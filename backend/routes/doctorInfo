@@ -1,9 +1,13 @@
 const express = require('express')
 const doctorinfoSchema = require('../Schema/doctorinfoSchema')
+
 const {
-    createDoctor
+    createDoctor,
+    getDoctorByusername,
+    updateDoctorProfile
 
 } = require('../controllers/doctorInfocontroller')
+
 const router = express.Router()
 
 
@@ -14,12 +18,16 @@ router.get('/', (req, res) => {
 })
 
 //get a single patient
-router.get('/:id', (req, res) => {
-        res.json({ mssg: 'get single patients' })
-    })
-    //post new 
+router.get('/getDoctorByusername', getDoctorByusername)
 
+
+
+//create a doctor
 router.post('/createDoctor', createDoctor)
+
+
+//update doctor
+router.patch('/updateDoctor', updateDoctorProfile)
 
 
 module.exports = router

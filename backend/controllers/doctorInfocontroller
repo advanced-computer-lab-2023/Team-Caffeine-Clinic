@@ -1,11 +1,13 @@
 const DoctorInfo = require('../Schema/doctorinfoSchema')
+const express = require('express');
+const router = express.Router();
 
 // Create a new doctor
 const createDoctor = async(req, res) => {
-    const { firstName, userName, lastName, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } } = req.body;
+    const { firstName, lastName, userName, hospital, houryrate, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } } = req.body;
 
     try {
-        const doctor = new DoctorInfo({ firstName, userName, lastName, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } });
+        const doctor = new DoctorInfo({ firstName, lastName, userName, hospital, houryrate, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } });
         await doctor.save();
         res.status(200).json(doctor);
     } catch (error) {
@@ -16,15 +18,18 @@ const createDoctor = async(req, res) => {
 
 
 // Define a controller function to get a doctor by ID
-const getDoctorById = async(req, res) => {
-    const doctoruserName = req.params.userName; // Assuming you pass the doctor's ID as a route parameter
 
+
+const getDoctorByusername = async(req, res) => {
+    const doctoruserName = req.query.userName; // Assuming you pass the doctor's username as a route parameter
+    console.log(doctoruserName);
     try {
-        // Use Mongoose to find the doctor by ID
-        const doctor = await DoctorInfo.find({ userName })
+
+        // Use Mongoose to find the doctor by username
+        const doctor = await DoctorInfo.find({ userName: doctoruserName })
 
         if (!doctor) {
-            // If no doctor with the given ID is found, return a 404 Not Found response
+            // If no doctor with the given username is found, return a 404 Not Found response
             return res.status(404).json({ message: 'Doctor not found' });
         }
 
@@ -32,11 +37,42 @@ const getDoctorById = async(req, res) => {
         res.json(doctor);
     } catch (error) {
         // Handle any errors that occur during the database query
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).send(error);
     }
 }
 
+///
+const updateDoctorProfile = async(req, res) => {
+    const doctoruserName = req.query.userName; // Assuming you pass the doctor's ID as a route parameter
+    const { hospital } = req.body;
+
+
+    try {
+        // Use Mongoose to find the doctor by ID
+        const doctor = await DoctorInfo.findOneAndUpdate({ userName: doctoruserName }, { hospital: hospital });
+
+
+        if (!doctor) {
+            // If no doctor with the given ID is found, return a 404 Not Found response
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // Respond with the updated doctor profile
+        await doctor.save();
+
+        res.json(doctor);
+
+    } catch (error) {
+        // Handle any errors that occur during the update process
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
+
 module.exports = {
-    getDoctorById,
+    getDoctorByusername,
+    updateDoctorProfile,
     createDoctor
 };

@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 
 const doctorInfoSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
-    userName: { type: String, required: true },
     lastName: { type: String, required: true },
+    userName: { type: String, required: true },
+     hospital: { type: String, required: true },
+    houryrate: { type: Number, integer: true },
     speciality: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
      gender: { type: String, enum: ['Male', 'Female'], required: true },
@@ -12,7 +14,10 @@ const doctorInfoSchema = new mongoose.Schema({
           phone: String,
           address: String,
       }
+
 }, {timestamps:true})
+
+
 
 
 
