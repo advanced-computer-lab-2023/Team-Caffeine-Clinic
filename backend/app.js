@@ -9,6 +9,9 @@ const bodyParser = require('body-parser');
 const signUp = require('./routes/signup');
 const Perscriptions = require('./routes/Perscriptions');
 
+const familyMembersRoute = require('./routes/familyMembers');
+const doctorsRoute = require('./routes/doctors');
+
 
 var app = express();
 
@@ -54,6 +57,9 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use('/', signUp)
 app.use('/api/perscription', Perscriptions)
+
+app.use('/api/familyMembers', familyMembersRoute);
+app.use('/api/doctors', doctorsRoute);
 
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
