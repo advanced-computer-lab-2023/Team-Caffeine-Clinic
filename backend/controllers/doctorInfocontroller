@@ -1,13 +1,18 @@
 const DoctorInfo = require('../Schema/doctorinfoSchema')
 const express = require('express');
 const router = express.Router();
+const Doctor = require('../Schema/doctor'); // Import your Doctor model
+const Patient = require('../Schema/Patient'); // Import your Patient model
+
+
+
 
 // Create a new doctor
 const createDoctor = async(req, res) => {
     const { firstName, lastName, userName, hospital, houryrate, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } } = req.body;
 
     try {
-        const doctor = new DoctorInfo({ firstName, lastName, userName, hospital, houryrate, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } });
+        const doctor = new DoctorInfo({ firstName, lastName, userName,hospital, houryrate, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } });
         await doctor.save();
         res.status(200).json(doctor);
     } catch (error) {
