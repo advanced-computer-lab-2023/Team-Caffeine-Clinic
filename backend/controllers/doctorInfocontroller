@@ -1,0 +1,42 @@
+const DoctorInfo = require('../Schema/doctorinfoSchema')
+
+// Create a new doctor
+const createDoctor = async(req, res) => {
+    const { firstName, userName, lastName, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } } = req.body;
+
+    try {
+        const doctor = new DoctorInfo({ firstName, userName, lastName, speciality, dateOfBirth, gender, contactInfo: { email, phone, address } });
+        await doctor.save();
+        res.status(200).json(doctor);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+
+// Define a controller function to get a doctor by ID
+const getDoctorById = async(req, res) => {
+    const doctoruserName = req.params.userName; // Assuming you pass the doctor's ID as a route parameter
+
+    try {
+        // Use Mongoose to find the doctor by ID
+        const doctor = await DoctorInfo.find({ userName })
+
+        if (!doctor) {
+            // If no doctor with the given ID is found, return a 404 Not Found response
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // If the doctor is found, return it in the response
+        res.json(doctor);
+    } catch (error) {
+        // Handle any errors that occur during the database query
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+module.exports = {
+    getDoctorById,
+    createDoctor
+};

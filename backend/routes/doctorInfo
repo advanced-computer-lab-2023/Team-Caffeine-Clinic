@@ -1,0 +1,25 @@
+const express = require('express')
+const doctorinfoSchema = require('../Schema/doctorinfoSchema')
+const {
+    createDoctor
+
+} = require('../controllers/doctorInfocontroller')
+const router = express.Router()
+
+
+
+
+router.get('/', (req, res) => {
+    res.json({ mssg: 'get doctor info' })
+})
+
+//get a single patient
+router.get('/:id', (req, res) => {
+        res.json({ mssg: 'get single patients' })
+    })
+    //post new 
+
+router.post('/createDoctor', createDoctor)
+
+
+module.exports = router

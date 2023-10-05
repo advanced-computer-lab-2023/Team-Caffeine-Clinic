@@ -1,0 +1,22 @@
+const mongoose = require('mongoose');
+
+const doctorInfoSchema = new mongoose.Schema({
+    firstName: { type: String, required: true },
+    userName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    speciality: { type: String, required: true },
+    dateOfBirth: { type: Date, required: true },
+     gender: { type: String, enum: ['Male', 'Female'], required: true },
+      contactInfo: {
+          email: String,
+          phone: String,
+          address: String,
+      }
+}, {timestamps:true})
+
+
+
+
+module.exports = mongoose.model('DoctorInfo',doctorInfoSchema);
+
+ 
