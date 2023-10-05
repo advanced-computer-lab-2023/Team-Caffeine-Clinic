@@ -1,0 +1,37 @@
+{
+  "name": "patient",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.3.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "mongodb": "^6.1.0",
+    "mongoose": "^7.5.3",
+    "mongose": "^0.0.2-security",
+    "morgan": "~1.9.1",
+    "nodemon": "^3.0.1"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahzsalah/pg-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahzsalah/pg-backend/issues"
+  },
+  "homepage": "https://github.com/ahzsalah/pg-backend#readme",
+  "description": ""
+}
