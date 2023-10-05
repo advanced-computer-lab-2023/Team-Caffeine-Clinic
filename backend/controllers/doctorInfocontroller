@@ -7,31 +7,19 @@ const doctor = require('../Schema/doctor');
 
 //create a new Patient
 const signUp = async(req, res) => {
-    const {username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation} = req.body
+        const { username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation } = req.body
 
-    const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation}
+        const emergency_contact = { full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation }
 
-    const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
+        const patient = new Patient({ username, name, email, password, dob, gender, mobile_number, emergency_contact })
 
-    await patient.save()
+        await patient.save()
 
-    res.status(200).json(patient)
-}
-// Create a new doctor
-const createDoctor = async (req, res) => {
+        res.status(200).json(patient)
+    }
+    // Create a new doctor
+const createDoctor = async(req, res) => {
     const {
-      username,
-      name,
-      speciality,
-      rate,
-      affiliation,
-      education,
-      availableDates,
-      patients,
-    } = req.body;
-  
-    try {
-      const doctor = new Doctor({
         username,
         name,
         speciality,
@@ -40,14 +28,26 @@ const createDoctor = async (req, res) => {
         education,
         availableDates,
         patients,
-      });
-  
-      await doctor.save();
-      res.status(200).json(doctor);
+    } = req.body;
+
+    try {
+        const doctor = new Doctor({
+            username,
+            name,
+            speciality,
+            rate,
+            affiliation,
+            education,
+            availableDates,
+            patients,
+        });
+
+        await doctor.save();
+        res.status(200).json(doctor);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message });
     }
-  };
+};
 
 
 
@@ -76,33 +76,34 @@ const getDoctorByusername = async(req, res) => {
 }
 
 ///
-const updateDoctorProfile = async (req, res) => {
+const updateDoctorProfile = async(req, res) => {
     const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
+    console.log(doctorUsername)
     const { affiliation } = req.body;
-  
+
     try {
-      // Use Mongoose to find the doctor by username
-      const doctor = await Doctor.findOne({ username: doctorUsername });
-  
-      if (!doctor) {
-        // If no doctor with the given username is found, return a 404 Not Found response
-        return res.status(404).json({ message: 'Doctor not found' });
-      }
-  
-      // Update the doctor's affiliation
-      doctor.affiliation = affiliation;
-  
-      // Save the updated doctor profile
-      await doctor.save();
-  
-      // Respond with the updated doctor profile
-      res.json(doctor);
+        // Use Mongoose to find the doctor by username
+        const doctor = await Doctor.findOneAndUpdate({ username: doctorUsername }, { affiliation: affiliation });
+
+        if (!doctor) {
+            // If no doctor with the given username is found, return a 404 Not Found response
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // Update the doctor's affiliation
+        doctor.affiliation = affiliation;
+
+        // Save the updated doctor profile
+        await doctor.save();
+
+        // Respond with the updated doctor profile
+        res.json(doctor);
     } catch (error) {
-      // Handle any errors that occur during the update process
-      console.error(error); // Log the error for debugging
-      res.status(500).json({ message: 'Internal Server Error' });
+        // Handle any errors that occur during the update process
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ message: 'Internal Server Error' });
     }
-  };
+};
 
 
 module.exports = {
