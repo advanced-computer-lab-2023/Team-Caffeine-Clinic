@@ -8,6 +8,7 @@ const doctorInfoSchema = new mongoose.Schema({
     houryrate: { type: Number, integer: true },
     speciality: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
+    Mypatients: [{}]
      gender: { type: String, enum: ['Male', 'Female'], required: true },
       contactInfo: {
           email: String,
