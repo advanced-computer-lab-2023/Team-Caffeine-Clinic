@@ -11,6 +11,7 @@ const Perscriptions = require('./routes/Perscriptions');
 
 const familyMembersRoute = require('./routes/familyMembers');
 const doctorsRoute = require('./routes/doctors');
+const adminsRoute = require('./routes/Admin');
 
 
 var app = express();
@@ -57,7 +58,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use('/', signUp)
 app.use('/api/perscription', Perscriptions)
-
+app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
 
