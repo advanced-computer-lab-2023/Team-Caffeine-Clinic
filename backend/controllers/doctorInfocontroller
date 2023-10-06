@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Doctor = require('../Schema/doctor'); // Import your Doctor model
 const Patient = require('../Schema/Patient'); // Import your Patient model
-const doctor = require('../Schema/doctor');
 
 
 //create a new Patient
@@ -17,8 +16,7 @@ const signUp = async(req, res) => {
 
         res.status(200).json(patient)
     }
-
-    // Create a new doctor
+ // Create a new doctor
 const createDoctor = async (req, res) => {
         const {
             username,
@@ -51,10 +49,7 @@ const createDoctor = async (req, res) => {
             res.status(400).json({ error: error.message });
         }
  };
-    
-
-
-
+  
 // Define a controller function to get a doctor by ID
 const getDoctorByusername = async(req, res) => {
     const doctoruserName = req.query.userName; // Assuming you pass the doctor's username as a route parameter
@@ -167,8 +162,6 @@ const updateDoctorProfile = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
-
 module.exports = {
     getDoctorByusername,
     updateDoctorProfile,
