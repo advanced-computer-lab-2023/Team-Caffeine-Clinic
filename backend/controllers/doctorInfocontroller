@@ -228,5 +228,6 @@ module.exports = {
     createDoctor,
     updateRate,
     updateEmail,
-    signUp
+    signUp,
+    createAppointment
 };

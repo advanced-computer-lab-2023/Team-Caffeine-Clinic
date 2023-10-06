@@ -6,7 +6,9 @@ const {
     getDoctorByusername,
     updateDoctorProfile,
     updateRate,
-    updateEmail
+    updateEmail,
+    signUp,
+    createAppointment
 
 } = require('../controllers/doctorInfocontroller')
 
@@ -32,6 +34,13 @@ router.post('/createDoctor', createDoctor)
 router.patch('/updateDoctor', updateDoctorProfile)
 router.patch('/updateRate', updateRate)
 router.patch('/updateEmail', updateEmail)
+
+//add patient
+router.post('/signUp', signUp)
+
+//add appointment 
+router.post('/createAppointment',createAppointment)
+
 
 
 module.exports = router
