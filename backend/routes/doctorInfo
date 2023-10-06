@@ -4,7 +4,9 @@ const doctorinfoSchema = require('../Schema/doctorinfoSchema')
 const {
     createDoctor,
     getDoctorByusername,
-    updateDoctorProfile
+    updateDoctorProfile,
+    updateRate,
+    updateEmail
 
 } = require('../controllers/doctorInfocontroller')
 
@@ -26,8 +28,10 @@ router.get('/getDoctorByusername', getDoctorByusername)
 router.post('/createDoctor', createDoctor)
 
 
-//update doctor
+//update doctor info 
 router.patch('/updateDoctor', updateDoctorProfile)
+router.patch('/updateRate', updateRate)
+router.patch('/updateEmail', updateEmail)
 
 
 module.exports = router
