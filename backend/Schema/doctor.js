@@ -24,8 +24,7 @@ const doctorSchema = new Schema({
         required: true
     },
     email: {
-        type: String, // Add the email field
-        required: true, // You can change this to `false` if email is not always required
+        type: String // Add the email field
     },
     education: {
         type: String
