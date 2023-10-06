@@ -29,12 +29,8 @@ const createAppointment = async (req, res) => {
   }
 };
 
-module.exports = {
-  createAppointment,
-};
-
-//create a new Patient
-const signUp = async (req, res) => {
+// Controller to create a new patient
+const createPatient = async (req, res) => {
   const {
     username,
     name,
@@ -42,13 +38,13 @@ const signUp = async (req, res) => {
     password,
     dob,
     gender,
-    mobile_number,
+    mobilenumber,
     Efull_name,
     Emobile_number,
     relation,
   } = req.body;
 
-  const emergency_contact = {
+  const emergencycontact = {
     full_name: Efull_name,
     mobile_number: Emobile_number,
     relation_to_the_patient: relation,
@@ -64,8 +60,8 @@ const signUp = async (req, res) => {
       password,
       dob,
       gender,
-      mobile_number,
-      emergency_contact,
+      mobilenumber,
+      emergencycontact,
       health_records, // Include the health records field
     });
 
@@ -76,6 +72,8 @@ const signUp = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
  // Create a new doctor
 const createDoctor = async (req, res) => {
         const {
@@ -228,6 +226,6 @@ module.exports = {
     createDoctor,
     updateRate,
     updateEmail,
-    signUp,
+    createPatient,
     createAppointment
 };
