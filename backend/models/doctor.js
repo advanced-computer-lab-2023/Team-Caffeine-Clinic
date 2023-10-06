@@ -25,6 +25,11 @@ const doctorSchema = new Schema({
     availableDates: [{
         date: Date,
         time: String
+    }],
+
+    patients: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Patient'
     }]
 });
 

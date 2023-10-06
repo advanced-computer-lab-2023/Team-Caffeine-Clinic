@@ -56,7 +56,11 @@ const patientSchema = new Schema({
             required: true,
             enum: ['Wife', 'Husband', 'Child', "Father", "Mother"]
         }
-    }
+    },
+
+    health_records: [{
+        type: String
+    }]
 }, {timestamps: true})
 
 module.exports = mongoose.model('Patient', patientSchema)
