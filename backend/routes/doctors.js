@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Doctor = require('../models/Doctor');
+const Doctor = require('../models/doctor');
 
 // Get all doctors with optional name and/or speciality filter
 router.get('/get', async (req, res) => {
