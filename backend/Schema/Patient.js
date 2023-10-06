@@ -43,18 +43,14 @@ const patientSchema = new Schema({
 
         full_name: {
             type: String,
-            required: true
         },
 
         mobile_number: {
             type: Number,
-            required: true
         },
 
         relation_to_the_patient: {
             type: String,
-            required: true,
-            // enum: ['Wife', 'Husband', 'Child', "Father", "Mother"]
         }
     },
 
