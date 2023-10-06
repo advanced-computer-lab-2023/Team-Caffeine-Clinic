@@ -29,15 +29,12 @@ const doctorSchema = new Schema({
     education: {
         type: String
     },
-    availableDates: [{
-        date: Date,
-        time: String
-    }],
     patients: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Patient'
+        type: String, // Change the type to String to reference patients by username
+        ref: 'Patient' // Reference the Patient model
     }]
 });
+
 
 
 module.exports = mongoose.model('Doctor', doctorSchema);

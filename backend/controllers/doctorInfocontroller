@@ -1,26 +1,66 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Doctor = require('../Schema/doctor'); // Import your Doctor model
 const Patient = require('../Schema/Patient'); // Import your Patient model
+const Appointment = require('../Schema/appointment');
+
+
+//add patients to a doc using the doc username so we can use it whenever we create an appointment 
+const addPatientToDoctor = async (req, res) => {
+  try {
+      const { doctorUsername, patientUsername } = req.body;
+
+      // Find the doctor by username
+      const doctor = await Doctor.findOne({ username: doctorUsername });
+
+      if (!doctor) {
+          return res.status(404).json({ message: 'Doctor not found' });
+      }
+
+      // Find the patient by username
+      const patient = await Patient.findOne({ username: patientUsername });
+
+      if (!patient) {
+          return res.status(404).json({ message: 'Patient not found' });
+      }
+
+      // Add the patient's username to the doctor's list of patients
+      doctor.patients.push(patient.username);
+      await doctor.save();
+
+      res.status(200).json(doctor);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
 //create a new appointment
+//We changed the app schema to ref the username of both the pat and the doc so if we can change it by ID it would be better
 const createAppointment = async (req, res) => {
   try {
-    const { doctorId, patientId, appointmentDate } = req.body;
+    const { dusername, pusername, appointmentDate } = req.body;
 
-    // Check if the doctor and patient IDs are valid ObjectId strings
-    if (!mongoose.Types.ObjectId.isValid(doctorId) || !mongoose.Types.ObjectId.isValid(patientId)) {
-      return res.status(400).json({ message: 'Invalid doctor or patient ID' });
+    // Find the doctor and patient by username
+    const doctor = await Doctor.findOne({ username: dusername });
+    const patient = await Patient.findOne({ username: pusername });
+
+    if (!doctor || !patient) {
+      return res.status(400).json({ message: 'Doctor or patient not found' });
     }
 
     // Create a new appointment
     const appointment = new Appointment({
-      doctor: doctorId,
-      patient: patientId,
+      doctor: doctor.username, // Reference the doctor by username
+      patient: patient.username, // Reference the patient by username
       appointmentDate: new Date(appointmentDate), // Convert the appointmentDate to a Date object
     });
-
+   
     await appointment.save();
+
+    // Use the addPatientToDoctor function to add the patient to the doctor's list
+    await addPatientToDoctor(doctor.username, patient.username);
 
     res.status(201).json(appointment);
   } catch (error) {
@@ -72,7 +112,6 @@ const createPatient = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
 
  // Create a new doctor
 const createDoctor = async (req, res) => {
@@ -227,5 +266,6 @@ module.exports = {
     updateRate,
     updateEmail,
     createPatient,
-    createAppointment
+    createAppointment,
+    addPatientToDoctor
 };

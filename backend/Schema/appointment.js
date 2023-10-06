@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 
 const appointmentSchema = new Schema({
   doctor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Doctor',
+    type: String, // Change the type to String
+    ref: 'Doctor', // Reference the model name
     required: true,
   },
   patient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient',
+    type: String, // Change the type to String
+    ref: 'Patient', // Reference the model name
     required: true,
   },
   appointmentDate: {
@@ -17,6 +17,7 @@ const appointmentSchema = new Schema({
     required: true,
   }
   // Add other appointment-related fields as needed
-},{timestamps: true});
+}, { timestamps: true });
+
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

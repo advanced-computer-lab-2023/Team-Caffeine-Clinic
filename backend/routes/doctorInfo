@@ -8,7 +8,8 @@ const {
     updateRate,
     updateEmail,
     createPatient,
-    createAppointment
+    createAppointment,
+    addPatientToDoctor
 
 } = require('../controllers/doctorInfocontroller')
 
@@ -40,6 +41,9 @@ router.post('/createPatient', createPatient)
 
 //add appointment 
 router.post('/createAppointment',createAppointment)
+
+//add a patient to a doc 
+router.patch('/addPatientToDoctor', addPatientToDoctor)
 
 
 
