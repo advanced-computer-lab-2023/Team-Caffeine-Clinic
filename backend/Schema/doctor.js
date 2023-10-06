@@ -23,6 +23,10 @@ const doctorSchema = new Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String, // Add the email field
+        required: true, // You can change this to `false` if email is not always required
+    },
     education: {
         type: String
     },
@@ -30,11 +34,11 @@ const doctorSchema = new Schema({
         date: Date,
         time: String
     }],
-
     patients: [{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Patient'
     }]
 });
+
 
 module.exports = mongoose.model('Doctor', doctorSchema);
