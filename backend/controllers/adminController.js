@@ -115,6 +115,41 @@ const deleteAdmin = async (req, res) => {
     }
   }
 
+  const deletehealthPackage = async (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({error: 'No such HealthPackage'})
+    }
+
+    const healthPackage = await HealthPackage.findOneAndDelete({_id: id})
+
+    if(!healthPackage) {
+      return res.status(400).json({error: 'No such healthPackage'})
+    }
+
+    res.status(200).json(healthPackage)
+  }
+
+  // update a Health package
+const updateHealthPack = async (req, res) => {
+    const { id } = req.params
+  
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({error: 'No such Health Package'})
+    }
+  
+    const healthpackage = await HealthPackage.findOneAndUpdate({_id: id}, {
+      ...req.body
+    })
+  
+    if (!healthpackage) {
+      return res.status(400).json({error: 'No such Health Package'})
+    }
+  
+    res.status(200).json(healthpackage)
+  }
+ 
 
 module.exports = {
     createAdmin,
@@ -123,5 +158,7 @@ module.exports = {
     deleteAdmin,
     createSilverPackage,
     createPlatPackage,
-    createGoldPackage
+    createGoldPackage,
+    deletehealthPackage,
+    updateHealthPack
 }

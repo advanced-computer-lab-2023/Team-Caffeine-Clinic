@@ -5,7 +5,9 @@ const {createAdmin,
     getAdmin,
     deleteAdmin,
     createSilverPackage,
+    deletehealthPackage,
     createGoldPackage,
+    updateHealthPack,
     createPlatPackage} = require('../controllers/adminController');
 
 
@@ -19,9 +21,12 @@ router.post('/', createAdmin);
 
 router.delete('/:id', deleteAdmin);
 
-router.post('/silverpackage', createSilverPackage);
-router.post('/goldpackage', createGoldPackage);
-router.post('/platinumpackage', createPlatPackage);
+router.post('/healthPackage/silverpackage', createSilverPackage);
+router.post('/healthPackage/goldpackage', createGoldPackage);
+router.post('/healthPackage/platinumpackage', createPlatPackage);
+router.delete('/healthPackage/:id', deletehealthPackage);
+
+// router.patch('/healthPackage/:id', updateHealthPack); 
 
 
 
