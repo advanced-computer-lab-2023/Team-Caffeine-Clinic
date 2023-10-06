@@ -7,7 +7,7 @@ const patientSchema = new Schema({
         type: String,
         required: true
     },
-    
+
     name: {
         type: String,
         required: true
@@ -31,36 +31,36 @@ const patientSchema = new Schema({
     gender: {
         type: String,
         required: true,
-        enum: ['male', 'female'] 
+        // enum: ['male', 'female']
     },
 
-    mobile_number: {
-        type: String,
+    mobilenumber: {
+        type: Number,
         required: true
     },
 
-    emergency_contact: {
-        
-        full_name:{
+    emergencycontact: {
+
+        full_name: {
             type: String,
             required: true
         },
 
         mobile_number: {
-            type: String,
+            type: Number,
             required: true
         },
 
         relation_to_the_patient: {
             type: String,
             required: true,
-           // enum: ['Wife', 'Husband', 'Child', "Father", "Mother"]
+            // enum: ['Wife', 'Husband', 'Child', "Father", "Mother"]
         }
     },
 
     health_records: [{
         type: String
     }]
-}, {timestamps: true})
+}, { timestamps: true })
 
 module.exports = mongoose.model('Patient', patientSchema)
