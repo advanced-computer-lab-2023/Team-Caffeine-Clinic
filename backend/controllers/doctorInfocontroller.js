@@ -355,41 +355,63 @@ const patientsWithUpcomingAppointments = async(req, res) => {
 
 
 // Create a route to view patient information and health records#req:25
-const getAllHealthRecords = async(req, res) => {
+const getAllHealthRecords = async (req, res) => {
     try {
-
         const { doctorUsername } = req.body;
+        
         // Find the doctor by username
         const doctor = await Doctor.findOne({ username: doctorUsername });
-        console.log(doctor)
 
         if (!doctor) {
             return res.status(404).json({ message: 'Doctor not found' });
         }
 
-        // Determine the patient associated with the doctor, you may have your own logic for this
+        // Determine the patients associated with the doctor, you may have your own logic for this
         // For example, you might have a field in the doctor's model that stores the patient's username
-        const patientUsername = doctor.patients; // Replace with your logic to determine the patient's username
+        const patientUsernames = doctor.patients; // Replace with your logic to determine the patient's usernames
+        const allHealthRecords = [];
 
-        // Find the patient by username
-        const patient = await Patient.findOne({ username: patientUsername });
+        for (const patientUsername of patientUsernames) {
+            const patient = await Patient.findOne({ username: patientUsername });
 
-        if (!patient) {
-            return res.status(404).json({ message: 'Patient not found' });
+            if (patient) {
+                const healthRecords = patient.health_records;
+                allHealthRecords.push({ patientUsername, healthRecords });
+            }
         }
 
-        // Access the patient's health records
-        const healthRecords = patient.health_records;
-
-        res.json({ healthRecords });
+        res.json({ allHealthRecords });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while fetching health records.' });
     }
 };
 
+const myPatients = async(req, res) => {
+    try {
+        const { doctorUsername } = req.body;
+        
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: doctorUsername });
 
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
 
+        // Determine the patients associated with the doctor, you may have your own logic for this
+        // For example, you might have a field in the doctor's model that stores the patient's username
+        const patientUsernames = doctor.patients;
+
+        if (patientUsernames.length == 0) {
+            return res.status(400).json({ error: 'Doctor Dont have patients yet' });
+        }
+
+        res.json({ patientUsernames });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching the list of patients.' });
+    }
+};
 
 
 
@@ -406,5 +428,6 @@ module.exports = {
     createPatient,
     createAppointment,
     addPatientToDoctor,
-    selectpatient
+    selectpatient,
+    myPatients
 };

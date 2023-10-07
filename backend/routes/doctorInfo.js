@@ -12,7 +12,8 @@ const {
     createAppointment,
     selectpatient,
     getAllHealthRecords,
-    addPatientToDoctor
+    addPatientToDoctor,
+    myPatients
 
 } = require('../controllers/doctorInfocontroller')
 
@@ -28,9 +29,11 @@ router.get('/', (req, res) => {
 //get a single patient
 router.get('/getDoctorByusername', getDoctorByusername)
 
-//get a single patient
+//get all patient AllHealthRecords with a doc
 router.get('/getAllHealthRecords', getAllHealthRecords)
 
+//get all patient  with a doc
+router.get('/myPatients', myPatients)
 
 // sorting the patient by the appointement date doneeeeeeeeeeeeee
 router.get('/patientsWithUpcomingAppointments', patientsWithUpcomingAppointments)
