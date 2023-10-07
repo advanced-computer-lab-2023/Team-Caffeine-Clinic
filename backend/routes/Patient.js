@@ -5,13 +5,13 @@ const Doctor = require('../Schema/doctor'); // Import your Doctor model
 const Patient = require('../Schema/Patient'); // Import your Patient model
 const Appointment = require('../Schema/appointment'); // Import your Appointment model
 
-// Create a route to select a patient by their ID
-router.get('/select-patient/:patientId', async (req, res) => {
+// Create a route to select a patient by their name  #req:34
+router.get('/select-patient/:patientname', async (req, res) => {
   try {
-    const patientId = req.params.patientId; // Get the patient ID from the URL parameter
+    const patientname = req.params.patientname; // Get the patient name from the URL parameter
 
-    // Retrieve the patient details by their ID
-    const selectedPatient = await Patient.findById(patientId);
+    // Retrieve the patient details by their name
+    const selectedPatient = await Patient.findOne({name:patientname})
 
     if (!selectedPatient) {
       return res.status(404).json({ error: 'Patient not found.' });
@@ -23,23 +23,23 @@ router.get('/select-patient/:patientId', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while selecting the patient.' });
   }
 });
-// Create a route to filter patients by upcoming appointments
+// Create a route to filter patients by upcoming appointments by doc username #req:35
 router.get('/patients-with-upcoming-appointments', async (req, res) => {
     try {
-      const doctorId = req.body; // Assuming you have a user authentication system
+      const doctoruserName = req.body; // Assuming you have a user authentication system
       const currentDate = new Date();
   
       // Find upcoming appointments for the doctor
       const upcomingAppointments = await Appointment.find({
-        doctor: doctorId,
+        doctor: doctoruserName,
         appointmentDate: { $gte: currentDate },
       });
   
-      // Extract patient IDs from upcoming appointments
-      const patientIds = upcomingAppointments.map((appointment) => appointment.patient);
+      // Extract patient usernames from upcoming appointments
+      const patientusernames = upcomingAppointments.map((appointment) => appointment.patient);
   
       // Find patients based on patient IDs
-      const patientsWithUpcomingAppointments = await Patient.find({ _id: { $in: patientIds } });
+      const patientsWithUpcomingAppointments = await Patient.find({ username: { $in: patientusernames } });
   
       res.json({ patients: patientsWithUpcomingAppointments });
     } catch (error) {
@@ -48,25 +48,43 @@ router.get('/patients-with-upcoming-appointments', async (req, res) => {
     }
   });
   
-// Create a route to view patient information and health records
-router.get('/view-patient/:patientId', async (req, res) => {
+// Create a route to view patient information and health records#req:25
+router.get('/view-patient/:patientusername', async (req, res) => {
     try {
-      const doctorId = req.body; // Assuming you have a user authentication system
-      const patientId = req.body;
-  
+      const doctorusername = req.body; // Assuming you have a user authentication system
+      const patientusername = req.body;
+      
+      const doc = await Doctor.findOne({username:doctorusername});
       // Check if the doctor is associated with the patient
-      const doctor = await Doctor.findById(doctorId).populate('patients');
-      const patient = await Patient.findById(patientId);
-  
-      if (!doctor.patients.includes(patientId)) {
+      const doctor = await Doctor.findOne({username:doctorusername}).populate('patients');
+      const patient = await Patient.findOne({username:patientusername});
+      if(!doc||!patient){
+        res.status(400).json({ error: 'Doctor/patient username invalid' });
+
+      }
+      if (!doctor.patients.includes(patientusername)) {
         return res.status(403).json({ error: 'Access denied. This patient is not registered with you.' });
       }
-  
+      const patinetsDOP = new Date(patient.dob)
+      const currentDate = new Date()
+      const age = currentDate.getFullYear() - patinetsDOP.getFullYear()
+      if (
+        currentDate.getMonth() < patinetsDOP.getMonth()||
+        (currentDate.getMonth()==patinetsDOP.getMonth()&&
+        currentDate.getDate()<patinetsDOP.getDate())
+      ){
+        age--;
+      }
+      if(age<0){
+        res.status(400).json({ error: 'this patient has a wrong age entry please re register' });
+      }
+
       // If the doctor is associated with the patient, you can access their information and health records
       const patientInfo = {
         username: patient.username,
         name: patient.name,
         email: patient.email,
+        age: age
         // Add other patient information fields you want to include
       };
   
@@ -79,11 +97,11 @@ router.get('/view-patient/:patientId', async (req, res) => {
     }
   });
 
-  // Create a route to view a list of all patients for a specific doctor
+  // Create a route to view a list of all patients for a specific doctor #req: 25,36
 router.get('/my-patients', async (req, res) => {
     try {
-      const doctorId = req.body; // Assuming you have a user authentication system
-      const doctor = await Doctor.findById(doctorId).populate('patients');
+      const doctorusername = req.body; // Assuming you have a user authentication system
+      const doctor = await Doctor.findOne({username:doctorusername}).populate('patients');
   
       if (!doctor) {
         return res.status(404).json({ error: 'Doctor not found.' });
@@ -91,6 +109,10 @@ router.get('/my-patients', async (req, res) => {
   
       // Extract the list of patients associated with the doctor
       const patients = doctor.patients;
+
+      if(patients.length==0){
+        return res.status(400).json({ error: 'Doctor Dont have patients yet' });
+      }
   
       res.json({ patients });
     } catch (error) {
@@ -99,7 +121,9 @@ router.get('/my-patients', async (req, res) => {
     }
   });
 
-// Create a route to search for a patient by name
+
+//we dont use this yet
+// Create a route to search for a patient by name 
 router.get('/search-patient', async (req, res) => {
   try {
     const doctorId = req.body; // Assuming you have a user authentication system
