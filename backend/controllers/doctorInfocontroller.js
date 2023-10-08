@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Doctor = require('../models/doctor'); // Import your Doctor model
 const Patient = require('../models/Patient'); // Import your Patient model
-const Appointment = require('../Schema/appointment');
+const Appointment = require('../models/appointment');
 
 
 //add patients to a doc using the doc username so we can use it whenever we create an appointment 
