@@ -1,6 +1,9 @@
 const Admin = require('../models/admin');
 const mongoose = require('mongoose');
+
+//Import Schemas / Models
 const HealthPackage = require('../models/healthPackageModel');
+const DoctorApplication = require('../models/DoctorApplication');
 
 //get all Admins 
 const getAdmins = async (req, res) => {
@@ -54,6 +57,20 @@ const deleteAdmin = async (req, res) => {
     res.status(200).json(admin)
   }
 
+//View All Applications
+const viewDoctorApplication = async(req, res) => {
+  try{
+    const doctorApplications = await DoctorApplication.find();
+    res.status(200).json(doctorApplications)
+  } catch(error){
+    res.status(400).json({error: "Error"})
+  }
+}
+
+
+//Packages
+
+// 1. Silver
   const createSilverPackage = async (req, res) => {
       try {
     const silverPackage = await HealthPackage.create({
@@ -74,6 +91,7 @@ const deleteAdmin = async (req, res) => {
     }
   }
 
+  //Gold
   const createGoldPackage = async (req, res) => {
     try {
     const goldPackage = await HealthPackage.create({
@@ -95,6 +113,7 @@ const deleteAdmin = async (req, res) => {
     }
   }
 
+  //Plat
   const createPlatPackage = async (req, res) => {
     try {
         const platinumPackage = await HealthPackage.create({
@@ -115,6 +134,7 @@ const deleteAdmin = async (req, res) => {
     }
   }
 
+  //Delete Package
   const deletehealthPackage = async (req, res) => {
     const { id } = req.params
 
@@ -156,6 +176,7 @@ module.exports = {
     getAdmins,
     getAdmin,
     deleteAdmin,
+    viewDoctorApplication,
     createSilverPackage,
     createPlatPackage,
     createGoldPackage,
