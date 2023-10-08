@@ -4,6 +4,7 @@ const {createAdmin,
     getAdmins,
     getAdmin,
     deleteAdmin,
+    viewDoctorApplication,
     createSilverPackage,
     deletehealthPackage,
     createGoldPackage,
@@ -20,6 +21,8 @@ router.get('/:id', getAdmin);
 router.post('/', createAdmin);
 
 router.delete('/:id', deleteAdmin);
+
+router.get('/viewDoctorApplications', viewDoctorApplication);
 
 router.post('/healthPackage/silverpackage', createSilverPackage);
 router.post('/healthPackage/goldpackage', createGoldPackage);
