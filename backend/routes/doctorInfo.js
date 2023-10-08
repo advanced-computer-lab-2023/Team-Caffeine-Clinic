@@ -26,13 +26,13 @@ router.get('/', (req, res) => {
     res.json({ mssg: 'get doctor info' })
 })
 
-//get a single patient
-router.get('/getDoctorByusername', getDoctorByusername)
+// //get a single patient
+// router.get('/getDoctorByusername', getDoctorByusername)
 
 //get all patient AllHealthRecords with a doc
 router.get('/getAllHealthRecords', getAllHealthRecords)
 
-//get all patient  with a doc
+//get all patient with a doc
 router.get('/myPatients', myPatients)
 
 // sorting the patient by the appointement date doneeeeeeeeeeeeee
@@ -52,8 +52,8 @@ router.patch('/updateDoctor', updateDoctorProfile)
 router.patch('/updateRate', updateRate)
 router.patch('/updateEmail', updateEmail)
 
-//add patient
-router.post('/createPatient', createPatient)
+// //add patient
+// router.post('/createPatient', createPatient)
 
 //add appointment  
 router.post('/createAppointment', createAppointment)
