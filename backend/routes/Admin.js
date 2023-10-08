@@ -1,5 +1,5 @@
 const express = require('express');
-const Admin = require('../models/adminModel');
+const Admin = require('../models/admin');
 const {createAdmin,
     getAdmins,
     getAdmin,

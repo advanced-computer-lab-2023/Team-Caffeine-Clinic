@@ -12,6 +12,8 @@ const Perscriptions = require('./routes/Perscriptions');
 const familyMembersRoute = require('./routes/familyMembers');
 const doctorsRoute = require('./routes/doctors');
 const adminsRoute = require('./routes/Admin');
+const doctorInfoRoutes = require('./routes/doctorInfo')
+
 
 
 var app = express();
@@ -61,6 +63,13 @@ app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
+app.use('/', doctorInfoRoutes)
+
+
+app.use((req, res, next) => {
+  console.log(req.path, req.method)
+  next()
+});
 
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
@@ -114,7 +123,7 @@ mongoose.connect(process.env.MONGO_URI)
     })
 
 
-// const PORT = 3000;
+// const PORT = 3000;     
 // app.listen(process.env.PORT, () => {
 //     console.log(`Server is running on port ${process.env.PORT}`);
 // });
