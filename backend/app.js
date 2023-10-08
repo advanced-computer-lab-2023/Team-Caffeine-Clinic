@@ -58,7 +58,7 @@ app.use(bodyParser.json());
 
 // middleware
 app.use(express.json());
-app.use('/', signUp)
+app.use('/api/signUp', signUp)
 app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
