@@ -1,5 +1,5 @@
 const express = require('express')
-const doctorinfoSchema = require('../models/doctorinfoSchema')
+const doctor = require('../models/doctor')
 
 const {
     createDoctor,
