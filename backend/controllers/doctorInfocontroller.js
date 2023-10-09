@@ -311,11 +311,6 @@ const selectpatient = async(req, res) => {
         res.status(500).json({ error: 'An error occurred while selecting the patient.' });
     }
 }
-
-
-
-
-
 // Create a route to filter patients by upcoming appointments by doc username #req:35
 const patientsWithUpcomingAppointments = async(req, res) => {
     try {
@@ -347,8 +342,6 @@ const patientsWithUpcomingAppointments = async(req, res) => {
         res.status(500).json({ error: 'An error occurred while filtering patients with upcoming appointments.' });
     }
 }
-
-
 // Create a route to view patient information and health records#req:25
 const getAllHealthRecords = async (req, res) => {
     try {
@@ -381,7 +374,6 @@ const getAllHealthRecords = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching health records.' });
     }
 };
-
 const myPatients = async(req, res) => {
     try {
         const { doctorUsername } = req.body;
@@ -407,11 +399,6 @@ const myPatients = async(req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching the list of patients.' });
     }
 };
-
-
-
-
-
 module.exports = {
     getAllHealthRecords,
     patientsWithUpcomingAppointments,
@@ -420,7 +407,6 @@ module.exports = {
     createDoctor,
     updateRate,
     updateEmail,
-    createPatient,
     createAppointment,
     addPatientToDoctor,
     selectpatient,

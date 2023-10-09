@@ -5,15 +5,6 @@ const Schema = mongoose.Schema
 const doctorSchema = new Schema({
     username: {
         type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
         required: true
     },
     name: {
@@ -32,18 +23,18 @@ const doctorSchema = new Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String // Add the email field
+    },
     education: {
         type: String
     },
-    availableDates: [{
-        date: Date,
-        time: String
-    }],
-
     patients: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Patient'
+        type: String, // Change the type to String to reference patients by username
+        ref: 'Patient' // Reference the Patient model
     }]
 });
+
+
 
 module.exports = mongoose.model('Doctor', doctorSchema);
