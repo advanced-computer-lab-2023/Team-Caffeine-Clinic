@@ -4,7 +4,7 @@ const doctor = require('../models/doctor')
 const {
     createDoctor,
     patientsWithUpcomingAppointments,
-    // getDoctorByusername,
+    getDoctorByusername,
     updateDoctorProfile,
     updateRate,
     updateEmail,
@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 })
 
 // //get a single patient
-// router.get('/getDoctorByusername', getDoctorByusername)
+/router.get('/getDoctorByusername', getDoctorByusername)
 
 //get all patient AllHealthRecords with a doc
 router.get('/getAllHealthRecords', getAllHealthRecords)

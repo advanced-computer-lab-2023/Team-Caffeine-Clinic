@@ -189,7 +189,7 @@ const getDoctorByusername = async(req, res) => {
         try {
 
             // Use Mongoose to find the doctor by username
-            const doctor = await DoctorInfo.find({ username: doctoruserName })
+            const doctor = await Doctor.find({ username: doctoruserName })
 
             if (!doctor) {
                 // If no doctor with the given username is found, return a 404 Not Found response
@@ -416,6 +416,7 @@ const myPatients = async(req, res) => {
 };
 module.exports = {
     getAllHealthRecords,
+    
     patientsWithUpcomingAppointments,
     getDoctorByusername,
     updateDoctorProfile,
