@@ -4,11 +4,11 @@ const doctor = require('../models/doctor')
 const {
     createDoctor,
     patientsWithUpcomingAppointments,
-    getDoctorByusername,
+    // getDoctorByusername,
     updateDoctorProfile,
     updateRate,
     updateEmail,
-    createPatient,
+    // createPatient,
     createAppointment,
     selectpatient,
     getAllHealthRecords,
