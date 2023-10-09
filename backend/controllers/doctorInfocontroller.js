@@ -370,7 +370,7 @@ const patientsWithUpcomingAppointments = async (req, res) => {
 
         // Create an array of patient objects with names and appointment dates
         const patientData = patientsWithUpcomingAppointments.map((patient) => {
-            const appointment = upcomingAppointments.find((appointment) => appointment.patient == patient.username);
+            const appointment = upcomingAppointments.find((appointment) => appointment.patient.username == patient.username);
             return {
                 name: patient.name,
                 appointmentDate: appointment ? appointment.appointmentDate : null
