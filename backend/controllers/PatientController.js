@@ -17,7 +17,6 @@ const signUp = async(req, res) => {
     res.status(200).json(patient)
 }
 
-
 //View and Filter Perscriptions
 const viewFilterPerscriptions = async (req, res) => {
     const patientID = req.body
