@@ -311,73 +311,37 @@ const selectpatient = async(req, res) => {
         }
     }
     // Create a route to filter patients by upcoming appointments by doc username #req:35
-// const patientsWithUpcomingAppointments = async(req, res) => {
-//         try {
-//             const { doctoruserName } = req.body; // Assuming you have a user authentication system
-//             //const currentDate = new Date();
-
-
-//             // Find upcoming appointments for the doctor
-
-
-//             const upcomingAppointments = await Appointment.find({
-//                 doctor: doctoruserName
-//             });
-
-
-//             const appointmentData = upcomingAppointments.map((appointment) => ({
-//                 // Assuming you have a patient name field in your Appointment model
-//                 appointmentDate: appointment.appointmentDate,
-//             }));
-//             // // Extract patient usernames from upcoming appointments
-
-//             const patientusernames = upcomingAppointments.map((appointment) => appointment.patient);
-
-//             const patientsWithUpcomingAppointments = await Patient.find({ username: { $in: patientusernames } }).select('name');
-
-//             // // Extract the names from the patients
-//             const patientNames = patientsWithUpcomingAppointments.map((patient) => patient.name);
-
-//             res.json({ patientNames, appointmentData });
-//             // // res.json({ patients: patientsWithUpcomingAppointments.mongoose.name });
-//         } catch (error) {
-//             console.error(error);
-//             res.status(500).json({ error: 'An error occurred while filtering patients with upcoming appointments.' });
-//         }
-//     }
 const patientsWithUpcomingAppointments = async (req, res) => {
     try {
         const { doctorUserName } = req.body; // Assuming you have a user authentication system
+        const currentDate = new Date();
 
-        // Find upcoming appointments for the doctor
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: doctorUserName });
+
+        if (!doctor) {
+            return res.status(404).json({ error: 'Doctor not found.' });
+        }
+
+        // Get the patient usernames associated with the doctor
+        const patientUsernames = doctor.patients;
+
+        // Find upcoming appointments for the specific doctor and patients
         const upcomingAppointments = await Appointment.find({
-            doctor: doctorUserName
+            doctor: doctorUserName,
+            patient: { $in: patientUsernames },
+            appointmentDate: { $gte: currentDate }
         });
 
-        console.log('Upcoming Appointments:', upcomingAppointments);
-
-        // Extract patient usernames from upcoming appointments
-        const patientUsernames = upcomingAppointments.map((appointment) => appointment.patient);
-
-        console.log('Patient Usernames:', patientUsernames);
-
-        // Find patients by their usernames and select their names and appointment dates
-        const patientsWithUpcomingAppointments = await Patient.find({
-            username: { $in: patientUsernames }
-        }).select('name').lean();
-
-        console.log('Patients with Appointments:', patientsWithUpcomingAppointments);
-
         // Create an array of patient objects with names and appointment dates
-        const patientData = patientsWithUpcomingAppointments.map((patient) => {
-            const appointment = upcomingAppointments.find((appointment) => appointment.patient.username == patient.username);
+        const patientData = await Promise.all(patientUsernames.map(async (patientUsername) => {
+            const appointment = upcomingAppointments.find((appointment) => appointment.patient === patientUsername);
+            const patient = await Patient.findOne({ username: patientUsername });
             return {
                 name: patient.name,
                 appointmentDate: appointment ? appointment.appointmentDate : null
             };
-        });
-
-        console.log('Patient Data:', patientData);
+        }));
 
         // Filter out patients with no appointment date
         const filteredPatientData = patientData.filter((patient) => patient.appointmentDate !== null);
