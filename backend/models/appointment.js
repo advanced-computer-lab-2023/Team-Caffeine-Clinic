@@ -15,6 +15,12 @@ const appointmentSchema = new Schema({
   appointmentDate: {
     type: Date,
     required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
+    default :'upcoming'
   }
 
 }, { timestamps: true });

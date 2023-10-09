@@ -40,7 +40,6 @@ const addPatientToDoctor = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
 //create a new appointment
 //We changed the app schema to ref the username of both the pat and the doc so if we can change it by ID it would be better
 const createAppointment = async(req, res) => {
@@ -82,62 +81,61 @@ const createAppointment = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+// // Controller to create a new patient
+// const createPatient = async(req, res) => {
+//     const {
+//         username,
+//         name,
+//         email,
+//         password,
+//         dob,
+//         gender,
+//         mobilenumber,
+//         emergencycontact: { full_name, mobile_number, relation_to_the_patient },
+//         health_records,
+//     } = req.body;
 
-// Controller to create a new patient
-const createPatient = async(req, res) => {
-    const {
-        username,
-        name,
-        email,
-        password,
-        dob,
-        gender,
-        mobilenumber,
-        emergencycontact: { full_name, mobile_number, relation_to_the_patient },
-        health_records,
-    } = req.body;
+//     try {
+//         const patient = new Patient({
+//             username,
+//             name,
+//             email,
+//             password,
+//             dob,
+//             gender,
+//             mobilenumber,
+//             emergencycontact: {
+//                 full_name,
+//                 mobile_number,
+//                 relation_to_the_patient,
+//             },
+//             health_records,
+//         });
+//         const existingpatinet = await Patient.findOne({
+//             username,
+//             name,
+//             email,
+//             password,
+//             dob,
+//             gender,
+//             mobilenumber,
+//             emergencycontact: {
+//                 full_name,
+//                 mobile_number,
+//                 relation_to_the_patient,
+//             },
+//             health_records,
+//         });
+//         if (existingpatinet) {
+//             return res.status(400).json({ message: 'patient with the same details already exists' });
 
-    try {
-        const patient = new Patient({
-            username,
-            name,
-            email,
-            password,
-            dob,
-            gender,
-            mobilenumber,
-            emergencycontact: {
-                full_name,
-                mobile_number,
-                relation_to_the_patient,
-            },
-            health_records,
-        });
-        const existingpatinet = await Patient.findOne({
-            username,
-            name,
-            email,
-            password,
-            dob,
-            gender,
-            mobilenumber,
-            emergencycontact: {
-                full_name,
-                mobile_number,
-                relation_to_the_patient,
-            },
-            health_records,
-        });
-        if (existingpatinet) {
-            return res.status(400).json({ message: 'patient with the same details already exists' });
-
-        }
-        await patient.save();
-        res.status(200).json(patient);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
+//         }
+//         await patient.save();
+//         res.status(200).json(patient);
+//     } catch (error) {
+//         res.status(400).json({ error: error.message });
+//     }
+// };
 // Create a new doctor
 const createDoctor = async(req, res) => {
     const {
@@ -333,9 +331,6 @@ const patientsWithUpcomingAppointments = async(req, res) => {
             // Assuming you have a patient name field in your Appointment model
             appointmentDate: appointment.appointmentDate,
         }));
-
-
-
         // // Extract patient usernames from upcoming appointments
 
         const patientusernames = upcomingAppointments.map((appointment) => appointment.patient);
