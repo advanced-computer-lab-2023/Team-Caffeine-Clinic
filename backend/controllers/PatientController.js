@@ -6,11 +6,11 @@ const Perscriptions = require('../models/Perscriptions');
 
 //Sign up as a new Patient
 const signUp = async(req, res) => {
-    const {username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation} = req.body
+    const {username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation,health_records} = req.body
 
     const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation}
 
-    const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
+    const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact,health_records})
 
     await patient.save()
 
