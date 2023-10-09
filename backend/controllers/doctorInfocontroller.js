@@ -28,10 +28,7 @@ const addPatientToDoctor = async(req, res) => {
         // Add the patient's username to the doctor's list of patients if it is not there
         if (!doctor.patients.includes(patient.username)) {
             doctor.patients.push(patient.username);
-        } else {
-            return res.status(404).json({ message: 'Patient is already in your patinets List' });
-
-        }
+        } 
         await doctor.save();
 
         res.status(200).json(doctor);
@@ -44,7 +41,7 @@ const addPatientToDoctor = async(req, res) => {
 //We changed the app schema to ref the username of both the pat and the doc so if we can change it by ID it would be better
 const createAppointment = async(req, res) => {
     try {
-        const { dusername, pusername, appointmentDate } = req.body;
+        const { dusername, pusername, appointmentDate , status } = req.body;
 
         // Find the doctor and patient by username
         const doctor = await Doctor.findOne({ username: dusername });
@@ -58,6 +55,7 @@ const createAppointment = async(req, res) => {
             doctor: doctor.username,
             patient: patient.username,
             appointmentDate: new Date(appointmentDate),
+            status:status
         });
 
         if (existingAppointment) {
@@ -67,7 +65,8 @@ const createAppointment = async(req, res) => {
         const appointment = new Appointment({
             doctor: doctor.username, // Reference the doctor by username
             patient: patient.username, // Reference the patient by username
-            appointmentDate: new Date(appointmentDate), // Convert the appointmentDate to a Date object
+            appointmentDate: new Date(appointmentDate),
+            status:status // Convert the appointmentDate to a Date object
         });
 
         await appointment.save();
