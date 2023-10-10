@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 //Import Schemas / Models
 const HealthPackage = require('../models/healthPackageModel');
 const DoctorApplication = require('../models/DoctorApplication');
+const Doctor = require('../models/doctor');
+const Patient = require('../models/Patient');
 
 //get all Admins 
 const getAdmins = async (req, res) => {
@@ -42,20 +44,25 @@ const createAdmin = async (req, res) => {
 
 // delete an admin
 const deleteAdmin = async (req, res) => {
-    const { id } = req.params
-  
+  try {
+    const { id } = req.params;
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({error: 'No such admin'})
+        return res.status(400).json({ error: 'Invalid admin ID' });
     }
-  
-    const admin = await Admin.findOneAndDelete({_id: id})
-  
-    if(!admin) {
-      return res.status(400).json({error: 'No such admin'})
+
+    const admin = await Admin.findOneAndDelete({ _id: id });
+
+    if (!admin) {
+        return res.status(404).json({ error: 'Admin not found' });
     }
-  
-    res.status(200).json(admin)
-  }
+
+    res.status(200).json(admin);
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+}
+};
 
 //View All Applications
 const viewDoctorApplication = async(req, res) => {
@@ -66,6 +73,41 @@ const viewDoctorApplication = async(req, res) => {
     res.status(400).json({error: "Error"})
   }
 }
+
+
+const deleteDoctor = async(req, res) => {
+  const { id } = req.params
+  
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({error: 'No such doctor'})
+    }
+  
+    const doc = await Doctor.findOneAndDelete({_id: id})
+  
+    if(!doc) {
+      return res.status(400).json({error: 'No such doctor'})
+    }
+  
+    res.status(200).json(doc)
+}
+
+const deletePatient = async(req, res) => { 
+  const { id } = req.params
+  
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({error: 'No such Patient'})
+  }
+
+  const pat = await Patient.findOneAndDelete({_id: id})
+
+  if(!pat) {
+    return res.status(400).json({error: 'No such Patient'})
+  }
+
+  res.status(200).json(pat)
+}
+
+
 
 
 //Packages
@@ -181,5 +223,7 @@ module.exports = {
     createPlatPackage,
     createGoldPackage,
     deletehealthPackage,
-    updateHealthPack
+    deleteDoctor,
+    updateHealthPack,
+    deletePatient
 }
