@@ -206,7 +206,7 @@ const getDoctorByusername = async(req, res) => {
     //update Rate   doneee
 const updateRate = async(req, res) => {
     const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
-    const rate  = req.query.userName; // Change from email to rate
+    const rate  = req.query.rate; // Change from email to rate
 
     try {
         // Use Mongoose to find the doctor by username

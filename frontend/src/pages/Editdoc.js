@@ -1,24 +1,58 @@
-// EditMyDoc.js
+import React, { useState } from 'react';
 
-import React, { useEffect, useState } from 'react';
+const UpdateRate = () => {
+  const [newRate, setNewRate] = useState('');
+  const [message, setMessage] = useState('');
 
-const EditMyDoc = () => {
-  const [usernameFromSession, setUsernameFromSession] = useState('');
+  const handleRateChange = (e) => {
+    setNewRate(e.target.value);
+  };
 
-  // Use useEffect to retrieve the username from localStorage
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsernameFromSession(storedUsername);
+  const updateRate = async () => {
+    try {
+      const storedUsername = localStorage.getItem('username'); // Retrieve username from localStorage
+      if (!storedUsername) {
+        setMessage('No username found in session.');
+        return;
+      }
+
+      // Send a PATCH request to update the rate
+      const response = await fetch(
+        `/updateRate?username=${storedUsername}&rate=${newRate}`, // Include rate as a query parameter
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        setMessage('Error updating rate.');
+        return;
+      }
+
+      setMessage('Rate updated successfully.');
+    } catch (error) {
+      console.error(error);
+      setMessage('Internal Server Error.');
     }
-  }, []); // Empty dependency array ensures this runs only once
+  };
 
   return (
-    <div className="DoctorHome">
-      <h2>DoctorHome</h2>
-      <p>Username from Session: {usernameFromSession}</p>
+    <div>
+      <h1>Update Doctor's Rate</h1>
+      <label htmlFor="newRateInput">New Rate:</label>
+      <input
+        type="number"
+        id="newRateInput"
+        value={newRate}
+        onChange={handleRateChange}
+      />
+      <button onClick={updateRate}>Update Rate</button>
+      <p>{message}</p>
     </div>
   );
 };
 
-export default EditMyDoc;
+export default UpdateRate;
