@@ -5,7 +5,6 @@ const Doctor = require('../models/doctor'); // Import your Doctor model
 const Patient = require('../models/Patient'); // Import your Patient model
 const Appointment = require('../models/appointment');
 
-
 //add patients to a doc using the doc username so we can use it whenever we create an appointment 
 const addPatientToDoctor = async(req, res) => {
     try {
@@ -294,7 +293,8 @@ const updateDoctorProfile = async(req, res) => {
 // Create a route to select a patient by their name  #req:34
 const selectpatient = async(req, res) => {
         try {
-            const patientname = req.query.name; // Get the patient name from the URL parameter
+            const patientname = req.query.name;
+             // Get the patient name from the URL parameter
 
             // Retrieve the patient details by their name
             const selectedPatient = await Patient.findOne({ name: patientname })
@@ -313,7 +313,7 @@ const selectpatient = async(req, res) => {
     // Create a route to filter patients by upcoming appointments by doc username #req:35
 const patientsWithUpcomingAppointments = async (req, res) => {
     try {
-        const { doctorUserName } = req.body; // Assuming you have a user authentication system
+        const  doctorUserName  = req.query.doctorUserName; // Assuming you have a user authentication system
         const currentDate = new Date();
 
         // Find the doctor by username
