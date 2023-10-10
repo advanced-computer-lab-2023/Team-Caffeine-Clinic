@@ -10,14 +10,16 @@ const getDoctors = async (req, res) => {
   let filter = {};
 
   if (name) filter.name = new RegExp(name, 'i'); // Case-insensitive regex search
-  if (speciality) filter.speciality = speciality;
+  if (speciality) filter.speciality = new RegExp(speciality, 'i');
 
   try {
       const doctors = await Doctor.find(filter);
       res.status(200).send(doctors);
+      console.log(doctors);
   } catch (error) {
       res.status(400).send(error);
   }
+  
 };
 
 // Get doctor details by ID

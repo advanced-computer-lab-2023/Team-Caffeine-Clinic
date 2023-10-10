@@ -13,12 +13,14 @@ const familyMembersRoute = require('./routes/familyMembers');
 const doctorsRoute = require('./routes/doctors');
 const adminsRoute = require('./routes/Admin');
 const doctorInfoRoutes = require('./routes/doctorInfo')
+// const cors = require('cors');
 
 
 
 var app = express();
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+// app.use(cors());
 
 
 // var createError = require('http-errors');
@@ -27,7 +29,6 @@ app.use(bodyParser.json());
 // var logger = require('morgan');
 // mongoose.connect('mongodb://localhost/virtual_clinic', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// const cors = require('cors');
 
 
 
@@ -53,7 +54,6 @@ app.use(bodyParser.json());
 // app.use('/users', usersRouter);
 
 
-// app.use(cors());
 
 
 // middleware
