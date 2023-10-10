@@ -13,7 +13,7 @@ const DoctorInfo = () => {
         throw new Error('Doctor not found');
       }
       const data = await response.json();
-      setDoctor(data);
+      setDoctor(data[0]);
       setError(null);
     } catch (error) {
       setDoctor(null);
