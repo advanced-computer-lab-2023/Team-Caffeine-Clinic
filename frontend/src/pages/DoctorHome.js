@@ -1,5 +1,5 @@
 import {useEffect , useState} from 'react'
-import seeddoc from '../components/seedoc'
+import seeddoc from './seedoc'
 
 
 const DoctorHome = ()=> {

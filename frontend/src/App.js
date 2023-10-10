@@ -1,26 +1,28 @@
-import {BrowserRouter , Routes , Route} from 'react-router-dom'
+import {BrowserRouter , Routes , Route ,Switch} from 'react-router-dom'
 
 //pages & Components
 import DoctorHome from './pages/DoctorHome';
-import DoctorInfo from './components/seedoc';
+import DoctorInfo from './pages/seedoc';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <DoctorInfo />
-      <div className='pages'>
-        <Routes>
-         <Route 
-            path="/" 
-            element={<DoctorHome/>}
-         />
+      <Navbar/>
+      <div className='Navbar'>
+       <Routes>
+        
+         <Route  path="DoctorHome" element={<DoctorHome/>} />
 
-        </Routes>
+         <Route  path="seedoc" element={<DoctorInfo/>} />
+         
 
+          </Routes>
       </div>
+     
       </BrowserRouter>
-      
+
     </div>
   );
 }

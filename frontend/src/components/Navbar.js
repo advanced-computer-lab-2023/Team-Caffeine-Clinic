@@ -1,15 +1,19 @@
 import { Link } from "react-router-dom"
 
+
 const Navbar =()=>{
 
     return(
-        <header>
+        <nav>
             <div className="container">
-                <Link to="/">
+                <Link to="/seedoc">
                     <h1>DoctorPage</h1>
                 </Link>
+
+
+                <Link to="/DoctorHome"> test </Link>
             </div>
-        </header>
+        </nav>
     )
 }
 
