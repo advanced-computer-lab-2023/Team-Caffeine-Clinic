@@ -206,7 +206,7 @@ const getDoctorByusername = async(req, res) => {
     //update Rate   doneee
 const updateRate = async(req, res) => {
     const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
-    const { rate } = req.body; // Change from email to rate
+    const rate  = req.query.userName; // Change from email to rate
 
     try {
         // Use Mongoose to find the doctor by username
@@ -235,7 +235,7 @@ const updateRate = async(req, res) => {
 //update doctor email   doneeee
 const updateEmail = async(req, res) => {
     const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
-    const { email } = req.body; // Change from affiliation to email
+    const email  = req.query.email; // Change from affiliation to email
 
     try {
         // Use Mongoose to find the doctor by username
@@ -265,7 +265,7 @@ const updateEmail = async(req, res) => {
 const updateDoctorProfile = async(req, res) => {
     const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
     console.log(doctorUsername)
-    const { affiliation } = req.body;
+    const  affiliation = req.query.affiliation;
 
     try {
         // Use Mongoose to find the doctor by username
@@ -391,7 +391,7 @@ const getAllHealthRecords = async(req, res) => {
 };
 const myPatients = async(req, res) => {
     try {
-        const { doctorUsername } = req.body;
+        const  doctorUsername  = req.query.doctorUsername;
 
         // Find the doctor by username
         const doctor = await Doctor.findOne({ username: doctorUsername });

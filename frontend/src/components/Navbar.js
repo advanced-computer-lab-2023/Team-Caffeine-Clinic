@@ -11,7 +11,7 @@ const Navbar =()=>{
                 </Link>
 
 
-                <Link to="/DoctorHome"> test </Link>
+                <Link to="/Editdoc"> test </Link>
             </div>
         </nav>
     )

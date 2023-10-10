@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
+import { useUsername } from './UsernameContext'; // Import the context hook
 
 const DoctorInfo = () => {
-  const [username, setUsername] = useState('');
+  const { username, setUsername } = useUsername(); // Access the global username state
+
   const [doctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
-
+localStorage.setItem('username', username);
   const handleSearch = async () => {
     try {
-        console.log(username);
+      console.log(username);
       const response = await fetch(`/getDoctorByusername?userName=${username}`);
       if (!response.ok) {
         throw new Error('Doctor not found');
       }
+
       const data = await response.json();
       setDoctor(data[0]);
       setError(null);
@@ -30,7 +33,7 @@ const DoctorInfo = () => {
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-        />
+          />
         <button onClick={handleSearch}>Search</button>
       </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
