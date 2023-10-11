@@ -112,6 +112,17 @@ const deletePatient = async(req, res) => {
 
 //Packages
 
+//Get all packages
+const getHealthPacks = async(req, res) => {
+  try{
+    const healthpack = await HealthPackage.find();
+    res.status(200).json(healthpack)
+  } catch(error){
+    res.status(400).json({error: "Error"})
+  }
+}
+
+
 // 1. Silver
   const createSilverPackage = async (req, res) => {
       try {
@@ -224,6 +235,7 @@ module.exports = {
     createGoldPackage,
     deletehealthPackage,
     deleteDoctor,
+    getHealthPacks,
     updateHealthPack,
     deletePatient
 }

@@ -1,33 +1,25 @@
 import { useEffect,useState } from "react";
+import { Link } from 'react-router-dom';
 
-const Home =  () => {
-    const [admins , setAdmins] = useState(null);
 
-    useEffect(() => {
-        const fetchAdmins = async () => {
-            const response = await fetch('api/Admin/ViewAdmins');
-            const json = await response.json();
-            if (response.ok) {
-              //  console.log(json);
-                setAdmins(json);
-            }
-        }
-
-        fetchAdmins();
-    }, [])
-
+const Home = () => {
     return (
-        <>
-      <h2>Admins</h2>  
-        <div className="home">
-            <div className="admins">
-                {admins && admins.map((admin) => (
-                    <p key={admin.id}>{admin.Username}{admin.Passowrd}</p>
-                ))}
-            </div>
+        <div className= "home">
+            <h2>Admin Home</h2>
+            <Link to="/AdminHome">
+                      <button>View admins</button>
+                </Link>
+            <Link to="/viewDoctorApps">
+                      <button>View Doctor Applications</button>
+                </Link>
+            <Link to="/viewDoctors">
+                      <button>View Doctors</button>
+                </Link>
+            <Link to="/viewHealthPacks">
+                      <button>View Health Packages</button>
+                </Link>
         </div>
-        </>
     )
- }
+}
 
- export default Home;
+export default Home
