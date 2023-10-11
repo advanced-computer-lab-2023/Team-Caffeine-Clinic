@@ -14,17 +14,7 @@ body {
 }
 header {
   background: #fcfcfc;
-}
-header .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
 }
 header a {
   color: #333;
@@ -35,7 +25,7 @@ header a {
   padding: 20px;
   margin: 0 auto;
 }
-.home .doctors{
+.home .doctors .familyMembers{
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 100px;
@@ -49,8 +39,7 @@ header a {
   box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
 }
 .pageheader{
-  display: inline-block;
-  
+  display: inline-block;  
 }
 .home {
   display: flex;
@@ -97,23 +86,20 @@ header a {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
-  height: 40px;
-  top: 0;
-  right: 0;
-  left: 0;
+  height: 60px;
+  flex-direction: row;
   align-items: center;
   padding: 15px;
   position: fixed;
   z-index: 100;
+  width: 100%;
 }
 .home-button .logout-button {
   font-family: 'Roboto', sans-serif;
 }
 .home-button {
-  margin-left: 50px;
 }
 .logout-button {
-  margin-right: 50px;
 }
 .logout-button:hover {
   background-color: #e9e9e9;
@@ -137,13 +123,12 @@ header a {
   align-items: center;
   margin-top: 60px;
 }
-
 .Sidebar a {
   text-decoration: none; 
   color: #ecf0f1; 
   padding: 10px 15px;
   margin: 5px 0;
-  width: 140px;
+  width: 150px;
   text-align: center;
   border-radius: 4px; 
   transition: background-color 0.3s; 
@@ -156,4 +141,35 @@ header a {
   margin-left: 120px;
   z-index: 50;
   width: 900px;
+}
+.create-form h3 {
+  margin-bottom: 50px;
+}
+.create-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.create-form input {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.create-form label {
+  margin: 5px 0;
+  font-weight: bold;
+}
+.create-form button {
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 40px;
+}
+.create-form button:hover {
+  background-color: #0056b3;
 }

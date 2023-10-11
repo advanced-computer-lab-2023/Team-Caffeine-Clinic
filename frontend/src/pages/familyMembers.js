@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import FamilyMemberDetails from '../components/FamilyMemberDetails';
+import FamilyMemberForm from '../components/FamilyMemberForm';
+
 
 const FamilyMembers = () => {
 
@@ -7,7 +9,7 @@ const FamilyMembers = () => {
 
     useEffect(() => {
       const fetchFamilyMembers = async () => {
-        let url = '/api/familyMembers/get'; 
+        let url = '/api/familyMembers/getFamilyMembers'; 
 
         const response = await fetch(url);
         const json = await response.json();
@@ -18,17 +20,20 @@ const FamilyMembers = () => {
       }
       // console.log('ookayyyyyyy');
       fetchFamilyMembers();
+      
     }, [])
 
     return (
-      
       <div className="familyMembers">
+
         {/* familyMembers list */}
         <div className='familyMembers'>
           {familyMembers && familyMembers.map((familyMember) => (
             <FamilyMemberDetails key={familyMember.patientID} familyMember={familyMember} />
           ))} 
         </div>
+
+        <FamilyMemberForm/>
       </div>
   )
 }
