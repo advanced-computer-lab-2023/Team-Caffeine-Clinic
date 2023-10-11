@@ -10,10 +10,10 @@ function App() {
       <BrowserRouter>
         <div className="pages">
           <Routes>
-            <Route>
+            <Route
               path="/"
               element={<Home />}
-            </Route>
+            />
           </Routes>
         </div>
       </BrowserRouter>
