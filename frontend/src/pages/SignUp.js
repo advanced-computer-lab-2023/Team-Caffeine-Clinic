@@ -17,7 +17,7 @@ const SignUp = () => {
 
     const [EName, setEname] = useState('');
     const [EMobile, setEMobile] = useState('');
-    const [ERelation, setRelation] = useState('');
+    const [ERelation, setERelation] = useState('');
     
     const [error, setError] = useState(null);
 
@@ -25,8 +25,11 @@ const SignUp = () => {
         e.preventDefault()
 
         const Patient = {
-            username, name, email, password, dob, gender, mobileNumber, EName, EMobile, ERelation 
+            username, name, email, password, dob, gender, 
+            mobile_number: mobileNumber, Efull_name: EName, Emobile_number: EMobile, relation: ERelation 
         }
+
+        
 
         const response = await fetch('/api/signup', {
             method: 'POST',
@@ -39,20 +42,23 @@ const SignUp = () => {
         const json = await response.json()
 
         if(!response.ok){
+            setUsername('')
+            console.log(name, ERelation);
             setError(json.error)
             console.log(error);
         }
 
         if(response.ok){
+            setUsername('')
             setError(null)
-            console.log("Patient Created", json);
+            console.log("Patient Created", json[0]);
         }
     }
 
     return(
         <header>
             <div className="signUp">
-                <Form className="createPatient" onSubmit={register}>
+                <form className="createPatient" onSubmit={register}>
                 Username: 
                 <label className="label">
                     <input
@@ -97,22 +103,16 @@ const SignUp = () => {
                 </label>
                 <hr />
                 <p>
-                    Radio buttons:
-                    <label>
-                        <input type="radio" name="myRadio" value={gender} onChange={e => setGender(e.target.value)} />
-                       Male
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="myRadio"
-                            value={gender}
-                            onChange={e => setGender(e.target.value)}
-                            defaultChecked={true} 
-                        />
-                        Female
-                    </label>
-                    </p>
+            Radio buttons:
+            <label>
+              <input type="radio" name="gender" value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
+              Male
+            </label>
+            <label>
+              <input type="radio" name="gender" value="female" checked={gender === 'female'} onChange={(e) => setGender(e.target.value)} />
+              Female
+            </label>
+          </p>
                     <hr />
                 <label>
                     Mobile Number: 
@@ -141,36 +141,17 @@ const SignUp = () => {
                 </label>
                 <br />
                 <label>
-                    Relation:
-                    <select>
-
-                        <option value={ERelation} 
-                            onChange={e => setRelation(e.target.value)}
-                        >Wife</option>
-
-                        <option value={ERelation} 
-                            onChange={e => setRelation(e.target.value)}>
-                        Husband</option>
-
-                        <option value={ERelation} 
-                            onChange={e => setRelation(e.target.value)}>
-                        Child</option>
-
-                        <option value={ERelation} 
-                            onChange={e => setRelation(e.target.value)}>
-                        Father</option>
-
-                        <option value={ERelation} 
-                            onChange={e => setRelation(e.target.value)}>
-                        Mother</option>
-
-                    </select>
+                    Relation to the Patient: 
+                    <input 
+                    value={ERelation}
+                    onChange={e => setERelation(e.target.value)}
+                    type="text" />
                 </label>
                 <br /><br />
-                <Button variant="dark">
+                <Button variant="dark" type="submit">
                     Register
                 </Button>
-                </Form>
+                </form>
             </div>
         </header>
     )
