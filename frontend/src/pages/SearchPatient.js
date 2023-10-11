@@ -58,9 +58,9 @@ const SelectPatient = () => {
           {selectedPatient.emergencycontact ? (
             <div>
               <h2>Emergency Contact</h2>
-              <p>Name: {selectedPatient.emergency_contact.full_name}</p>
-              <p>Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
-              <p>Relation: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
+              <p>Name: {selectedPatient.emergencycontact.full_name}</p>
+              <p>Mobile Number: {selectedPatient.emergencycontact.mobile_number}</p>
+              <p>Relation: {selectedPatient.emergencycontact.relation_to_the_patient}</p>
             </div>
           ) : null}
         </div>
