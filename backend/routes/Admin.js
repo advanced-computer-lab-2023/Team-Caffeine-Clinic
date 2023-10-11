@@ -16,7 +16,7 @@ const {createAdmin,
 
 const router = express.Router();
 
-router.get('/', getAdmins);
+router.get('/viewAdmins', getAdmins);
 
 router.get('/getAdmin/:id', getAdmin);
 router.post('/', createAdmin);
