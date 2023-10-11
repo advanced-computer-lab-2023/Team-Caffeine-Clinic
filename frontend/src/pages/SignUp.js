@@ -57,6 +57,8 @@ const SignUp = () => {
 
     return(
         <header>
+            <h1>Sign Up</h1>
+            <br /><br />
             <div className="signUp">
                 <form className="createPatient" onSubmit={register}>
                 Username: 
