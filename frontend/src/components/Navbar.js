@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 const Navbar = () => {
   return (
     <header className="container navbar">
-      <Link to="/">
-        <h1>SignUp</h1>
-      </Link>
+      <Link to="/" className='home-button'>Home</Link>
+      <div></div>
+      <div className='logout-button'>log out</div>
     </header>
   )
 }

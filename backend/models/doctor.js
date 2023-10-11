@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema
 
+
+
 const doctorSchema = new Schema({
     username: {
         type: String,
@@ -24,17 +26,40 @@ const doctorSchema = new Schema({
         required: true
     },
     email: {
-        type: String // Add the email field
+        type: String, 
+        required: true
     },
     education: {
-        type: String
+        type: String,
+        required: true
     },
     patients: [{
-        type: String, // Change the type to String to reference patients by username
-        ref: 'Patient' // Reference the Patient model
+        type: String, 
+        ref: 'Patient' 
     }]
 });
 
+// const Doctor = mongoose.model('Doctor', doctorSchema);
 
+
+// const drJones = new Doctor({
+//     username: "dr_jones",
+//     name: "Dr. Samantha Jones",
+//     speciality: "Cardiology",
+//     rate: 4.8,
+//     affiliation: "MediCare Hospital",
+//     email: "dr.jones@medicare.com",
+//     education: "MD in Cardiology from Harvard Medical School",
+//     patients: ["patient1_username", "patient2_username"]
+// });
+
+// // Save the doctor to the database
+// drJones.save()
+// .then(() => {
+//     console.log('Doctor added successfully');
+// })
+// .catch(err => {
+//     console.error('Error adding doctor:', err);
+// });
 
 module.exports = mongoose.model('Doctor', doctorSchema);

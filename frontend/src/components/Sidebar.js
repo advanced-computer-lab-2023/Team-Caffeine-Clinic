@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'; 
 
 const Sidebar = () => {
   return (
-    <Sidebar className="Sidebar">
-      <Link to="/">
-        <h1>Sidebar</h1>
-      </Link>
-    </Sidebar>
+    <div className="Sidebar">
+      <Link to="/doctors">Doctors</Link>
+      <Link to="/familyMembers">Family Members</Link>
+      <Link to="/Prescriptions">Prescriptions</Link>
+    </div>
   )
 }
 
-export default Sidebar
+export default Sidebar;
