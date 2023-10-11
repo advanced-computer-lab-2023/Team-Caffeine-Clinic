@@ -18,7 +18,6 @@ const FamilyMembers = () => {
           setFamilyMembers(json)
         }
       }
-      // console.log('ookayyyyyyy');
       fetchFamilyMembers();
       
     }, [])
@@ -33,7 +32,7 @@ const FamilyMembers = () => {
           ))} 
         </div>
 
-        <FamilyMemberForm/>
+        <FamilyMemberForm className="familyMemberForm"/>
       </div>
   )
 }

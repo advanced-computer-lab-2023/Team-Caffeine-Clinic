@@ -87,7 +87,7 @@ import { useState } from "react"
       </select>
 
  
-      <button>Add Family Member</button>
+      <button onClick={handleSubmit}>Add Family Member</button>
       {error && <div className="error">{error}</div>}
     </form>
 
