@@ -8,6 +8,7 @@ const {
     updateDoctorProfile,
     updateRate,
     updateEmail,
+    searchmyPatients,
     // createPatient,
     createAppointment,
     selectpatient,
@@ -42,9 +43,10 @@ router.get('/patientsWithUpcomingAppointments', patientsWithUpcomingAppointments
 //get a patient by name  34   doneeeeeee
 router.get('/selectpatient', selectpatient)
 
+router.get('/searchmyPatients', searchmyPatients)
 
 //create a doctor
-router.post('/createDoctor', createDoctor)
+router.get('/createDoctor', createDoctor)
 
 
 //update doctor info 

@@ -147,7 +147,6 @@ const createDoctor = async(req, res) => {
         availableDates,
         patients,
     } = req.body;
-
     try {
         const doctor = new Doctor({
             username,
@@ -201,8 +200,8 @@ const getDoctorByusername = async(req, res) => {
             // Handle any errors that occur during the database query
             res.status(500).send(error);
         }
-    }
-    //update Rate   doneee
+}
+//update Rate   doneee
 const updateRate = async(req, res) => {
     const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
     const rate  = req.query.rate; // Change from email to rate
@@ -289,7 +288,6 @@ const updateDoctorProfile = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
-
 // Create a route to select a patient by their name  #req:34
 const selectpatient = async(req, res) => {
         try {
@@ -297,8 +295,7 @@ const selectpatient = async(req, res) => {
              // Get the patient name from the URL parameter
 
             // Retrieve the patient details by their name
-            const selectedPatient = await Patient.findOne({ name: patientname })
-            console.log(selectedPatient)
+            const selectedPatient = await Patient.findOne({ username: patientname })
 
             if (!selectedPatient) {
                 return res.status(404).json({ error: 'Patient not found.' });
@@ -309,8 +306,8 @@ const selectpatient = async(req, res) => {
             console.error(error);
             res.status(500).json({ error: 'An error occurred while selecting the patient.' });
         }
-    }
-    // Create a route to filter patients by upcoming appointments by doc username #req:35
+}
+// Create a route to filter patients by upcoming appointments by doc username #req:35
 const patientsWithUpcomingAppointments = async (req, res) => {
     try {
         const  doctorUserName  = req.query.doctorUserName; // Assuming you have a user authentication system
@@ -355,9 +352,7 @@ const patientsWithUpcomingAppointments = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while filtering patients with upcoming appointments.' });
     }
 };
-
-
-    // Create a route to view patient information and health records#req:25
+ // Create a route to view patient information and health records#req:25
 const getAllHealthRecords = async(req, res) => {
     try {
         const { doctorUsername } = req.body;
@@ -414,9 +409,42 @@ const myPatients = async(req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching the list of patients.' });
     }
 };
+const searchmyPatients = async (req, res) => {
+    try {
+        const doctorUsername = req.query.doctorUsername;
+        const patientUsername = req.query.patientUsername;
+
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: doctorUsername });
+
+        if (!doctor) {
+            return res.status(400).json({ message: 'Doctor not found' });
+        }
+
+        // Check if the patient is associated with the doctor
+        if (!doctor.patients.includes(patientUsername)) {
+            return res.status(400).json({ error: 'Patient is not enrolled with this doctor' });
+        }
+
+        // You can retrieve patient data from the Patient model here
+        // Replace 'PatientModel' with your actual Patient model
+        const patient = await Patient.findOne({ username: patientUsername });
+
+        if (!patient) {
+            return res.status(400).json({ error: 'Patient not found' });
+        }
+
+        // Return patient data
+      return  res.status(200).json({ patient });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching the patient data.' });
+    }
+};
 module.exports = {
     getAllHealthRecords,
-    
+    searchmyPatients,
     patientsWithUpcomingAppointments,
     getDoctorByusername,
     updateDoctorProfile,

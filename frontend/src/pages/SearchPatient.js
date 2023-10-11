@@ -1,64 +1,72 @@
 import React, { useState } from 'react';
 
 const SelectPatient = () => {
-  const [patientName, setPatientName] = useState('');
+  const [patientUsername, setPatientUsername] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleNameChange = (e) => {
-    setPatientName(e.target.value);
-  };
-
-  const fetchSelectedPatient = async () => {
+  const fetchPatientData = async () => {
     try {
-      const response = await fetch(`/selectpatient?name=${patientName}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch patient');
+      const storedUsername = localStorage.getItem('username');
+      if (!storedUsername) {
+        setError('No username found in session.');
+        return;
       }
-      const data = await response.json();
-      setSelectedPatient(data.patient);
-      setError(null);
+      const response = await fetch(
+        `/searchmyPatients/?doctorUsername=${storedUsername}&patientUsername=${patientUsername}`
+      );
+      
+      if (!response.ok) {
+       
+        setError('Error fetching patient data.');
+        setSelectedPatient(null);
+      } else {
+        const data = await response.json();
+        setSelectedPatient(data.patient);
+        setError('');
+      }
     } catch (error) {
-      setSelectedPatient(null);
-      setError('Patient not found.');
+      console.error(error);
+      setError('Internal Server Error.');
     }
   };
 
   return (
     <div>
-      <h1>Select a Patient</h1>
-      <label htmlFor="patientNameInput">Patient Name:</label>
-      <input
-        type="text"
-        id="patientNameInput"
-        value={patientName}
-        onChange={handleNameChange}
-      />
-      <button onClick={fetchSelectedPatient}>Select Patient</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {selectedPatient && (
+      <div>
+        <label htmlFor="patientUsername">Patient Username:</label>
+        <input
+          type="text"
+          id="patientUsername"
+          value={patientUsername}
+          onChange={(e) => setPatientUsername(e.target.value)}
+        />
+      </div>
+
+      <button onClick={fetchPatientData}>Fetch Patient Data</button>
+
+      {selectedPatient ? (
         <div>
           <h2>Selected Patient</h2>
-            <p>UserName: {selectedPatient.username}</p>
-            <p>Name: {selectedPatient.name}</p>
-            <p>Email: {selectedPatient.email}</p>
-            <p>Date of birth: {selectedPatient.dob}</p>
-            <p>Gender: {selectedPatient.gender}</p>
-            <p>Mobile Number: {selectedPatient.mobile_number}</p>
+          <p>UserName: {selectedPatient.username}</p>
+          <p>Name: {selectedPatient.name}</p>
+          <p>Email: {selectedPatient.email}</p>
+          <p>Date of birth: {selectedPatient.dob}</p>
+          <p>Gender: {selectedPatient.gender}</p>
+          <p>Mobile Number: {selectedPatient.mobilenumber}</p>
 
-            <h2>Emergency Contact</h2>
-            <p>Name: {selectedPatient.emergencycontact.full_name}</p>
-            <p>Mobile Number: {selectedPatient.emergencycontact.mobile_number}</p>
-            <p>Relation: {selectedPatient.emergencycontact.relation_to_the_patient}</p>
-
-            <h2>Health Records</h2>
-            <ul>
-            {selectedPatient.health_records.map((record, index) => (
-                <li key={index}>{record}</li>
-            ))}
-            </ul>
+          {selectedPatient.emergencycontact ? (
+            <div>
+              <h2>Emergency Contact</h2>
+              <p>Name: {selectedPatient.emergency_contact.full_name}</p>
+              <p>Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
+              <p>Relation: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
+            </div>
+          ) : null}
         </div>
-      )}
+      ) : null}
+
+      {error && <p>{error}</p>}
     </div>
   );
 };
