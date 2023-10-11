@@ -8,13 +8,20 @@ const Perscriptions = require('../models/Perscriptions');
 const signUp = async(req, res) => {
     const {username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation} = req.body
 
-    const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation}
+    console.log(username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number);
 
-    const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
 
-    await patient.save()
+    const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
 
-    res.status(200).json(patient)
+    try{
+        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
+
+        await patient.save()
+
+        res.status(200).json(patient)
+    } catch(error){
+        res.status(400).json(error)
+    }
 }
 
 //View and Filter Perscriptions
