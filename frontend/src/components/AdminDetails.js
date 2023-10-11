@@ -8,7 +8,7 @@ const AdminDetails = ({ admin }) => {
       // if (response.ok) {
       //   dispatch({type: 'DELETE_WORKOUT', payload: json})
       // }
-  }
+    }
 
     return (
       <div className="Admin-details">

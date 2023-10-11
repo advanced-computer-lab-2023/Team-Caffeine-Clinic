@@ -1,5 +1,8 @@
 const DocAppDetails = ({ Appl }) => {
 
+
+  //needs 2 buttons (reject and accept).
+
     return (
       <div className="Admin-details">
         <h4></h4>
