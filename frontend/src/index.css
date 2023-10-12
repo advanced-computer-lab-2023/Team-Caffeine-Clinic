@@ -142,6 +142,7 @@ header a {
   z-index: 50;
   width: 900px;
 }
+
 .create-form h3 {
   margin-bottom: 50px;
 }
@@ -179,4 +180,18 @@ header a {
   grid-template-columns: 1fr;
   gap: 100px;
   margin-left: 130px;
+}
+
+.perscButton{
+  position: absolute;
+  right: 150px;
+  top: 50%;
+  width: 100px;
+  height: 50px;
+}
+
+.perscription{
+  margin-left: 200px;
+  z-index: 50;
+  width: 900px;
 }
