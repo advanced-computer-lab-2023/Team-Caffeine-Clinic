@@ -10,9 +10,7 @@ import MyPatients from './pages/ViewPatients';
 import UsernameProvider  from './pages/UsernameContext'; // Import the context
 import PatientsWithUpcomingAppointments from './pages/UpcomingAppointments'
 import SelectPatient from './pages/SearchPatient'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import SignUp from './pages/SignUp';
 import Doctors from './pages/doctors';
@@ -25,7 +23,6 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Navbar />
         <div className='Navbar'>
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
