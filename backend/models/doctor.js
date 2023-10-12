@@ -39,7 +39,7 @@ const doctorSchema = new Schema({
     }]
 });
 
-// const Doctor = mongoose.model('Doctor', doctorSchema);
+// const Doctor = mongoose.model('Docctor', doctorSchema);
 
 
 // const drJones = new Doctor({

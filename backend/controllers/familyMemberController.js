@@ -7,7 +7,7 @@ const addFamilyMember = async (req, res) => {
   try {
       // const familyMember = new FamilyMember(req.body);
       const familyMember = await FamilyMember.create(req.body); 
-      await familyMember.save();
+      // await familyMember.save();
       res.status(200).json(familyMember);
   } catch (error) {
       res.status(400).json({error: error.message});
