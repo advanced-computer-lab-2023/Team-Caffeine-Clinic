@@ -74,7 +74,16 @@ const viewDoctorApplication = async(req, res) => {
   }
 }
 
+const viewPatients = async(req, res) => {
+  try{
+    const patients = await Patient.find();
+    res.status(200).json(patients)
+  } catch(error){
+    res.status(400).json({error: "Error"})
+  }
+}
 
+//Delete a doctor from the system
 const deleteDoctor = async(req, res) => {
   const { id } = req.params
   
@@ -237,5 +246,6 @@ module.exports = {
     deleteDoctor,
     getHealthPacks,
     updateHealthPack,
+    viewPatients,
     deletePatient
 }

@@ -12,21 +12,27 @@ const {createAdmin,
     updateHealthPack,
     getHealthPacks,
     deletePatient,
+    viewPatients,
     createPlatPackage} = require('../controllers/adminController');
 
 
 const router = express.Router();
 
+//Admin routes
 router.get('/viewAdmins', getAdmins);
 router.get('/getAdmin/:id', getAdmin);
 router.post('/addAdmin', createAdmin);
 router.delete('/:id', deleteAdmin);
 
-
+//Doctor & Doctor application routes
 router.get('/viewDoctorApplications', viewDoctorApplication);
 router.delete('/deleteDoctor/:id', deleteDoctor);
-router.delete('/deletePatient/:id', deletePatient);
 
+//patient routes
+router.delete('/deletePatient/:id', deletePatient);
+router.get('/viewPatients',viewPatients);
+
+//Health package routes
 router.get('/healthPackages', getHealthPacks)
 router.post('/healthPackage/silverpackage', createSilverPackage);
 router.delete('/deleteHealthPackage/:id', deletehealthPackage);

@@ -102,6 +102,20 @@ form button {
   border-radius: 4px;
   cursor: pointer;
 }
+
+ button {
+  position: flex;
+  background: var(--primary);
+  border: 0;
+  color: #fff;
+  font-size: large;
+  margin: 10px;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
+  width: 400px;
+}
 div.error {
   padding: 10px;
   background: #ffefef;

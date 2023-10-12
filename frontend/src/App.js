@@ -4,6 +4,7 @@ import Home from "./pages/AdminHome";
 import DoctorAppHome from './pages/viewDoctorApps';
 import ViewDoctorHome from './pages/viewDoctors';
 import HPHome from './pages/viewHealthPacks';
+import ViewPatientHome from './pages/viewPatients';
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
         <Route
         path="/viewHealthPacks"
         element =  {<HPHome/>}
+          />
+        <Route
+        path="/viewPatients"
+        element =  {<ViewPatientHome/>}
           />
         </Routes>
         </div>  

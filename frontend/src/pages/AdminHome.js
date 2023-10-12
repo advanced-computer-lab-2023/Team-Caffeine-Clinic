@@ -6,6 +6,8 @@ const Home = () => {
     return (
         <div className= "home">
             <h2>Admin Home</h2>
+            <br />
+            <div>
             <Link to="/AdminHome">
                       <button>View admins</button>
                 </Link>
@@ -14,10 +16,14 @@ const Home = () => {
                 </Link>
             <Link to="/viewDoctors">
                       <button>View Doctors</button>
-                </Link>
+                      </Link>
             <Link to="/viewHealthPacks">
                       <button>View Health Packages</button>
                 </Link>
+            <Link to="/viewPatients">
+                      <button>View Patients</button>
+                </Link>
+            </div>
         </div>
     )
 }
