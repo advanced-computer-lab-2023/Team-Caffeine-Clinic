@@ -1,12 +1,5 @@
 const DoctorDetails = ({ doctor }) => {
 
-  const handleClick = async () => {
-    const response = await fetch('/api/Admin/deleteDoctor/' + doctor._id, {
-      method: 'DELETE'
-    })
-    const json = await response.json()
-}
-
     return (
       <div className="Admin-details">
         <h4></h4>
@@ -20,7 +13,6 @@ const DoctorDetails = ({ doctor }) => {
         <p><strong>Available Dates: </strong>{doctor.availableDates}</p>
         <p><strong>Patients: </strong>{doctor.patients}</p>
         <p>{doctor.createdAt}</p>
-        <span onClick={handleClick}>Delete</span>
       </div>
     )
   }
