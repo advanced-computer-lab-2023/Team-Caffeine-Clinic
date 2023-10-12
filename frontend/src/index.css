@@ -154,3 +154,17 @@ header a {
   z-index: 50;
   width: 900px;
 }
+
+.perscButton{
+  position: absolute;
+  right: 150px;
+  top: 50%;
+  width: 100px;
+  height: 50px;
+}
+
+.perscription{
+  margin-left: 200px;
+  z-index: 50;
+  width: 900px;
+}

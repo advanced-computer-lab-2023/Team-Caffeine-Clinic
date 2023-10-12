@@ -5,7 +5,7 @@ const Sidebar = () => {
     <div className="Sidebar">
       <Link to="/doctors">Doctors</Link>
       <Link to="/familyMembers">Family Members</Link>
-      <Link to="/Prescriptions">Prescriptions</Link>
+      <Link to="/Perscriptions">Perscriptions</Link>
     </div>
   )
 }
