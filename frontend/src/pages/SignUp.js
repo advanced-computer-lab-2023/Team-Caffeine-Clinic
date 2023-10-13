@@ -4,20 +4,6 @@ import { useEffect, useState} from 'react';
 
 import {Button, Form} from 'react-bootstrap'
 
-import {
-    MDBBtn,
-    MDBContainer,
-    MDBCard,
-    MDBCardBody,
-    MDBCardImage,
-    MDBRow,
-    MDBCol,
-    MDBInput,
-    MDBRadio,
-    MDBSelect
-  }
-  from 'mdb-react-ui-kit';
-
 const SignUp = () => {
     const current = new Date().toISOString().split("T")[0]
 

@@ -19,6 +19,7 @@ import Perscription from './pages/Perscriptions';
 import SinglePerscriptions from './pages/SinglePerscriptionDetails'
 import DoctorNavbar from './components/DoctorNavbar';
 import ApplyDoctor from './pages/ApplyDoctor'
+import Login from './pages/Login'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <div className='Navbar'>
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
+              <Route path="" element={<Login />} />
              
               <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />
@@ -37,7 +39,7 @@ function App() {
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
 
               {/* Ibra - Salah*/}
-              <Route path='' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
+              <Route path='/home' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
               <Route path='Perscriptions' element={<WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar>} />

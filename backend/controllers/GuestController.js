@@ -23,6 +23,7 @@ const loginAsPatient = async(req, res) => {
 
         if (user) {
             req.session.user = user;
+            console.log(req.session.user._id);
             res.status(200).send('Login successful');
           } else {
             res.status(401).send('Login failed');

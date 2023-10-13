@@ -25,7 +25,13 @@ const signUp = async(req, res) => {
 
 //View and Filter Perscriptions
 const viewFilterPerscriptions = async (req, res) => {
-    const patientID = req.query.patientID
+    const user = req.session.user
+
+    const patientID = user._id
+
+    //const patientID = user.username
+
+    console.log(patientID)
 
     const date = req.query.date;
     const doctor = req.query.doctor;
