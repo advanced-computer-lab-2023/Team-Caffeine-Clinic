@@ -7,7 +7,7 @@ const addFamilyMember = async (req, res) => {
 
   const user = req.session.user
 
-  const patientID = user._id
+  const patientID = user.id
 
   const {name, nationalID, age, gender, relation} = req.body
 
@@ -28,7 +28,7 @@ const getFamilyMembers = async (req, res) => {
 
   const user = req.session.user
 
-  const patientID = user._id
+  const patientID = user.id
 
   try {
       const familyMembers = await FamilyMember.find({patientID});

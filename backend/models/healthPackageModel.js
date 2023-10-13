@@ -6,17 +6,30 @@ const healthPackageSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  description: String,
-  servicesIncluded: String,
+  description: {
+    type: String
+  },
+  servicesIncluded: {
+    type: String
+  },
   basePrice: {
     type: Number,
     required: true,
   },
   discounts: {
-    doctorSession: Number, // Percentage discount on doctor's sessions
-    pharmacyMedicine: Number, // Percentage discount on pharmacy medicines
-    familySubscription: Number, // Percentage discount on family members' subscriptions
-  },
+    doctorSession: {
+      type: Number,
+      // required: true,
+    },
+    pharmacyMedicine: {
+      type: Number,
+      // required: true,
+    },
+    familySubscription: {
+      type: Number,
+      // required: true,
+    }
+  }
 });
 
 const HealthPackage = mongoose.model('HealthPackage', healthPackageSchema);

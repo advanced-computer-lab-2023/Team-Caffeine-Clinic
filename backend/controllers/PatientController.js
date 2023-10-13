@@ -33,9 +33,6 @@ const signUp = async(req, res) => {
 //     //const patientID = user.username
 
 
-//     const date = req.query.date;
-//     const doctor = req.query.doctor;
-//     const state = req.query.state
 
 //     let filter = {};
 
