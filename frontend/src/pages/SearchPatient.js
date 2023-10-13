@@ -7,13 +7,13 @@ const SelectPatient = () => {
 
   const fetchPatientData = async () => {
     try {
-      const storedUsername = localStorage.getItem('username');
-      if (!storedUsername) {
-        setError('No username found in session.');
-        return;
-      }
+      // const storedUsername = localStorage.getItem('username');
+      // if (!storedUsername) {
+      //   setError('No username found in session.');
+      //   return;
+      // }
       const response = await fetch(
-        `/searchmyPatients/?doctorUsername=${storedUsername}&patientUsername=${patientUsername}`
+        `/api/searchmyPatients/?patientUsername=${patientUsername}`
       );
       
       if (!response.ok) {

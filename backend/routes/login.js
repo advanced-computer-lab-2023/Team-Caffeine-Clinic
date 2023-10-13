@@ -4,9 +4,12 @@ const router = express.Router()
 
 //Controllers
 const {
-    loginAsPatient
+    loginAsPatient,
+    loginAsDoctor
 } = require('../controllers/GuestController')
 
-router.post('/login', loginAsPatient)
+router.post('/loginAsPatient', loginAsPatient)
+
+router.post('/loginAsDoctor', loginAsDoctor)
 
 module.exports = router

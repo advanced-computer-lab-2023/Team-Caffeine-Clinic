@@ -9,26 +9,39 @@ function LoginForm() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/login', {
+      const patientResponse = await fetch('/api/loginAsPatient', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username }),
       });
-
-      if (response.status === 200) {
-        // Login successful, navigate to the dashboard or another route
+  
+      if (patientResponse.status === 200) {
+        // Redirect to the patient dashboard
         navigate('/home');
       } else {
-        // Login failed
-        console.error('Login failed');
+        const doctorResponse = await fetch('/api/loginAsDoctor', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username }),
+        });
+  
+        if (doctorResponse.status === 200) {
+          // Redirect to the doctor dashboard
+          navigate('/seedoc');
+        } else {
+          // Login failed
+          console.error('Login failed');
+        }
       }
     } catch (error) {
       console.error('Login failed', error);
     }
   };
-
+  
   return (
     <div>
       <form onSubmit={handleLogin}>

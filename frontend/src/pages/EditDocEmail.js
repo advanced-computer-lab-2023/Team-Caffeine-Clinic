@@ -10,15 +10,15 @@ const UpdateEmail = () => {
 
   const updateEmail = async () => {
     try {
-      const storedUsername = localStorage.getItem('username'); // Retrieve username from localStorage
-      if (!storedUsername) {
-        setMessage('No username found in session.');
-        return;
-      }
+      // const storedUsername = localStorage.getItem('username'); // Retrieve username from localStorage
+      // if (!storedUsername) {
+      //   setMessage('No username found in session.');
+      //   return;
+      // }
 
       // Send a PATCH request to update the email
       const response = await fetch(
-        `/updateEmail?username=${storedUsername}&email=${newEmail}`, // Include email as a query parameter
+        `/api/updateEmail?email=${newEmail}`, // Include email as a query parameter
         {
           method: 'PATCH',
           headers: {

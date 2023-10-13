@@ -10,15 +10,15 @@ const UpdateAffiliation = () => {
 
   const updateAffiliation = async () => {
     try {
-      const storedUsername = localStorage.getItem('username'); // Retrieve username from localStorage
-      if (!storedUsername) {
-        setMessage('No username found in session.');
-        return;
-      }
+      // const storedUsername = localStorage.getItem('username'); // Retrieve username from localStorage
+      // if (!storedUsername) {
+      //   setMessage('No username found in session.');
+      //   return;
+      // }
 
       // Send a PATCH request to update the affiliation
       const response = await fetch(
-        `/updateDoctor?username=${storedUsername}&affiliation=${newAffiliation}`, // Include affiliation as a query parameter
+        `/api/updateDoctor?affiliation=${newAffiliation}`, // Include affiliation as a query parameter
         {
           method: 'PATCH',
           headers: {

@@ -74,7 +74,7 @@ app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
-app.use('/', doctorInfoRoutes)
+app.use('/api', doctorInfoRoutes)
 
 
 app.use((req, res, next) => {
