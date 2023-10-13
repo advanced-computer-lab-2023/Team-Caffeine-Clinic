@@ -18,7 +18,7 @@ const UpdateAffiliation = () => {
 
       // Send a PATCH request to update the affiliation
       const response = await fetch(
-        `/api/updateDoctor?affiliation=${newAffiliation}`, // Include affiliation as a query parameter
+        `/api/doctorInfo/updateDoctor?affiliation=${newAffiliation}`, // Include affiliation as a query parameter
         {
           method: 'PATCH',
           headers: {

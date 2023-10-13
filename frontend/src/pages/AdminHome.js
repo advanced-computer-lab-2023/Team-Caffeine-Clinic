@@ -8,7 +8,7 @@ const Home = () => {
             <h2>Admin Home</h2>
             <br />
             <div>
-            <Link to="/AdminHome">
+            <Link to="/ViewAdmin">
                       <button>View admins</button>
                 </Link>
             <Link to="/viewDoctorApps">
@@ -20,7 +20,7 @@ const Home = () => {
             <Link to="/viewHealthPacks">
                       <button>View Health Packages</button>
                 </Link>
-            <Link to="/viewPatients">
+            <Link to="/viewPatientsAdmin">
                       <button>View Patients</button>
                 </Link>
             </div>

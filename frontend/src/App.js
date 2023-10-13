@@ -7,7 +7,7 @@ import Navbar from './components/Navbar';
 import EditMyDoc from './pages/EditDocRate';
 import UpdateEmail from './pages/EditDocEmail';
 import UpdateAffiliation from './pages/EditDocHos';
-import MyPatients from './pages/ViewPatients';
+import MyPatients from './pages/viewPatients';
 import UsernameProvider  from './pages/UsernameContext'; // Import the context
 import PatientsWithUpcomingAppointments from './pages/UpcomingAppointments'
 import SelectPatient from './pages/SearchPatient'
@@ -76,7 +76,7 @@ function App() {
               element =  {<HPHome/>}
                 />
               <Route
-              path="/viewPatients"
+              path="/viewPatientsAdmin"
               element =  {<ViewPatientHome/>}
                 />
             </Routes>

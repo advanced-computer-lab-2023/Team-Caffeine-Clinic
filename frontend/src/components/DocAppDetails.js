@@ -42,7 +42,7 @@ const handleClick2 = async () => {
         <p><strong>Available Dates: </strong>{Appl.availableDates}</p>
         <p>{Appl.createdAt}</p>
         <span onClick={handleClick}>Approve</span>
-        <span onClick2={handleClick2}>Reject</span>
+        <span onClick={handleClick2}>Reject</span>
       </div>
     )
   }

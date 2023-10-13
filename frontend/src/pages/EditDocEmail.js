@@ -18,7 +18,7 @@ const UpdateEmail = () => {
 
       // Send a PATCH request to update the email
       const response = await fetch(
-        `/api/updateEmail?email=${newEmail}`, // Include email as a query parameter
+        `/api/doctorInfo/updateEmail?email=${newEmail}`, // Include email as a query parameter
         {
           method: 'PATCH',
           headers: {

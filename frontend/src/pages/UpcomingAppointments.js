@@ -16,7 +16,7 @@ const PatientsWithUpcomingAppointments = () => {
     // Make an API request to fetch patients with upcoming appointments
     const fetchPatientsWithAppointments = async () => {
       try {
-        const response = await fetch(`/api/patientsWithUpcomingAppointments`);
+        const response = await fetch(`/api/doctorInfo/patientsWithUpcomingAppointments`);
         if (!response.ok) {
           throw new Error('Failed to fetch patients with upcoming appointments');
         }

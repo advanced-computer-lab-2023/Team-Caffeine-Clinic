@@ -6,6 +6,8 @@ const Patient = require('../models/Patient')
 
 const Doctor = require('../models/doctor')
 
+const Admin = require('../models/admin')
+
 //Apply as a Doctor
 const applyDoctor = async(req, res) => {
     const {username, password, email, name, speciality, rate, affiliation, education, availableDates} = req.body
@@ -42,6 +44,26 @@ const loginAsDoctor = async(req, res) => {
 
     try {
         const user = await Doctor.findOne({username: username})
+
+        if (user) {
+            req.session.user = user;
+            console.log(req.session.user._id);
+            res.status(200).send('Login successful');
+          } else {
+            res.status(401).send('Login failed');
+          }
+
+
+    } catch (error) {
+        res.status(401).send(error);
+    }
+}
+
+const loginAsAdmin = async(req, res) => {
+    const {username} = req.body
+
+    try {
+        const user = await Admin.findOne({Username: username})
 
         if (user) {
             req.session.user = user;
@@ -95,5 +117,6 @@ const loginAsDoctor = async(req, res) => {
 module.exports = {
     applyDoctor,
     loginAsPatient,
-    loginAsDoctor
+    loginAsDoctor,
+    loginAsAdmin
 }

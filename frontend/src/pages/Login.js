@@ -33,8 +33,21 @@ function LoginForm() {
           // Redirect to the doctor dashboard
           navigate('/seedoc');
         } else {
+          const adminResponse = await fetch('/api/loginAsAdmin', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username }),
+          });
+
+          if (adminResponse.status === 200) {
+            // Redirect to the doctor dashboard
+            navigate('/AdminHome');
+          } else{
           // Login failed
           console.error('Login failed');
+          }
         }
       }
     } catch (error) {
