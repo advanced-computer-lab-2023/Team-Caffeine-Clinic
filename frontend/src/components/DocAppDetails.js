@@ -22,6 +22,13 @@ const DocAppDetails = ({ Appl }) => {
     const json = await response.json()
 }
 
+const handleClick2 = async () => {
+  const response = await fetch('/api/Admin/deleteApp/' + Appl._id, {
+    method: 'DELETE'
+  })
+  const json = await response.json()
+}
+
     return (
       <div className="Admin-details">
         <h4></h4>
@@ -35,6 +42,7 @@ const DocAppDetails = ({ Appl }) => {
         <p><strong>Available Dates: </strong>{Appl.availableDates}</p>
         <p>{Appl.createdAt}</p>
         <span onClick={handleClick}>Approve</span>
+        <span onClick2={handleClick2}>Reject</span>
       </div>
     )
   }
