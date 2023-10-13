@@ -27,7 +27,7 @@ const signUp = async(req, res) => {
 const viewFilterPerscriptions = async (req, res) => {
     const user = req.session.user
 
-    const patientID = user._id
+    const patientID = await user._id
 
     //const patientID = user.username
 

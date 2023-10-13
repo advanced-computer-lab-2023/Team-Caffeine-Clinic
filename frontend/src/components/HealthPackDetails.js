@@ -19,6 +19,7 @@ const HealthPackdetails = ({ hp }) => {
         <span onClick={handleClick}>Delete</span>
         {/* <span onClick={handleClick}>Update</span> */}
       </div>
+
     )
   }
   

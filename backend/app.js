@@ -15,6 +15,8 @@ const doctorsRoute = require('./routes/doctors');
 const adminsRoute = require('./routes/Admin');
 const doctorInfoRoutes = require('./routes/doctorInfo');
 const login  = require('./routes/login');
+const healthPackageController = require('./controllers/healthPackagesController');
+
 // const cors = require('cors');
 
 
@@ -103,6 +105,9 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('Welcome back, user') 
 })
+
+app.get('/api/healthPackages', healthPackageController.getHealthPackages);
+
 
 
 // catch 404 and forward to error handler
