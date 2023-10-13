@@ -13,7 +13,7 @@ const SelectPatient = () => {
       //   return;
       // }
       const response = await fetch(
-        `/api/searchmyPatients/?patientUsername=${patientUsername}`
+        `/api/doctorInfo/searchmyPatients/?patientUsername=${patientUsername}`
       );
       
       if (!response.ok) {

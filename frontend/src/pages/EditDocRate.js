@@ -18,7 +18,7 @@ const UpdateRate = () => {
 
       // Send a PATCH request to update the rate
       const response = await fetch(
-        `/api/updateRate?rate=${newRate}`, // Include rate as a query parameter
+        `/api/doctorInfo/updateRate?rate=${newRate}`, // Include rate as a query parameter
         {
           method: 'PATCH',
           headers: {

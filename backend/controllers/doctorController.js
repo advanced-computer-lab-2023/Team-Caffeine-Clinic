@@ -22,16 +22,19 @@ const getDoctors = async (req, res) => {
   
 };
 
-// Get doctor details by ID
+// Get doctor details by username
 const getSingleDoctor = async (req, res) => {
   try {
-      const doctor = await Doctor.findById(req.params.doctorId);
+    
+      const doctor = await Doctor.findOne({ username: req.params.doctorId });
+      
       if (!doctor) return res.status(404).send("Doctor not found");
       res.status(200).send(doctor);
   } catch (error) {
       res.status(500).send(error);
   }
 };
+
 
 
 module.exports = {

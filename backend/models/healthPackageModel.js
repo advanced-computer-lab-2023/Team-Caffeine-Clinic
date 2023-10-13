@@ -7,7 +7,7 @@ const healthPackageSchema = new mongoose.Schema({
     unique: true
   },
   description: String,
-  servicesIncluded: [String],
+  servicesIncluded: String,
   basePrice: {
     type: Number,
     required: true,

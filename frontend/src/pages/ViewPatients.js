@@ -40,7 +40,7 @@ const MyPatients = () => {
     
   //   return;
   // }
-        const response = await fetch(`/api/myPatients/`); // You should replace with your actual API endpoint
+        const response = await fetch(`/api/doctorInfo/myPatients/`); // You should replace with your actual API endpoint
 
         if (!response.ok) {
           throw new Error('Failed to fetch patients');

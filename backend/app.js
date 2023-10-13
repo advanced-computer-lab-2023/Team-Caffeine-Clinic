@@ -74,7 +74,7 @@ app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
-app.use('/api', doctorInfoRoutes)
+app.use('/api/doctorInfo', doctorInfoRoutes)
 
 
 app.use((req, res, next) => {
@@ -82,7 +82,7 @@ app.use((req, res, next) => {
   next()
 });
 
-// // catch 404 and forward to error handler
+// // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   next(createError(404));
 // });

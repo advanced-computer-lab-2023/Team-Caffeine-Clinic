@@ -1,7 +1,14 @@
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
+
 const DoctorDetails = ({ doctor }) => {
   return (
     <div className="doctor-details">
-      <div className="name">{doctor.name}</div>
+      <div className="name">
+        <Link to={`/doctor/getSingleDoctor/${doctor.username}`} className="doctor-link">
+          {doctor.name}
+        </Link>
+      </div>
       <div className="details"><strong>speciality: </strong>{doctor.speciality}</div>
       <div className="details"><strong>rate: </strong>{doctor.rate}</div>
       <div className="details"><strong>affiliation: </strong>{doctor.affiliation}</div>

@@ -10,7 +10,7 @@ localStorage.setItem('username', username);
   const handleSearch = async () => {
     try {
       console.log(username);
-      const response = await fetch(`/getDoctorByusername?userName=${username}`);
+      const response = await fetch(`/api/doctorInfo/getDoctorByusername?userName=${username}`);
       if (!response.ok) {
         throw new Error('Doctor not found');
       }

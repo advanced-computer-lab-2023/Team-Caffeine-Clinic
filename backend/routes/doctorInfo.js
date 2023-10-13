@@ -15,7 +15,7 @@ const {
     getAllHealthRecords,
     addPatientToDoctor,
     myPatients
-
+    
 } = require('../controllers/doctorInfocontroller')
 
 const router = express.Router()
