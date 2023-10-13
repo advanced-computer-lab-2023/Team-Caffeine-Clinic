@@ -36,7 +36,7 @@ var app = express();
 // Configure the session
 app.use(
   session({
-    secret: process.env.SESSION_SECRET, // A secret key for session encryption
+    secret: "anything for now", // A secret key for session encryption
     resave: false, // Do not save session on every request
     saveUninitialized: true, // Save new sessions
     cookie: { maxAge: 3600000 }, // Session duration in milliseconds (1 hour)
