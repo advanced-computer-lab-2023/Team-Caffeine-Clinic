@@ -31,7 +31,6 @@ const viewFilterPerscriptions = async (req, res) => {
 
     //const patientID = user.username
 
-    console.log(patientID)
 
     const date = req.query.date;
     const doctor = req.query.doctor;
