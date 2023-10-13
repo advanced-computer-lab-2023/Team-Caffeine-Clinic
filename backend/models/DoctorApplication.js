@@ -13,6 +13,11 @@ const applicationSchema = new Schema({
         required: true
     },
 
+    email: {
+        type: String,
+        required:true
+    },
+
     name: {
         type: String,
         required: true

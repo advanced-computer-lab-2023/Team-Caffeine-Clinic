@@ -3,6 +3,7 @@ require('dotenv').config()
 var express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 
 //Import Routes
 
@@ -12,13 +13,16 @@ const Perscriptions = require('./routes/Perscriptions');
 const familyMembersRoute = require('./routes/familyMembers');
 const doctorsRoute = require('./routes/doctors');
 const adminsRoute = require('./routes/Admin');
-const doctorInfoRoutes = require('./routes/doctorInfo')
+const doctorInfoRoutes = require('./routes/doctorInfo');
+const login  = require('./routes/login');
+// const cors = require('cors');
 
 
 
 var app = express();
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+// app.use(cors());
 
 
 // var createError = require('http-errors');
@@ -27,10 +31,17 @@ app.use(bodyParser.json());
 // var logger = require('morgan');
 // mongoose.connect('mongodb://localhost/virtual_clinic', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// const cors = require('cors');
 
 
-
+// Configure the session
+app.use(
+  session({
+    secret: "anything for now", // A secret key for session encryption
+    resave: false, // Do not save session on every request
+    saveUninitialized: true, // Save new sessions
+    cookie: { maxAge: 3600000 }, // Session duration in milliseconds (1 hour)
+  })
+);
 
 
 
@@ -53,17 +64,17 @@ app.use(bodyParser.json());
 // app.use('/users', usersRouter);
 
 
-// app.use(cors());
 
 
 // middleware
 app.use(express.json());
-app.use('/api/signUp', signUp)
+app.use('/api', login)
+app.use('/api', signUp)
 app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
-app.use('/', doctorInfoRoutes)
+app.use('/api', doctorInfoRoutes)
 
 
 app.use((req, res, next) => {
@@ -95,20 +106,20 @@ app.get('/', (req, res) => {
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 //connect to mongoDB
 mongoose.connect(process.env.MONGO_URI)

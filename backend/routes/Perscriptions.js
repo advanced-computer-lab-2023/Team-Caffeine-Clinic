@@ -4,10 +4,20 @@ const router = express.Router()
 
 //Controllers
 const {
-    viewFilterPerscriptions
+    viewFilterPerscriptions, getSinglePerscription
 } = require('../controllers/PatientController')
+
+const {
+    createPersc, getDoctorName
+} = require('../controllers/PerscriptionsController')
 
 //View and Filter All Perscriptions
 router.get('/', viewFilterPerscriptions)
+
+router.get('/singlePersc/:perscID', getSinglePerscription)
+
+router.post('/create', createPersc)
+
+router.get('/doctor/:id', getDoctorName)
 
 module.exports = router

@@ -5,7 +5,6 @@ const Doctor = require('../models/doctor'); // Import your Doctor model
 const Patient = require('../models/Patient'); // Import your Patient model
 const Appointment = require('../models/appointment');
 
-
 //add patients to a doc using the doc username so we can use it whenever we create an appointment 
 const addPatientToDoctor = async(req, res) => {
     try {
@@ -28,9 +27,6 @@ const addPatientToDoctor = async(req, res) => {
         // Add the patient's username to the doctor's list of patients if it is not there
         if (!doctor.patients.includes(patient.username)) {
             doctor.patients.push(patient.username);
-        } else {
-            return res.status(404).json({ message: 'Patient is already in your patinets List' });
-
         }
         await doctor.save();
 
@@ -44,7 +40,7 @@ const addPatientToDoctor = async(req, res) => {
 //We changed the app schema to ref the username of both the pat and the doc so if we can change it by ID it would be better
 const createAppointment = async(req, res) => {
     try {
-        const { dusername, pusername, appointmentDate } = req.body;
+        const { dusername, pusername, appointmentDate, status } = req.body;
 
         // Find the doctor and patient by username
         const doctor = await Doctor.findOne({ username: dusername });
@@ -58,6 +54,7 @@ const createAppointment = async(req, res) => {
             doctor: doctor.username,
             patient: patient.username,
             appointmentDate: new Date(appointmentDate),
+            status: status
         });
 
         if (existingAppointment) {
@@ -67,7 +64,8 @@ const createAppointment = async(req, res) => {
         const appointment = new Appointment({
             doctor: doctor.username, // Reference the doctor by username
             patient: patient.username, // Reference the patient by username
-            appointmentDate: new Date(appointmentDate), // Convert the appointmentDate to a Date object
+            appointmentDate: new Date(appointmentDate),
+            status: status // Convert the appointmentDate to a Date object
         });
 
         await appointment.save();
@@ -140,6 +138,7 @@ const createAppointment = async(req, res) => {
 const createDoctor = async(req, res) => {
     const {
         username,
+        password,
         name,
         speciality,
         rate,
@@ -149,10 +148,10 @@ const createDoctor = async(req, res) => {
         availableDates,
         patients,
     } = req.body;
-
     try {
         const doctor = new Doctor({
             username,
+            password,
             name,
             speciality,
             rate,
@@ -165,6 +164,7 @@ const createDoctor = async(req, res) => {
 
         const existingdoctor = await Doctor.findOne({
             username,
+            password,
             name,
             speciality,
             rate,
@@ -190,7 +190,7 @@ const getDoctorByusername = async(req, res) => {
         try {
 
             // Use Mongoose to find the doctor by username
-            const doctor = await DoctorInfo.find({ username: doctoruserName })
+            const doctor = await Doctor.find({ username: doctoruserName })
 
             if (!doctor) {
                 // If no doctor with the given username is found, return a 404 Not Found response
@@ -203,11 +203,14 @@ const getDoctorByusername = async(req, res) => {
             // Handle any errors that occur during the database query
             res.status(500).send(error);
         }
-    }
-    //update Rate
+}
+//update Rate   doneee
 const updateRate = async(req, res) => {
-    const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
-    const { rate } = req.body; // Change from email to rate
+    const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+
+    const doctorUsername = user.username
+
+    const rate  = req.query.rate; // Change from email to rate
 
     try {
         // Use Mongoose to find the doctor by username
@@ -233,10 +236,13 @@ const updateRate = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-//update doctor email
+//update doctor email   doneeee
 const updateEmail = async(req, res) => {
-    const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
-    const { email } = req.body; // Change from affiliation to email
+    const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+
+    const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
+    
+    const email  = req.query.email; // Change from affiliation to email
 
     try {
         // Use Mongoose to find the doctor by username
@@ -262,11 +268,13 @@ const updateEmail = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-///update hospital
+///update hospital   doneeee
 const updateDoctorProfile = async(req, res) => {
-    const doctorUsername = req.query.username; // Assuming you pass the doctor's username as a query parameter
-    console.log(doctorUsername)
-    const { affiliation } = req.body;
+    const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+
+    const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
+    
+    const  affiliation = req.query.affiliation;
 
     try {
         // Use Mongoose to find the doctor by username
@@ -291,62 +299,78 @@ const updateDoctorProfile = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
-
 // Create a route to select a patient by their name  #req:34
 const selectpatient = async(req, res) => {
-    try {
-        const patientname = req.query.name; // Get the patient name from the URL parameter
+        try {
+            const patientname = req.query.name;
+             // Get the patient name from the URL parameter
 
-        // Retrieve the patient details by their name
-        const selectedPatient = await Patient.findOne({ name: patientname })
-        console.log(selectedPatient)
+            // Retrieve the patient details by their name
+            const selectedPatient = await Patient.findOne({ username: patientname })
 
-        if (!selectedPatient) {
-            return res.status(404).json({ error: 'Patient not found.' });
+            if (!selectedPatient) {
+                return res.status(404).json({ error: 'Patient not found.' });
+            }
+
+            res.json({ patient: selectedPatient });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while selecting the patient.' });
         }
-
-        res.json({ patient: selectedPatient });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred while selecting the patient.' });
-    }
 }
 // Create a route to filter patients by upcoming appointments by doc username #req:35
-const patientsWithUpcomingAppointments = async(req, res) => {
+const patientsWithUpcomingAppointments = async (req, res) => {
     try {
-        const { doctoruserName } = req.body; // Assuming you have a user authentication system
+        const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+
+        const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
+        
         const currentDate = new Date();
 
-        // Find upcoming appointments for the doctor
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: doctorUserName });
+
+        if (!doctor) {
+            return res.status(404).json({ error: 'Doctor not found.' });
+        }
+
+        // Get the patient usernames associated with the doctor
+        const patientUsernames = doctor.patients;
+
+        // Find upcoming appointments for the specific doctor and patients
         const upcomingAppointments = await Appointment.find({
-            doctor: doctoruserName,
-            appointmentDate: { $gte: currentDate },
+            doctor: doctorUserName,
+            patient: { $in: patientUsernames },
+            appointmentDate: { $gte: currentDate }
         });
-        const appointmentData = upcomingAppointments.map((appointment) => ({
-            // Assuming you have a patient name field in your Appointment model
-            appointmentDate: appointment.appointmentDate,
+
+        // Create an array of patient objects with names and appointment dates
+        const patientData = await Promise.all(patientUsernames.map(async (patientUsername) => {
+            const appointment = upcomingAppointments.find((appointment) => appointment.patient === patientUsername);
+            const patient = await Patient.findOne({ username: patientUsername });
+            return {
+                name: patient.name,
+                appointmentDate: appointment ? appointment.appointmentDate : null
+            };
         }));
-        // // Extract patient usernames from upcoming appointments
 
-        const patientusernames = upcomingAppointments.map((appointment) => appointment.patient);
+        // Filter out patients with no appointment date
+        const filteredPatientData = patientData.filter((patient) => patient.appointmentDate !== null);
 
-        const patientsWithUpcomingAppointments = await Patient.find({ username: { $in: patientusernames } }).select('name');
+        // Sort filteredPatientData based on upcoming appointment dates
+        filteredPatientData.sort((a, b) => a.appointmentDate - b.appointmentDate);
 
-        // // Extract the names from the patients
-        const patientNames = patientsWithUpcomingAppointments.map((patient) => patient.name);
-
-        res.json({ patientNames, appointmentData });
-        // // res.json({ patients: patientsWithUpcomingAppointments.mongoose.name });
+        res.json(filteredPatientData);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while filtering patients with upcoming appointments.' });
     }
-}
-// Create a route to view patient information and health records#req:25
-const getAllHealthRecords = async (req, res) => {
+};
+ // Create a route to view patient information and health records#req:25
+const getAllHealthRecords = async(req, res) => {
     try {
         const { doctorUsername } = req.body;
-        
+
         // Find the doctor by username
         const doctor = await Doctor.findOne({ username: doctorUsername });
 
@@ -376,8 +400,11 @@ const getAllHealthRecords = async (req, res) => {
 };
 const myPatients = async(req, res) => {
     try {
-        const { doctorUsername } = req.body;
+        const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+
+        const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
         
+
         // Find the doctor by username
         const doctor = await Doctor.findOne({ username: doctorUsername });
 
@@ -399,8 +426,45 @@ const myPatients = async(req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching the list of patients.' });
     }
 };
+const searchmyPatients = async (req, res) => {
+    try {
+        const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+
+        const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
+        
+        const patientUsername = req.query.patientUsername;
+
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: doctorUsername });
+
+        if (!doctor) {
+            return res.status(400).json({ message: 'Doctor not found' });
+        }
+
+        // Check if the patient is associated with the doctor
+        if (!doctor.patients.includes(patientUsername)) {
+            return res.status(400).json({ error: 'Patient is not enrolled with this doctor' });
+        }
+
+        // You can retrieve patient data from the Patient model here
+        // Replace 'PatientModel' with your actual Patient model
+        const patient = await Patient.findOne({ username: patientUsername });
+
+        if (!patient) {
+            return res.status(400).json({ error: 'Patient not found' });
+        }
+
+        // Return patient data
+      return  res.status(200).json({ patient });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching the patient data.' });
+    }
+};
 module.exports = {
     getAllHealthRecords,
+    searchmyPatients,
     patientsWithUpcomingAppointments,
     getDoctorByusername,
     updateDoctorProfile,

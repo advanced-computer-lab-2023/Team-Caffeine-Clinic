@@ -8,18 +8,30 @@ const Perscriptions = require('../models/Perscriptions');
 const signUp = async(req, res) => {
     const {username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation} = req.body
 
-    const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation}
+    const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
 
-    const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
 
-    await patient.save()
+    try{
+        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
 
-    res.status(200).json(patient)
+        await patient.save()
+
+        res.status(200).json(patient)
+    } catch(error){
+        console.log(error);
+        res.status(400).json(error)
+    }
 }
 
 //View and Filter Perscriptions
 const viewFilterPerscriptions = async (req, res) => {
-    const patientID = req.body
+    const user = req.session.user
+
+    const patientID = user._id
+
+    //const patientID = user.username
+
+    console.log(patientID)
 
     const date = req.query.date;
     const doctor = req.query.doctor;
@@ -28,8 +40,8 @@ const viewFilterPerscriptions = async (req, res) => {
     let filter = {};
 
     if (patientID) filter.patientID = patientID
-    if (doctor) filter.doctor = new RegExp(doctor, 'i'); // Case-insensitive regex search
-    if (date) filter.date = date;
+    if (doctor) filter.doctorID = doctor // Case-insensitive regex search
+    if (date) filter.date_of_perscription = date;
     if (state) filter.state = state
 
     try {
@@ -40,7 +52,21 @@ const viewFilterPerscriptions = async (req, res) => {
     }
 }
 
+const getSinglePerscription = async(req, res) => {
+    const _id = req.params.perscID
+
+    console.log(_id);
+
+    try {
+        const perscription = await Perscriptions.findById(_id)
+        res.status(200).json(perscription)
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
 module.exports = {
     signUp,
-    viewFilterPerscriptions
+    viewFilterPerscriptions,
+    getSinglePerscription
 }

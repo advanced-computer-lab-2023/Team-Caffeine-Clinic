@@ -1,0 +1,29 @@
+/* Navbar.css */
+
+nav {
+    background-color: #007bff; /* Navbar background color */
+    padding: 10px 0;
+    color: #fff; /* Text color */
+  }
+  
+  .container {
+    max-width: 800px; /* Maximum width for content */
+    margin: 0 auto; /* Center the content horizontally */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin: 0;
+    text-decoration: none;
+    color: #fff; /* Text color for the title */
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: #fff; /* Text color for links */
+    margin-left: 20px; /* Spacing between links */
+  }
+  
