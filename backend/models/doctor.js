@@ -9,6 +9,10 @@ const doctorSchema = new Schema({
         type: String,
         required: true
     },
+    password: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -35,7 +39,7 @@ const doctorSchema = new Schema({
     },
     patients: [{
         type: String, 
-        ref: 'Patient' 
+        ref: 'Patient'
     }]
 });
 

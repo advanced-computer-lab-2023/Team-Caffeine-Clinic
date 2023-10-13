@@ -3,6 +3,7 @@ require('dotenv').config()
 var express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 
 //Import Routes
 
@@ -12,7 +13,8 @@ const Perscriptions = require('./routes/Perscriptions');
 const familyMembersRoute = require('./routes/familyMembers');
 const doctorsRoute = require('./routes/doctors');
 const adminsRoute = require('./routes/Admin');
-const doctorInfoRoutes = require('./routes/doctorInfo')
+const doctorInfoRoutes = require('./routes/doctorInfo');
+const login  = require('./routes/login');
 // const cors = require('cors');
 
 
@@ -31,7 +33,15 @@ var app = express();
 
 
 
-
+// Configure the session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, // A secret key for session encryption
+    resave: false, // Do not save session on every request
+    saveUninitialized: true, // Save new sessions
+    cookie: { maxAge: 3600000 }, // Session duration in milliseconds (1 hour)
+  })
+);
 
 
 
@@ -58,6 +68,7 @@ var app = express();
 
 // middleware
 app.use(express.json());
+app.use('/api', login)
 app.use('/api', signUp)
 app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)

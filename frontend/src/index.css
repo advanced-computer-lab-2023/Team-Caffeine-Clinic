@@ -195,3 +195,7 @@ header a {
   z-index: 50;
   width: 900px;
 }
+
+.message{
+  color: green;
+}

@@ -18,6 +18,7 @@ import FamilyMembers from './pages/familyMembers';
 import Perscription from './pages/Perscriptions';
 import SinglePerscriptions from './pages/SinglePerscriptionDetails'
 import DoctorNavbar from './components/DoctorNavbar';
+import ApplyDoctor from './pages/ApplyDoctor'
 
 function App() {
   return (
@@ -41,7 +42,8 @@ function App() {
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
               <Route path='Perscriptions' element={<WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar>} />
               <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar>} />
-              <Route path='/signup' element={<SignUp />} />
+              <Route path='signup' element={<SignUp />} />
+              <Route path='doctorApplication' element={<ApplyDoctor />} />
 
             </Routes>
           </UsernameProvider>

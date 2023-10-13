@@ -4,8 +4,24 @@ import { useEffect, useState} from 'react';
 
 import {Button, Form} from 'react-bootstrap'
 
+import {
+    MDBBtn,
+    MDBContainer,
+    MDBCard,
+    MDBCardBody,
+    MDBCardImage,
+    MDBRow,
+    MDBCol,
+    MDBInput,
+    MDBRadio,
+    MDBSelect
+  }
+  from 'mdb-react-ui-kit';
+
 const SignUp = () => {
     const current = new Date().toISOString().split("T")[0]
+
+    const [message, setMessage] = useState('')
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -42,7 +58,6 @@ const SignUp = () => {
         const json = await response.json()
 
         if(!response.ok){
-            setUsername('')
             console.log(name, ERelation);
             setError(json.error)
             console.log(error);
@@ -50,14 +65,28 @@ const SignUp = () => {
 
         if(response.ok){
             setUsername('')
+            setPassword('')
+            setName('')
+            setEmail('')
+            setDob('')
+            setGender('')
+            setMobile('')
+            setEname('')
+            setEMobile('')
+            setERelation('')
             setError(null)
             console.log("Patient Created", json[0]);
+            setMessage("Patient Created Successfuly")
         }
     }
 
     return(
         <header>
             <h1>Sign Up</h1>
+            <br />
+            <div className="message">
+                <h6>{message}</h6>
+            </div>
             <br /><br />
             <div className="signUp">
                 <form className="createPatient" onSubmit={register}>

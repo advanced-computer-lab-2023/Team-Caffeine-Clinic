@@ -10,13 +10,15 @@ const signUp = async(req, res) => {
 
     const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
 
+
     try{
-        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact,health_records})
+        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
 
         await patient.save()
 
         res.status(200).json(patient)
     } catch(error){
+        console.log(error);
         res.status(400).json(error)
     }
 }
