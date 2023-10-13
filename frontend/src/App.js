@@ -1,3 +1,4 @@
+
 // App.js
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -20,6 +21,12 @@ import SinglePerscriptions from './pages/SinglePerscriptionDetails'
 import DoctorNavbar from './components/DoctorNavbar';
 import ApplyDoctor from './pages/ApplyDoctor'
 import Login from './pages/Login'
+import ViewAdmin from "./pages/ViewAdmins"
+import AdminHome from "./pages/AdminHome";
+import DoctorAppHome from './pages/viewDoctorApps';
+import ViewDoctorHome from './pages/viewDoctors';
+import HPHome from './pages/viewHealthPacks';
+import ViewPatientHome from './pages/viewPatientsAdmin';
 
 function App() {
   return (
@@ -38,7 +45,7 @@ function App() {
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><PatientsWithUpcomingAppointments /></WithDoctorNavbar>} />
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
 
-              {/* Ibra - Salah*/}
+              {/* Ibra - Salah */}
               <Route path='home' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
@@ -47,6 +54,31 @@ function App() {
               <Route path='signup' element={<SignUp />} />
               <Route path='doctorApplication' element={<ApplyDoctor />} />
 
+              {/* Mo2 - Yas */}
+              <Route
+              path="/AdminHome"
+              element =  {<AdminHome/>}
+              />
+              <Route
+              path="/ViewAdmin"
+              element =  {<ViewAdmin/>}
+                />
+              <Route
+              path="/viewDoctorApps"
+              element =  {<DoctorAppHome/>}
+                />
+              <Route
+              path="/viewDoctors"
+              element =  {<ViewDoctorHome/>}
+                />
+              <Route
+              path="/viewHealthPacks"
+              element =  {<HPHome/>}
+                />
+              <Route
+              path="/viewPatients"
+              element =  {<ViewPatientHome/>}
+                />
             </Routes>
           </UsernameProvider>
         </div>

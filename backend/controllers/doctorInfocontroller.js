@@ -136,6 +136,7 @@ const createAppointment = async(req, res) => {
 // };
 // Create a new doctor
 const createDoctor = async(req, res) => {
+
     const {
         username,
         password,
@@ -143,8 +144,8 @@ const createDoctor = async(req, res) => {
         speciality,
         rate,
         affiliation,
-        education,
         email, // Add the email field to the request body
+        education,
         availableDates,
         patients,
     } = req.body;

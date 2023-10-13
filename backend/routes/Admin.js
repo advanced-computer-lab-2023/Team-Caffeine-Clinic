@@ -7,30 +7,42 @@ const {createAdmin,
     viewDoctorApplication,
     createSilverPackage,
     deletehealthPackage,
+    deleteDoctor,
     createGoldPackage,
     updateHealthPack,
+    getHealthPacks,
+    deletePatient,
+    viewPatients,
+    deleteDocApp,
+    createHealthPackage,
     createPlatPackage} = require('../controllers/adminController');
 
 
 const router = express.Router();
 
-router.get('/', getAdmins);
-
-router.get('/:id', getAdmin);
-
-router.post('/', createAdmin);
-
+//Admin routes
+router.get('/viewAdmins', getAdmins);
+router.get('/getAdmin/:id', getAdmin);
+router.post('/addAdmin', createAdmin);
 router.delete('/:id', deleteAdmin);
 
+//Doctor & Doctor application routes
+router.delete('/deleteApp/:id',deleteDocApp);
 router.get('/viewDoctorApplications', viewDoctorApplication);
+router.delete('/deleteDoctor/:id', deleteDoctor);
 
+//patient routes
+router.delete('/deletePatient/:id', deletePatient);
+router.get('/viewPatients',viewPatients);
+
+//Health package routes
+router.post('/createHealthPackage', createHealthPackage);
+router.get('/healthPackages', getHealthPacks)
 router.post('/healthPackage/silverpackage', createSilverPackage);
+router.delete('/deleteHealthPackage/:id', deletehealthPackage);
 router.post('/healthPackage/goldpackage', createGoldPackage);
 router.post('/healthPackage/platinumpackage', createPlatPackage);
-router.delete('/healthPackage/:id', deletehealthPackage);
-
-// router.patch('/healthPackage/:id', updateHealthPack); 
-
+router.patch('/updateHealthPackage/:id', updateHealthPack); 
 
 
 
