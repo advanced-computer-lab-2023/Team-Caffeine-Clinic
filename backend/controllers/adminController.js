@@ -142,12 +142,14 @@ const deletePatient = async(req, res) => {
 
 const createHealthPackage = async (req, res) => {
   const {name,
-        description,servicesIncluded,
+        description,
+        servicesIncluded,
         basePrice,
         discounts,
         } = req.body;
   try {
       const hp = await HealthPackage.create({name,description,servicesIncluded,basePrice,discounts})
+      console.log({name,description,servicesIncluded,basePrice,discounts});
       res.status(200).json(hp)
   }
   catch(error){
@@ -174,7 +176,7 @@ const getHealthPacks = async(req, res) => {
     const silverPackage = await HealthPackage.create({
         name: 'Silver Package',
         description: 'Patient pays 3600 LE per year',
-        servicesIncluded: [],
+        servicesIncluded: '',
         basePrice: 3600,
         discounts: {
           doctorSession: 0.4, // 40% discount on doctor's sessions
@@ -195,7 +197,7 @@ const getHealthPacks = async(req, res) => {
     const goldPackage = await HealthPackage.create({
         name: 'Gold Package',
         description: 'Patient pays 6000 LE per year',
-        servicesIncluded: [],
+        servicesIncluded: '',
         basePrice: 6000,
         discounts: {
           doctorSession: 0.6, // 60% discount on doctor's sessions
@@ -217,7 +219,7 @@ const getHealthPacks = async(req, res) => {
         const platinumPackage = await HealthPackage.create({
             name: 'Platinum Package',
             description: 'Patient pays 9000 LE per year',
-            servicesIncluded: [],
+            servicesIncluded: '',
             basePrice: 9000,
             discounts: {
               doctorSession: 0.8, // 80% discount on doctor's sessions

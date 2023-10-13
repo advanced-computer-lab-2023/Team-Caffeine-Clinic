@@ -3,14 +3,14 @@ import { useState } from 'react'
 const HealthPackForm = () => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [services, setServices] = useState('')
+  const [servicesIncluded, setServices] = useState('')
   const [basePrice, setBasePrice] = useState('')
   const [error, setError] = useState(null)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const hp = {name,description,services,basePrice}
+    const hp = {name,description,servicesIncluded,basePrice}
     console.log(JSON.stringify(hp));
     
     const response = await fetch('/api/Admin/createHealthPackage', {
@@ -59,7 +59,7 @@ const HealthPackForm = () => {
       <input 
         type="text"  
         onChange={(e) => setServices(e.target.value)} 
-        value={services}
+        value={servicesIncluded}
       />
 
       <label>Base Price:</label>
