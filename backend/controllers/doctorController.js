@@ -26,7 +26,7 @@ const getDoctors = async (req, res) => {
 const getSingleDoctor = async (req, res) => {
   try {
     
-      const doctor = await Doctor.findOne({ username: req.params.doctorId });
+      const doctor = await Doctor.findOne({ username: req.params.username });
       
       if (!doctor) return res.status(404).send("Doctor not found");
       res.status(200).send(doctor);
