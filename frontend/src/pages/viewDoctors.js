@@ -1,5 +1,5 @@
 import {useEffect,useState} from "react";
-import DoctorDetails from "../components/DoctorDetails"
+import DoctorDetails from "../components/AdminDoctorDetails"
 
 const ViewDoctorHome =  () => {
     const [Doctors , setDoctors] = useState(null);
