@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button';
+import Perscription from '../pages/Perscriptions';
 
 const PerscriptionDetails = ({ perscription }) => {
   // const [doctors, setDoctors] = useState('');
@@ -43,7 +44,6 @@ const PerscriptionDetails = ({ perscription }) => {
           setName(json);
         }
       };
-
       fetchName();
     }, [perscription.doctorID]); // Include id as a dependency to re-fetch the data when the id changes
 
