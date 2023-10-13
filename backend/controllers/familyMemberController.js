@@ -4,9 +4,18 @@ const mongoose = require('mongoose');
 
 // Add family member
 const addFamilyMember = async (req, res) => {
+
+  const user = req.session.user
+
+  const patientID = user._id
+
+  const {name, nationalID, age, gender, relation} = req.body
+
+  const member = {patientID, name, nationalID, age, gender, relation}
+
   try {
       // const familyMember = new FamilyMember(req.body);
-      const familyMember = await FamilyMember.create(req.body); 
+      const familyMember = await FamilyMember.create(member); 
       // await familyMember.save();
       res.status(200).json(familyMember);
   } catch (error) {
@@ -16,8 +25,13 @@ const addFamilyMember = async (req, res) => {
 
 // Get registered family members
 const getFamilyMembers = async (req, res) => {
+
+  const user = req.session.user
+
+  const patientID = user._id
+
   try {
-      const familyMembers = await FamilyMember.find({});
+      const familyMembers = await FamilyMember.find({patientID});
       res.status(200).send(familyMembers);
   } catch (error) {
       res.status(400).send('error getting familyMembers')

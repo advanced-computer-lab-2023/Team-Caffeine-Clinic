@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
 })
 
 // //get a single patient
-/router.get('/getDoctorByusername', getDoctorByusername)
+router.get('/getDoctorByusername', getDoctorByusername)
 
 //get all patient AllHealthRecords with a doc
 router.get('/getAllHealthRecords', getAllHealthRecords)
@@ -46,7 +46,7 @@ router.get('/selectpatient', selectpatient)
 router.get('/searchmyPatients', searchmyPatients)
 
 //create a doctor
-router.get('/createDoctor', createDoctor)
+router.post('/createDoctor', createDoctor)
 
 
 //update doctor info 

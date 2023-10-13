@@ -13,29 +13,25 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [dob, setDob] = useState('');
-    const [gender, setGender] = useState('');
-    const [mobileNumber, setMobile] = useState('');
-
-    const [EName, setEname] = useState('');
-    const [EMobile, setEMobile] = useState('');
-    const [ERelation, setERelation] = useState('');
+    const [speciality, setSpeciality] = useState('');
+    const [rate, setRate] = useState('');
+    const [affiliation, setAffiliation] = useState('');
+    const [education, setEducation] = useState('');
     
     const [error, setError] = useState(null);
 
     const register = async (e) => {
         e.preventDefault()
 
-        const Patient = {
-            username, name, email, password, dob, gender, 
-            mobile_number: mobileNumber, Efull_name: EName, Emobile_number: EMobile, relation: ERelation 
+        const DoctorApplication = {
+            username: username, password: password, email: email, 
+            name: name, speciality: speciality, rate: rate, affiliation: affiliation, education: education
         }
-
         
 
-        const response = await fetch('/api/signup', {
+        const response = await fetch('/api/applyDoctor', {
             method: 'POST',
-            body: JSON.stringify(Patient),
+            body: JSON.stringify(DoctorApplication),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -44,7 +40,6 @@ const SignUp = () => {
         const json = await response.json()
 
         if(!response.ok){
-            console.log(name, ERelation);
             setError(json.error)
             console.log(error);
         }
@@ -52,17 +47,15 @@ const SignUp = () => {
         if(response.ok){
             setUsername('')
             setPassword('')
-            setName('')
             setEmail('')
-            setDob('')
-            setGender('')
-            setMobile('')
-            setEname('')
-            setEMobile('')
-            setERelation('')
+            setAffiliation('')
+            setEducation('')
+            setRate('')
+            setName('')
+            setSpeciality('')
             setError(null)
-            console.log("Patient Created", json[0]);
-            setMessage("Patient Created Successfuly")
+            console.log("Doctor Application Created", json[0]);
+            setMessage("Doctor Application Created Successfully")
         }
     }
 
@@ -110,63 +103,39 @@ const SignUp = () => {
                 </label>
                 <hr />
                 <label>
-                    Date of Birth: 
-                    <input type='date'
-                        placeholder='Enter BirthDate'
-                        value={dob} onChange={e => setDob(e.target.value)}
-                        name='birthdate'
-                        max={current}
+                speciality: 
+                    <input type='text'
+                        placeholder='Enter Speciality'
+                        value={speciality} onChange={e => setSpeciality(e.target.value)}
                         />
                 </label>
                 <hr />
-                <p>
-            Radio buttons:
-            <label>
-              <input type="radio" name="gender" value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
-              Male
-            </label>
-            <label>
-              <input type="radio" name="gender" value="female" checked={gender === 'female'} onChange={(e) => setGender(e.target.value)} />
-              Female
-            </label>
-          </p>
-                    <hr />
                 <label>
-                    Mobile Number: 
+                    Hourly Rate: 
                     <input 
-                    value={mobileNumber}
-                    onChange={e => setMobile(e.target.value)}
+                    value={rate}
+                    onChange={e => setRate(e.target.value)}
                     type="text" />
                 </label>
                 <hr />
-                Emergency Contact:
-                <br /> <br />
                 <label>
-                    Full Name: 
+                    Affiliation (Hospistal Name): 
                     <input 
-                    value={EName}
-                    onChange={e => setEname(e.target.value)}
+                    value={affiliation}
+                    onChange={e => setAffiliation(e.target.value)}
                     type="text" />
                 </label>
                 <br />
                 <label>
-                    Mobile Number: 
+                    Education: 
                     <input 
-                    value={EMobile}
-                    onChange={e => setEMobile(e.target.value)}
-                    type="text" />
-                </label>
-                <br />
-                <label>
-                    Relation to the Patient: 
-                    <input 
-                    value={ERelation}
-                    onChange={e => setERelation(e.target.value)}
+                    value={education}
+                    onChange={e => setEducation(e.target.value)}
                     type="text" />
                 </label>
                 <br /><br />
                 <Button variant="dark" type="submit">
-                    Register
+                    Apply
                 </Button>
                 </form>
             </div>

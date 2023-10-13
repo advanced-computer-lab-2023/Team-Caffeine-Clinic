@@ -33,14 +33,14 @@ const MyPatients = () => {
     // Fetch the list of patients when the component mounts
     const fetchDoctorPatients = async () => {
       try {
-        const storedUsername = localStorage.getItem('username');
+  //       const storedUsername = localStorage.getItem('username');
 
-  if (!storedUsername) {
-    setError('No username found in session.');
+  // if (!storedUsername) {
+  //   setError('No username found in session.');
     
-    return;
-  }
-        const response = await fetch(`/myPatients/?doctorUsername=${storedUsername}`); // You should replace with your actual API endpoint
+  //   return;
+  // }
+        const response = await fetch(`/api/myPatients/`); // You should replace with your actual API endpoint
 
         if (!response.ok) {
           throw new Error('Failed to fetch patients');

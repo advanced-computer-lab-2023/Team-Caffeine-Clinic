@@ -10,15 +10,15 @@ const UpdateRate = () => {
 
   const updateRate = async () => {
     try {
-      const storedUsername = localStorage.getItem('username'); // Retrieve username from localStorage
-      if (!storedUsername) {
-        setMessage('No username found in session.');
-        return;
-      }
+      // const storedUsername = localStorage.getItem('username'); // Retrieve username from localStorage
+      // if (!storedUsername) {
+      //   setMessage('No username found in session.');
+      //   return;
+      // }
 
       // Send a PATCH request to update the rate
       const response = await fetch(
-        `/updateRate?username=${storedUsername}&rate=${newRate}`, // Include rate as a query parameter
+        `/api/updateRate?rate=${newRate}`, // Include rate as a query parameter
         {
           method: 'PATCH',
           headers: {

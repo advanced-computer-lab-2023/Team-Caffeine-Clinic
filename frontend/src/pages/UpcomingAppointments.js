@@ -6,17 +6,17 @@ const PatientsWithUpcomingAppointments = () => {
 
   useEffect(() => {
     // Retrieve the doctor's username from the session
-    const storedUsername = localStorage.getItem('username');
+    // const storedUsername = localStorage.getItem('username');
 
-    if (!storedUsername) {
-      setError('No username found in session.');
-      return;
-    }
+    // if (!storedUsername) {
+    //   setError('No username found in session.');
+    //   return;
+    // }
 
     // Make an API request to fetch patients with upcoming appointments
     const fetchPatientsWithAppointments = async () => {
       try {
-        const response = await fetch(`/patientsWithUpcomingAppointments?doctorUserName=${storedUsername}`);
+        const response = await fetch(`/api/patientsWithUpcomingAppointments`);
         if (!response.ok) {
           throw new Error('Failed to fetch patients with upcoming appointments');
         }

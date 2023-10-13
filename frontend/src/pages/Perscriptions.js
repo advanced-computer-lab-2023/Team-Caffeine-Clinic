@@ -5,7 +5,6 @@ import PerscriptionDetails from '../components/PerscriptionDetails';
 const Perscription = () => {
 
     const [perscriptions, setPerscription] = useState(null);
-    const [patient, setPatient] = useState('');
     const [dateFilter, setDateFilter] = useState('');
     const [doctorFilter, setDoctorFilter] = useState('');
     const [stateFilter, setStateFilter] = useState('');
@@ -15,7 +14,6 @@ const Perscription = () => {
         let url = '/api/perscription';
 
         const params = new URLSearchParams();
-        if (patient) params.append('state', patient);
         if (dateFilter) params.append('date', dateFilter);
         if (doctorFilter) params.append('doctor', doctorFilter);
         if (stateFilter) params.append('state', stateFilter);
@@ -37,13 +35,6 @@ const Perscription = () => {
       <div className="doctors">
         {/* Filter section */}
         <div className="filters">
-          <input 
-            type="text" 
-            placeholder="Patient ID" 
-            value={patient}
-            onChange={(e) => setPatient(e.target.value)} 
-            className="filter-input"
-          />
           <input 
             type="text" 
             placeholder="Filter by Date" 
