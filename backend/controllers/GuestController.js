@@ -4,9 +4,9 @@ const DoctorAppplication = require('../models/DoctorApplication');
 
 //Apply as a Doctor
 const applyDoctor = async(req, res) => {
-    const {username, password, name, speciality, rate, affiliation, education, availableDates} = req.body
+    const {username, password,email, name, speciality, rate, affiliation, education, availableDates} = req.body
 
-    const doctorApp = new DoctorAppplication({username, password, name, speciality, rate, affiliation, education, availableDates})
+    const doctorApp = new DoctorAppplication({username, password,email, name, speciality, rate, affiliation, education, availableDates})
 
     await doctorApp.save()
 

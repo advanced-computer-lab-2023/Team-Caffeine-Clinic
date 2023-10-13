@@ -99,7 +99,26 @@ const deleteDoctor = async(req, res) => {
   
     res.status(200).json(doc)
 }
+//Remove a doctor application from the system
+const deleteDocApp = async(req, res) => { 
+  const { id } = req.params
+  
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({error: 'No such Doctor Application'})
+  }
 
+  const docApp = await DoctorApplication.findOneAndDelete({_id: id})
+
+  if(!docApp) {
+    return res.status(400).json({error: 'No such Doctor Application'})
+  }
+
+  res.status(200).json(docApp)
+}
+
+
+
+// Delete a Patient from the system
 const deletePatient = async(req, res) => { 
   const { id } = req.params
   
@@ -120,6 +139,23 @@ const deletePatient = async(req, res) => {
 
 
 //Packages
+
+const createHealthPackage = async (req, res) => {
+  const {name,
+        description,servicesIncluded,
+        basePrice,
+        discounts,
+        } = req.body;
+  try {
+      const hp = await HealthPackage.create({name,description,servicesIncluded,basePrice,discounts})
+      res.status(200).json(hp)
+  }
+  catch(error){
+      res.status(400).json({error: error.message})
+  }
+}
+
+
 
 //Get all packages
 const getHealthPacks = async(req, res) => {
@@ -247,5 +283,7 @@ module.exports = {
     getHealthPacks,
     updateHealthPack,
     viewPatients,
+    createHealthPackage,
+    deleteDocApp,
     deletePatient
 }

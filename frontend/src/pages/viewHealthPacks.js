@@ -1,7 +1,7 @@
 import { useEffect,useState } from "react";
 import { Link } from 'react-router-dom';
-import AdminForm from "../components/AdminForm"
 import HealthPackdetails from "../components/HealthPackDetails"
+import HealthPackForm from "../components/HealthPackForm";
 
 const HPHome =  () => {
     const [HP , setHP] = useState(null);
@@ -31,7 +31,7 @@ const HPHome =  () => {
           <HealthPackdetails hp={hp} key={hp._id} />
                   ))}
             </div>
-            {/* <AdminForm /> */}
+            <HealthPackForm />
         </div>
         </>
     )

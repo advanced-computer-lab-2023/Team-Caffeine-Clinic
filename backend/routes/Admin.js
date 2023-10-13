@@ -13,6 +13,8 @@ const {createAdmin,
     getHealthPacks,
     deletePatient,
     viewPatients,
+    deleteDocApp,
+    createHealthPackage,
     createPlatPackage} = require('../controllers/adminController');
 
 
@@ -25,6 +27,7 @@ router.post('/addAdmin', createAdmin);
 router.delete('/:id', deleteAdmin);
 
 //Doctor & Doctor application routes
+router.delete('/deleteApp/:id',deleteDocApp);
 router.get('/viewDoctorApplications', viewDoctorApplication);
 router.delete('/deleteDoctor/:id', deleteDoctor);
 
@@ -33,6 +36,7 @@ router.delete('/deletePatient/:id', deletePatient);
 router.get('/viewPatients',viewPatients);
 
 //Health package routes
+router.post('/createHealthPackage', createHealthPackage);
 router.get('/healthPackages', getHealthPacks)
 router.post('/healthPackage/silverpackage', createSilverPackage);
 router.delete('/deleteHealthPackage/:id', deletehealthPackage);

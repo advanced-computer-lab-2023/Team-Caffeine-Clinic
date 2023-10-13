@@ -2,6 +2,25 @@ const DocAppDetails = ({ Appl }) => {
 
 
   //needs 2 buttons (reject and accept).
+  const createDoc = async () => {
+    const response = await fetch('/api/doctorInfo/createDoctor', {
+      method: 'POST',
+      body : JSON.stringify(Appl),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    //const json = await response.json;
+   }
+
+
+  const handleClick = async () => {
+    createDoc();
+    const response = await fetch('/api/Admin/deleteApp/' + Appl._id, {
+      method: 'DELETE'
+    })
+    const json = await response.json()
+}
 
     return (
       <div className="Admin-details">
@@ -15,6 +34,7 @@ const DocAppDetails = ({ Appl }) => {
         <p><strong>Education: </strong>{Appl.education}</p>
         <p><strong>Available Dates: </strong>{Appl.availableDates}</p>
         <p>{Appl.createdAt}</p>
+        <span onClick={handleClick}>Approve</span>
       </div>
     )
   }

@@ -138,14 +138,16 @@ const createAppointment = async(req, res) => {
 // };
 // Create a new doctor
 const createDoctor = async(req, res) => {
+
     const {
         username,
+        password,
         name,
         speciality,
         rate,
         affiliation,
-        education,
         email, // Add the email field to the request body
+        education,
         availableDates,
         patients,
     } = req.body;
@@ -153,6 +155,7 @@ const createDoctor = async(req, res) => {
     try {
         const doctor = new Doctor({
             username,
+            password,
             name,
             speciality,
             rate,
@@ -165,6 +168,7 @@ const createDoctor = async(req, res) => {
 
         const existingdoctor = await Doctor.findOne({
             username,
+            password,
             name,
             speciality,
             rate,
