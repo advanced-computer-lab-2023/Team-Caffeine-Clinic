@@ -7,7 +7,7 @@ import Navbar from './components/Navbar';
 import EditMyDoc from './pages/EditDocRate';
 import UpdateEmail from './pages/EditDocEmail';
 import UpdateAffiliation from './pages/EditDocHos';
-import MyPatients from './pages/viewPatients';
+import MyPatients from './pages/ViewPatients';
 import UsernameProvider  from './pages/UsernameContext'; // Import the context
 import PatientsWithUpcomingAppointments from './pages/UpcomingAppointments'
 import SelectPatient from './pages/SearchPatient'
@@ -27,6 +27,8 @@ import DoctorAppHome from './pages/viewDoctorApps';
 import ViewDoctorHome from './pages/viewDoctors';
 import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
+import SingleDoctor from './pages/singleDoctor';
+
 
 function App() {
   return (
@@ -48,6 +50,7 @@ function App() {
               {/* Ibra - Salah */}
               <Route path='home' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
+              <Route path='doctor/getSingleDoctor/:username' element={<SingleDoctor />} />
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
               <Route path='Perscriptions' element={<WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar>} />
               <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar>} />

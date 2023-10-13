@@ -41,8 +41,8 @@ const handleClick2 = async () => {
         <p><strong>Education: </strong>{Appl.education}</p>
         <p><strong>Available Dates: </strong>{Appl.availableDates}</p>
         <p>{Appl.createdAt}</p>
-        <span onClick={handleClick}>Approve</span>
-        <span onClick={handleClick2}>Reject</span>
+        <span className="accept-button" onClick={handleClick}>Approve</span>
+        <span className="reject-button" onClick={handleClick2}>Reject</span>
       </div>
     )
   }

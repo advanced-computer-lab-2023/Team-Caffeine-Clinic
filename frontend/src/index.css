@@ -66,6 +66,7 @@ header a {
   padding: 20px;
   position: relative;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+  width: 400px;
 }
 .pageheader{
   display: inline-block;  
@@ -293,4 +294,21 @@ div.error {
   color: var(--error);
   border-radius: 4px;
   margin: 20px 0;
+}
+.single-doctor-details {
+  background: #fff;
+  border-radius: 4px;
+  margin-left: 200px;
+  padding: 20px;
+  position: relative;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+
+}
+.accept-button {
+  margin-right: 80px;
+  color: #1aac83;
+
+}
+.reject-button {
+  color: #e7195a;
 }

@@ -10,8 +10,8 @@ const doctor = require('../models/doctor');
 // Get all doctors with optional name and/or speciality filter
 router.get('/getDoctors', getDoctors);
 
-// Get doctor details by ID
-router.get('/getSingleDoctor/:doctorId', getSingleDoctor);
+// Get doctor details by username
+router.get('/getSingleDoctor/:username', getSingleDoctor);
 
 
 
