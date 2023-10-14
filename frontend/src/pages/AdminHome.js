@@ -23,6 +23,9 @@ const Home = () => {
             <Link to="/viewPatientsAdmin">
                       <button>View Patients</button>
                 </Link>
+            <Link to="/">
+                      <button>log out</button>
+                </Link>
             </div>
         </div>
     )

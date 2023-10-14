@@ -21,7 +21,10 @@ const HPHome =  () => {
 
     return (
         <>
-      <h2>Health Packages</h2>  
+        <nav>
+        <Link className="home-button" to="/AdminHome">Home</Link>
+      </nav>
+      <h2 className="title-admin">Health Packages</h2>  
         <div className="home">
             <div className="admins">
             {/* {HP && HP.map((hp) => (
