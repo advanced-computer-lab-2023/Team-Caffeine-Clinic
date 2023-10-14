@@ -49,7 +49,7 @@ const PerscriptionDetails = ({ perscription }) => {
 
 
     return (
-      <div className="doctor-details">
+      <div className="perscription-details">
           <div className="details"><strong>Patient: </strong>{perscription.patientID}</div>
           <div className="details"><strong>Doctor: </strong>{doctorName}</div>
           <div className="details"><strong>Date: </strong>{perscription.date_of_perscription}</div>
