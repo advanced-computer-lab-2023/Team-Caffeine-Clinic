@@ -69,6 +69,8 @@ const SignUp = () => {
     return(
         <header>
             <h1>Sign Up</h1>
+
+            
             <br />
             <div className="message">
                 <h6>{message}</h6>
@@ -168,6 +170,11 @@ const SignUp = () => {
                 <Button variant="dark" type="submit">
                     Register
                 </Button>
+
+                <Link className='login-button' to="/">
+                login instead
+            </Link>
+
                 </form>
             </div>
         </header>

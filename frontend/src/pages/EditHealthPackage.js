@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+
 const EditHealthPackage = () => {
     const {id} = useParams() 
     const [name, setName] = useState('')
@@ -44,7 +45,9 @@ const EditHealthPackage = () => {
 
   return (
     <><header>
-      <Navbar />
+      <nav>
+        <Link className="home-button" to="/AdminHome">Home</Link>
+      </nav>
     </header><form className="create" onSubmit={handleSubmit}>
         <h3>edit HealthPackage</h3>
 

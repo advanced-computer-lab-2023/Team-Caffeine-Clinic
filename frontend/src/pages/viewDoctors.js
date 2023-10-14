@@ -1,5 +1,7 @@
 import {useEffect,useState} from "react";
 import DoctorDetails from "../components/AdminDoctorDetails"
+import { Link } from 'react-router-dom';
+
 
 const ViewDoctorHome =  () => {
     const [Doctors , setDoctors] = useState(null);
@@ -19,7 +21,10 @@ const ViewDoctorHome =  () => {
 
     return (
         <>
-      <h2>Doctors</h2>  
+        <nav>
+        <Link className="home-button" to="/AdminHome">Home</Link>
+      </nav>
+      <h2 className="title-admin">Doctors</h2>  
         <div className="home">
             <div className="doctors">
                 {/* {Doctors && Doctors.map((doctor) => (

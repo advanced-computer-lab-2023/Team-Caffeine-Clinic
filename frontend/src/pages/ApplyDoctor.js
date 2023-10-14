@@ -137,6 +137,10 @@ const SignUp = () => {
                 <Button variant="dark" type="submit">
                     Apply
                 </Button>
+
+                <Link className='login-button' to="/">
+                login instead
+            </Link>
                 </form>
             </div>
         </header>

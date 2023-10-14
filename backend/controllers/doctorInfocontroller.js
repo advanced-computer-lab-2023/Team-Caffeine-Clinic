@@ -322,14 +322,14 @@ const selectpatient = async(req, res) => {
 // Create a route to filter patients by upcoming appointments by doc username #req:35
 const patientsWithUpcomingAppointments = async (req, res) => {
     try {
-        const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+        const doctor = req.session.user; // Assuming you pass the doctor's username as a query parameter
 
-        const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
-        
+        // const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
+        // console.log(doctorUsername);
         const currentDate = new Date();
 
         // Find the doctor by username
-        const doctor = await Doctor.findOne({ username: doctorUserName });
+        // const doctor = await Doctor.findOne({ username: doctorUsername });
 
         if (!doctor) {
             return res.status(404).json({ error: 'Doctor not found.' });
@@ -340,7 +340,7 @@ const patientsWithUpcomingAppointments = async (req, res) => {
 
         // Find upcoming appointments for the specific doctor and patients
         const upcomingAppointments = await Appointment.find({
-            doctor: doctorUserName,
+            doctor: doctor.username,
             patient: { $in: patientUsernames },
             appointmentDate: { $gte: currentDate }
         });
