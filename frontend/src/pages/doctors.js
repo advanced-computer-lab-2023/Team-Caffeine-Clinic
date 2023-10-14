@@ -9,7 +9,7 @@ const Doctors = () => {
 
     useEffect(() => {
       const fetchDoctors = async () => {
-        let url = '/api/doctors/getDoctors';
+        let url = '/api/healthpackage/estimateRate';
 
         const params = new URLSearchParams();
         if (nameFilter) params.append('name', nameFilter);

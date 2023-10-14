@@ -75,7 +75,7 @@ function LoginForm() {
         />
         <button className='login-button' type="submit">Log In</button>{' '}
         <Link to="/signup"><button className='login-button'>Sign Up</button></Link>{' '}
-        <Link to="/applyDoctor"><button className='login-button'>Sign Up As a Doctor</button></Link>
+        <Link to="/doctorApplication"><button className='login-button'>Sign Up As a Doctor</button></Link>
       </form>
     </div>
   );
