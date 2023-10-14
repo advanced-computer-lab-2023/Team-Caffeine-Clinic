@@ -145,8 +145,11 @@ const createHealthPackage = async (req, res) => {
         description,
         servicesIncluded,
         basePrice,
-        discounts,
+        docSession,
+        medicine,
+        family
         } = req.body;
+        const discounts = {doctorSession:docSession, pharmacyMedicine:medicine,familySubscription:family}
   try {
       const hp = await HealthPackage.create({name,description,servicesIncluded,basePrice,discounts})
       console.log({name,description,servicesIncluded,basePrice,discounts});

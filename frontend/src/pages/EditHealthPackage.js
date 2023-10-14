@@ -7,6 +7,9 @@ const EditHealthPackage = () => {
     const [description, setDescription] = useState('')
     const [services, setServices] = useState('')
     const [basePrice, setBasePrice] = useState('')
+    const [docSession, setdocSession] = useState('')
+    const [medicine, setMedicine] = useState('')
+    const [family, setFamily] = useState('')
     const [error, setError] = useState(null)
 
     const handleSubmit = async (e) => {
@@ -32,6 +35,9 @@ const EditHealthPackage = () => {
       setDescription('')
       setServices("");
       setBasePrice("");
+      setdocSession('')
+      setMedicine('')
+      setFamily('')
     }
 
   }
@@ -69,6 +75,27 @@ const EditHealthPackage = () => {
           required
           onChange={(e) => setBasePrice(e.target.value)}
           value={basePrice} />
+
+        <label>Doctor Session Discount:</label>
+        <input
+          type="number"
+          required
+          onChange={(e) => setdocSession(e.target.value)}
+          value={docSession} />
+
+        <label>Medicine Session Discount:</label>
+        <input
+          type="number"
+          required
+          onChange={(e) => setMedicine(e.target.value)}
+          value={medicine} />
+
+        <label>Family Member Discount:</label>
+        <input
+          type="number"
+          required
+          onChange={(e) => setFamily(e.target.value)}
+          value={family} />
 
         <button>Save changes</button>
         {/* <label> {Edit} </label> */}

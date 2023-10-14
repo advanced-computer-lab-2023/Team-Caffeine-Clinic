@@ -5,6 +5,9 @@ const HealthPackForm = () => {
   const [description, setDescription] = useState('')
   const [servicesIncluded, setServices] = useState('')
   const [basePrice, setBasePrice] = useState('')
+  const [docSession, setdocSession] = useState('')
+  const [medicine, setMedicine] = useState('')
+  const [family, setFamily] = useState('')
   const [error, setError] = useState(null)
 
   const handleSubmit = async (e) => {
@@ -32,6 +35,9 @@ const HealthPackForm = () => {
       setDescription('')
       setServices('')
       setBasePrice('')
+      setdocSession('')
+      setFamily('')
+      setMedicine('')
       console.log('new Health Package added:', json)
     }
 
@@ -67,6 +73,25 @@ const HealthPackForm = () => {
         type="text"  
         onChange={(e) => setBasePrice(e.target.value)} 
         value={basePrice}
+      />
+
+      <label>Doctor Session Discount:</label>
+      <input 
+        type="text"  
+        onChange={(e) => setdocSession(e.target.value)} 
+        value={docSession}
+      />
+      <label>Pharmacy medicine discount:</label>
+      <input 
+        type="text"  
+        onChange={(e) => setMedicine(e.target.value)} 
+        value={medicine}
+      />
+      <label>Family Member Discount:</label>
+      <input 
+        type="text"  
+        onChange={(e) => setFamily(e.target.value)} 
+        value={family}
       />
 
       <button>Add Health Package</button>

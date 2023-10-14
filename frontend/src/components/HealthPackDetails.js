@@ -5,6 +5,7 @@ const HealthPackdetails = ({ hp }) => {
       method: 'DELETE'
     })
     const json = await response.json()
+    window.location.reload();
 }
 
 let handleSubmit = async (e) => {
@@ -21,6 +22,9 @@ let handleSubmit = async (e) => {
         <p><strong>Description: </strong>{hp.description}</p>
         <p><strong>Services Included: </strong>{hp.servicesIncluded}</p>
         <p><strong>Base Price: </strong>{hp.basePrice}</p>
+        <p><strong>Doctor Discount: </strong>{hp.discounts.doctorSession}</p>
+        <p><strong>Family member Discount: </strong>{hp.discounts.pharmacyMedicine}</p>
+        <p><strong>Pharmacy Medicine Discount: </strong>{hp.discounts.familySubscription}</p>
         {/* <p><strong>Discounts: </strong>{hp.discounts}</p> */}
         <p>{hp.createdAt}</p>
         <span className="span1 "onClick={handleClick}>Delete</span>
