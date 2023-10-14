@@ -1,6 +1,6 @@
 import { useState } from "react"
 
- const FamilyMemberForm = () => {
+ const FamilyMemberForm = ({onAddFamilyMember}) => {
   const [name, setName] = useState('');
   const [nationalID, setNationalID] = useState('');
   const [age, setAge] = useState('');
@@ -35,6 +35,8 @@ import { useState } from "react"
       setRelation('');
       setError(null);
       console.log('new family member added', json);  
+
+      onAddFamilyMember(json);
     }
     
 

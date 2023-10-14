@@ -5,7 +5,7 @@ import FamilyMemberForm from '../components/FamilyMemberForm';
 
 const FamilyMembers = () => {
 
-    const [familyMembers, setFamilyMembers] = useState(null);
+    const [familyMembers, setFamilyMembers] = useState([]);
 
     useEffect(() => {
       const fetchFamilyMembers = async () => {
@@ -22,6 +22,10 @@ const FamilyMembers = () => {
       
     }, [])
 
+    const handleAddFamilyMember = (newMember) => {
+      setFamilyMembers((prevMembers) => [...prevMembers, newMember]);
+  };
+
     return (
       <div className="familyMembers">
 
@@ -32,7 +36,10 @@ const FamilyMembers = () => {
           ))} 
         </div>
 
-        <FamilyMemberForm className="familyMemberForm"/>
+        <FamilyMemberForm 
+        className="familyMemberForm" 
+        onAddFamilyMember={handleAddFamilyMember}
+        />
       </div>
   )
 }

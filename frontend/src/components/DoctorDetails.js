@@ -14,6 +14,7 @@ const DoctorDetails = ({ doctor }) => {
       <div className="details"><strong>affiliation: </strong>{doctor.affiliation}</div>
       <div className="details"><strong>email: </strong>{doctor.email}</div>
       <div className="details"><strong>education: </strong>{doctor.education}</div>
+      <div className="details"><strong>session price: </strong>{doctor.rate + 0.1 * (100) - (0)}</div>
     </div>
   )
 }

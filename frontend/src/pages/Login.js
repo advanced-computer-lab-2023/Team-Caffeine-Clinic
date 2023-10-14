@@ -57,20 +57,22 @@ function LoginForm() {
   
   return (
     <div>
-      <form onSubmit={handleLogin}>
+      <form className='login-form' onSubmit={handleLogin}>
         <input
+        className='input-login'
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
+        className='input-login'
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Log In</button>
+        <button className='login-button' type="submit">Log In</button>
       </form>
     </div>
   );
