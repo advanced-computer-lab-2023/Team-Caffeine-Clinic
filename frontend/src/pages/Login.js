@@ -55,6 +55,7 @@ function LoginForm() {
     }
   };
   
+
   return (
     <div>
       <form className='login-form' onSubmit={handleLogin}>
@@ -72,7 +73,9 @@ function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className='login-button' type="submit">Log In</button>
+        <button className='login-button' type="submit">Log In</button>{' '}
+        <Link to="/signup"><button className='login-button'>Sign Up</button></Link>{' '}
+        <Link to="/applyDoctor"><button className='login-button'>Sign Up As a Doctor</button></Link>
       </form>
     </div>
   );
