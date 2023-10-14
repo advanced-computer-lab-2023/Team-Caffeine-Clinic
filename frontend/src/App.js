@@ -29,6 +29,7 @@ import ViewDoctorHome from './pages/viewDoctors';
 import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
+import EditHealthPackage from './pages/EditHealthPackage';
 
 
 function App() {
@@ -80,6 +81,10 @@ function App() {
               path="/viewHealthPacks"
               element =  {<HPHome/>}
                 />
+              <Route
+              path="/editHP/:id"
+              element =  {<EditHealthPackage/>}
+              />
               <Route
               path="/viewPatientsAdmin"
               element =  {<ViewPatientHome/>}
