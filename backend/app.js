@@ -15,8 +15,9 @@ const doctorsRoute = require('./routes/doctors');
 const adminsRoute = require('./routes/Admin');
 const doctorInfoRoutes = require('./routes/doctorInfo');
 const login  = require('./routes/login');
-const healthPackageController = require('./controllers/healthPackagesController');
+const healthPackageRoutes = require('./routes/healthPackages');
 
+const healthPackageController = require('./controllers/healthPackagesController');
 // const cors = require('cors');
 
 
@@ -76,7 +77,8 @@ app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
-app.use('/api/doctorInfo', doctorInfoRoutes)
+app.use('/api/doctorInfo', doctorInfoRoutes);
+app.use('/api/healthpackage', healthPackageRoutes);
 
 
 app.use((req, res, next) => {

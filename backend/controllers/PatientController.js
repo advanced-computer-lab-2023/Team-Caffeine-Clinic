@@ -2,18 +2,19 @@ const { default: mongoose } = require('mongoose')
 
 const Patient = require('../models/Patient');
 const Perscriptions = require('../models/Perscriptions');
-const Doctor = require('../models/doctor')
+const Doctor = require('../models/doctor');
+const healthPackage = require('../models/healthPackageModel');
 
 
 //Sign up as a new Patient
 const signUp = async(req, res) => {
-    const {username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation} = req.body
+    const {username, name, email, password, dob, gender, mobile_number, health_package, Efull_name, Emobile_number, relation} = req.body
 
     const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
 
 
     try{
-        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
+        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, health_package, emergency_contact})
 
         await patient.save()
 
@@ -93,6 +94,45 @@ const viewFilterPerscriptions = async (req, res) => {
     }
 }
 
+const estimateRate = async (req, res) => {
+    const patientId = req.query.patientId;
+
+    try {
+        const patient = await Patient.findById(patientId);
+        
+        if (!patient) {
+            return res.status(404).json({ error: 'Patient not found' });
+        }
+
+        const doctors = await Doctor.find();
+        const patientHealthPackage = patient.health_package;
+
+        const HealthPackage = await healthPackage.findOne({ name: patientHealthPackage });
+
+        if (!HealthPackage) {
+            const doctormap = doctors.map(doctor => ({
+                doctorName: doctor.name,
+                originalRate: doctor.rate,
+                rateAfterDiscount: doctor.rate,
+            }));
+            return res.status(200).json(doctormap); // Return here
+        }
+
+        const doctorRates = doctors.map(doctor => {
+            let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+            return {
+                doctorName: doctor.name,
+                originalRate: doctor.rate,
+                rateAfterDiscount: rateAfterDiscount,
+            };
+        });
+
+        return res.status(200).json(doctorRates); // Return here
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
 
 
 const getSinglePerscription = async(req, res) => {
@@ -111,5 +151,6 @@ const getSinglePerscription = async(req, res) => {
 module.exports = {
     signUp,
     viewFilterPerscriptions,
-    getSinglePerscription
+    getSinglePerscription,
+    estimateRate
 }
