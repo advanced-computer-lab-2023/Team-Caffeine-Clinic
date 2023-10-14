@@ -95,10 +95,11 @@ const viewFilterPerscriptions = async (req, res) => {
 }
 
 const estimateRate = async (req, res) => {
-    const patientId = req.query.patientId;
+    const patient = req.session.user
+    // const patientId = req.query.patientId;
 
     try {
-        const patient = await Patient.findById(patientId);
+        // const patient = await Patient.findById(patientId);
         
         if (!patient) {
             return res.status(404).json({ error: 'Patient not found' });
@@ -110,18 +111,29 @@ const estimateRate = async (req, res) => {
         const HealthPackage = await healthPackage.findOne({ name: patientHealthPackage });
 
         if (!HealthPackage) {
-            const doctormap = doctors.map(doctor => ({
-                doctorName: doctor.name,
-                originalRate: doctor.rate,
-                rateAfterDiscount: doctor.rate,
-            }));
+            const doctormap = doctors.map(doctor => {
+                return{
+                    username: doctor.username,
+                    email: doctor.email,
+                    name: doctor.name,
+                    speciality: doctor.speciality,
+                    affiliation: doctor.affiliation,
+                    education: doctor.education,
+                    originalRate: doctor.rate,
+                    rateAfterDiscount: doctor.rate
+            }});
             return res.status(200).json(doctormap); // Return here
         }
 
         const doctorRates = doctors.map(doctor => {
             let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
             return {
-                doctorName: doctor.name,
+                username: doctor.username,
+                email: doctor.email,
+                name: doctor.name,
+                speciality: doctor.speciality,
+                affiliation: doctor.affiliation,
+                education: doctor.education,
                 originalRate: doctor.rate,
                 rateAfterDiscount: rateAfterDiscount,
             };
