@@ -374,3 +374,46 @@ button:hover {
   margin-top: 300px;
   align-items: center;
 }
+
+.doctor-buttons {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #8fb3d9; 
+  color: #fff; 
+  text-decoration: none; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+  width: 300px;
+}
+.doctor-buttons:hover {
+    background-color: #0056b3; 
+}
+.home-button {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+  background-color: #0056b3;
+}
+
+.title-admin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
