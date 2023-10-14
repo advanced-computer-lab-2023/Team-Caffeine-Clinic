@@ -39,6 +39,11 @@ const patientSchema = new Schema({
         required: true
     },
 
+    health_package: { 
+        type: String, 
+        default: 'no package'
+    },
+
     emergency_contact: {
         
         full_name:{
@@ -55,7 +60,8 @@ const patientSchema = new Schema({
             type: String,
             required: true,
             enum: ['Wife', 'Husband', 'Child', "Father", "Mother", "Sibling"]
-        }
+        },
+        
     },
 
     health_records: [{

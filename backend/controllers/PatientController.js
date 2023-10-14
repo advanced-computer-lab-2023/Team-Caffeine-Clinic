@@ -2,17 +2,19 @@ const { default: mongoose } = require('mongoose')
 
 const Patient = require('../models/Patient');
 const Perscriptions = require('../models/Perscriptions');
+const Doctor = require('../models/doctor');
+const healthPackage = require('../models/healthPackageModel');
 
 
 //Sign up as a new Patient
 const signUp = async(req, res) => {
-    const {username, name, email, password, dob, gender, mobile_number, Efull_name, Emobile_number, relation} = req.body
+    const {username, name, email, password, dob, gender, mobile_number, health_package, Efull_name, Emobile_number, relation} = req.body
 
     const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
 
 
     try{
-        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, emergency_contact})
+        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, health_package, emergency_contact})
 
         await patient.save()
 
@@ -24,33 +26,114 @@ const signUp = async(req, res) => {
 }
 
 //View and Filter Perscriptions
+// const viewFilterPerscriptions = async (req, res) => {
+//     const user = req.session.user
+
+//     const patientID = user._id
+
+//     //const patientID = user.username
+
+
+
+//     let filter = {};
+
+//     if (patientID) filter.patientID = patientID
+//     if (doctor) filter.doctorID = doctor // Case-insensitive regex search
+//     if (date) filter.date_of_perscription = date;
+//     if (state) filter.state = state
+
+//     try {
+//         const prescriptions = await Perscriptions.find(filter);
+//         res.status(200).send(prescriptions);
+//     } catch (error) {
+//         res.status(400).send(error);
+//     }
+// }
 const viewFilterPerscriptions = async (req, res) => {
-    const user = req.session.user
-
-    const patientID = user._id
-
-    //const patientID = user.username
-
-    console.log(patientID)
-
+    const user = req.session.user;
+    const patientID = await user._id;
     const date = req.query.date;
-    const doctor = req.query.doctor;
-    const state = req.query.state
+    const doctorName = req.query.doctorName; // The input character(s) for doctor name search
+    const state = req.query.state;
 
     let filter = {};
+    let prescriptionsarray = [];
 
-    if (patientID) filter.patientID = patientID
-    if (doctor) filter.doctorID = doctor // Case-insensitive regex search
+    if (patientID) filter.patientID = patientID;
     if (date) filter.date_of_perscription = date;
-    if (state) filter.state = state
+    if (state) filter.state = state;
 
     try {
-        const prescriptions = await Perscriptions.find(filter);
-        res.status(200).send(prescriptions);
+        if (doctorName) {
+            // If a doctorName is provided, search for doctors that match the input
+            const matchingDoctors = await Doctor.find({
+                name: { $regex: new RegExp(doctorName, 'i') }
+            }, '_id'); // Only return doctor names
+            console.log(matchingDoctors)
+            for(let i=0;i<matchingDoctors.length;i++){
+               console.log(matchingDoctors[i])
+                const filter2  = {}
+                if (patientID) filter2.patientID = patientID;
+                if (date) filter2.date_of_perscription = date;
+                if (state) filter2.state = state;
+                if(matchingDoctors[i]) filter2.doctorID = matchingDoctors[i]
+                console.log(filter2)
+                const prescription = await Perscriptions.findOne(filter2)
+                prescriptionsarray.push(prescription)
+                
+            }
+            res.status(200).send( prescriptionsarray );
+
+        } else {
+            // If no doctorName is provided, retrieve prescriptions
+            const prescriptions = await Perscriptions.find(filter);
+            res.status(200).send( prescriptions );
+        }
     } catch (error) {
         res.status(400).send(error);
     }
 }
+
+const estimateRate = async (req, res) => {
+    const patientId = req.query.patientId;
+
+    try {
+        const patient = await Patient.findById(patientId);
+        
+        if (!patient) {
+            return res.status(404).json({ error: 'Patient not found' });
+        }
+
+        const doctors = await Doctor.find();
+        const patientHealthPackage = patient.health_package;
+
+        const HealthPackage = await healthPackage.findOne({ name: patientHealthPackage });
+
+        if (!HealthPackage) {
+            const doctormap = doctors.map(doctor => ({
+                doctorName: doctor.name,
+                originalRate: doctor.rate,
+                rateAfterDiscount: doctor.rate,
+            }));
+            return res.status(200).json(doctormap); // Return here
+        }
+
+        const doctorRates = doctors.map(doctor => {
+            let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+            return {
+                doctorName: doctor.name,
+                originalRate: doctor.rate,
+                rateAfterDiscount: rateAfterDiscount,
+            };
+        });
+
+        return res.status(200).json(doctorRates); // Return here
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+
 
 const getSinglePerscription = async(req, res) => {
     const _id = req.params.perscID
@@ -68,5 +151,6 @@ const getSinglePerscription = async(req, res) => {
 module.exports = {
     signUp,
     viewFilterPerscriptions,
-    getSinglePerscription
+    getSinglePerscription,
+    estimateRate
 }

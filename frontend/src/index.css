@@ -58,6 +58,15 @@ header a {
   position: relative;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
 }
+.perscription-details {
+  background: #fff;
+  border-radius: 4px;
+  margin: 20px auto;
+  padding: 20px;
+  position: relative;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+  margin-left: 70px;
+}
 
 .Admin-details {
   background: #fff;
@@ -158,7 +167,7 @@ header a {
   color: #ecf0f1; 
   padding: 10px 15px;
   margin: 5px 0;
-  width: 150px;
+  width: 160px;
   text-align: center;
   border-radius: 4px; 
   transition: background-color 0.3s; 
@@ -311,4 +320,57 @@ div.error {
 }
 .reject-button {
   color: #e7195a;
+}
+.health-packages {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.health-packages ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.health-packages li {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.health-packages h2 {
+  margin: 0 0 10px;
+}
+
+.error-message {
+  color: red;
+}
+.input-login {
+  width: 25%;
+  padding: 12px 20px;
+  border: 2px solid #3498db;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.login-button {
+  background-color: #3498db;
+  color: white;
+  padding: 15px 25px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  max-width: 200px;
+}
+button:hover {
+  background-color: #63a7d4;
+}
+.login-form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 300px;
+  align-items: center;
 }

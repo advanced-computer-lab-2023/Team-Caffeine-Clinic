@@ -28,6 +28,7 @@ let handleSubmit = async (e) => {
         <span onClick={handleSubmit}>Edit</span>
         {/* <span onClick={handleClick}>Update</span> */}
       </div>
+
     )
   }
   
