@@ -23,9 +23,9 @@ let handleSubmit = async (e) => {
         <p><strong>Base Price: </strong>{hp.basePrice}</p>
         {/* <p><strong>Discounts: </strong>{hp.discounts}</p> */}
         <p>{hp.createdAt}</p>
-        <span onClick={handleClick}>Delete</span>
+        <span className="span1 "onClick={handleClick}>Delete</span>
         <br />
-        <span onClick={handleSubmit}>Edit</span>
+        <span className="span2" onClick={handleSubmit}>Edit</span>
         {/* <span onClick={handleClick}>Update</span> */}
       </div>
 

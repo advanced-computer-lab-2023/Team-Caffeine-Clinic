@@ -239,6 +239,10 @@ header a {
   color: green;
 }
 
+.Admin-details {
+  width: 1000px;
+}
+
 .Admin-details h4 {
   margin: 0 0 10px 0;
   font-size: 1.2em;
@@ -255,10 +259,35 @@ header a {
   right: 20px;
   cursor: pointer;
   background: #f1f1f1;
-  padding: 6px;
+   padding: 6px; 
   border-radius: 10%;
   color: #333;
 }
+
+.Admin-details .span1 {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: #f1f1f1;
+   padding: 6px; 
+  border-radius: 10%;
+  color: #333;
+}
+
+.Admin-details .span2 {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: #f1f1f1;
+  padding: 6px;
+  border-radius: 10%;
+  color: #333;
+  margin-right:70px ;
+}
+
+
 
 /* new workout form */
 label, input {
