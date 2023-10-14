@@ -446,3 +446,18 @@ button:hover {
   font-weight: bold;
   margin-bottom: 20px;
 }
+
+.logout-button {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #ff1e1e;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.logout-button:hover {
+  background-color: #e50000;
+}
