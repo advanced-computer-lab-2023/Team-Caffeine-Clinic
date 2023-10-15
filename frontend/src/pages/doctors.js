@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import DoctorDetails from '../components/DoctorDetails';
 
+
 const Doctors = () => {
 
     const [doctors, setDoctors] = useState(null);
