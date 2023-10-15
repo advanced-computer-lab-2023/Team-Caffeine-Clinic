@@ -18,6 +18,7 @@ const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
 
 const healthPackageController = require('./controllers/healthPackagesController');
+const Appointment = require('./routes/appointments');
 // const cors = require('cors');
 
 
@@ -79,6 +80,7 @@ app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
 app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
+app.use('/api', Appointment)
 
 
 app.use((req, res, next) => {

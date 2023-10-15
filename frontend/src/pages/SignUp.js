@@ -16,6 +16,7 @@ const SignUp = () => {
     const [dob, setDob] = useState('');
     const [gender, setGender] = useState('');
     const [mobileNumber, setMobile] = useState('');
+    const [healthRecords, setHealthRecords] = useState('');
 
     const [EName, setEname] = useState('');
     const [EMobile, setEMobile] = useState('');
@@ -28,7 +29,7 @@ const SignUp = () => {
 
         const Patient = {
             username, name, email, password, dob, gender, 
-            mobile_number: mobileNumber, Efull_name: EName, Emobile_number: EMobile, relation: ERelation 
+            mobile_number: mobileNumber, Efull_name: EName, Emobile_number: EMobile, relation: ERelation  , health_records: healthRecords
         }
 
         
@@ -60,6 +61,7 @@ const SignUp = () => {
             setEname('')
             setEMobile('')
             setERelation('')
+            setHealthRecords('')
             setError(null)
             console.log("Patient Created", json[0]);
             setMessage("Patient Created Successfuly")
@@ -122,7 +124,7 @@ const SignUp = () => {
                 </label>
                 <hr />
                 <p>
-            Radio buttons:
+            Choose Gender:
             <label>
               <input type="radio" name="gender" value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
               Male
@@ -166,6 +168,16 @@ const SignUp = () => {
                     onChange={e => setERelation(e.target.value)}
                     type="text" />
                 </label>
+                <br/>
+                
+                <label>
+                    Health Record: 
+                    <input 
+                    value={healthRecords}
+                    onChange={(e) => setHealthRecords(e.target.value)}
+                    type="text" />
+                </label>
+                
                 <br /><br />
                 <Button variant="dark" type="submit">
                     Register

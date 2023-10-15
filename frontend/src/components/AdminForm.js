@@ -28,6 +28,7 @@ const AdminForm = () => {
       setPassword('')
       console.log('new Admin added:', json)
     }
+    window.location.reload();
 
   }
 

@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 
 const healthPackage = require('../models/healthPackageModel')
 
+const Appointment = require('../models/appointment')
+
 
 // Get all doctors with optional name and/or speciality filter
 const getDoctors = async (req, res) => {
@@ -66,8 +68,34 @@ const getSingleDoctor = async (req, res) => {
 };
 
 
+const getAppointments = async(req, res) => {
+  const doctor = req.session.user
+  const doctorUsername = doctor.username
+
+  try {
+
+      const date = req.query.date;
+      const status = req.query.status;
+
+      let filter = {};
+
+      if (date) filter.appointmentDate = date; 
+      if (status) filter.status = new RegExp(status, 'i');
+      if (doctorUsername) filter.doctor = doctorUsername
+
+
+      const appointement = await Appointment.find(filter)
+      res.status(200).json(appointement)
+  } catch (error) {
+      res.status(400).send(error);
+  }
+}
+
+
+
 
 module.exports = {
   getDoctors,
-  getSingleDoctor
+  getSingleDoctor,
+  getAppointments
 }

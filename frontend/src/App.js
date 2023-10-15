@@ -30,6 +30,8 @@ import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
+import Appointments from './pages/Appointments';
+import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 
 
@@ -49,7 +51,8 @@ function App() {
               <Route path="ViewPatients" element={<WithDoctorNavbar><MyPatients /></WithDoctorNavbar>} />
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><PatientsWithUpcomingAppointments /></WithDoctorNavbar>} />
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
-              
+              <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
+
 
               {/* Ibra - Salah */}
               <Route path='home' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
@@ -59,6 +62,7 @@ function App() {
               <Route path='healthPackages' element={<WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar>} />
               <Route path='Perscriptions' element={<WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar>} />
               <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar>} />
+              <Route path='Appointments' element={<WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar>} />
               <Route path='signup' element={<SignUp />} />
               <Route path='doctorApplication' element={<ApplyDoctor />} />
               <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar>} />

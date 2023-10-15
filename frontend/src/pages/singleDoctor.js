@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Navbar from '../components/Navbar'
 
 const SingleDoctor = () => {
   const { username } = useParams();
@@ -32,6 +33,8 @@ const SingleDoctor = () => {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="single-doctor-details">
       <div className="name">{doctor.name}</div>
       <div className="details"><strong>speciality: </strong>{doctor.speciality}</div>
@@ -41,6 +44,7 @@ const SingleDoctor = () => {
       <div className="details"><strong>education: </strong>{doctor.education}</div>
       <div className="details"><strong>session price: </strong>{doctor.rateAfterDiscount + 0.1 * (doctor.rateAfterDiscount)}</div>
     </div>
+    </>
   );
 };
 
