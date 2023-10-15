@@ -31,6 +31,7 @@ import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
 import Appointments from './pages/Appointments';
+import AppointmentDoc from './pages/AppointmentDoc';
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
               <Route path="ViewPatients" element={<WithDoctorNavbar><MyPatients /></WithDoctorNavbar>} />
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><PatientsWithUpcomingAppointments /></WithDoctorNavbar>} />
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
+              <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
 
               {/* Ibra - Salah */}
               <Route path='home' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
