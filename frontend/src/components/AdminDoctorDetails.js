@@ -5,6 +5,7 @@ const DoctorDetails = ({ doctor }) => {
         method: 'DELETE'
         })
         const json = await response.json()
+        window.location.reload();
     }
 
 

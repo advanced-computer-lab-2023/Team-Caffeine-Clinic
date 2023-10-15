@@ -5,6 +5,7 @@ const AdminDetails = ({ admin }) => {
         method: 'DELETE'
       })
       const json = await response.json()
+      window.location.reload();
   }
 
     return (

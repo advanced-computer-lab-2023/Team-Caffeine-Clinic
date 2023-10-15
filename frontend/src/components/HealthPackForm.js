@@ -41,7 +41,10 @@ const HealthPackForm = () => {
       console.log('new Health Package added:', json)
     }
 
+    window.location.reload();
   }
+ 
+
 
   return (
     <form className="create" onSubmit={handleSubmit}> 

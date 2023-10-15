@@ -17,12 +17,14 @@ const HPHome =  () => {
         }
 
         fetchHealthPacks();
+        
     }, [])
 
     return (
         <>
         <nav>
         <Link className="home-button" to="/AdminHome">Home</Link>
+       
       </nav>
       <h2 className="title-admin">Health Packages</h2>  
         <div className="home">
