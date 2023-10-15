@@ -30,6 +30,7 @@ import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
+import Appointments from './pages/Appointments';
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
               <Route path='healthPackages' element={<WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar>} />
               <Route path='Perscriptions' element={<WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar>} />
               <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar>} />
+              <Route path='Appointments' element={<WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar>} />
               <Route path='signup' element={<SignUp />} />
               <Route path='doctorApplication' element={<ApplyDoctor />} />
 

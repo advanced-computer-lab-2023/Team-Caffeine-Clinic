@@ -5,6 +5,8 @@ const Perscriptions = require('../models/Perscriptions');
 const Doctor = require('../models/doctor');
 const healthPackage = require('../models/healthPackageModel');
 
+const Appointment = require('../models/appointment')
+
 
 //Sign up as a new Patient
 const signUp = async(req, res) => {
@@ -168,9 +170,33 @@ const getSinglePerscription = async(req, res) => {
     }
 }
 
+const getAppointments = async(req, res) => {
+    const patient = req.session.user
+    const patientUsername = patient.username
+
+    try {
+
+        const date = req.query.date;
+        const status = req.query.status;
+
+        let filter = {};
+
+        if (date) filter.appointmentDate = date; // Case-insensitive regex search
+        if (status) filter.status = new RegExp(status, 'i');
+        if (patientUsername) filter.patient = patientUsername
+
+
+        const appointement = await Appointment.find(filter)
+        res.status(200).json(appointement)
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
 module.exports = {
     signUp,
     viewFilterPerscriptions,
     getSinglePerscription,
-    estimateRate
+    estimateRate,
+    getAppointments
 }
