@@ -53,14 +53,14 @@ const SelectPatient = () => {
           <p>Email: {selectedPatient.email}</p>
           <p>Date of birth: {selectedPatient.dob}</p>
           <p>Gender: {selectedPatient.gender}</p>
-          <p>Mobile Number: {selectedPatient.mobilenumber}</p>
+          <p>Mobile Number: {selectedPatient.mobile_number}</p>
 
-          {selectedPatient.emergencycontact ? (
+          {selectedPatient.emergency_contact ? (
             <div>
               <h2>Emergency Contact</h2>
-              <p>Name: {selectedPatient.emergencycontact.full_name}</p>
-              <p>Mobile Number: {selectedPatient.emergencycontact.mobile_number}</p>
-              <p>Relation: {selectedPatient.emergencycontact.relation_to_the_patient}</p>
+              <p>Name: {selectedPatient.emergency_contact.full_name}</p>
+              <p>Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
+              <p>Relation: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
             </div>
           ) : null}
         </div>

@@ -20,6 +20,7 @@ const DocAppDetails = ({ Appl }) => {
       method: 'DELETE'
     })
     const json = await response.json()
+    window.location.reload();
 }
 
 const handleClick2 = async () => {
@@ -27,6 +28,7 @@ const handleClick2 = async () => {
     method: 'DELETE'
   })
   const json = await response.json()
+  window.location.reload();
 }
 
     return (

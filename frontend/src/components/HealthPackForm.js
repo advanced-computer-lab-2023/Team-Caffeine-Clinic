@@ -13,7 +13,7 @@ const HealthPackForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const hp = {name,description,servicesIncluded,basePrice}
+    const hp = {name,description,servicesIncluded,basePrice,docSession,medicine,family}
     console.log(JSON.stringify(hp));
     
     const response = await fetch('/api/Admin/createHealthPackage', {
@@ -41,7 +41,10 @@ const HealthPackForm = () => {
       console.log('new Health Package added:', json)
     }
 
+    window.location.reload();
   }
+ 
+
 
   return (
     <form className="create" onSubmit={handleSubmit}> 
