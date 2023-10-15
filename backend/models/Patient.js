@@ -64,9 +64,10 @@ const patientSchema = new Schema({
         
     },
 
-    health_records: [{
+    health_records: {
         type: String
-    }]
+    }
+    
 }, {timestamps: true})
 
 module.exports = mongoose.model('Patient', patientSchema)
