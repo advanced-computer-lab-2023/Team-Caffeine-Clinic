@@ -31,7 +31,7 @@ const UpdateEmail = () => {
         setMessage('Error updating email.');
         return;
       }
-
+    
       setMessage('Email updated successfully.');
     } catch (error) {
       console.error(error);

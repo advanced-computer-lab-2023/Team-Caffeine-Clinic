@@ -39,8 +39,10 @@ const applicationSchema = new Schema({
         required: true
     },
     availableDates: [{
-        date: Date,
-        time: String
+       type:String,
+       required: true,
+       default:[]
+       
     }]
 });
 

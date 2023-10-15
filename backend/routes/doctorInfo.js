@@ -16,7 +16,13 @@ const {
     addPatientToDoctor,
     myPatients
     
+    
 } = require('../controllers/doctorInfocontroller')
+
+const {
+    
+    filterDoctorsByAvailability
+} = require('../controllers/PatientController')
 
 const router = express.Router()
 
@@ -32,6 +38,9 @@ router.get('/getDoctorByusername', getDoctorByusername)
 
 //get all patient AllHealthRecords with a doc
 router.get('/getAllHealthRecords', getAllHealthRecords)
+
+//filter  a doctor by speciality and/or availability on a certain date and at a specific time
+router.get('/filterDoctorsByAvailability',filterDoctorsByAvailability)
 
 //get all patient with a doc
 router.get('/myPatients', myPatients)
