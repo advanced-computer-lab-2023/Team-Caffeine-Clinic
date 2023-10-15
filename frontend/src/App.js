@@ -32,6 +32,7 @@ import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
 import Appointments from './pages/Appointments';
 import AppointmentDoc from './pages/AppointmentDoc';
+import DoctorList from './pages/Filterbyavedates'
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
 
+
               {/* Ibra - Salah */}
               <Route path='home' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
@@ -63,6 +65,7 @@ function App() {
               <Route path='Appointments' element={<WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar>} />
               <Route path='signup' element={<SignUp />} />
               <Route path='doctorApplication' element={<ApplyDoctor />} />
+              <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar>} />
 
               {/* Mo2 - Yas */}
               <Route

@@ -156,6 +156,20 @@ const estimateRate = async (req, res) => {
 };
 
 
+  // Function to filter doctors by availability on a certain date and time
+  const filterDoctorsByAvailability = async (req, res) => {
+    const  date  = req.query.date;
+    
+    try {
+      const doctors = await Doctor.find({
+        availableDates : date
+      });
+      res.json(doctors);
+    } catch (error) {
+      console.error('Error filtering doctors by availability:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
 
 const getSinglePerscription = async(req, res) => {
     const _id = req.params.perscID
@@ -198,5 +212,6 @@ module.exports = {
     viewFilterPerscriptions,
     getSinglePerscription,
     estimateRate,
-    getAppointments
+    getAppointments,
+    filterDoctorsByAvailability
 }

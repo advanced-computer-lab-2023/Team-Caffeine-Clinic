@@ -38,7 +38,11 @@ const doctorSchema = new Schema({
     education: {
         type: String,
         required: true
-    },
+    }, availableDates: [{
+        type:String,
+        required: true,
+        default:[]
+    }],
     patients: [{
         type: String, 
         ref: 'Patient'
