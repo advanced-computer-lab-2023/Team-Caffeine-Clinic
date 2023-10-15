@@ -105,7 +105,15 @@ const estimateRate = async (req, res) => {
             return res.status(404).json({ error: 'Patient not found' });
         }
 
-        const doctors = await Doctor.find();
+        const name = req.query.name;
+        const speciality = req.query.speciality;
+
+        let filter = {};
+
+        if (name) filter.name = new RegExp(name, 'i'); // Case-insensitive regex search
+        if (speciality) filter.speciality = new RegExp(speciality, 'i');
+
+        const doctors = await Doctor.find(filter);
         const patientHealthPackage = patient.health_package;
 
         const HealthPackage = await healthPackage.findOne({ name: patientHealthPackage });
