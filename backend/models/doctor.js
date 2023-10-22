@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 
+const passportLocalMongoose = require('passport-local-mongoose')
+
 const Schema = mongoose.Schema
 
 
@@ -49,27 +51,6 @@ const doctorSchema = new Schema({
     }]
 });
 
-// const Doctor = mongoose.model('Docctor', doctorSchema);
-
-
-// const drJones = new Doctor({
-//     username: "dr_jones",
-//     name: "Dr. Samantha Jones",
-//     speciality: "Cardiology",
-//     rate: 4.8,
-//     affiliation: "MediCare Hospital",
-//     email: "dr.jones@medicare.com",
-//     education: "MD in Cardiology from Harvard Medical School",
-//     patients: ["patient1_username", "patient2_username"]
-// });
-
-// // Save the doctor to the database
-// drJones.save()
-// .then(() => {
-//     console.log('Doctor added successfully');
-// })
-// .catch(err => {
-//     console.error('Error adding doctor:', err);
-// });
+doctorSchema.plugin(passportLocalMongoose)
 
 module.exports = mongoose.model('Doctor', doctorSchema);

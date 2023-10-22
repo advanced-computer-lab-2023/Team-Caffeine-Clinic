@@ -6,13 +6,17 @@ const router = express.Router()
 const {
     loginAsPatient,
     loginAsDoctor,
-    loginAsAdmin
+    loginAsAdmin,
+    login,
+    logout
 } = require('../controllers/GuestController')
 
-router.post('/loginAsPatient', loginAsPatient)
+router.post('/loginAsPatient', login, loginAsPatient)
 
-router.post('/loginAsDoctor', loginAsDoctor)
+router.post('/loginAsDoctor', login, loginAsDoctor)
 
-router.post('/loginAsAdmin', loginAsAdmin)
+router.post('/loginAsAdmin', login, loginAsAdmin)
+
+router.post('/logout', logout)
 
 module.exports = router

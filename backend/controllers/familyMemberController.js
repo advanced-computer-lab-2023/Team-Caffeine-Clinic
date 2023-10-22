@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 // Add family member
 const addFamilyMember = async (req, res) => {
 
-  const user = req.session.user
+  const user = req.user
 
   const patientID = user.id
 
@@ -26,7 +26,7 @@ const addFamilyMember = async (req, res) => {
 // Get registered family members
 const getFamilyMembers = async (req, res) => {
 
-  const user = req.session.user
+  const user = req.user
 
   const patientID = user.id
 

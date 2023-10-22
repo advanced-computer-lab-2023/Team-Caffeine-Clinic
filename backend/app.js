@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
+const passport = require('passport')
+
 //Import Routes
 
 const signUp = require('./routes/signup');
@@ -68,7 +70,8 @@ app.use(
 // app.use('/users', usersRouter);
 
 
-
+app.use(passport.initialize())
+app.use(passport.session())
 
 // middleware
 app.use(express.json());

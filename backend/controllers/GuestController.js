@@ -1,12 +1,29 @@
 const { default: mongoose } = require('mongoose')
 
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const passportLocalMongoose = require('passport-local-mongoose')
+
+//Models
 const DoctorAppplication = require('../models/DoctorApplication');
-
 const Patient = require('../models/Patient')
-
 const Doctor = require('../models/doctor')
-
 const Admin = require('../models/admin')
+
+
+// Passport local Strategy
+passport.use(Patient.createStrategy());
+passport.use(Doctor.createStrategy());
+passport.use(Admin.createStrategy());
+
+// To use with sessions
+passport.serializeUser(Patient.serializeUser());
+passport.deserializeUser(Patient.deserializeUser());
+passport.serializeUser(Doctor.serializeUser());
+passport.deserializeUser(Doctor.deserializeUser());
+passport.serializeUser(Admin.serializeUser());
+passport.deserializeUser(Admin.deserializeUser());
+
 
 //Apply as a Doctor
 const applyDoctor = async(req, res) => {
@@ -19,25 +36,33 @@ const applyDoctor = async(req, res) => {
     res.status(200).json(doctorApp)
 }
 
-const loginAsPatient = async(req, res) => {
-    const {username} = req.body
+const login = passport.authenticate('local')
 
-    try {
-        const user = await Patient.findOne({username: username})
-
-        if (user) {
-            req.session.user = user;
-            console.log(req.session.user._id);
-            res.status(200).send('Login successful');
-          } else {
-            res.status(401).send('Login failed');
-          }
-
-
-    } catch (error) {
-        res.status(401).send(error);
-    }
+const loginAsPatient = function(req, res){
+    console.log('hima is here');
+    // console.log(req.user.username);
+    res.status(200).json({mssg: req})
 }
+
+// const loginAsPatient = async(req, res) => {
+//     const {username} = req.body
+
+//     try {
+//         const user = await Patient.findOne({username: username})
+
+//         if (user) {
+//             req.user = user;
+//             console.log(req.user._id);
+//             res.status(200).send('Login successful');
+//           } else {
+//             res.status(401).send('Login failed');
+//           }
+
+
+//     } catch (error) {
+//         res.status(401).send(error);
+//     }
+// }
 
 const loginAsDoctor = async(req, res) => {
     const {username} = req.body
@@ -46,8 +71,8 @@ const loginAsDoctor = async(req, res) => {
         const user = await Doctor.findOne({username: username})
 
         if (user) {
-            req.session.user = user;
-            console.log(req.session.user._id);
+            req.user = user;
+            console.log(req.user._id);
             res.status(200).send('Login successful');
           } else {
             res.status(401).send('Login failed');
@@ -66,8 +91,8 @@ const loginAsAdmin = async(req, res) => {
         const user = await Admin.findOne({Username: username})
 
         if (user) {
-            req.session.user = user;
-            console.log(req.session.user._id);
+            req.user = user;
+            console.log(req.user._id);
             res.status(200).send('Login successful');
           } else {
             res.status(401).send('Login failed');
@@ -79,44 +104,17 @@ const loginAsAdmin = async(req, res) => {
     }
 }
 
-// const login = async (req, res) => {
-//     const { username } = req.body;
-  
-//     // Try logging in as a patient
-//     try {
-//       const patient = await Patient.findOne({ username: username });
-  
-//       if (patient) {
-//         req.session.user = patient;
-//         console.log(req.session.user._id);
-//         res.status(200).send(patient);
-//         return; // Exit the function if login succeeds
-//       }
-//     } catch (error) {
-//       res.status(500).send(error);
-//       return; // Exit the function on error
-//     }
-  
-//     // If patient login fails, try logging in as a doctor
-//     try {
-//       const doctor = await Doctor.findOne({ username: username });
-  
-//       if (doctor) {
-//         req.session.user = doctor;
-//         console.log(req.session.user._id);
-//         res.status(200).send(doctor);
-//       } else {
-//         res.status(401).send('Login failed');
-//       }
-//     } catch (error) {
-//       res.status(500).send(error);
-//     }
-//   };
-  
+const logout = function(req, res, next) {
+    req.logout(function(err) {
+      if (err) { return next(err); }
+    });
+  }
 
 module.exports = {
     applyDoctor,
     loginAsPatient,
     loginAsDoctor,
-    loginAsAdmin
+    loginAsAdmin,
+    login,
+    logout
 }
