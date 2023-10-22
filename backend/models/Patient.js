@@ -5,11 +5,6 @@ const passportLocalMongoose = require('passport-local-mongoose')
 const Schema = mongoose.Schema
 
 const patientSchema = new Schema({
-    username: {
-        type: String,
-        required: true
-    },
-    
     name: {
         type: String,
         required: true
