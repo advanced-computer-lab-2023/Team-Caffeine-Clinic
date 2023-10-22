@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
 
 //Import Routes
 
@@ -19,6 +20,8 @@ const doctorInfoRoutes = require('./routes/doctorInfo');
 const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
 
+const Patient = require('./models/Patient')
+
 const healthPackageController = require('./controllers/healthPackagesController');
 const Appointment = require('./routes/appointments');
 // const cors = require('cors');
@@ -26,6 +29,9 @@ const Appointment = require('./routes/appointments');
 
 
 var app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
 
 // app.use(bodyParser.json());
 // app.use(cors());
@@ -72,6 +78,28 @@ app.use(
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+
+passport.use(new LocalStrategy(
+  (username, password, done) => {
+    // In this function, you should validate the provided username and password.
+    // You can query your database to find the user and check if the password matches.
+    // If the username and password are valid, call `done(null, user)`; if not, call `done(null, false)`.
+
+    // Example:
+    console.log(username);
+    console.log(password);
+
+    Patient.findOne({ username: username }, function(err, user) {
+        console.log('a7a');
+      if (err) { return done(err); }
+      if (!user) { return done(null, false, { message: 'Incorrect username.' }); }
+      if (!user.validPassword(password)) { return done(null, false, { message: 'Incorrect password.' }); }
+      console.log(user);
+      return done(null, user);
+    });
+  }
+));
 
 // middleware
 app.use(express.json());

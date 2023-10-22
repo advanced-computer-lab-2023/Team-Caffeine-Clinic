@@ -1,7 +1,7 @@
 const { default: mongoose } = require('mongoose')
 
 const passport = require('passport')
-const LocalStrategy = require('passport-local')
+const LocalStrategy = require('passport-local').Strategy
 const passportLocalMongoose = require('passport-local-mongoose')
 
 //Models
@@ -25,6 +25,12 @@ passport.serializeUser(Admin.serializeUser());
 passport.deserializeUser(Admin.deserializeUser());
 
 
+
+//const LocalStrategy = require('passport-local').Strategy;
+
+
+
+
 //Apply as a Doctor
 const applyDoctor = async(req, res) => {
     const {username, password, email, name, speciality, rate, affiliation, education, availableDates} = req.body
@@ -36,7 +42,12 @@ const applyDoctor = async(req, res) => {
     res.status(200).json(doctorApp)
 }
 
-const login = passport.authenticate('local')
+const login = passport.authenticate('local', (username, password, err) => {
+    if(err){
+        console.log(err);
+    }
+
+})
 
 const loginAsPatient = function(req, res){
     console.log('hima is here');

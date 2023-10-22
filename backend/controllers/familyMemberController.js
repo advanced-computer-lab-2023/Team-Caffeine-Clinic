@@ -27,7 +27,7 @@ const addFamilyMember = async (req, res) => {
 const getFamilyMembers = async (req, res) => {
 
   const user = req.user
-
+  
   const patientID = user.id
 
   try {
