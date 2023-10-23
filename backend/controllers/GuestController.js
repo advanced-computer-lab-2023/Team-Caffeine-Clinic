@@ -42,17 +42,12 @@ const applyDoctor = async(req, res) => {
     res.status(200).json(doctorApp)
 }
 
-const login = passport.authenticate('local', (username, password, err) => {
-    if(err){
-        console.log(err);
-    }
-
-})
+const login = passport.authenticate('local')
 
 const loginAsPatient = function(req, res){
     console.log('hima is here');
     // console.log(req.user.username);
-    res.status(200).json({mssg: req})
+    res.status(200).json(req.session)
 }
 
 // const loginAsPatient = async(req, res) => {

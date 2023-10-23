@@ -81,25 +81,26 @@ app.use(passport.session())
 
 
 passport.use(new LocalStrategy(
-  (username, password, done) => {
-    // In this function, you should validate the provided username and password.
-    // You can query your database to find the user and check if the password matches.
-    // If the username and password are valid, call `done(null, user)`; if not, call `done(null, false)`.
+  async (username, password, done) => {
+    try {
+      console.log('ana hena');
+      const user = await Patient.findOne({ username: username });
 
-    // Example:
-    console.log(username);
-    console.log(password);
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      console.log(password);
+      if (!user.validatePassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
 
-    Patient.findOne({ username: username }, function(err, user) {
-        console.log('a7a');
-      if (err) { return done(err); }
-      if (!user) { return done(null, false, { message: 'Incorrect username.' }); }
-      if (!user.validPassword(password)) { return done(null, false, { message: 'Incorrect password.' }); }
-      console.log(user);
       return done(null, user);
-    });
+    } catch (err) {
+      return done(err);
+    }
   }
 ));
+
 
 // middleware
 app.use(express.json());
