@@ -149,40 +149,17 @@ const createDoctor = async(req, res) => {
         availableDates,
         patients,
     } = req.body;
-    try {
-        const doctor = new Doctor({
-            username,
-            password,
-            name,
-            speciality,
-            rate,
-            affiliation,
-            education,
-            email, // Include the email field in the Doctor creation
-            availableDates,
-            patients,
-        });
-
-        const existingdoctor = await Doctor.findOne({
-            username,
-            password,
-            name,
-            speciality,
-            rate,
-            affiliation,
-            education,
-            email, // Include the email field in the Doctor creation
-            availableDates,
-            patients,
-        });
-        if (existingdoctor) {
-            return res.status(400).json({ message: 'Doctor with the same details already exists' });
-        }
-        await doctor.save();
-        res.status(201).json(doctor); // Use status 201 for resource creation
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    
+    Doctor.register({username: username, 
+        name: name, speciality: speciality, rate: rate, 
+        affiliation: affiliation, email: email, education: education, 
+        availableDates: availableDates, patients: patients}, password, function(err, user) {
+        if(err){
+          console.log(err);
+          return res.status(400).json({err: err})
+      }
+          return res.status(200).json({mssg: "Signed Up successfuly"})
+      })
 };
 // Define a controller function to get a doctor by ID
 const getDoctorByusername = async(req, res) => {

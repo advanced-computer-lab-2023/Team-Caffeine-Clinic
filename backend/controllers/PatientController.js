@@ -28,17 +28,15 @@ const signUp = async(req, res) => {
 
 
     
-    const patient = new Patient({username, name, email, dob, gender, mobile_number, health_package, emergency_contact})
-    Patient.register(patient, password, function(err, user){
+    // const patient = new Patient({username, name, email, dob, gender, mobile_number, health_package, emergency_contact})
+    Patient.register(new Patient({username: username, name, email, dob, gender, mobile_number, health_package, emergency_contact}), password, function(err, user){
         //console.log("woah");
         if(err){
             //console.log("woah");
-            res.status(400).json({err: "Error! Try Again"})
+            return res.status(400).json({err: "Error! Try Again"})
         }
-        passport.authenticate("local"), function(req, res){
-            console.log("woah");
-            res.status(200).json({mssg: "Signed Up successfuly"})
-        }
+            return res.status(200).json({mssg: "Signed Up successfuly"})
+        
     })
 }
 
