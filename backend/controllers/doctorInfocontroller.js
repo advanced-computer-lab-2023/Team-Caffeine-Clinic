@@ -149,40 +149,17 @@ const createDoctor = async(req, res) => {
         availableDates,
         patients,
     } = req.body;
-    try {
-        const doctor = new Doctor({
-            username,
-            password,
-            name,
-            speciality,
-            rate,
-            affiliation,
-            education,
-            email, // Include the email field in the Doctor creation
-            availableDates,
-            patients,
-        });
-
-        const existingdoctor = await Doctor.findOne({
-            username,
-            password,
-            name,
-            speciality,
-            rate,
-            affiliation,
-            education,
-            email, // Include the email field in the Doctor creation
-            availableDates,
-            patients,
-        });
-        if (existingdoctor) {
-            return res.status(400).json({ message: 'Doctor with the same details already exists' });
-        }
-        await doctor.save();
-        res.status(201).json(doctor); // Use status 201 for resource creation
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    
+    Doctor.register({username: username, 
+        name: name, speciality: speciality, rate: rate, 
+        affiliation: affiliation, email: email, education: education, 
+        availableDates: availableDates, patients: patients}, password, function(err, user) {
+        if(err){
+          console.log(err);
+          return res.status(400).json({err: err})
+      }
+          return res.status(200).json({mssg: "Signed Up successfuly"})
+      })
 };
 // Define a controller function to get a doctor by ID
 const getDoctorByusername = async(req, res) => {
@@ -207,7 +184,7 @@ const getDoctorByusername = async(req, res) => {
 }
 //update Rate   doneee
 const updateRate = async(req, res) => {
-    const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+    const user = req.user; // Assuming you pass the doctor's username as a query parameter
 
     const doctorUsername = user.username
 
@@ -239,7 +216,7 @@ const updateRate = async(req, res) => {
 };
 //update doctor email   doneeee
 const updateEmail = async(req, res) => {
-    const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+    const user = req.user; // Assuming you pass the doctor's username as a query parameter
 
     const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
     
@@ -271,7 +248,7 @@ const updateEmail = async(req, res) => {
 };
 ///update hospital   doneeee
 const updateDoctorProfile = async(req, res) => {
-    const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+    const user = req.user; // Assuming you pass the doctor's username as a query parameter
 
     const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
     
@@ -322,7 +299,7 @@ const selectpatient = async(req, res) => {
 // Create a route to filter patients by upcoming appointments by doc username #req:35
 const patientsWithUpcomingAppointments = async (req, res) => {
     try {
-        const doctor = req.session.user; // Assuming you pass the doctor's username as a query parameter
+        const doctor = req.user; // Assuming you pass the doctor's username as a query parameter
 
         // const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
         // console.log(doctorUsername);
@@ -401,7 +378,7 @@ const getAllHealthRecords = async(req, res) => {
 };
 const myPatients = async(req, res) => {
     try {
-        const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+        const user = req.user; // Assuming you pass the doctor's username as a query parameter
 
         const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
         
@@ -429,7 +406,7 @@ const myPatients = async(req, res) => {
 };
 const searchmyPatients = async (req, res) => {
     try {
-        const user = req.session.user; // Assuming you pass the doctor's username as a query parameter
+        const user = req.user; // Assuming you pass the doctor's username as a query parameter
 
         const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
         

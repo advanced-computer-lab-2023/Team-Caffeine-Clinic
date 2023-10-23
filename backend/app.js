@@ -5,6 +5,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+
+
 //Import Routes
 
 const signUp = require('./routes/signup');
@@ -17,13 +21,21 @@ const doctorInfoRoutes = require('./routes/doctorInfo');
 const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
 
+const Patient = require('./models/Patient')
+
 const healthPackageController = require('./controllers/healthPackagesController');
 const Appointment = require('./routes/appointments');
-// const cors = require('cors');
+
+const Doctor = require('./models/doctor');
+const Admin = require('./models/admin');
+// const./models/admin= require('cors');
+
 
 
 
 var app = express();
+
+
 
 // app.use(bodyParser.json());
 // app.use(cors());
@@ -35,6 +47,10 @@ var app = express();
 // var logger = require('morgan');
 // mongoose.connect('mongodb://localhost/virtual_clinic', { useNewUrlParser: true, useUnifiedTopology: true });
 
+app.use((req, res, next) => {
+  console.log(req.path, req.method)
+  next()
+});
 
 
 // Configure the session
@@ -68,6 +84,47 @@ app.use(
 // app.use('/users', usersRouter);
 
 
+// Passport local Strategy
+passport.use(Patient.createStrategy());
+passport.use(Doctor.createStrategy());
+passport.use(Admin.createStrategy());
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+// To use with sessions
+passport.serializeUser(Patient.serializeUser());
+passport.deserializeUser(Patient.deserializeUser());
+passport.serializeUser(Doctor.serializeUser());
+passport.deserializeUser(Doctor.deserializeUser());
+passport.serializeUser(Admin.serializeUser());
+passport.deserializeUser(Admin.deserializeUser());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+
+// passport.use(new LocalStrategy(
+//   async (username, password, done) => {
+//     try {
+//       console.log('ana hena');
+//       const user = await Patient.findOne({ username: username });
+
+//       if (!user) {
+//         return done(null, false, { message: 'Incorrect username.' });
+//       }
+//       console.log(password);
+//       if (!user.validatePassword(password)) {
+//         return done(null, false, { message: 'Incorrect password.' });
+//       }
+
+//       return done(null, user);
+//     } catch (err) {
+//       return done(err);
+//     }
+//   }
+// ));
 
 
 // middleware
@@ -83,10 +140,6 @@ app.use('/api/healthpackage', healthPackageRoutes);
 app.use('/api', Appointment)
 
 
-app.use((req, res, next) => {
-  console.log(req.path, req.method)
-  next()
-});
 
 // // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
@@ -110,7 +163,7 @@ app.get('/', (req, res) => {
   res.send('Welcome back, user') 
 })
 
-app.get('/api/healthPackages', healthPackageController.getHealthPackages);
+//app.get('/api/healthPackages', healthPackageController.getHealthPackages);
 
 
 

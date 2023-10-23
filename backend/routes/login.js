@@ -1,18 +1,25 @@
 const express = require('express')
 
+const passport = require('passport')
+
 const router = express.Router()
 
 //Controllers
 const {
-    loginAsPatient,
-    loginAsDoctor,
-    loginAsAdmin
+    loginPatient,
+    loginDoctor,
+    loginAdmin,
+    login,
+    loginfunc,
+    logout
 } = require('../controllers/GuestController')
 
-router.post('/loginAsPatient', loginAsPatient)
+router.post('/loginAsPatient', loginPatient, loginfunc)
 
-router.post('/loginAsDoctor', loginAsDoctor)
+router.post('/loginAsDoctor', loginDoctor, loginfunc)
 
-router.post('/loginAsAdmin', loginAsAdmin)
+router.post('/loginAsAdmin', loginAdmin, loginfunc)
+
+router.post('/logout', logout)
 
 module.exports = router

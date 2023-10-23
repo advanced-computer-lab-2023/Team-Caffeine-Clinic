@@ -1,12 +1,24 @@
 const { default: mongoose } = require('mongoose')
 
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const passportLocalMongoose = require('passport-local-mongoose')
+
+
+// Import Models
 const Patient = require('../models/Patient');
 const Perscriptions = require('../models/Perscriptions');
 const Doctor = require('../models/doctor');
 const healthPackage = require('../models/healthPackageModel');
-
 const Appointment = require('../models/appointment')
 
+
+// Passport local Strategy
+passport.use(Patient.createStrategy());
+
+// To use with sessions
+passport.serializeUser(Patient.serializeUser());
+passport.deserializeUser(Patient.deserializeUser());
 
 //Sign up as a new Patient
 const signUp = async(req, res) => {
@@ -15,21 +27,22 @@ const signUp = async(req, res) => {
     const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
 
 
-    try{
-        const patient = new Patient({username, name, email, password, dob, gender, mobile_number, health_package, emergency_contact})
-
-        await patient.save()
-
-        res.status(200).json(patient)
-    } catch(error){
-        console.log(error);
-        res.status(400).json(error)
-    }
+    
+    // const patient = new Patient({username, name, email, dob, gender, mobile_number, health_package, emergency_contact})
+    Patient.register(new Patient({username: username, name, email, dob, gender, mobile_number, health_package, emergency_contact}), password, function(err, user){
+        //console.log("woah");
+        if(err){
+            //console.log("woah");
+            return res.status(400).json({err: "Error! Try Again"})
+        }
+            return res.status(200).json({mssg: "Signed Up successfuly"})
+        
+    })
 }
 
 //View and Filter Perscriptions
 // const viewFilterPerscriptions = async (req, res) => {
-//     const user = req.session.user
+//     const user = req.user
 
 //     const patientID = user._id
 
@@ -52,7 +65,7 @@ const signUp = async(req, res) => {
 //     }
 // }
 const viewFilterPerscriptions = async (req, res) => {
-    const user = req.session.user;
+    const user = req.user;
     const patientID = await user._id;
     const date = req.query.date;
     const doctorName = req.query.doctorName; // The input character(s) for doctor name search
@@ -97,7 +110,7 @@ const viewFilterPerscriptions = async (req, res) => {
 }
 
 const estimateRate = async (req, res) => {
-    const patient = req.session.user
+    const patient = req.user
     // const patientId = req.query.patientId;
 
     try {
@@ -185,7 +198,7 @@ const getSinglePerscription = async(req, res) => {
 }
 
 const getAppointments = async(req, res) => {
-    const patient = req.session.user
+    const patient = req.user
     const patientUsername = patient.username
 
     try {

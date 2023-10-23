@@ -14,7 +14,7 @@ function LoginForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ username, password }),
       });
   
       if (patientResponse.status === 200) {
@@ -26,7 +26,7 @@ function LoginForm() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ username }),
+          body: JSON.stringify({ username, password }),
         });
   
         if (doctorResponse.status === 200) {
@@ -38,7 +38,7 @@ function LoginForm() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username }),
+            body: JSON.stringify({ username, password }),
           });
 
           if (adminResponse.status === 200) {

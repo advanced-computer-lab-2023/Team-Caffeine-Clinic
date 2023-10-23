@@ -33,13 +33,13 @@ const getAdmin = async (req, res) => {
 //Create a new Admin 
 const createAdmin = async (req, res) => {
     const {Username , Password} = req.body;
-    try {
-        const admin = await Admin.create({Username,Password})
-        res.status(200).json(admin)
-    }
-    catch(error){
-        res.status(400).json({error: error.message})
-    }
+        Admin.register({username: Username}, Password, function(err, user) {
+          if(err){
+            console.log(err);
+            return res.status(400).json({err: err})
+        }
+            return res.status(200).json({mssg: "Signed Up successfuly"})
+        })
 }
 
 // delete an admin

@@ -8,7 +8,7 @@ const HealthPackages = () => {
   useEffect(() => {
     const fetchHealthPackages = async () => {
       try {
-        const response = await fetch('/api/healthpackages');
+        const response = await fetch('/api/healthpackage');
         const data = await response.json();
         
         if (!response.ok) {
