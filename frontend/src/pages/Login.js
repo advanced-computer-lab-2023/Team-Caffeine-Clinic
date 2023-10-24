@@ -74,6 +74,7 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button className='login-button' type="submit">Log In</button>{' '}
+        <Link to=""> Forgot your Password? </Link>
         <Link to="/signup"><button className='login-button'>Sign Up</button></Link>{' '}
         <Link to="/doctorApplication"><button className='login-button'>Sign Up As a Doctor</button></Link>
       </form>
