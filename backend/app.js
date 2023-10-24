@@ -4,6 +4,7 @@ var express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const cors = require('cors');
 
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -20,6 +21,7 @@ const adminsRoute = require('./routes/Admin');
 const doctorInfoRoutes = require('./routes/doctorInfo');
 const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
+const forgotPass = require('./routes/forgotPass');
 
 const Patient = require('./models/Patient')
 
@@ -34,11 +36,11 @@ const Admin = require('./models/admin');
 
 
 var app = express();
-
+app.use(cors());
 
 
 // app.use(bodyParser.json());
-// app.use(cors());
+
 
 
 // var createError = require('http-errors');
@@ -138,6 +140,7 @@ app.use('/api/doctors', doctorsRoute);
 app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
 app.use('/api', Appointment)
+app.use('/api', forgotPass)
 
 
 

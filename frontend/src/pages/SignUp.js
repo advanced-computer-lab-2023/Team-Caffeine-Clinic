@@ -34,7 +34,7 @@ const SignUp = () => {
 
         
 
-        const response = await fetch('/api/signup', {
+        const response = await fetch('http://localhost:4000/api/signup', {
             method: 'POST',
             body: JSON.stringify(Patient),
             headers: {

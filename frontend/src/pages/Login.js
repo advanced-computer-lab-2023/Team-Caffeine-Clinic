@@ -9,7 +9,7 @@ function LoginForm() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const patientResponse = await fetch('/api/loginAsPatient', {
+      const patientResponse = await fetch('http://localhost:4000/api/loginAsPatient', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ function LoginForm() {
         // Redirect to the patient dashboard
         navigate('/home');
       } else {
-        const doctorResponse = await fetch('/api/loginAsDoctor', {
+        const doctorResponse = await fetch('http://localhost:4000/api/loginAsDoctor', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ function LoginForm() {
           // Redirect to the doctor dashboard
           navigate('/seedoc');
         } else {
-          const adminResponse = await fetch('/api/loginAsAdmin', {
+          const adminResponse = await fetch('http://localhost:4000/api/loginAsAdmin', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button className='login-button' type="submit">Log In</button>{' '}
-        <Link to=""> Forgot your Password? </Link>
+        <Link to="/forgotPass"> Forgot your Password? </Link>
         <Link to="/signup"><button className='login-button'>Sign Up</button></Link>{' '}
         <Link to="/doctorApplication"><button className='login-button'>Sign Up As a Doctor</button></Link>
       </form>

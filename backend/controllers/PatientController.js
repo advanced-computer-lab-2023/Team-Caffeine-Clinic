@@ -4,6 +4,8 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const passportLocalMongoose = require('passport-local-mongoose')
 
+const nodemailer = require('nodemailer');
+
 
 // Import Models
 const Patient = require('../models/Patient');
@@ -11,6 +13,7 @@ const Perscriptions = require('../models/Perscriptions');
 const Doctor = require('../models/doctor');
 const healthPackage = require('../models/healthPackageModel');
 const Appointment = require('../models/appointment')
+const OTP = require('../models/OTP');
 
 
 // Passport local Strategy
@@ -38,6 +41,111 @@ const signUp = async(req, res) => {
             return res.status(200).json({mssg: "Signed Up successfuly"})
         
     })
+}
+
+const changePass = async(req, res) => {
+    const {oldPassword, newPassword} = req.body
+
+    const user = req.user;
+
+    user.changePassword(oldPassword, newPassword, function(err){
+        if(err){
+            return res.status(400).json({mssg: "Something went wrong"})
+        }
+    })
+}
+
+function generateOTP() {
+    // Generate a random number between 100000 and 999999
+    const min = 100000;
+    const max = 999999;
+    const otp = Math.floor(Math.random() * (max - min + 1)) + min;
+  
+    return otp;
+  }
+
+const forgotPass = async(req, res) => {
+    const {email} = req.body
+    
+    // Verify Valid Mail
+    const user = await Patient.findOne({email: email})
+    if(!user){
+        return res.status(400).json({err: "Email Address is incorrect"})
+    }
+
+    const randomOTP = generateOTP();
+
+    const transporter = nodemailer.createTransport({
+        service: 'hotmail',
+        auth: {
+          user: 'acluser123@hotmail.com',
+          pass: 'AMRgames1@',
+        },
+    });
+      
+    const verify = new OTP({
+        email: email,
+        OTP: randomOTP
+    })
+
+    await verify.save()
+
+    const mailOptions = {
+        from: 'acluser123@hotmail.com',
+        to: email,
+        subject: 'Password Reset OTP',
+        text: `Your OTP: ${randomOTP}`, // Replace with the generated OTP
+    };
+      
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
+
+    return res.status(200).json({mssg: "tmam"})
+}
+
+const verifyOTP = async(req, res) => {
+    const {otp, email} = req.body
+
+    const verify = await OTP.findOne({email: email})
+
+    if(verify.OTP != otp){
+        console.log("Wrong OTP");
+        return res.status(400).json({mssg: "Wrong OTP"})
+    }
+
+    //console.log("tmam");
+    // If OTP is correct, you can allow the user to set a new password
+    return res.status(200).json({ mssg: "OTP verified successfully" });
+}
+
+const setPass = async(req, res) => {
+    const {newPassword, email} = req.body
+
+    const user = await Patient.findOne({email: email});
+
+    
+    user.setPassword(newPassword, async(err) => {
+        if(err){
+            console.log(err);
+            return res.status(400).json({mssg: "Something went wrong"})
+        }
+
+        try {
+            await user.save();
+            console.log("Password updated");
+            return res.status(202).json({ mssg: "Password Changed Successfully" });
+        } catch (err) {
+            console.log(err);
+            return res.status(400).json({ mssg: "Error saving user with new password" });
+        }
+       
+    })
+
 }
 
 //View and Filter Perscriptions
@@ -226,5 +334,9 @@ module.exports = {
     getSinglePerscription,
     estimateRate,
     getAppointments,
-    filterDoctorsByAvailability
+    filterDoctorsByAvailability,
+    changePass,
+    setPass,
+    forgotPass,
+    verifyOTP
 }

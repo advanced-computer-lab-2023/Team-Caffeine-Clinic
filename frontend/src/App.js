@@ -33,6 +33,7 @@ import EditHealthPackage from './pages/EditHealthPackage';
 import Appointments from './pages/Appointments';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
+import ForgotPass from './pages/ForgotPass';
 
 
 function App() {
@@ -64,8 +65,10 @@ function App() {
               <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar>} />
               <Route path='Appointments' element={<WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar>} />
               <Route path='signup' element={<SignUp />} />
+              <Route path='forgotPass' element={<ForgotPass />} />
               <Route path='doctorApplication' element={<ApplyDoctor />} />
               <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar>} />
+
 
               {/* Mo2 - Yas */}
               <Route
