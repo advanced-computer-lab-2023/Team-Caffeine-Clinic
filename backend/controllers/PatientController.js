@@ -3,6 +3,7 @@ const { default: mongoose } = require('mongoose')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const passportLocalMongoose = require('passport-local-mongoose')
+const jwt = require('jsonwebtoken')
 
 const nodemailer = require('nodemailer');
 
@@ -17,30 +18,43 @@ const OTP = require('../models/OTP');
 
 
 // Passport local Strategy
-passport.use(Patient.createStrategy());
+//passport.use(Patient.createStrategy());
 
 // To use with sessions
-passport.serializeUser(Patient.serializeUser());
-passport.deserializeUser(Patient.deserializeUser());
+// passport.serializeUser(Patient.serializeUser());
+// passport.deserializeUser(Patient.deserializeUser());
+
+const createToken = (_id) => {
+    return jwt.sign({_id: _id}, process.env.SECRET, {expiresIn: '3d'})
+}
 
 //Sign up as a new Patient
 const signUp = async(req, res) => {
-    const {username, name, email, password, dob, gender, mobile_number, health_package, Efull_name, Emobile_number, relation} = req.body
+    const {username, password, name, email, dob, gender, mobile_number, health_package, Efull_name, Emobile_number, relation} = req.body
 
     const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
 
+    const patient = new Patient({username, password, name, email, dob, gender, 
+        mobile_number, health_package, emergency_contact})
 
+    try {
+        const user = await Patient.signUp(patient)
+
+        res.status(200).json({username, user})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
     
     // const patient = new Patient({username, name, email, dob, gender, mobile_number, health_package, emergency_contact})
-    Patient.register(new Patient({username: username, name, email, dob, gender, mobile_number, health_package, emergency_contact}), password, function(err, user){
-        //console.log("woah");
-        if(err){
-            //console.log("woah");
-            return res.status(400).json({err: "Error! Try Again"})
-        }
-            return res.status(200).json({mssg: "Signed Up successfuly"})
+    // Patient.register(new Patient({username: username, name, email, dob, gender, mobile_number, health_package, emergency_contact}), password, function(err, user){
+    //     //console.log("woah");
+    //     if(err){
+    //         //console.log("woah");
+    //         return res.status(400).json({err: "Error! Try Again"})
+    //     }
+    //         return res.status(200).json({mssg: "Signed Up successfuly"})
         
-    })
+    // })
 }
 
 const changePass = async(req, res) => {
@@ -218,6 +232,10 @@ const viewFilterPerscriptions = async (req, res) => {
 }
 
 const estimateRate = async (req, res) => {
+    console.log('yady el neela');
+
+    console.log(req.session);
+
     const patient = req.user
     // const patientId = req.query.patientId;
 
@@ -225,6 +243,7 @@ const estimateRate = async (req, res) => {
         // const patient = await Patient.findById(patientId);
         
         if (!patient) {
+            console.log('we ba3deen');
             return res.status(404).json({ error: 'Patient not found' });
         }
 

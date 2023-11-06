@@ -6,7 +6,10 @@ const {
     getSingleDoctor,
     getAppointments
 } = require('../controllers/doctorController');
-const doctor = require('../models/doctor');
+
+const requireAuth = require('../middleware/requrieAuth')
+
+router.use(requireAuth)
 
 // Get all doctors with optional name and/or speciality filter
 router.get('/getDoctors', getDoctors);

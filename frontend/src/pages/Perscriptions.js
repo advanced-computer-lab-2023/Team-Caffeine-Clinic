@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useAuthContext } from "../hooks/useAuthContext";
 import PerscriptionDetails from '../components/PerscriptionDetails';
 
 const Perscription = () => {
@@ -8,10 +9,12 @@ const Perscription = () => {
     const [stateFilter, setStateFilter] = useState('');
     const [error, setError] = useState(null);  // Track any potential error
 
+    const user = useAuthContext()
+
     useEffect(() => {
         const fetchPerscription = async () => {
             try {
-                let url = '/api/perscription';
+                let url = 'http://localhost:4000/api/perscription';
 
                 const params = new URLSearchParams();
                 if (dateFilter) params.append('date', dateFilter);
@@ -19,7 +22,11 @@ const Perscription = () => {
                 if (stateFilter) params.append('state', stateFilter);
                 if (params.toString()) url += `?${params.toString()}`;
 
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${user.user.token}`
+                    }
+                });
                 
                 // Add check for response.ok to handle HTTP status errors
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -32,9 +39,10 @@ const Perscription = () => {
                 setError(err.message || 'Fetching perscriptions failed');
             }
         };
-
-        fetchPerscription();
-    }, [dateFilter, doctorFilter, stateFilter]);
+        if(user){
+            fetchPerscription();
+        }
+    }, [dateFilter, doctorFilter, stateFilter, user]);
 
     return (
         <div className="doctors">

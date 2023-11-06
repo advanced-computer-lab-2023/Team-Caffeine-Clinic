@@ -18,7 +18,7 @@ const EditHealthPackage = () => {
     
     const hp = {id, name, description, services, basePrice}
     
-    const response = await fetch('/api/Admin/updateHealthPackage/' + id, {
+    const response = await fetch('http://localhost:4000/api/Admin/updateHealthPackage/' + id, {
       method: 'PATCH',
       body: JSON.stringify(hp),
       headers: {

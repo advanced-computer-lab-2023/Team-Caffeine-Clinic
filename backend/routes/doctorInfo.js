@@ -24,9 +24,11 @@ const {
     filterDoctorsByAvailability
 } = require('../controllers/PatientController')
 
+const requireAuth = require('../middleware/requrieAuth')
+
 const router = express.Router()
 
-
+router.use(requireAuth)
 
 
 router.get('/', (req, res) => {

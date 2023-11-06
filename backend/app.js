@@ -36,6 +36,7 @@ const Admin = require('./models/admin');
 
 
 var app = express();
+app.use(express.json());
 app.use(cors());
 
 
@@ -49,21 +50,24 @@ app.use(cors());
 // var logger = require('morgan');
 // mongoose.connect('mongodb://localhost/virtual_clinic', { useNewUrlParser: true, useUnifiedTopology: true });
 
+
 app.use((req, res, next) => {
   console.log(req.path, req.method)
   next()
 });
 
-
 // Configure the session
-app.use(
-  session({
-    secret: "anything for now", // A secret key for session encryption
-    resave: false, // Do not save session on every request
-    saveUninitialized: true, // Save new sessions
-    cookie: { maxAge: 3600000 }, // Session duration in milliseconds (1 hour)
-  })
-);
+// app.use(
+//   session({
+//     secret: "anything for now", // A secret key for session encryption
+//     resave: false, // Do not save session on every request
+//     saveUninitialized: false, // Save new sessions
+//     cookie: {
+//       maxAge: 3600000, // Session duration in milliseconds (1 hour)
+//     },
+//   })
+// );
+
 
 
 
@@ -84,26 +88,44 @@ app.use(
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
+app.use(bodyParser.urlencoded({ extended: false }));
 
-
-// Passport local Strategy
-passport.use(Patient.createStrategy());
-passport.use(Doctor.createStrategy());
-passport.use(Admin.createStrategy());
 
 app.use(passport.initialize())
+
+app.use(session({  
+  name: `daffyduck`,
+  secret: 'some-secret-example',  
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    expires: new Date(253402300000000) 
+  } 
+}));
+
 app.use(passport.session())
 
 
-// To use with sessions
-passport.serializeUser(Patient.serializeUser());
-passport.deserializeUser(Patient.deserializeUser());
-passport.serializeUser(Doctor.serializeUser());
-passport.deserializeUser(Doctor.deserializeUser());
-passport.serializeUser(Admin.serializeUser());
-passport.deserializeUser(Admin.deserializeUser());
 
-app.use(bodyParser.urlencoded({ extended: false }));
+const getSession = (req, res) => {
+  //console.log(req.session);
+  res.send(req.session)
+}
+
+// // Passport local Strategy
+// passport.use(Patient.createStrategy());
+// passport.use(Doctor.createStrategy());
+// passport.use(Admin.createStrategy());
+
+
+// // To use with sessions
+// passport.serializeUser(Patient.serializeUser());
+// passport.deserializeUser(Patient.deserializeUser());
+// passport.serializeUser(Doctor.serializeUser());
+// passport.deserializeUser(Doctor.deserializeUser());
+// passport.serializeUser(Admin.serializeUser());
+// passport.deserializeUser(Admin.deserializeUser());
+
 
 
 
@@ -130,9 +152,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 // middleware
-app.use(express.json());
 app.use('/api', login)
 app.use('/api', signUp)
+app.get('/getSession', getSession)
 app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);

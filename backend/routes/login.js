@@ -10,15 +10,18 @@ const {
     loginDoctor,
     loginAdmin,
     login,
-    loginfunc,
-    logout
+    loginPatientfunc,
+    loginAdminfunc,
+    loginDocfunc,
+    logout,
+    loginfunc
 } = require('../controllers/GuestController')
 
-router.post('/loginAsPatient', loginPatient, loginfunc)
+router.post('/loginAsPatient', loginPatient)
 
-router.post('/loginAsDoctor', loginDoctor, loginfunc)
+router.post('/loginAsDoctor', loginDoctor, loginDocfunc)
 
-router.post('/loginAsAdmin', loginAdmin, loginfunc)
+router.post('/loginAsAdmin', loginAdmin, loginAdminfunc)
 
 router.post('/logout', logout)
 

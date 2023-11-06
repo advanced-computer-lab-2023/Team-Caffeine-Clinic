@@ -4,6 +4,8 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const passportLocalMongoose = require('passport-local-mongoose')
 
+const jwt = require('jsonwebtoken')
+
 //Models
 const DoctorAppplication = require('../models/DoctorApplication');
 const Patient = require('../models/Patient')
@@ -18,13 +20,13 @@ const Admin = require('../models/admin')
 
 
 // Passport local Strategy
-passport.use('patient-local', Patient.createStrategy());
+// passport.use('patient-local', Patient.createStrategy());
 passport.use('doctor-local', Doctor.createStrategy());
 passport.use('admin-local', Admin.createStrategy());
 
 // To use with sessions
-passport.serializeUser(Patient.serializeUser());
-passport.deserializeUser(Patient.deserializeUser());
+// passport.serializeUser(Patient.serializeUser());
+// passport.deserializeUser(Patient.deserializeUser());
 passport.serializeUser(Doctor.serializeUser());
 passport.deserializeUser(Doctor.deserializeUser());
 passport.serializeUser(Admin.serializeUser());
@@ -34,6 +36,10 @@ passport.deserializeUser(Admin.deserializeUser());
 
 //const LocalStrategy = require('passport-local').Strategy;
 
+
+const createToken = (_id, type) => {
+  return jwt.sign({_id: _id, type: type}, process.env.SECRET, {expiresIn: '3d'})
+}
 
 
 
@@ -48,14 +54,50 @@ const applyDoctor = async(req, res) => {
     res.status(200).json(doctorApp)
 }
 
-const loginPatient = passport.authenticate('patient-local')
+// const loginPatient = passport.authenticate('patient-local')
 const loginDoctor = passport.authenticate('doctor-local')
 const loginAdmin = passport.authenticate('admin-local')
 
-const loginfunc = function(req, res){
+const loginPatient = async(req, res) => {
+  const {username, password} = req.body
+
+  try {
+    const user = await Patient.login(username, password)
+
+    //create token
+    const token = createToken(user._id)
+
+    res.status(200).json({username, token})
+  } catch (error) {
+    res.status(400).json({error: error}) 
+  }
+}
+
+const  loginfunc = function(req, res){
+  //req.login()
+  console.log(req.user);
+}
+
+const loginPatientfunc = function(req, res){
     console.log('hima is here');
+    console.log(req.user);
+    const token = createToken(req.user._id, "Patient")
     // console.log(req.user.username);
-    res.status(200).json({mssg: req.session})
+    res.status(200).json({type: 'Patient', token: token, mssg: req.session})
+}
+
+const loginDocfunc = function(req, res){
+    console.log('hima is here');
+    const token = createToken(req.user._id, "Doctor")
+    // console.log(req.user.username);
+    res.status(200).json({type: 'Doctor', token: token})
+}
+
+const loginAdminfunc = function(req, res){
+    console.log('hima is here');
+    const token = createToken(req.user._id, "Admin")
+    // console.log(req.user.username);
+    res.status(200).json({type: 'Admin', token: token})
 }
 
 // const loginAsPatient = async(req, res) => {
@@ -119,16 +161,22 @@ const loginfunc = function(req, res){
 // }
 
 const logout = function(req, res, next) {
+  console.log(req.user);
     req.logout(function(err) {
-      if (err) { return next(err); }
+      if (err) { 
+        console.log(err);
+        return next(err); }
     });
   }
 
 module.exports = {
     applyDoctor,
-    loginfunc,
+    loginPatientfunc,
+    loginAdminfunc,
+    loginDocfunc,
     loginAdmin,
     loginPatient,
     loginDoctor,
+    loginfunc,
     logout
 }

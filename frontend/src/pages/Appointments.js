@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import DoctorDetails from '../components/DoctorDetails';
 import AppointmentDetail from '../components/AppointmentDetails';
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Appointments = () => {
 
     const [appointments, setAppointments] = useState(null);
     const [dateFilter, setDateFilter] = useState('');
     const [stateFilter, setstateFilter] = useState('');
+
+    const user = useAuthContext()
 
     useEffect(() => {
       const fetchDoctors = async () => {
@@ -19,14 +22,20 @@ const Appointments = () => {
 
         console.log(url);
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
         const json = await response.json();
 
         if (response.ok) {
             setAppointments(json)
         }
       }
-      fetchDoctors();
+      if(user){
+        fetchDoctors();
+      }
     }, [dateFilter, stateFilter])
 
     return (

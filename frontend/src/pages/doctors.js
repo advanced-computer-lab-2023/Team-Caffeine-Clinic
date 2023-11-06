@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useAuthContext } from "../hooks/useAuthContext";
+
 import DoctorDetails from '../components/DoctorDetails';
 
 
@@ -8,24 +10,34 @@ const Doctors = () => {
     const [nameFilter, setNameFilter] = useState('');
     const [specialityFilter, setSpecialityFilter] = useState('');
 
+    const user = useAuthContext()
+
     useEffect(() => {
       const fetchDoctors = async () => {
-        let url = '/api/healthpackage/estimateRate';
+        let url = 'http://localhost:4000/api/healthpackage/estimateRate';
 
         const params = new URLSearchParams();
         if (nameFilter) params.append('name', nameFilter);
         if (specialityFilter) params.append('speciality', specialityFilter);
         if (params.toString()) url += `?${params.toString()}`;
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${user.user.token}`
+          }
+        });
         const json = await response.json();
 
         if (response.ok) {
           setDoctors(json)
         }
       }
-      fetchDoctors();
-    }, [nameFilter, specialityFilter])
+      
+      if (user){
+        fetchDoctors();
+      }
+
+    }, [nameFilter, specialityFilter, user])
 
     return (
       <div className="doctors">

@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function DoctorList() {
   const [doctors, setDoctors] = useState([]);
   const [dateTime, setDateTime] = useState('');
 
+  const user = useAuthContext()
+
   const fetchDoctorsByAvailability = async () => {
     try {
-      console.log(dateTime)
-      const response = await fetch(`/api/doctorInfo/filterDoctorsByAvailability?date=${dateTime}`);
+      //console.log(user)
+      const response = await fetch(`http://localhost:4000/api/doctorInfo/filterDoctorsByAvailability?date=${dateTime}`, {
+        headers: {
+          'Authorization': `Bearer ${user.user.token}`
+        }
+      }, [user]);
       if (response.ok) {
         const data = await response.json();
         setDoctors(data);
@@ -18,10 +25,11 @@ function DoctorList() {
   };
 
   useEffect(() => {
-    if (dateTime) {
+    //console.log(user);
+    if (dateTime && user) {
       fetchDoctorsByAvailability();
     }
-  }, [dateTime]);
+  }, [dateTime, user]);
 
   // Define your CSS styles here
   const containerStyle = {
