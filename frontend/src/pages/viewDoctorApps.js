@@ -1,24 +1,31 @@
 import { useEffect,useState } from "react";
 import DocAppDetails from "../components/DocAppDetails"
 import { Link } from 'react-router-dom';
-
+import { useAuthContext } from '../hooks/useAuthContext';
 
 
 const DoctorAppHome =  () => {
     const [Appl , setAppls] = useState(null);
 
+    const {user} = useAuthContext()
+
     useEffect(() => {
         const fetchAppls = async () => {
-            const response = await fetch('api/Admin/viewDoctorApplications');
+            const response = await fetch('api/Admin/viewDoctorApplications', {
+                headers: {
+                  'Authorization': `Bearer ${user.token}`
+                }
+              });
             const json = await response.json();
             if (response.ok) {
               //  console.log(json);
                 setAppls(json);
             }
         }
-
-        fetchAppls();
-    }, [])
+        if(user){
+            fetchAppls();
+        }
+    }, [user])
 
     return (
         <>

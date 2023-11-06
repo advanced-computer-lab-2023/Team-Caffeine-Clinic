@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Perscription from '../pages/Perscriptions';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const PerscriptionDetails = ({ perscription }) => {
   // const [doctors, setDoctors] = useState('');
@@ -29,13 +30,19 @@ const PerscriptionDetails = ({ perscription }) => {
     const [doctorName, setName] = useState('');
     const[patientname , setPatientname]=useState('')
 
+    const {user} = useAuthContext()
+
     useEffect(() => {
       const fetchName = async () => {
         if (perscription.doctorID) {
           // Construct the URL with the doctorID
           const url = `/api/perscription/doctor/${perscription.doctorID}`;
 
-          const response = await fetch(url);
+          const response = await fetch(url, {
+            headers: {
+              'Authorization': `Bearer ${user.token}`
+            }
+          });
           if (!response.ok) {
             console.log('Error fetching prescription data');
             return; // Handle the error appropriately
@@ -45,8 +52,10 @@ const PerscriptionDetails = ({ perscription }) => {
           setName(json);
         }
       };
-      fetchName();
-    }, [perscription.doctorID]); // Include id as a dependency to re-fetch the data when the id changes
+      if(user){
+        fetchName();
+      }
+    }, [perscription.doctorID, user]); // Include id as a dependency to re-fetch the data when the id changes
 
 
     return (

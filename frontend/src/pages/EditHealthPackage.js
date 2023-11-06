@@ -16,6 +16,8 @@ const EditHealthPackage = () => {
     const [family, setFamily] = useState('')
     const [error, setError] = useState(null)
 
+    const {user} = useAuthContext()
+
     const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -26,6 +28,7 @@ const EditHealthPackage = () => {
       body: JSON.stringify(hp),
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
       }
     })
     const json = await response.json()

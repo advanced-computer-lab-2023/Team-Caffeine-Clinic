@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const HealthPackForm = () => {
   const [name, setName] = useState('')
@@ -10,6 +11,8 @@ const HealthPackForm = () => {
   const [family, setFamily] = useState('')
   const [error, setError] = useState(null)
 
+  const {user} = useAuthContext()
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -20,7 +23,8 @@ const HealthPackForm = () => {
       method: 'POST',
       body: JSON.stringify(hp),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
       }
     })
     const json = await response.json()

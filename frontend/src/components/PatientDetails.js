@@ -1,8 +1,14 @@
+import { useAuthContext } from '../hooks/useAuthContext';
+
 const PatientDetails = ({ patient }) => {
+  const {user} = useAuthContext()
 
     const handleClick = async () => {
       const response = await fetch('/api/Admin/deletePatient/' + patient._id, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
       })
       const json = await response.json()
       window.location.reload();
