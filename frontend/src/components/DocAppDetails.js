@@ -1,5 +1,8 @@
+import { useAuthContext } from '../hooks/useAuthContext';
+
 const DocAppDetails = ({ Appl }) => {
 
+  const {user} = useAuthContext()
 
   //needs 2 buttons (reject and accept).
   const createDoc = async () => {
@@ -7,7 +10,8 @@ const DocAppDetails = ({ Appl }) => {
       method: 'POST',
       body : JSON.stringify(Appl),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
       }
     })
     //const json = await response.json;
@@ -17,7 +21,10 @@ const DocAppDetails = ({ Appl }) => {
   const handleClick = async () => {
     createDoc();
     const response = await fetch('/api/Admin/deleteApp/' + Appl._id, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${user.token}`
+      }
     })
     const json = await response.json()
     window.location.reload();
@@ -25,7 +32,10 @@ const DocAppDetails = ({ Appl }) => {
 
 const handleClick2 = async () => {
   const response = await fetch('/api/Admin/deleteApp/' + Appl._id, {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${user.token}`
+    }
   })
   const json = await response.json()
   window.location.reload();

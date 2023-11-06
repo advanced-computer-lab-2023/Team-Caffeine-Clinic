@@ -1,8 +1,15 @@
 import { useEffect,useState } from "react";
 import { Link } from 'react-router-dom';
+import { useLogout } from '../hooks/useLogout'
 
 
 const Home = () => {
+    const { logout } = useLogout()
+
+    const handleClick = () => {
+        logout()
+      }
+
     return (
         <div className= "home">
             <h2>Admin Home</h2>
@@ -23,7 +30,7 @@ const Home = () => {
             <Link to="/viewPatientsAdmin">
                       <button>View Patients</button>
                 </Link>
-            <Link to="/">
+            <Link to="/" onClick={handleClick}>
                       <button>log out</button>
                 </Link>
             </div>

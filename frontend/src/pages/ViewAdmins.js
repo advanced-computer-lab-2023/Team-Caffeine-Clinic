@@ -2,21 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminForm from "../components/AdminForm";
 import AdminDetails from "../components/AdminDetails";
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const AdminHome = () => {
   const [admins, setAdmins] = useState(null);
 
+  const {user} = useAuthContext()
+
   useEffect(() => {
     const fetchAdmins = async () => {
-      const response = await fetch("api/Admin/ViewAdmins");
+      const response = await fetch("api/Admin/ViewAdmins", {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
       const json = await response.json();
       if (response.ok) {
         setAdmins(json);
       }
     };
-
-    fetchAdmins();
-  }, []);
+    if(user){
+      fetchAdmins();
+    }
+  }, [user]);
 
   return (
     <>

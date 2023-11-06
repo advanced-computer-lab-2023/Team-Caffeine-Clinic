@@ -1,23 +1,31 @@
 import {useEffect,useState} from "react";
 import PatientDetails from "../components/PatientDetails";
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 
 const ViewPatientHome =  () => {
     const [Patients , setPatients] = useState(null);
 
+    const {user} = useAuthContext()
+
     useEffect(() => {
         const fetchPatients = async () => {
-            const response = await fetch('api/Admin/ViewPatients');
+            const response = await fetch('api/Admin/ViewPatients', {
+                headers: {
+                  'Authorization': `Bearer ${user.token}`
+                }
+              });
             const json = await response.json();
             if (response.ok) {
               //  console.log(json);
                 setPatients(json);
             }
         }
-
-        fetchPatients();
-    }, [])
+        if(user){
+            fetchPatients();
+        }
+    }, [user])
 
     return (
         <>

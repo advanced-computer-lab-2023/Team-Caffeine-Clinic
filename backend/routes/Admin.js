@@ -17,8 +17,13 @@ const {createAdmin,
     createHealthPackage,
     createPlatPackage} = require('../controllers/adminController');
 
+    const {requireAdminAuth} = require('../middleware/requrieAuth')
+
+
 
 const router = express.Router();
+
+//router.use(requireAdminAuth)
 
 //Admin routes
 router.get('/viewAdmins', getAdmins);

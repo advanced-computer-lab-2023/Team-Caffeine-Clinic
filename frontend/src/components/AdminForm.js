@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const AdminForm = () => {
   const [Username, setUsername] = useState('')
   const [Password, setPassword] = useState('')
   const [error, setError] = useState(null)
+
+  const {user} = useAuthContext()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -14,7 +17,8 @@ const AdminForm = () => {
       method: 'POST',
       body: JSON.stringify(admin),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
       }
     })
     const json = await response.json()

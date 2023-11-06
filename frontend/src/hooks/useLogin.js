@@ -24,6 +24,14 @@ export const useLogin = () => {
         })
         }
 
+        if(response.status != 200){
+            response = await fetch('http://localhost:4000/api/loginAsAdmin', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username, password })
+        })
+        }
+
         const json = await response.json()
 
         if(!response.ok){
