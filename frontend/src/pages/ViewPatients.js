@@ -17,7 +17,11 @@ const MyPatients = () => {
   const fetchPatientDetails = async (patientUsername) => {
     
     try {
-      const response = await fetch(`/api/doctorInfo/selectpatient?name=${patientUsername}`);
+      const response = await fetch(`/api/doctorInfo/selectpatient?name=${patientUsername}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch patient details');
