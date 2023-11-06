@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 
+import { useAuthContext } from '../hooks/useAuthContext';
+
 const UpdateAffiliation = () => {
   const [newAffiliation, setNewAffiliation] = useState('');
   const [message, setMessage] = useState('');
+
+  const {user} = useAuthContext()
 
   const handleAffiliationChange = (e) => {
     setNewAffiliation(e.target.value);
@@ -23,6 +27,7 @@ const UpdateAffiliation = () => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
           },
         }
       );

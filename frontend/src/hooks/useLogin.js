@@ -10,11 +10,19 @@ export const useLogin = () => {
         setIsLoading(true)
         setError(null)
         
-        const response = await fetch('http://localhost:4000/api/loginAsPatient', {
+        let response = await fetch('http://localhost:4000/api/loginAsPatient', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ username, password })
         })
+
+        if(response.status != 200){
+            response = await fetch('http://localhost:4000/api/loginAsDoctor', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username, password })
+        })
+        }
 
         const json = await response.json()
 

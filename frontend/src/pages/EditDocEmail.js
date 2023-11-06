@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { useAuthContext } from '../hooks/useAuthContext';
+
 
 const UpdateEmail = () => {
   const [newEmail, setNewEmail] = useState('');
   const [message, setMessage] = useState('');
+
+  const {user} = useAuthContext()
+
 
   const handleEmailChange = (e) => {
     setNewEmail(e.target.value);
@@ -23,6 +28,7 @@ const UpdateEmail = () => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
           },
         }
       );

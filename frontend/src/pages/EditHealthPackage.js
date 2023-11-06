@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useAuthContext } from '../hooks/useAuthContext';
+
+
 import Navbar from '../components/Navbar'
 
 const EditHealthPackage = () => {
@@ -22,7 +25,7 @@ const EditHealthPackage = () => {
       method: 'PATCH',
       body: JSON.stringify(hp),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }
     })
     const json = await response.json()

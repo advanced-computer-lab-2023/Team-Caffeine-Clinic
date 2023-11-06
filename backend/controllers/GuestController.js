@@ -67,7 +67,7 @@ const loginPatient = async(req, res) => {
     //create token
     const token = createToken(user._id, 'Patient')
 
-    res.status(200).json({username, token})
+    res.status(200).json({type: 'Patient', token})
   } catch (error) {
     res.status(400).json({error: error}) 
   }
@@ -82,7 +82,7 @@ const loginDoctor = async(req, res) => {
     //create token
     const token = createToken(user._id, 'Doctor')
 
-    res.status(200).json({username, token})
+    res.status(200).json({type: 'Doctor', token})
   } catch (error) {
     res.status(400).json({error: error}) 
   }

@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import { useAuthContext } from '../hooks/useAuthContext';
+
 
 const SelectPatient = () => {
   const [patientUsername, setPatientUsername] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [error, setError] = useState('');
+
+  const {user} = useAuthContext()
+
 
   const fetchPatientData = async () => {
     try {
@@ -13,7 +18,12 @@ const SelectPatient = () => {
       //   return;
       // }
       const response = await fetch(
-        `/api/doctorInfo/searchmyPatients/?patientUsername=${patientUsername}`
+        `/api/doctorInfo/searchmyPatients/?patientUsername=${patientUsername}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        }
       );
       
       if (!response.ok) {

@@ -44,13 +44,14 @@ function App() {
   const [patient, setPatient] = useState(null)
   const [admin, setAdmin] = useState(null)
 
+
   return (
     <div className="App">
       <BrowserRouter>
         <div className='Navbar'>
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
-              <Route path="" element={!user ? <Login /> : <Navigate to="/home"/>} />
+              <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? <Navigate to="/home"/> : (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to=""/>} />
              
               <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />

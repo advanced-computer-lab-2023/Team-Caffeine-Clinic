@@ -2,6 +2,12 @@ const express = require('express')
 const doctor = require('../models/doctor')
 
 const {
+    getDoctors,
+    getSingleDoctor,
+    getAppointments
+} = require('../controllers/doctorController');
+
+const {
     createDoctor,
     patientsWithUpcomingAppointments,
     getDoctorByusername,
@@ -27,6 +33,8 @@ const {
 const {requireDoctorAuth} = require('../middleware/requrieAuth')
 
 const router = express.Router()
+
+
 
 router.use(requireDoctorAuth)
 
@@ -73,6 +81,8 @@ router.post('/createAppointment', createAppointment)
 
 //add a patient to a doc 
 router.patch('/addPatientToDoctor', addPatientToDoctor)
+
+router.get('/appointments', getAppointments)
 
 
 

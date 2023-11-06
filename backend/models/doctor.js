@@ -1,6 +1,7 @@
 //Doctor
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const passportLocalMongoose = require('passport-local-mongoose')
 

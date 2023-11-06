@@ -36,7 +36,7 @@ const Appointments = () => {
       if(user){
         fetchDoctors();
       }
-    }, [dateFilter, stateFilter])
+    }, [dateFilter, stateFilter, user])
 
     return (
       <div className="doctors">

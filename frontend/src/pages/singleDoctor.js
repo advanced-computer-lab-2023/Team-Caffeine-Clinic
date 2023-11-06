@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar'
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const SingleDoctor = () => {
   const { username } = useParams();
   const [doctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
 
+  const {user} = useAuthContext()
+
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
         // console.log(username);
-        const response = await fetch(`/api/doctors/getSingleDoctor/${username}`);
+        const response = await fetch(`/api/doctors/getSingleDoctor/${username}`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -21,8 +28,11 @@ const SingleDoctor = () => {
         setError(error.message);
       }
     };
-    fetchDoctor();
-  }, [username]);
+    
+    if(user){
+      fetchDoctor();
+    }
+  }, [username, user]);
 
   if (error) {
     return <p>{error}</p>;
