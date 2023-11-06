@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom"
 import "../index.css"
+import { useLogout } from '../hooks/useLogout'
 
 
 const DoctorNavbar =()=>{
+    const { logout } = useLogout()
+
+    const handleClick = () => {
+        logout()
+      }
 
     return(
         <nav>
@@ -19,7 +25,7 @@ const DoctorNavbar =()=>{
                 <Link className="doctor-buttons" to="/UpcomingAppointments"><h3> View My Upcoming Appointments </h3></Link>
                 <Link className="doctor-buttons" to="/SearchPatient"><h3>Search a Patient</h3></Link>
                 <Link className="doctor-buttons" to="/DocAppointments"><h3>Appointments</h3></Link>
-                <Link className="doctor-buttons" to="/"><h3>log out</h3></Link>
+                <Link className="doctor-buttons" to="/" onClick={handleClick}><h3>Log Out</h3></Link>
 
 
             </div>

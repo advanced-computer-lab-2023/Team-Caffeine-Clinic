@@ -29,6 +29,7 @@ const getDoctors = async (req, res) => {
 // Get doctor details by username
 const getSingleDoctor = async (req, res) => {
   const patient = req.user
+  console.log(patient);
   const patientHealthPackage = patient.health_package;
   try {
       const doctor = await Doctor.findOne({ username: req.params.username });

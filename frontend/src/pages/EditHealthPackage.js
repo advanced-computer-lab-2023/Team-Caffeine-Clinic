@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useAuthContext } from '../hooks/useAuthContext';
+
+
 import Navbar from '../components/Navbar'
 
 const EditHealthPackage = () => {
@@ -18,11 +21,11 @@ const EditHealthPackage = () => {
     
     const hp = {id, name, description, services, basePrice}
     
-    const response = await fetch('/api/Admin/updateHealthPackage/' + id, {
+    const response = await fetch('http://localhost:4000/api/Admin/updateHealthPackage/' + id, {
       method: 'PATCH',
       body: JSON.stringify(hp),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }
     })
     const json = await response.json()

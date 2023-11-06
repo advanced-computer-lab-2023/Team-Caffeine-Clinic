@@ -11,6 +11,10 @@ const {
     createPersc, getDoctorName
 } = require('../controllers/PerscriptionsController')
 
+const {requireAuth} = require('../middleware/requrieAuth')
+
+router.use(requireAuth)
+
 //View and Filter All Perscriptions
 router.get('/', viewFilterPerscriptions)
 

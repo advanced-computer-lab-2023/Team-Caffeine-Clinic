@@ -3,10 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { useAuthContext } from '../hooks/useAuthContext';
+
+
 const MyPatients = () => {
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
+
+  const {user} = useAuthContext()
+
   
   const fetchPatientDetails = async (patientUsername) => {
     
@@ -40,7 +46,11 @@ const MyPatients = () => {
     
   //   return;
   // }
-        const response = await fetch(`/api/doctorInfo/myPatients/`); // You should replace with your actual API endpoint
+        const response = await fetch(`/api/doctorInfo/myPatients/`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        }); // You should replace with your actual API endpoint
 
         if (!response.ok) {
           throw new Error('Failed to fetch patients');
@@ -53,9 +63,10 @@ const MyPatients = () => {
         setError('Failed to fetch patients');
       }
     };
-
-    fetchDoctorPatients();
-  }, []);
+    if(user){
+      fetchDoctorPatients();
+    }
+  }, [user]);
 
   const displayPatientDetails = () => {
     if (selectedPatient) {

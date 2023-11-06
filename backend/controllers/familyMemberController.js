@@ -1,6 +1,12 @@
 const FamilyMember = require('../models/familyMember');
 const mongoose = require('mongoose');
 
+const Patient = require('../models/Patient');
+
+const passport = require('passport');
+// passport.serializeUser(Patient.serializeUser());
+// passport.deserializeUser(Patient.deserializeUser());
+
 
 // Add family member
 const addFamilyMember = async (req, res) => {
@@ -27,8 +33,10 @@ const addFamilyMember = async (req, res) => {
 const getFamilyMembers = async (req, res) => {
 
   const user = req.user
+
+  console.log(req.session);
   
-  const patientID = user.id
+  const patientID = user._id
 
   try {
       const familyMembers = await FamilyMember.find({patientID});

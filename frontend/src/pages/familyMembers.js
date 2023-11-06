@@ -2,25 +2,34 @@ import { useEffect, useState } from 'react'
 import FamilyMemberDetails from '../components/FamilyMemberDetails';
 import FamilyMemberForm from '../components/FamilyMemberForm';
 
+import { useAuthContext } from '../hooks/useAuthContext';
+
 
 const FamilyMembers = () => {
 
     const [familyMembers, setFamilyMembers] = useState([]);
 
+    const {user} = useAuthContext()
+
     useEffect(() => {
       const fetchFamilyMembers = async () => {
-        let url = '/api/familyMembers/getFamilyMembers'; 
+        let url = 'http://localhost:4000/api/familyMembers/getFamilyMembers'; 
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
         const json = await response.json();
 
         if (response.ok) {
           setFamilyMembers(json)
         }
       }
-      fetchFamilyMembers();
-      
-    }, [])
+      if(user){
+        fetchFamilyMembers();
+      }
+    }, [user])
 
     const handleAddFamilyMember = (newMember) => {
       setFamilyMembers((prevMembers) => [...prevMembers, newMember]);

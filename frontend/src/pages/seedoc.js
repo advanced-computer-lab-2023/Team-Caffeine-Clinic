@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 import { useUsername } from './UsernameContext'; // Import the context hook
 
+import { useAuthContext } from '../hooks/useAuthContext';
+
+
 const DoctorInfo = () => {
   const { username, setUsername } = useUsername(); // Access the global username state
 
   const [doctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
-localStorage.setItem('username', username);
+
+
+  const {user} = useAuthContext()
+
+//localStorage.setItem('username', username);
   const handleSearch = async () => {
     try {
       console.log(username);
-      const response = await fetch(`/api/doctorInfo/getDoctorByusername?userName=${username}`);
+      const response = await fetch(`/api/doctorInfo/getDoctorByusername?userName=${username}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Doctor not found');
       }

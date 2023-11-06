@@ -1,7 +1,7 @@
 
 // App.js
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import DoctorInfo from './pages/seedoc';
 import Navbar from './components/Navbar';
 import EditMyDoc from './pages/EditDocRate';
@@ -33,16 +33,25 @@ import EditHealthPackage from './pages/EditHealthPackage';
 import Appointments from './pages/Appointments';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
+import ForgotPass from './pages/ForgotPass';
+import { useAuthContext } from './hooks/useAuthContext';
+
 
 
 function App() {
+  const { user } = useAuthContext()
+  const [doctor, setDoctor] = useState(null)
+  const [patient, setPatient] = useState(null)
+  const [admin, setAdmin] = useState(null)
+
+
   return (
     <div className="App">
       <BrowserRouter>
         <div className='Navbar'>
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
-              <Route path="" element={<Login />} />
+              <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? <Navigate to="/home"/> : (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to=""/>} />
              
               <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />
@@ -55,17 +64,19 @@ function App() {
 
 
               {/* Ibra - Salah */}
-              <Route path='home' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
+              <Route path='home' element={ <WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
-              <Route path='doctor/getSingleDoctor/:username' element={<SingleDoctor />} />
+              <Route path='doctor/getSingleDoctor/:username' element={user ? <SingleDoctor /> : <Navigate to="/" /> }/>
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
-              <Route path='healthPackages' element={<WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar>} />
-              <Route path='Perscriptions' element={<WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar>} />
-              <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar>} />
-              <Route path='Appointments' element={<WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar>} />
-              <Route path='signup' element={<SignUp />} />
-              <Route path='doctorApplication' element={<ApplyDoctor />} />
-              <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar>} />
+              <Route path='healthPackages' element={user ? <WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='Perscriptions' element={user ? <WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='SinglePerscriptions/:id' element={user ? <WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='Appointments' element={user ? <WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
+              <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
+              <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
+              <Route path='Filterbyavedates' element={user ? <WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+
 
               {/* Mo2 - Yas */}
               <Route

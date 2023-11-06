@@ -7,6 +7,10 @@ const {
 
 const { estimateRate } = require('../controllers/PatientController');
 
+const {requireAuth} = require('../middleware/requrieAuth')
+
+router.use(requireAuth)
+
 // Get registered HealthPackages
 router.get('/', getHealthPackages);
 router.get('/estimateRate', estimateRate);

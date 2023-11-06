@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { useAuthContext } from "../hooks/useAuthContext";
+
 
  const FamilyMemberForm = ({onAddFamilyMember}) => {
   const [name, setName] = useState('');
@@ -8,9 +10,17 @@ import { useState } from "react"
   const [relation, setRelation] = useState('');
   const [error, setError] = useState(null);
 
+  const user = useAuthContext()
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user){
+      setError('You must be logged in')
+      return
+    }
+    //console.log(user.user.token);
 
     const familyMember = {name , nationalID, age, gender, relation};
 
@@ -18,9 +28,10 @@ import { useState } from "react"
       method: 'POST',
       body: JSON.stringify(familyMember),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.user.token}`
       }
-    });
+    }, [user]);
 
     const json = await response.json();
 

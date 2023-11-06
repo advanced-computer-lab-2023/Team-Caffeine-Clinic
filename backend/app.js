@@ -4,6 +4,7 @@ var express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const cors = require('cors');
 
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -20,7 +21,9 @@ const adminsRoute = require('./routes/Admin');
 const doctorInfoRoutes = require('./routes/doctorInfo');
 const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
-
+const forgotPass = require('./routes/forgotPass');
+const patientRoute = require('./routes/patient')
+ 
 const Patient = require('./models/Patient')
 
 const healthPackageController = require('./controllers/healthPackagesController');
@@ -34,11 +37,12 @@ const Admin = require('./models/admin');
 
 
 var app = express();
-
+app.use(express.json());
+app.use(cors());
 
 
 // app.use(bodyParser.json());
-// app.use(cors());
+
 
 
 // var createError = require('http-errors');
@@ -47,21 +51,24 @@ var app = express();
 // var logger = require('morgan');
 // mongoose.connect('mongodb://localhost/virtual_clinic', { useNewUrlParser: true, useUnifiedTopology: true });
 
+
 app.use((req, res, next) => {
   console.log(req.path, req.method)
   next()
 });
 
-
 // Configure the session
-app.use(
-  session({
-    secret: "anything for now", // A secret key for session encryption
-    resave: false, // Do not save session on every request
-    saveUninitialized: true, // Save new sessions
-    cookie: { maxAge: 3600000 }, // Session duration in milliseconds (1 hour)
-  })
-);
+// app.use(
+//   session({
+//     secret: "anything for now", // A secret key for session encryption
+//     resave: false, // Do not save session on every request
+//     saveUninitialized: false, // Save new sessions
+//     cookie: {
+//       maxAge: 3600000, // Session duration in milliseconds (1 hour)
+//     },
+//   })
+// );
+
 
 
 
@@ -82,26 +89,44 @@ app.use(
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
+app.use(bodyParser.urlencoded({ extended: false }));
 
-
-// Passport local Strategy
-passport.use(Patient.createStrategy());
-passport.use(Doctor.createStrategy());
-passport.use(Admin.createStrategy());
 
 app.use(passport.initialize())
+
+app.use(session({  
+  name: `daffyduck`,
+  secret: 'some-secret-example',  
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    expires: new Date(253402300000000) 
+  } 
+}));
+
 app.use(passport.session())
 
 
-// To use with sessions
-passport.serializeUser(Patient.serializeUser());
-passport.deserializeUser(Patient.deserializeUser());
-passport.serializeUser(Doctor.serializeUser());
-passport.deserializeUser(Doctor.deserializeUser());
-passport.serializeUser(Admin.serializeUser());
-passport.deserializeUser(Admin.deserializeUser());
 
-app.use(bodyParser.urlencoded({ extended: false }));
+const getSession = (req, res) => {
+  //console.log(req.session);
+  res.send(req.session)
+}
+
+// // Passport local Strategy
+// passport.use(Patient.createStrategy());
+// passport.use(Doctor.createStrategy());
+// passport.use(Admin.createStrategy());
+
+
+// // To use with sessions
+// passport.serializeUser(Patient.serializeUser());
+// passport.deserializeUser(Patient.deserializeUser());
+// passport.serializeUser(Doctor.serializeUser());
+// passport.deserializeUser(Doctor.deserializeUser());
+// passport.serializeUser(Admin.serializeUser());
+// passport.deserializeUser(Admin.deserializeUser());
+
 
 
 
@@ -128,16 +153,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 // middleware
-app.use(express.json());
 app.use('/api', login)
 app.use('/api', signUp)
+app.get('/getSession', getSession)
 app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
 app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
+app.use('/api/patient', patientRoute)
 app.use('/api', Appointment)
+app.use('/api', forgotPass)
 
 
 

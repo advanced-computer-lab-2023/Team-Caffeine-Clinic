@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 
+import { useAuthContext } from '../hooks/useAuthContext';
+
 const UpdateRate = () => {
   const [newRate, setNewRate] = useState('');
   const [message, setMessage] = useState('');
+
+  const {user} = useAuthContext()
 
   const handleRateChange = (e) => {
     setNewRate(e.target.value);
@@ -23,6 +27,7 @@ const UpdateRate = () => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
           },
         }
       );

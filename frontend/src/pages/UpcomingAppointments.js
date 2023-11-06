@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useAuthContext } from '../hooks/useAuthContext';
+
 
 const PatientsWithUpcomingAppointments = () => {
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
+
+  const {user} = useAuthContext()
+
 
   useEffect(() => {
     // Retrieve the doctor's username from the session
@@ -16,7 +21,11 @@ const PatientsWithUpcomingAppointments = () => {
     // Make an API request to fetch patients with upcoming appointments
     const fetchPatientsWithAppointments = async () => {
       try {
-        const response = await fetch(`/api/doctorInfo/patientsWithUpcomingAppointments`);
+        const response = await fetch(`/api/doctorInfo/patientsWithUpcomingAppointments`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch patients with upcoming appointments');
         }
@@ -28,9 +37,10 @@ const PatientsWithUpcomingAppointments = () => {
         setError('Failed to fetch patients with upcoming appointments');
       }
     };
-
-    fetchPatientsWithAppointments();
-  }, []);
+    if(user){
+      fetchPatientsWithAppointments();
+    }
+  }, [user]);
 
   return (
     <div>

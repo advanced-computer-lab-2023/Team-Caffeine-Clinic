@@ -149,22 +149,35 @@ const createDoctor = async(req, res) => {
         availableDates,
         patients,
     } = req.body;
+
+    const doctor = new Doctor({
+        username: username, password: password, name: name, speciality: speciality, rate: rate, affiliation: affiliation,
+        email: email, education: education, availableDates: availableDates, patients: patients
+    })
+
+    try {
+        const user = await Doctor.signUp(doctor)
+
+        res.status(200).json({username, user})
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
     
-    Doctor.register({username: username, 
-        name: name, speciality: speciality, rate: rate, 
-        affiliation: affiliation, email: email, education: education, 
-        availableDates: availableDates, patients: patients}, password, function(err, user) {
-        if(err){
-          console.log(err);
-          return res.status(400).json({err: err})
-      }
-          return res.status(200).json({mssg: "Signed Up successfuly"})
-      })
+    // Doctor.register({username: username, 
+    //     name: name, speciality: speciality, rate: rate, 
+    //     affiliation: affiliation, email: email, education: education, 
+    //     availableDates: availableDates, patients: patients}, password, function(err, user) {
+    //     if(err){
+    //       console.log(err);
+    //       return res.status(400).json({err: err})
+    //   }
+    //       return res.status(200).json({mssg: "Signed Up successfuly"})
+    //   })
 };
 // Define a controller function to get a doctor by ID
 const getDoctorByusername = async(req, res) => {
         const doctoruserName = req.query.userName; // Assuming you pass the doctor's username as a route parameter
-        console.log(doctoruserName);
+
         try {
 
             // Use Mongoose to find the doctor by username

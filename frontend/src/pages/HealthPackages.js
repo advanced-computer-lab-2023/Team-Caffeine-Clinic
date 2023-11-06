@@ -1,14 +1,21 @@
 import HealthPackDetails from '../components/HealthPackDetails';
+import { useAuthContext } from "../hooks/useAuthContext";
 import React, { useEffect, useState } from 'react';
 
 const HealthPackages = () => {
   const [healthPackages, setHealthPackages] = useState([]);
   const [error, setError] = useState(null);
 
+  const user = useAuthContext()
+
   useEffect(() => {
     const fetchHealthPackages = async () => {
       try {
-        const response = await fetch('/api/healthpackage');
+        const response = await fetch('/api/healthpackage', {
+          headers: {
+            'Authorization': `Bearer ${user.user.token}`
+          }
+        });
         const data = await response.json();
         
         if (!response.ok) {
@@ -20,9 +27,10 @@ const HealthPackages = () => {
         setError(err.message);
       }
     };
-
-    fetchHealthPackages();
-  }, []);
+    if(user){
+      fetchHealthPackages();
+    }
+  }, [user]);
 
   return (
     <div className="health-packages">
