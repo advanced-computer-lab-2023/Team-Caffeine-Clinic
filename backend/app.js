@@ -22,7 +22,8 @@ const doctorInfoRoutes = require('./routes/doctorInfo');
 const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
 const forgotPass = require('./routes/forgotPass');
-
+const patientRoute = require('./routes/patient')
+ 
 const Patient = require('./models/Patient')
 
 const healthPackageController = require('./controllers/healthPackagesController');
@@ -161,6 +162,7 @@ app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
 app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
+app.use('/api/patient', patientRoute)
 app.use('/api', Appointment)
 app.use('/api', forgotPass)
 

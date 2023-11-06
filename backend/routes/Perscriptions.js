@@ -11,7 +11,7 @@ const {
     createPersc, getDoctorName
 } = require('../controllers/PerscriptionsController')
 
-const requireAuth = require('../middleware/requrieAuth')
+const {requireAuth} = require('../middleware/requrieAuth')
 
 router.use(requireAuth)
 

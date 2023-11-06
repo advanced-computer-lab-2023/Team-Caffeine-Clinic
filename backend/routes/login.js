@@ -19,7 +19,7 @@ const {
 
 router.post('/loginAsPatient', loginPatient)
 
-router.post('/loginAsDoctor', loginDoctor, loginDocfunc)
+router.post('/loginAsDoctor', loginDoctor)
 
 router.post('/loginAsAdmin', loginAdmin, loginAdminfunc)
 

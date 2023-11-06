@@ -24,11 +24,11 @@ const {
     filterDoctorsByAvailability
 } = require('../controllers/PatientController')
 
-const requireAuth = require('../middleware/requrieAuth')
+const {requireDoctorAuth} = require('../middleware/requrieAuth')
 
 const router = express.Router()
 
-router.use(requireAuth)
+router.use(requireDoctorAuth)
 
 
 router.get('/', (req, res) => {
@@ -42,7 +42,7 @@ router.get('/getDoctorByusername', getDoctorByusername)
 router.get('/getAllHealthRecords', getAllHealthRecords)
 
 //filter  a doctor by speciality and/or availability on a certain date and at a specific time
-router.get('/filterDoctorsByAvailability',filterDoctorsByAvailability)
+//router.get('/filterDoctorsByAvailability',filterDoctorsByAvailability)
 
 //get all patient with a doc
 router.get('/myPatients', myPatients)

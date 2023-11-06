@@ -9,7 +9,7 @@ const {
     getFamilyMembers
 } = require('../controllers/familyMemberController');
 
-const requireAuth = require('../middleware/requrieAuth')
+const {requireAuth} = require('../middleware/requrieAuth')
 
 router.use(requireAuth)
 

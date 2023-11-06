@@ -6,7 +6,8 @@ const {
 } = require('../controllers/healthPackagesController');
 
 const { estimateRate } = require('../controllers/PatientController');
-const requireAuth = require('../middleware/requrieAuth')
+
+const {requireAuth} = require('../middleware/requrieAuth')
 
 router.use(requireAuth)
 

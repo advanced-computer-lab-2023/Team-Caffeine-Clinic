@@ -21,14 +21,14 @@ const Admin = require('../models/admin')
 
 // Passport local Strategy
 // passport.use('patient-local', Patient.createStrategy());
-passport.use('doctor-local', Doctor.createStrategy());
+//passport.use('doctor-local', Doctor.createStrategy());
 passport.use('admin-local', Admin.createStrategy());
 
 // To use with sessions
 // passport.serializeUser(Patient.serializeUser());
 // passport.deserializeUser(Patient.deserializeUser());
-passport.serializeUser(Doctor.serializeUser());
-passport.deserializeUser(Doctor.deserializeUser());
+// passport.serializeUser(Doctor.serializeUser());
+// passport.deserializeUser(Doctor.deserializeUser());
 passport.serializeUser(Admin.serializeUser());
 passport.deserializeUser(Admin.deserializeUser());
 
@@ -55,7 +55,7 @@ const applyDoctor = async(req, res) => {
 }
 
 // const loginPatient = passport.authenticate('patient-local')
-const loginDoctor = passport.authenticate('doctor-local')
+//const loginDoctor = passport.authenticate('doctor-local')
 const loginAdmin = passport.authenticate('admin-local')
 
 const loginPatient = async(req, res) => {
@@ -65,7 +65,22 @@ const loginPatient = async(req, res) => {
     const user = await Patient.login(username, password)
 
     //create token
-    const token = createToken(user._id)
+    const token = createToken(user._id, 'Patient')
+
+    res.status(200).json({username, token})
+  } catch (error) {
+    res.status(400).json({error: error}) 
+  }
+}
+
+const loginDoctor = async(req, res) => {
+  const {username, password} = req.body
+
+  try {
+    const user = await Doctor.login(username, password)
+
+    //create token
+    const token = createToken(user._id, 'Doctor')
 
     res.status(200).json({username, token})
   } catch (error) {

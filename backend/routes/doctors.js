@@ -7,7 +7,7 @@ const {
     getAppointments
 } = require('../controllers/doctorController');
 
-const requireAuth = require('../middleware/requrieAuth')
+const {requireAuth} = require('../middleware/requrieAuth')
 
 router.use(requireAuth)
 
