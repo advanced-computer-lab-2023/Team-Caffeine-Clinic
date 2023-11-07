@@ -20,7 +20,8 @@ const {
     selectpatient,
     getAllHealthRecords,
     addPatientToDoctor,
-    myPatients
+    myPatients,
+    add_available_slots
     
     
 } = require('../controllers/doctorInfocontroller')
@@ -73,6 +74,8 @@ router.patch('/updateDoctor', updateDoctorProfile)
 router.patch('/updateRate', updateRate)
 router.patch('/updateEmail', updateEmail)
 
+//add my available time slots for appointments
+router.patch('/add_available_slots', add_available_slots)
 // //add patient
 // router.post('/createPatient', createPatient)
 

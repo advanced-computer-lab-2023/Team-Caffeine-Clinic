@@ -4,6 +4,7 @@ const router = express.Router();
 const Doctor = require('../models/doctor'); // Import your Doctor model
 const Patient = require('../models/Patient'); // Import your Patient model
 const Appointment = require('../models/appointment');
+const { json } = require('body-parser');
 
 //add patients to a doc using the doc username so we can use it whenever we create an appointment 
 const addPatientToDoctor = async(req, res) => {
@@ -453,6 +454,35 @@ const searchmyPatients = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching the patient data.' });
     }
 };
+const add_available_slots = async (req, res) => {
+    const doctorusername = req.user.username; 
+
+    const timeSlot = req.query.timeSlot;
+
+    try {
+        // Find the doctor by ID
+        const doctor = await Doctor.findOne({ username: doctorusername });
+
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
+        }
+
+        // Add the new time slot to the available time slots array
+        if(!doctor.availableDates.includes(timeSlot)){
+        doctor.availableDates.push(timeSlot);
+        
+        // Save the updated doctor information
+        await doctor.save();
+
+        res.status(200).json({ message: "Time slot added successfully", doctor: doctor });}
+        else {
+            return res.status(400).json({ message: "this available Date is there already " });
+
+        }
+    } catch (err) {
+        res.status(500).json({ message: "Error adding time slot", error: err.message });
+    }
+};
 module.exports = {
     getAllHealthRecords,
     searchmyPatients,
@@ -465,5 +495,6 @@ module.exports = {
     createAppointment,
     addPatientToDoctor,
     selectpatient,
-    myPatients
+    myPatients,
+    add_available_slots
 };

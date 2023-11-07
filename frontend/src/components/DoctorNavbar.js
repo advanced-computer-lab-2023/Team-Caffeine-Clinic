@@ -26,6 +26,7 @@ const DoctorNavbar =()=>{
                 <Link className="doctor-buttons" to="/SearchPatient"><h3>Search a Patient</h3></Link>
                 <Link className="doctor-buttons" to="/DocAppointments"><h3>Appointments</h3></Link>
                 <Link className="doctor-buttons" to="/" onClick={handleClick}><h3>Log Out</h3></Link>
+                <Link className="doctor-buttons" to="/AddAvailableDate"><h3>Add My Available Time Slots</h3></Link>
 
 
             </div>
