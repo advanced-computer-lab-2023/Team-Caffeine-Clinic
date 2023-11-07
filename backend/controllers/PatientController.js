@@ -388,6 +388,8 @@ const createAppointment = async(req, res) => {
         const appointmentDate = req.query.date;
         const status = "upcoming";
 
+        console.log(dusername);
+
         // Find the doctor and patient by username
         const doctor = await Doctor.findOne({ username: dusername });
         const patient = await Patient.findOne({ username: pusername });
@@ -395,7 +397,7 @@ const createAppointment = async(req, res) => {
         if (!doctor || !patient) {
             return res.status(400).json({ message: 'Doctor or patient not found' }); }
 
-        doctor.availableDates.filter(item => item !== appointmentDate);
+        doctor.availableDates.filter(item => item != appointmentDate);
 
         // Check if there is an existing appointment with the same details
         const existingAppointment = await Appointment.findOne({
@@ -413,7 +415,7 @@ const createAppointment = async(req, res) => {
         const appointment = new Appointment({
             doctor: doctor.username, // Reference the doctor by username
             patient: patient.username, // Reference the patient by username
-            appointmentDate: new Date(appointmentDate),
+            appointmentDate: appointmentDate,
             status: status // Convert the appointmentDate to a Date object
         });
 
@@ -422,7 +424,7 @@ const createAppointment = async(req, res) => {
         const newreq = req
         const newres = res
             // Use the addPatientToDoctor function to add the patient to the doctor's list
-        await addPatientToDoctor(newreq, newres,doctor);
+        await addPatientToDoctor(newreq, newres,dusername);
 
     } catch (error) {
         console.error(error);
