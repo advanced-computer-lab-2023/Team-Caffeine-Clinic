@@ -24,6 +24,7 @@ const SingleDoctor = () => {
         }
         const data = await response.json();
         setDoctor(data);
+        console.log(data.availableDates);
       } catch (error) {
         setError(error.message);
       }
@@ -53,6 +54,19 @@ const SingleDoctor = () => {
       <div className="details"><strong>email: </strong>{doctor.email}</div>
       <div className="details"><strong>education: </strong>{doctor.education}</div>
       <div className="details"><strong>session price: </strong>{doctor.rateAfterDiscount + 0.1 * (doctor.rateAfterDiscount)}</div>
+      <div className="details">
+        <strong>Available Dates: </strong>
+        {doctor.availableDates && Array.isArray(doctor.availableDates) ? (
+          <ul>
+            {doctor.availableDates.map((Date, index) => (
+              <li key={index}>{Date}</li>
+            ))}
+          </ul>
+        ) : (
+          "No Dates available"
+        )}
+      </div>
+    
     </div>
     </>
   );
