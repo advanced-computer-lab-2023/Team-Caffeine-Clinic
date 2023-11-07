@@ -24,7 +24,7 @@ const Appointments = () => {
 
         const response = await fetch(url, {
           headers: {
-            'Authorization': `Bearer ${user.token}`
+            'Authorization': `Bearer ${user.user.token}`
           }
         });
         const json = await response.json();
