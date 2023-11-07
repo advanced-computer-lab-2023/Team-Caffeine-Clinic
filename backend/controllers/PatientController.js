@@ -348,6 +348,87 @@ const getAppointments = async(req, res) => {
     }
 }
 
+const addPatientToDoctor = async(req, res,dr) => {
+    try {
+        //const { dusername, pusername } = req.body;
+
+        const dusername= dr;
+        const pusername = req.user.username;
+
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: dusername });
+
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // Find the patient by username
+        const patient = await Patient.findOne({ username: pusername });
+
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+
+        // Add the patient's username to the doctor's list of patients if it is not there
+        if (!doctor.patients.includes(patient.username)) {
+            doctor.patients.push(patient.username);
+        }
+        await doctor.save();
+
+        res.status(200).json(doctor);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+const createAppointment = async(req, res) => {
+    try {
+        const pusername = req.user.username;
+        const dusername = req.query.doctorusername;
+        const appointmentDate = req.query.date;
+        const status = "upcoming";
+
+        // Find the doctor and patient by username
+        const doctor = await Doctor.findOne({ username: dusername });
+        const patient = await Patient.findOne({ username: pusername });
+
+        if (!doctor || !patient) {
+            return res.status(400).json({ message: 'Doctor or patient not found' }); }
+
+        doctor.availableDates.filter(item => item !== appointmentDate);
+
+        // Check if there is an existing appointment with the same details
+        const existingAppointment = await Appointment.findOne({
+            doctor: doctor.username,
+            patient: patient.username,
+            appointmentDate: appointmentDate,
+            status: status
+        });
+
+        if (existingAppointment) {
+            return res.status(400).json({ message: 'Appointment with the same details already exists' });
+        }
+        
+        // Create a new appointment
+        const appointment = new Appointment({
+            doctor: doctor.username, // Reference the doctor by username
+            patient: patient.username, // Reference the patient by username
+            appointmentDate: new Date(appointmentDate),
+            status: status // Convert the appointmentDate to a Date object
+        });
+
+        await appointment.save();
+        await doctor.save();
+        const newreq = req
+        const newres = res
+            // Use the addPatientToDoctor function to add the patient to the doctor's list
+        await addPatientToDoctor(newreq, newres,doctor);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 module.exports = {
     signUp,
     viewFilterPerscriptions,
@@ -358,5 +439,7 @@ module.exports = {
     changePass,
     setPass,
     forgotPass,
-    verifyOTP
+    verifyOTP,
+    createAppointment,addPatientToDoctor
+
 }

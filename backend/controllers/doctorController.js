@@ -47,7 +47,8 @@ const getSingleDoctor = async (req, res) => {
                   affiliation: doctor.affiliation,
                   education: doctor.education,
                   originalRate: doctor.rate,
-                  rateAfterDiscount: doctor.rate
+                  rateAfterDiscount: doctor.rate,
+                  availableDates: doctor.availableDates
               }
           return res.status(200).json(doctormap); // Return here
       }
@@ -60,7 +61,8 @@ const getSingleDoctor = async (req, res) => {
         affiliation: doctor.affiliation,
         education: doctor.education,
         originalRate: doctor.rate,
-        rateAfterDiscount: rateAfterDiscount
+        rateAfterDiscount: rateAfterDiscount,
+        availableDates: doctor.availableDates
       }
     return res.status(200).json(doctormap);
   } catch (error) {
