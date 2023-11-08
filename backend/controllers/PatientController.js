@@ -348,6 +348,68 @@ const getAppointments = async(req, res) => {
     }
 }
 
+const linkFamilyMember = async(req, res) => {
+    const user = req.user
+    const {filter, relation} = req.body // filter is either email or phone number
+    let patient;
+    try {
+        
+        if(filter.includes("@")){
+            patient = await Patient.findOne({email: filter})
+        } else{
+            patient = await Patient.findOne({mobile_number: filter})
+        }    
+
+        if(!patient){
+            res.status(400).json({mssg: "Patient not Found"})
+        }
+        
+        updateFamilyMember(user, patient, relation)
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(400).json({error: error})
+    }
+    
+}
+
+async function updateFamilyMember(user, patient, relation) {
+    await Patient.findOneAndUpdate(
+        { _id: user._id }, 
+        { $push: { 
+                family_members: patient._id,
+                relation: relation
+                } 
+        })
+
+    let reverseRelation;
+
+    switch(relation){
+        case "Wife":
+            reverseRelation = "Husband"
+            break
+        case "Husband": 
+            reverseRelation = "Wife"
+            break
+        case "Sibling":
+            reverseRelation = "Sibling"
+            break
+        case "Father":
+        case "Mother":
+            if(user.gender === "male")
+                reverseRelation = "Son"
+            else
+                reverseRelation = "Daughter"
+    }
+
+    await Patient.findOneAndUpdate(
+        { _id: patient._id }, 
+        { $push: { 
+                family_members: user._id,
+                relation: reverseRelation
+                } 
+        })
+}
+
 module.exports = {
     signUp,
     viewFilterPerscriptions,
@@ -358,5 +420,6 @@ module.exports = {
     changePass,
     setPass,
     forgotPass,
-    verifyOTP
+    verifyOTP,
+    linkFamilyMember
 }

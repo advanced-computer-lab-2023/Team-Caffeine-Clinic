@@ -23,7 +23,8 @@ const patientSchema = new Schema({
 
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     dob: {
@@ -39,7 +40,8 @@ const patientSchema = new Schema({
 
     mobile_number: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     health_package: { 
@@ -68,8 +70,18 @@ const patientSchema = new Schema({
             type: String,
             required: true,
             enum: ['Wife', 'Husband', 'Child', "Father", "Mother", "Sibling"]
-        },
-    }
+        }
+    },
+
+    family_members: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Patient'
+    }],
+
+    relation: [{
+        type: String,
+        enum: ["Wife", "Husband", "Daughter", "Father", "Mother", "Sibling", "Son"]
+    }]
 
 }, {timestamps: true})
 
