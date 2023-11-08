@@ -23,7 +23,8 @@ const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
 const forgotPass = require('./routes/forgotPass');
 const patientRoute = require('./routes/patient')
- 
+const stripe = require('./routes/stripe')
+
 const Patient = require('./models/Patient')
 
 const healthPackageController = require('./controllers/healthPackagesController');
@@ -31,6 +32,7 @@ const Appointment = require('./routes/appointments');
 
 const Doctor = require('./models/doctor');
 const Admin = require('./models/admin');
+
 // const./models/admin= require('cors');
 
 
@@ -165,7 +167,7 @@ app.use('/api/healthpackage', healthPackageRoutes);
 app.use('/api/patient', patientRoute)
 app.use('/api', Appointment)
 app.use('/api', forgotPass)
-
+app.use('/api', stripe)
 
 
 // // // catch 404 and forward to error handler
