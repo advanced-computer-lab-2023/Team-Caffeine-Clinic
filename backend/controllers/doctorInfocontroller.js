@@ -311,34 +311,6 @@ const selectpatient = async(req, res) => {
         }
 }
 // Create a route to filter patients by upcoming appointments by doc username #req:35
-const patientsWithUpcomingAppointments = async (req, res) => {
-    try {
-        const doctorUsername = req.user.username; // Assuming the username is passed as a parameter
-
-        // Get the current date and time
-        const currentDate = new Date();
-
-        const upcomingAppointments = await Appointment.find({
-            doctor: doctorUsername,
-            status: 'upcoming'
-        }).sort({ appointmentDate: 1 });
-
-        // Filter out past appointments based on the formatted dates
-        const filteredAppointments = upcomingAppointments.filter(appointment => {
-            const [year, month, day, time] = appointment.appointmentDate.split("\\");
-            const [hour, minute, second] = time.split(":");
-            const paddedYear = year.padStart(4, '0');
-            console.log(paddedYear);
-            const appointmentDate = new Date(paddedYear, month - 1, day, hour, minute, second);
-            return appointmentDate >= currentDate;
-        });
-
-        res.json(filteredAppointments);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred while listing upcoming appointments.' });
-    }
-};
 
 
 
@@ -439,10 +411,61 @@ const searchmyPatients = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching the patient data.' });
     }
 };
+const patientsWithUpcomingAppointments = async (req, res) => {
+    try {
+        const doctorUsername = req.user.username; // Assuming the username is passed as a parameter
+
+        // Get the current date and time
+        const currentDate = new Date();
+
+        const upcomingAppointments = await Appointment.find({
+            doctor: doctorUsername,
+            status: 'upcoming'
+        }).sort({ appointmentDate: 1 });
+        let o=0;
+        // Filter out past appointments based on the formatted dates
+        const filteredAppointments = upcomingAppointments.filter(appointment => {
+            const [year, month1, month, time,sec] = appointment.appointmentDate.split("\\");
+            const [day, hour, min1] = sec.split(":");
+            const paddedYear = year[1]+year[2]+year[3]+year[4];
+            let min = 0;
+            if(min1[1]!='"'){
+             min = min1[0]+min1[1];}
+            else {
+             min = min1[0];
+            }
+            const appointmentDate = new Date(paddedYear, month-1, day, hour, min);
+           
+
+            return appointmentDate>= currentDate;
+        });
+       
+
+        res.json(filteredAppointments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while listing upcoming appointments.' });
+    }
+};
+
 const add_available_slots = async (req, res) => {
     const doctorusername = req.user.username; 
+    const currentDate = new Date();
 
     const timeSlot = req.query.timeSlot;
+    const [year, month1, month, time,sec] = timeSlot.split("\\");
+    const [day, hour, min1] = sec.split(":");
+    const paddedYear = year[1]+year[2]+year[3]+year[4];
+    let min = 0;
+    if(min1[1]!='"'){
+     min = min1[0]+min1[1];}
+    else {
+     min = min1[0];
+    }
+    const appointmentDate = new Date(paddedYear, month-1, day, hour, min);
+    if(appointmentDate<currentDate){
+        return res.status(400).json({ message: "This date has already passed Enter a new one " });
+    }
 
     try {
         // Find the doctor by ID
