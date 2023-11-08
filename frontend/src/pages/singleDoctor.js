@@ -7,12 +7,11 @@ const SingleDoctor = () => {
   const { username } = useParams();
   const [doctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
-
   const { user } = useAuthContext();
 
   const handleCreateAppointment = async (date) => {
     try {
-      const response = await fetch(`/api/patient/createAppointment?doctorusername=${username}&date=${doctor.availableDates}`, {
+      const response = await fetch(`/api/patient/createAppointment?doctorusername=${username}&date=${date}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +77,7 @@ const SingleDoctor = () => {
               {doctor.availableDates.map((date, index) => (
                 <li key={index}>
                   {date}{' '}
-                  <button onClick={() => handleCreateAppointment(date)}>
+                  <button onClick={() => handleCreateAppointment(doctor.availableDates[index])}>
                     Book Appointment
                   </button>
                 </li>

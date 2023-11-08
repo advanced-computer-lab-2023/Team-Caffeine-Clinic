@@ -31,7 +31,6 @@ import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
-import Appointments from './pages/Appointments';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
@@ -77,7 +76,6 @@ function App() {
               <Route path='healthPackages' element={user ? <WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='Perscriptions' element={user ? <WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='SinglePerscriptions/:id' element={user ? <WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar> : <Navigate to="/" />} />
-              <Route path='Appointments' element={user ? <WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
               <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />

@@ -313,51 +313,36 @@ const selectpatient = async(req, res) => {
 // Create a route to filter patients by upcoming appointments by doc username #req:35
 const patientsWithUpcomingAppointments = async (req, res) => {
     try {
-        const doctor = req.user; // Assuming you pass the doctor's username as a query parameter
+        const doctorUsername = req.user.username; // Assuming the username is passed as a parameter
 
-        // const doctorUsername = user.username // Assuming you pass the doctor's username as a query parameter
-        // console.log(doctorUsername);
+        // Get the current date and time
         const currentDate = new Date();
 
-        // Find the doctor by username
-        // const doctor = await Doctor.findOne({ username: doctorUsername });
-
-        if (!doctor) {
-            return res.status(404).json({ error: 'Doctor not found.' });
-        }
-
-        // Get the patient usernames associated with the doctor
-        const patientUsernames = doctor.patients;
-
-        // Find upcoming appointments for the specific doctor and patients
         const upcomingAppointments = await Appointment.find({
-            doctor: doctor.username,
-            patient: { $in: patientUsernames },
-            appointmentDate: { $gte: currentDate }
+            doctor: doctorUsername,
+            status: 'upcoming'
+        }).sort({ appointmentDate: 1 });
+
+        // Filter out past appointments based on the formatted dates
+        const filteredAppointments = upcomingAppointments.filter(appointment => {
+            const [year, month, day, time] = appointment.appointmentDate.split("\\");
+            const [hour, minute, second] = time.split(":");
+            const paddedYear = year.padStart(4, '0');
+            console.log(paddedYear);
+            const appointmentDate = new Date(paddedYear, month - 1, day, hour, minute, second);
+            return appointmentDate >= currentDate;
         });
 
-        // Create an array of patient objects with names and appointment dates
-        const patientData = await Promise.all(patientUsernames.map(async (patientUsername) => {
-            const appointment = upcomingAppointments.find((appointment) => appointment.patient === patientUsername);
-            const patient = await Patient.findOne({ username: patientUsername });
-            return {
-                name: patient.name,
-                appointmentDate: appointment ? appointment.appointmentDate : null
-            };
-        }));
-
-        // Filter out patients with no appointment date
-        const filteredPatientData = patientData.filter((patient) => patient.appointmentDate !== null);
-
-        // Sort filteredPatientData based on upcoming appointment dates
-        filteredPatientData.sort((a, b) => a.appointmentDate - b.appointmentDate);
-
-        res.json(filteredPatientData);
+        res.json(filteredAppointments);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'An error occurred while filtering patients with upcoming appointments.' });
+        res.status(500).json({ error: 'An error occurred while listing upcoming appointments.' });
     }
 };
+
+
+
+
  // Create a route to view patient information and health records#req:25
 const getAllHealthRecords = async(req, res) => {
     try {
