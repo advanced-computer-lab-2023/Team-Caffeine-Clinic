@@ -339,7 +339,6 @@ const selectpatient = async(req, res) => {
             if (patient) {
 
                 const healthRecords = patient.health_records;
-
                 allHealthRecords.push({ patientUsername, healthRecords });
 
             }

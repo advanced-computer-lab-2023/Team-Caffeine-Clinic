@@ -47,10 +47,12 @@ const patientSchema = new Schema({
         default: 'no package'
     },
 
-    health_records: {
-        type: String,
-        default: 'insomnia'
-    },
+    health_records: [
+        {
+            type:String,
+            default:[]
+        }
+    ],
     
     emergency_contact: {
         
@@ -69,10 +71,7 @@ const patientSchema = new Schema({
             required: true,
             enum: ['Wife', 'Husband', 'Child', "Father", "Mother", "Sibling"]
         },
-   
-    } ,wallet:{
-        type:Number,
-        default:0 }
+    }
 
 }, {timestamps: true})
 
