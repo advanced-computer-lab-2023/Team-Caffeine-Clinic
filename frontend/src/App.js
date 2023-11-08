@@ -70,7 +70,7 @@ function App() {
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
 
-              <Route path="pay" element={<Elements stripe={stripePromise}> <PaymentHandler/> </Elements>}/>
+              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <PaymentHandler/> </Elements>}/>
 
 
 

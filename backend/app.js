@@ -152,7 +152,8 @@ const getSession = (req, res) => {
 //     }
 //   }
 // ));
-
+app.use('/api', forgotPass)
+app.use('/api', stripe)
 
 // middleware
 app.use('/api', login)
@@ -166,8 +167,6 @@ app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
 app.use('/api/patient', patientRoute)
 app.use('/api', Appointment)
-app.use('/api', forgotPass)
-app.use('/api', stripe)
 
 
 // // // catch 404 and forward to error handler

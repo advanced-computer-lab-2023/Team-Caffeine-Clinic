@@ -7,20 +7,29 @@ const PaymentForm = () => {
   const [clientSecret, setClientSecret] = useState(null);
   const [error, setError] = useState(null);
   
+  useEffect(() => {
+    const fetchClientSecret = async () => {
+        const url = '/api/create-payment-intent?amount=200'
+
+        const response = await fetch(url, {
+            method: 'POST',
+        })
+    
+        if(!response.ok){
+    
+        }
+    
+        const json = await response.json()
+        //console.log(json.clientSecret);
+        setClientSecret(json.clientSecret)
+    }
+    fetchClientSecret()
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await fetch('/api/create-payment-intent?amount=200', {
-        method: 'POST',
-    })
-
-    if(!response.ok){
-
-    }
-
-    const json = response.json
-    setClientSecret(json)
+    
 
     const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {

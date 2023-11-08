@@ -143,23 +143,31 @@ const setPass = async(req, res) => {
 
     const user = await Patient.findOne({email: email});
 
+    try{
+        Patient.setPassword(email, newPassword)
+        return res.status(202).json({ mssg: "Password Changed Successfully" });
+    } catch(error){
+        return res.status(400).json({error: error})
+    }
+    // const salt = await bcrypt.genSalt(10)
+    // const hash = await bcrypt.hash(newPassword, salt)
     
-    user.setPassword(newPassword, async(err) => {
-        if(err){
-            console.log(err);
-            return res.status(400).json({mssg: "Something went wrong"})
-        }
+    // user.setPassword(newPassword, async(err) => {
+    //     if(err){
+    //         console.log(err);
+    //         return res.status(400).json({mssg: "Something went wrong"})
+    //     }
 
-        try {
-            await user.save();
-            console.log("Password updated");
-            return res.status(202).json({ mssg: "Password Changed Successfully" });
-        } catch (err) {
-            console.log(err);
-            return res.status(400).json({ mssg: "Error saving user with new password" });
-        }
+    //     try {
+    //         await user.save();
+    //         console.log("Password updated");
+    //         return res.status(202).json({ mssg: "Password Changed Successfully" });
+    //     } catch (err) {
+    //         console.log(err);
+    //         return res.status(400).json({ mssg: "Error saving user with new password" });
+    //     }
        
-    })
+    // })
 
 }
 
