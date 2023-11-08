@@ -36,8 +36,12 @@ const PatientHealthRecord = () => {
           <h3>Selected Patient Details</h3>
           
           <p>Health Package: {selectedPatient.health_package}</p>
-          <p>Health Records: {selectedPatient.health_records}</p>
-          <p>Emergency Contact: {selectedPatient.emergency_contact.full_name}</p>
+          <p>Health Records:</p>
+<ul>
+  {selectedPatient.health_records.map((record, index) => (
+    <li key={index}>{record}</li>
+  ))}
+</ul>          <p>Emergency Contact: {selectedPatient.emergency_contact.full_name}</p>
           <p>Emergency Contact Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
           <p>Relation to the Patient: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
           <p>Wallet: {selectedPatient.wallet}</p>

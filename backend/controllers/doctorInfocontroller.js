@@ -423,27 +423,35 @@ const patientsWithUpcomingAppointments = async (req, res) => {
         // Get the current date and time
         const currentDate = new Date();
 
-        const upcomingAppointments = await Appointment.find({
-            doctor: doctorUsername,
-            status: 'upcoming'
-        }).sort({ appointmentDate: 1 });
-        let o=0;
-        // Filter out past appointments based on the formatted dates
-        const filteredAppointments = upcomingAppointments.filter(appointment => {
-            const [year, month1, month, time,sec] = appointment.appointmentDate.split("\\");
-            const [day, hour, min1] = sec.split(":");
-            const paddedYear = year[1]+year[2]+year[3]+year[4];
-            let min = 0;
-            if(min1[1]!='"'){
-             min = min1[0]+min1[1];}
-            else {
-             min = min1[0];
-            }
-            const appointmentDate = new Date(paddedYear, month-1, day, hour, min);
-           
+        const allAppointments = await Appointment.find({ doctor: doctorUsername });
 
-            return appointmentDate>= currentDate;
+        // Filter out appointments with status 'upcoming' or 'followUp'
+        const upcomingAndFollowUpAppointments = allAppointments.filter(appointment => {
+            return appointment.status === 'upcoming'|| appointment.status === 'FollowUp';
         });
+
+        // Filter out past appointments based on the formatted dates
+        const filteredAppointments = upcomingAndFollowUpAppointments.filter(appointment => {
+            if (!appointment.appointmentDate) return false; // Check if appointmentDate is undefined
+
+            const parts = appointment.appointmentDate.split("\\");
+            if (parts.length !== 5) return false; // Check if the expected format is matched
+
+            const [year, month1, month, time, sec] = parts;
+            const [day, hour, min1] = sec.split(":");
+            const paddedYear = year[1] + year[2] + year[3] + year[4];
+            console.log(paddedYear);
+            let min = 0;
+            if (min1[1] !== '"') {
+                min = min1[0] + min1[1];
+            } else {
+                min = min1[0];
+            }
+            const appointmentDate = new Date(paddedYear, month - 1, day, hour, min);
+
+            return appointmentDate >= currentDate;
+        });
+
        
 
         res.json(filteredAppointments);
@@ -496,7 +504,70 @@ const add_available_slots = async (req, res) => {
         res.status(500).json({ message: "Error adding time slot", error: err.message });
     }
 };
+const getCompletedAppointmentsForDoctor = async (req, res) => {
+    const doctorId = req.user.username; // Assuming you are passing the doctor's ID as a parameter
+    try {
+      const completedAppointments = await Appointment.find({ doctor: doctorId, status: 'completed' });
+      res.status(200).json(completedAppointments);
+    } catch (error) {
+      console.error('Error fetching completed appointments:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
 
+  const createfollowUPAppointment = async (req, res) => {
+    const doctorId = req.user.username;
+    const patientId = req.query.patientId;
+    const date = req.query.date;
+
+    try {
+        // Check if the appointment already exists
+        const existingAppointment = await Appointment.findOne({ doctor: doctorId, patient: patientId, appointmentDate: date });
+
+        if (existingAppointment) {
+            return res.status(400).json({ error: 'Appointment already exists' });
+        }
+
+        // Create a new appointment
+        const appointment = new Appointment({
+            doctor: doctorId,
+            patient: patientId,
+            appointmentDate: date,
+            status: 'upcoming', // Assuming the default status is 'upcoming'
+        });
+
+        await appointment.save();
+        res.status(200).json({ message: 'Appointment created successfully' });
+    } catch (error) {
+        console.error('Error creating appointment:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const changeToFollowUp = async (req, res) => {
+  const  doctorId = req.user.username;
+  const patientId = req.query.patientId;
+  const date = req.query.date;
+
+
+    try {
+      const appointment = await Appointment.findOneAndUpdate(
+        { doctor: doctorId, patient: patientId, appointmentDate: date },
+        { $set: { status: 'FollowUp' } },
+        { new: true }
+      );
+  
+      if (!appointment) {
+        return res.status(404).json({ error: 'Appointment not found' });
+      }
+  
+      res.status(200).json({ message: 'Status changed to FollowUp successfully', appointment });
+    } catch (error) {
+      console.error('Error changing appointment status:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+  
 module.exports = {
     getAllHealthRecords,
     searchmyPatients,
@@ -510,5 +581,8 @@ module.exports = {
     addPatientToDoctor,
     selectpatient,
     myPatients,
-    add_available_slots
+    add_available_slots,
+    getCompletedAppointmentsForDoctor,
+    createfollowUPAppointment,
+    changeToFollowUp
 };

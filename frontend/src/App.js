@@ -38,6 +38,8 @@ import { useAuthContext } from './hooks/useAuthContext';
 import AddAvailableDateFunc from './pages/AddAvailableDate';
 import DoctorHealthRecords from './pages/DoctorHealthRecords';
 import PatientHealthRecords from './pages/PatientHealthRecord';
+import CompletedAppointments from './pages/follow-up';
+
 
 
 
@@ -68,6 +70,8 @@ function App() {
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
               <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
+              <Route path="follow-up" element={<WithDoctorNavbar><CompletedAppointments /></WithDoctorNavbar>} />
+
 
 
               {/* Ibra - Salah */}
