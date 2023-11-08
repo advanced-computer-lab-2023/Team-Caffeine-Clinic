@@ -36,6 +36,7 @@ import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
 import { useAuthContext } from './hooks/useAuthContext';
 import AddAvailableDateFunc from './pages/AddAvailableDate';
+import DoctorHealthRecords from './pages/DoctorHealthRecords';
 
 
 
@@ -65,7 +66,7 @@ function App() {
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
-
+              <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
 
 
               {/* Ibra - Salah */}

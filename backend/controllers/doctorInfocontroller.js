@@ -316,16 +316,17 @@ const selectpatient = async(req, res) => {
 
 
  // Create a route to view patient information and health records#req:25
-const getAllHealthRecords = async(req, res) => {
+ const getAllHealthRecords = async(req, res) => {
     try {
-        const { doctorUsername } = req.body;
+
+        const doctor = req.user;
 
         // Find the doctor by username
-        const doctor = await Doctor.findOne({ username: doctorUsername });
+       // const doctor = await Doctor.findOne({ username: doctoruserName });
 
-        if (!doctor) {
-            return res.status(404).json({ message: 'Doctor not found' });
-        }
+        // if (!doctor) {
+        //     return res.status(404).json({ message: 'Doctor not found' });
+        // }
 
         // Determine the patients associated with the doctor, you may have your own logic for this
         // For example, you might have a field in the doctor's model that stores the patient's username
@@ -336,17 +337,22 @@ const getAllHealthRecords = async(req, res) => {
             const patient = await Patient.findOne({ username: patientUsername });
 
             if (patient) {
+
                 const healthRecords = patient.health_records;
+
                 allHealthRecords.push({ patientUsername, healthRecords });
+
             }
         }
+        return  res.status(200).json( allHealthRecords  );
 
-        res.json({ allHealthRecords });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while fetching health records.' });
     }
 };
+
 const myPatients = async(req, res) => {
     try {
         const user = req.user; // Assuming you pass the doctor's username as a query parameter
@@ -491,6 +497,7 @@ const add_available_slots = async (req, res) => {
         res.status(500).json({ message: "Error adding time slot", error: err.message });
     }
 };
+
 module.exports = {
     getAllHealthRecords,
     searchmyPatients,
