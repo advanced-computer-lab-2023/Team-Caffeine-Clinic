@@ -125,7 +125,7 @@ const forgotPass = async(req, res) => {
 
 const verifyOTP = async (req, res) => {
     const { otp, email } = req.body;
-
+    console.log(otp, email);
     try {
         const verify = await OTP.findOne({ email: email });
 
@@ -136,7 +136,7 @@ const verifyOTP = async (req, res) => {
 
         console.log("OTP from DB:", verify.OTP, "OTP from user:", otp);
 
-        if (verify.OTP.otp != otp.trim()) {
+        if (verify.OTP != otp) {
             console.log("Wrong OTP");
             return res.status(400).json({ mssg: "Wrong OTP" });
         }
