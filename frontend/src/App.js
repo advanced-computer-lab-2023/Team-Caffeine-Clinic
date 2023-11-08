@@ -34,9 +34,10 @@ import EditHealthPackage from './pages/EditHealthPackage';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
-import { useAuthContext } from './hooks/useAuthContext';
+import { useAuthContext } from './hooks/useAuthContext';          
 import AddAvailableDateFunc from './pages/AddAvailableDate';
 import DoctorHealthRecords from './pages/DoctorHealthRecords';
+import PatientHealthRecords from './pages/PatientHealthRecord';
 
 
 
@@ -72,6 +73,9 @@ function App() {
               {/* Ibra - Salah */}
               <Route path='home' element={ <WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
+
+              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><PatientHealthRecords /></WithNavbarAndSidebar>} />
+
               <Route path='doctor/getSingleDoctor/:username' element={user ? <SingleDoctor /> : <Navigate to="/" /> }/>
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
               <Route path='healthPackages' element={user ? <WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar> : <Navigate to="/" />} />
