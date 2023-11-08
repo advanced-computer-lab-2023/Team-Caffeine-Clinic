@@ -375,7 +375,6 @@ const createAppointment = async(req, res) => {
         const appointmentDate = req.query.date;
         const status = "upcoming";
 
-        console.log(dusername);
 
         // Find the doctor and patient by username
         const doctor = await Doctor.findOne({ username: dusername });
@@ -394,7 +393,7 @@ const createAppointment = async(req, res) => {
             appointmentDate: appointmentDate,
             status: status
         });
-
+        console.log('ana hena');
         if (existingAppointment) {
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
