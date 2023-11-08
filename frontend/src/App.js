@@ -26,6 +26,7 @@ import ViewAdmin from "./pages/ViewAdmins"
 import AdminHome from "./pages/AdminHome";
 import DoctorAppHome from './pages/viewDoctorApps';
 import ViewDoctorHome from './pages/viewDoctors';
+import AppointmentsComponent from './pages/PatientfilterAppointments';
 import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
@@ -81,6 +82,8 @@ function App() {
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
               <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
               <Route path='Filterbyavedates' element={user ? <WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><AppointmentsComponent /></WithNavbarAndSidebar>} />
+
 
 
               {/* Mo2 - Yas */}

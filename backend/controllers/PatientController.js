@@ -325,28 +325,7 @@ const getSinglePerscription = async(req, res) => {
     }
 }
 
-const getAppointments = async(req, res) => {
-    const patient = req.user
-    const patientUsername = patient.username
 
-    try {
-
-        const date = req.query.date;
-        const status = req.query.status;
-
-        let filter = {};
-
-        if (date) filter.appointmentDate = date; // Case-insensitive regex search
-        if (status) filter.status = new RegExp(status, 'i');
-        if (patientUsername) filter.patient = patientUsername
-
-
-        const appointement = await Appointment.find(filter)
-        res.status(200).json(appointement)
-    } catch (error) {
-        res.status(400).send(error);
-    }
-}
 
 const addPatientToDoctor = async(req, res,dr) => {
     try {
@@ -397,7 +376,8 @@ const createAppointment = async(req, res) => {
         if (!doctor || !patient) {
             return res.status(400).json({ message: 'Doctor or patient not found' }); }
 
-        doctor.availableDates.filter(item => item != appointmentDate);
+            doctor.availableDates= doctor.availableDates.filter(item => item != appointmentDate);
+
 
         // Check if there is an existing appointment with the same details
         const existingAppointment = await Appointment.findOne({
@@ -431,6 +411,53 @@ const createAppointment = async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+const getAppointments = async (req, res) => {
+   username = req.user.username;
+   date = req.query.date;
+   appointmentStatus  = req.query.status;
+   
+    let query = { patient: username };
+
+    // Check for the optional filters
+    if (date && !appointmentStatus ) {
+        query.appointmentDate = { $regex: date, $options: 'i' };
+    } else if (appointmentStatus  && !date) {
+        query.status = appointmentStatus ;
+    } else if (date && appointmentStatus ) {
+        query = {
+            patient: username,
+            appointmentDate: { $regex: date, $options: 'i' },
+            status: appointmentStatus ,
+        };
+    }
+
+    try {
+        const appointments = await Appointment.find(query)
+        res.status(200).json(appointments);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+const selectpatient = async(req, res) => {
+    try {
+        const patientname = req.user.username;
+         // Get the patient name from the URL parameter
+
+        // Retrieve the patient details by their name
+        const selectedPatient = await Patient.findOne({ username: patientname })
+
+        if (!selectedPatient) {
+            return res.status(404).json({ error: 'Patient not found.' });
+        }
+
+        res.json({ patient: selectedPatient });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while selecting the patient.' });
+    }
+}
+
+
 module.exports = {
     signUp,
     viewFilterPerscriptions,
@@ -442,6 +469,7 @@ module.exports = {
     setPass,
     forgotPass,
     verifyOTP,
-    createAppointment,addPatientToDoctor
+    createAppointment,addPatientToDoctor,
+    selectpatient
 
 }

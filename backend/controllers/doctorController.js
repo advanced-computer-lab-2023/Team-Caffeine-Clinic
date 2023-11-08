@@ -71,28 +71,35 @@ const getSingleDoctor = async (req, res) => {
 };
 
 
-const getAppointments = async(req, res) => {
-  const doctor = req.user
-  const doctorUsername = doctor.username
-
-  try {
-
-      const date = req.query.date;
-      const status = req.query.status;
-
-      let filter = {};
-
-      if (date) filter.appointmentDate = date; 
-      if (status) filter.status = new RegExp(status, 'i');
-      if (doctorUsername) filter.doctor = doctorUsername
 
 
-      const appointement = await Appointment.find(filter)
-      res.status(200).json(appointement)
-  } catch (error) {
-      res.status(400).send(error);
-  }
-}
+const getAppointments = async (req, res) => {
+  username = req.user.username;
+  date = req.query.date;
+  appointmentStatus  = req.query.status;
+  
+   let query = { doctor : username };
+
+   // Check for the optional filters
+   if (date && !appointmentStatus ) {
+       query.appointmentDate = { $regex: date, $options: 'i' };
+   } else if (appointmentStatus  && !date) {
+       query.status = appointmentStatus ;
+   } else if (date && appointmentStatus ) {
+       query = {
+           doctor: username,
+           appointmentDate: { $regex: date, $options: 'i' },
+           status: appointmentStatus ,
+       };
+   }
+
+   try {
+       const appointments = await Appointment.find(query)
+       res.status(200).json(appointments);
+   } catch (error) {
+       res.status(500).json({ error: 'Internal Server Error' });
+   }
+};
 
 
 

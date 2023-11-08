@@ -9,6 +9,8 @@ const Sidebar = () => {
       <Link to="/HealthPackages">Health Packages</Link>
       <Link to="/Appointments">Appointments</Link>
       <Link to="/Filterbyavedates">Filter by Availability Date</Link>
+      <Link to="/PatientfilterAppointments">My Appointments </Link>
+
     </div>
   )
 }

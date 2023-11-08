@@ -12,7 +12,7 @@ const SingleDoctor = () => {
 
   const handleCreateAppointment = async (date) => {
     try {
-      const response = await fetch(`/api/patient/createAppointment/dusername=${doctor}&appointmentDate=${doctor.availableDates}`, {
+      const response = await fetch(`/api/patient/createAppointment?doctorusername=${username}&date=${doctor.availableDates}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,6 +26,7 @@ const SingleDoctor = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      window.location.reload();
 
       // Handle successful response here
       // e.g., show a success message or update the UI accordingly

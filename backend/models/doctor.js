@@ -52,7 +52,10 @@ const doctorSchema = new Schema({
     patients: [{
         type: String, 
         ref: 'Patient'
-    }]
+    }],
+    wallet:{
+        type:Number,
+        default:0 }
 });
 
 //doctorSchema.plugin(passportLocalMongoose)

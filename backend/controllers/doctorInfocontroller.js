@@ -177,7 +177,7 @@ const createDoctor = async(req, res) => {
 };
 // Define a controller function to get a doctor by ID
 const getDoctorByusername = async(req, res) => {
-        const doctoruserName = req.query.userName; // Assuming you pass the doctor's username as a route parameter
+        const doctoruserName = req.user.username; // Assuming you pass the doctor's username as a route parameter
 
         try {
 

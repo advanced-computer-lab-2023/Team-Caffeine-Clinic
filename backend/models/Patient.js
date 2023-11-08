@@ -69,7 +69,10 @@ const patientSchema = new Schema({
             required: true,
             enum: ['Wife', 'Husband', 'Child', "Father", "Mother", "Sibling"]
         },
-    }
+   
+    } ,wallet:{
+        type:Number,
+        default:0 }
 
 }, {timestamps: true})
 

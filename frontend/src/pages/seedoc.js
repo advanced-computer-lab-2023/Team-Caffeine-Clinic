@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
-import { useUsername } from './UsernameContext'; // Import the context hook
+import React, { useState, useEffect } from 'react';
 
 import { useAuthContext } from '../hooks/useAuthContext';
 
-
 const DoctorInfo = () => {
-  const { username, setUsername } = useUsername(); // Access the global username state
 
   const [doctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
 
+  const { user } = useAuthContext();
 
-  const {user} = useAuthContext()
-
-//localStorage.setItem('username', username);
   const handleSearch = async () => {
     try {
-      console.log(username);
-      const response = await fetch(`/api/doctorInfo/getDoctorByusername?userName=${username}`, {
+      const response = await fetch(`/api/doctorInfo/getDoctorByusername`, {
         headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
+          Authorization: `Bearer ${user.token}`
+        },
       });
       if (!response.ok) {
         throw new Error('Doctor not found');
@@ -35,18 +29,13 @@ const DoctorInfo = () => {
     }
   };
 
+  useEffect(() => {
+    handleSearch();
+  }, []); // Empty dependency array to trigger only on initial render
+
   return (
     <div>
       <h1>Doctor Information</h1>
-      <div>
-        <label>Enter Doctor's Username:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          />
-        <button onClick={handleSearch}>Search</button>
-      </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {doctor && (
         <div>
@@ -58,6 +47,16 @@ const DoctorInfo = () => {
           <p>Affiliation: {doctor.affiliation}</p>
           <p>Email: {doctor.email || 'N/A'}</p>
           <p>Education: {doctor.education || 'N/A'}</p>
+          <p>
+            Available Dates:
+            <ul>
+              {doctor.availableDates &&
+                doctor.availableDates.map((date, index) => (
+                  <li key={index}>{date}</li>
+                ))}
+            </ul>
+          </p>
+          <p>Wallet: {doctor.wallet}</p>
         </div>
       )}
     </div>

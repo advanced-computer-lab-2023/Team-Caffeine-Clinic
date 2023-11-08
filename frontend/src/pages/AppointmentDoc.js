@@ -1,73 +1,69 @@
-import { useEffect, useState } from 'react'
-import DoctorDetails from '../components/DoctorDetails';
+import React, { useEffect, useState } from 'react';
 import AppointmentDetail from '../components/AppointmentDetails';
 import { useAuthContext } from '../hooks/useAuthContext';
 
-
 const AppointmentDoc = () => {
-
     const [appointments, setAppointments] = useState(null);
-    const [dateFilter, setDateFilter] = useState('');
-    const [stateFilter, setstateFilter] = useState('');
-
-    const {user} = useAuthContext()
+    const [date, setDate] = useState('');
+    const [status, setStatus] = useState('');
+    const { user } = useAuthContext();
 
     useEffect(() => {
-      const fetchDoctors = async () => {
-        let url = '/api/doctorInfo/appointments';
+        const fetchAppointments = async () => {
+            try {
+                const response = await fetch(
+                    `api/doctorInfo/appointments?date=${date}&status=${status}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${user.token}`,
+                        },
+                    }
+                );
 
-        const params = new URLSearchParams();
-        if (dateFilter) params.append('date', dateFilter);
-        if (stateFilter) params.append('status', stateFilter);
-        if (params.toString()) url += `?${params.toString()}`;
+                if (response.ok) {
+                    const data = await response.json();
+                    setAppointments(data);
+                } else {
+                    // Handle error here
+                }
+            } catch (error) {
+                console.error('Error fetching appointments:', error);
+            }
+        };
 
-        console.log(url);
-
-        const response = await fetch(url, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user.token}`
-          }
-        });
-        const json = await response.json();
-
-        if (response.ok) {
-            setAppointments(json)
-        }
-      }
-      if(user){
-        fetchDoctors();
-      }
-    }, [dateFilter, stateFilter, user])
+        fetchAppointments();
+    }, [date, status, user]);
 
     return (
-      <div className="doctors">
-        {/* Filter section */}
-        <div className="filters">
-          <input 
-            type="text" 
-            placeholder="Filter by Date" 
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)} 
-            className="filter-input"
-          />
-          <input 
-            type="text" 
-            placeholder="Filter by State" 
-            value={stateFilter}
-            onChange={(e) => setstateFilter(e.target.value)}
-            className="filter-input" 
-          />
-        </div>
+        <div className="doctors">
+            {/* Filter section */}
+            <div className="filters">
+                <input
+                    type="text"
+                    placeholder="Filter by Date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="filter-input"
+                />
+                <select value={status} onChange={(e) => setStatus(e.target.value)} className="filter-input">
+                    <option value="">--Select Status--</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="rescheduled">Rescheduled</option>
+                </select>
+            </div>
 
-        {/* Doctors list */}
-        <div className='doctors'>
-          {appointments && appointments.map((appointment) => (
-            <AppointmentDetail key={appointment._id} appointment={appointment} />
-          ))}
+            {/* Appointments list */}
+            <div className="appointments">
+                {appointments &&
+                    appointments.map((appointment) => (
+                        <AppointmentDetail key={appointment._id} appointment={appointment} />
+                    ))}
+            </div>
         </div>
-      </div>
-  )
-}
+    );
+};
 
 export default AppointmentDoc;
