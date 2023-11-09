@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Link } from "react-router-dom"
+import { useLogout } from '../hooks/useLogout'
+
 import "../index.css"
 
 
@@ -9,6 +11,8 @@ const App1 = () => {
   const [username, setUsername] = useState('');
   const [error, setError] = useState(null);
   const user = useAuthContext();
+  const { logout } = useLogout();
+
 
   const getEmploymentContract = async () => {
     try {
@@ -55,6 +59,10 @@ const App1 = () => {
       setError('Error rejecting the contract. Please try again later.');
     }
   };
+  const handleClick = () => {
+    logout()
+  }
+
 
   useEffect(() => {
     if (username) {
@@ -91,6 +99,10 @@ const App1 = () => {
       ) : (
         <p>Please enter your username to fetch employment contract data.</p>
       )}
+
+
+<Link  to="/" onClick={handleClick}><h3>Log Out</h3></Link>
+
     </div>
   );
 };
