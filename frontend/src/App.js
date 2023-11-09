@@ -40,7 +40,7 @@ import DoctorHealthRecords from './pages/DoctorHealthRecords';
 import PatientHealthRecords from './pages/PatientHealthRecord';
 import CompletedAppointments from './pages/follow-up';
 import App1 from './pages/employmentContract';
-import contractNavbar from './components/contactNavbar';
+import contractNAV from './components/ContractNavBar';
 
 
 
@@ -64,7 +64,8 @@ function App() {
               <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
               <Navigate to="/home"/> : (user.type === 'Pending') ? 
               <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
-              <Route path="employmentContract" element={<WithDoctorNavbar><App1 /></WithDoctorNavbar>} />
+
+              <Route path="employmentContract" element={<WithcontractNavbar><App1 /></WithcontractNavbar>} />
 
               <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />
@@ -169,7 +170,7 @@ function WithDoctorNavbar({ children }) {
 function WithcontractNavbar({ children }) {
   return (
     <div>
-      <contractNavbar />
+      <contractNAV />
       <div className="pages">
         {children}
       </div>

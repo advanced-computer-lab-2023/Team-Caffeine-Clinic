@@ -27,9 +27,7 @@ const Home = () => {
             <Link to="/viewHealthPacks">
                       <button>View Health Packages</button>
                 </Link>
-            <Link to="/employmentContract">
-                      <button>View Employment Contracts</button>
-                </Link>
+        
                 <Link to="/">
                       <button>Log Out</button>
                 </Link>
