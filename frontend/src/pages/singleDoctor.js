@@ -19,6 +19,7 @@ const SingleDoctor = () => {
   
   const [doctorIndex, setIndex] = useState(null)
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const [wallet, setWallet] = useState(null)
 
   const openPopup = (theIndex) => {
     setPopupOpen(true);
@@ -49,6 +50,24 @@ const SingleDoctor = () => {
       console.error('Error creating appointment:', error);
     }
   };
+
+  useEffect(() => {
+    const fetchWallet = async () => {
+      try {
+        const response = await fetch('/api/patient/getWallet', {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          }
+        })
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+      } catch (error) {
+        
+      }
+    }
+  })
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -106,7 +125,7 @@ const SingleDoctor = () => {
          
         </div>
         {isPopupOpen && (
-                  <Elements stripe={stripePromise}> <PaymentForm amount={doctor.rateAfterDiscount} onPaymentResult={() => handleCreateAppointment(doctorIndex)}/> </Elements>
+                  <Elements stripe={stripePromise}> <PaymentForm amount={doctor.rateAfterDiscount} wallet={wallet} onPaymentResult={() => handleCreateAppointment(doctorIndex)}/> </Elements>
                   )}
       </div>
     </>

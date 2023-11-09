@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 
-const PaymentForm = ({ amount, onPaymentResult }) => {
+const PaymentForm = ({ amount, wallet, onPaymentResult }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [clientSecret, setClientSecret] = useState(null);
@@ -28,6 +28,14 @@ const PaymentForm = ({ amount, onPaymentResult }) => {
     }
     fetchClientSecret()
   }, [])
+
+  const wallet = async () => {
+
+  }
+
+  const creditCard = async () => {
+
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();

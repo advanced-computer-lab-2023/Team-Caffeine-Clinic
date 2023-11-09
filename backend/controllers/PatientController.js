@@ -464,6 +464,16 @@ const selectpatient = async(req, res) => {
     }
 }
 
+const getWallet = async(req, res) => {
+    try {
+        const user = req.user
+
+        res.status(200).json({wallet: user.wallet})
+
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while selecting the patient.' });
+    }
+}
 
 module.exports = {
     signUp,
@@ -477,6 +487,6 @@ module.exports = {
     forgotPass,
     verifyOTP,
     createAppointment,addPatientToDoctor,
-    selectpatient
-
+    selectpatient,
+    getWallet
 }
