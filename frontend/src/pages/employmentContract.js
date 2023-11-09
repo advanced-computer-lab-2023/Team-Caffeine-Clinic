@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import { useLogout } from '../hooks/useLogout'
 
 import "../index.css"
+import { Button } from 'react-bootstrap';
 
 
 const App1 = () => {
@@ -101,7 +102,7 @@ const App1 = () => {
       )}
 
 
-<Link  to="/" onClick={handleClick}><h3>Log Out</h3></Link>
+<Link  to="/" onClick={handleClick}><Button>Log Out</Button></Link>
 
     </div>
   );
