@@ -20,7 +20,8 @@ const {
     selectpatient,
     getAllHealthRecords,
     addPatientToDoctor,
-    myPatients
+    myPatients,
+    doctorchangepassword
     
     
 } = require('../controllers/doctorInfocontroller')
@@ -84,6 +85,8 @@ router.patch('/addPatientToDoctor', addPatientToDoctor)
 
 router.get('/appointments', getAppointments)
 
+// Route to handle doctor password change
+router.post('/doctorchangepassword', doctorchangepassword);
 
 
 module.exports = router

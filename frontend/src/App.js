@@ -36,6 +36,7 @@ import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
 import { useAuthContext } from './hooks/useAuthContext';
 import AdminChangePassword from './pages/AdminChangePassword';
+import DoctorChangePassword from './pages/DoctorChangePassword';
 
 
 function App() {
@@ -62,6 +63,12 @@ function App() {
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><PatientsWithUpcomingAppointments /></WithDoctorNavbar>} />
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
+              <Route 
+              path="/doctor/DoctorChangePassword" 
+              element={<WithDoctorNavbar><DoctorChangePassword /></WithDoctorNavbar>} 
+            />
+
+              
 
 
               {/* Ibra - Salah */}

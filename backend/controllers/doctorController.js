@@ -92,11 +92,53 @@ const getAppointments = async(req, res) => {
   }
 }
 
+const bcrypt = require('bcrypt');
+
+const doctorchangepassword = async (req, res) => {
+  const { newPassword } = req.body; // The new password is expected to be sent in the body of the request
+  const doctorId = req.user._id; // Get the doctor's ID from the user object in the request
+
+  if (!mongoose.Types.ObjectId.isValid(doctorId)) {
+    return res.status(404).json({ error: 'Invalid doctor ID' });
+  }
+
+  // Regular expression to check for at least one capital letter and one number
+  const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
+
+  if (!passwordRequirements.test(newPassword)) {
+    return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+  }
+
+  try {
+    const salt = await bcrypt.genSalt(10); // Generate a salt
+    const hash = await bcrypt.hash(newPassword, salt); // Hash the new password with the salt
+
+    // Find the doctor by ID
+    const doctor = await Doctor.findById(doctorId);
+    
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+    
+    // Set the new password to the hashed password
+    doctor.password = hash;
+
+    // Save the doctor with the new hashed password
+    await doctor.save();
+
+    // Respond with a success message
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 
 
 module.exports = {
   getDoctors,
   getSingleDoctor,
-  getAppointments
+  getAppointments,
+  doctorchangepassword
 }
