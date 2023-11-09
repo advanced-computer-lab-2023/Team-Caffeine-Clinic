@@ -29,7 +29,6 @@ const getDoctors = async (req, res) => {
 // Get doctor details by username
 const getSingleDoctor = async (req, res) => {
   const patient = req.user
-  console.log(patient);
   const patientHealthPackage = patient.health_package;
   try {
       const doctor = await Doctor.findOne({ username: req.params.username });
@@ -53,6 +52,8 @@ const getSingleDoctor = async (req, res) => {
           return res.status(200).json(doctormap); // Return here
       }
       let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+      rateAfterDiscount = rateAfterDiscount + 0.1 * (rateAfterDiscount);
+
       const doctormap = {
         username: doctor.username,
         email: doctor.email,

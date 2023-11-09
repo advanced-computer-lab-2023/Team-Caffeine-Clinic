@@ -241,9 +241,6 @@ const viewFilterPerscriptions = async (req, res) => {
 }
 
 const estimateRate = async (req, res) => {
-    console.log('yady el neela');
-
-    console.log(req.session);
 
     const patient = req.user
     // const patientId = req.query.patientId;
@@ -286,6 +283,7 @@ const estimateRate = async (req, res) => {
 
         const doctorRates = doctors.map(doctor => {
             let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+            rateAfterDiscount = rateAfterDiscount + 0.1 * (rateAfterDiscount);
             return {
                 username: doctor.username,
                 email: doctor.email,
@@ -492,7 +490,7 @@ const payWithWallet = async (req, res) => {
 
         const newDoctorWallet = doctor.wallet + amount
 
-        await Patient.findByIdAndUpdate(doctor._id, {wallet: newDoctorWallet})
+        await Doctor.findByIdAndUpdate(doctor._id, {wallet: newDoctorWallet})
         
         await Patient.findByIdAndUpdate(user._id, {wallet: newPatientWallet})
     } catch (error) {

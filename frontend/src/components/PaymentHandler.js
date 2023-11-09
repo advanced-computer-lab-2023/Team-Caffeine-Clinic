@@ -59,7 +59,7 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
 
   const handleWallet = async () => {
 
-    if(amount > wallet){
+    if(amount > wallet.wallet){
       setError('Not Enough in Wallet')
     } else {
       try {
@@ -77,7 +77,7 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
   }
 
   const handleCreditCredit = async () => {
-
+    
   }
 
   const handleSubmit = async (event) => {
