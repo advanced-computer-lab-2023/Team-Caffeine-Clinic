@@ -5,7 +5,7 @@ const passport = require('passport')
 const router = express.Router()
 
 const {
-    filterDoctorsByAvailability,createAppointment,addPatientToDoctor,getAppointments,selectpatient, getWallet
+    filterDoctorsByAvailability,createAppointment,addPatientToDoctor,getAppointments,selectpatient, getWallet, payWithWallet
 } = require('../controllers/PatientController')
 
 const {
@@ -27,6 +27,9 @@ router.get('/selectpatient',selectpatient)
 
 // Wallet
 router.get('/getWallet', getWallet)
+
+// Pay With Wallet
+router.post('/payWithWallet', payWithWallet)
 
 
 

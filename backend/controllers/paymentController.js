@@ -5,14 +5,15 @@ const stripe = require('stripe')('sk_test_51OABYlCDYNw0lbpNxu1DkCMbDPyyLBAwj2EJ1
 
 const pay = async (req, res) => {
     const {amount} = req.query
-
+    const amountPay = Math.round(amount * 100)
     const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
+        amount: amountPay,
         currency: 'usd'
     })
 
     res.status(200).json({clientSecret: paymentIntent.client_secret})
 }
+
 
 module.exports = {
     pay
