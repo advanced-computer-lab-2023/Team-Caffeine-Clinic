@@ -70,37 +70,35 @@ const getSingleDoctor = async (req, res) => {
   }
 };
 
-
-
-
 const getAppointments = async (req, res) => {
-  username = req.user.username;
-  date = req.query.date;
-  appointmentStatus  = req.query.status;
-  
-   let query = { doctor : username };
+    try {
+        const doctorUsername = req.user.username;
+        const date = req.query.date;
+        const status = req.query.status;
+        let filter = { doctor: doctorUsername };
 
-   // Check for the optional filters
-   if (date && !appointmentStatus ) {
-       query.appointmentDate = { $regex: date, $options: 'i' };
-   } else if (appointmentStatus  && !date) {
-       query.status = appointmentStatus ;
-   } else if (date && appointmentStatus ) {
-       query = {
-           doctor: username,
-           appointmentDate: { $regex: date, $options: 'i' },
-           status: appointmentStatus ,
-       };
-   }
+        const appointments = await Appointment.find(filter);
 
-   try {
-       const appointments = await Appointment.find(query)
-       res.status(200).json(appointments);
-   } catch (error) {
-       res.status(500).json({ error: 'Internal Server Error' });
-   }
+        let filteredAppointments = appointments.filter(appointment => {
+            let isMatched = true;
+
+            if (date) {
+                isMatched = isMatched && appointment.appointmentDate.includes(date);
+            }
+
+            if (status) {
+                isMatched = isMatched && appointment.status === status;
+            }
+
+            return isMatched;
+        });
+
+        res.json(filteredAppointments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching appointments.' });
+    }
 };
-
 
 
 

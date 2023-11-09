@@ -38,7 +38,7 @@ const CompletedAppointments = ({ doctorId }) => {
         setNewDate(date);
     };
 
-    const handleSaveDate = async (patientId, date,olddate) => {
+    const handleSaveDate = async (patientId, date) => {
         const selectedDate = new Date(date);
         const year = selectedDate.getFullYear();
         const month = selectedDate.getMonth() + 1;
@@ -46,21 +46,11 @@ const CompletedAppointments = ({ doctorId }) => {
         const hours = selectedDate.getHours();
         const minutes = selectedDate.getMinutes();
 
-        const formattedDate = `${year}/${month}/${day}:${hours}:${minutes}`;
-
+        const formattedDate1 = `${year}\\${month}\\${day}:${hours}:${minutes}`;
+        const formattedDate = JSON.stringify(formattedDate1);
         try {
 
-            const chnage = await  fetch(
-                `/api/doctorInfo/changeToFollowUp?patientId=${patientId}&date=${olddate}`, 
-                {
-                  method: 'PATCH',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.user.token}`
-                  },
-                }
-              );
-
+           
               
               
               
@@ -122,7 +112,7 @@ const CompletedAppointments = ({ doctorId }) => {
                                 value={newDate}
                                 onChange={(e) => setNewDate(e.target.value)}
                             />
-                            <button onClick={() => handleSaveDate(appointment.patient, newDate, appointment.appointmentDate) }>
+                            <button onClick={() => handleSaveDate(appointment.patient, newDate) }>
                                 Save
                             </button>
                             <button onClick={handleCancelEdit}>Cancel</button>

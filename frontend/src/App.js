@@ -39,6 +39,10 @@ import AddAvailableDateFunc from './pages/AddAvailableDate';
 import DoctorHealthRecords from './pages/DoctorHealthRecords';
 import PatientHealthRecords from './pages/PatientHealthRecord';
 import CompletedAppointments from './pages/follow-up';
+import App1 from './pages/employmentContract';
+import contractNavbar from './components/contactNavbar';
+
+
 
 
 
@@ -58,8 +62,10 @@ function App() {
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
               <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
-              <Navigate to="/home"/> : (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
-             
+              <Navigate to="/home"/> : (user.type === 'Pending') ? 
+              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
+              <Route path="employmentContract" element={<WithDoctorNavbar><App1 /></WithDoctorNavbar>} />
+
               <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />
               <Route path="EditDocEmail" element={<WithDoctorNavbar><UpdateEmail /></WithDoctorNavbar>} />
@@ -160,5 +166,16 @@ function WithDoctorNavbar({ children }) {
     </div>
   );
 }
+function WithcontractNavbar({ children }) {
+  return (
+    <div>
+      <contractNavbar />
+      <div className="pages">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 
 export default App;

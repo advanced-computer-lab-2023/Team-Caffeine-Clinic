@@ -440,7 +440,6 @@ const patientsWithUpcomingAppointments = async (req, res) => {
             const [year, month1, month, time, sec] = parts;
             const [day, hour, min1] = sec.split(":");
             const paddedYear = year[1] + year[2] + year[3] + year[4];
-            console.log(paddedYear);
             let min = 0;
             if (min1[1] !== '"') {
                 min = min1[0] + min1[1];
@@ -533,7 +532,7 @@ const getCompletedAppointmentsForDoctor = async (req, res) => {
             doctor: doctorId,
             patient: patientId,
             appointmentDate: date,
-            status: 'upcoming', // Assuming the default status is 'upcoming'
+            status: 'FollowUp', // Assuming the default status is 'upcoming'
         });
 
         await appointment.save();

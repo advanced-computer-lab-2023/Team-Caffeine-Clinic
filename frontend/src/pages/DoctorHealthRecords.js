@@ -36,15 +36,20 @@ const HealthRecordsPage = () => {
     return (
         <div>
             <h1>Health Records</h1>
-            <ul>
-            {healthRecords &&(healthRecords).map((record, index) => (
-                    <li key={index}>{record.patientUsername}: {record.healthRecords}</li>
+            <ol>
+                {healthRecords && healthRecords.map((record, index) => (
+                    <li key={index}>
+                        {record.patientUsername}:
+                        <ul>
+                            {record.healthRecords&&record.healthRecords.map((healthRecord, i) => (
+                                <li key={i}>{healthRecord}</li>
+                            ))}
+                        </ul>
+                    </li>
                 ))}
-
-            </ul>
+            </ol>
         </div>
     );
 };
-
 
 export default HealthRecordsPage;

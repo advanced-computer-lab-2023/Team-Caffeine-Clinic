@@ -412,32 +412,36 @@ const createAppointment = async(req, res) => {
     }
 };
 const getAppointments = async (req, res) => {
-   username = req.user.username;
-   date = req.query.date;
-   appointmentStatus  = req.query.status;
-   
-    let query = { patient: username };
-
-    // Check for the optional filters
-    if (date && !appointmentStatus ) {
-        query.appointmentDate = { $regex: date, $options: 'i' };
-    } else if (appointmentStatus  && !date) {
-        query.status = appointmentStatus ;
-    } else if (date && appointmentStatus ) {
-        query = {
-            patient: username,
-            appointmentDate: { $regex: date, $options: 'i' },
-            status: appointmentStatus ,
-        };
-    }
-
     try {
-        const appointments = await Appointment.find(query)
-        res.status(200).json(appointments);
+        const patientUsername = req.user.username;
+        const date = req.query.date;
+        const status = req.query.status;
+        let filter = { patient: patientUsername };
+
+        const appointments = await Appointment.find(filter);
+
+        let filteredAppointments = appointments.filter(appointment => {
+            let isMatched = true;
+
+            if (date) {
+                isMatched = isMatched && appointment.appointmentDate.includes(date);
+            }
+
+            if (status) {
+                isMatched = isMatched && appointment.status === status;
+            }
+
+            return isMatched;
+        });
+
+        res.json(filteredAppointments);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching appointments.' });
     }
 };
+
+
 const selectpatient = async(req, res) => {
     try {
         const patientname = req.user.username;

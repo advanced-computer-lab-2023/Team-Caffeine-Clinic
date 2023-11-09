@@ -20,6 +20,7 @@ const AppointmentDoc = () => {
                         },
                     }
                 );
+                console.log("dateFilter");
 
                 if (response.ok) {
                     const data = await response.json();
@@ -52,6 +53,7 @@ const AppointmentDoc = () => {
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
                     <option value="rescheduled">Rescheduled</option>
+                    <option value="FollowUp">FollowUp</option>
                 </select>
             </div>
 
