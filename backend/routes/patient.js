@@ -5,7 +5,7 @@ const passport = require('passport')
 const router = express.Router()
 
 const {
-    filterDoctorsByAvailability
+    filterDoctorsByAvailability, subscribeToHealthPackage
 } = require('../controllers/PatientController')
 
 const {
@@ -17,5 +17,6 @@ router.use(requireAuth)
 
 //filter  a doctor by speciality and/or availability on a certain date and at a specific time
 router.get('/filterDoctorsByAvailability',filterDoctorsByAvailability)
+router.post('/subscribe',subscribeToHealthPackage)
 
 module.exports = router

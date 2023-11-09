@@ -348,6 +348,36 @@ const getAppointments = async(req, res) => {
     }
 }
 
+const subscribeToHealthPackage = async (req, res) => { 
+    try {
+
+        const { healthPackageName } = req.body;
+        console.log(healthPackageName);
+
+        const HealthPackage = await healthPackage.findOne({ name: healthPackageName });
+
+        if (!HealthPackage) {
+            return res.status(404).json({ error: 'Patient or HealthPackage not found' });
+        }
+
+        const updatedPatient = await Patient.findOneAndUpdate(
+            { _id: req.user._id },
+            { health_package: HealthPackage.name },
+            { new: true } 
+        );
+
+        if (!updatedPatient) {
+            return res.status(404).json({ error: 'Patient or HealthPackage not found' });
+        }
+        
+        res.json({ message: 'Subscription successful' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+}
+
+
 module.exports = {
     signUp,
     viewFilterPerscriptions,
@@ -358,5 +388,6 @@ module.exports = {
     changePass,
     setPass,
     forgotPass,
-    verifyOTP
+    verifyOTP,
+    subscribeToHealthPackage
 }

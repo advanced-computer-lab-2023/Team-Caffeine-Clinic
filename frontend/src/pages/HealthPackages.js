@@ -1,9 +1,11 @@
 import HealthPackDetails from '../components/HealthPackDetails';
 import { useAuthContext } from "../hooks/useAuthContext";
 import React, { useEffect, useState } from 'react';
+//import axios from 'axios';
 
 const HealthPackages = () => {
   const [healthPackages, setHealthPackages] = useState([]);
+  const [HealthPackageId, setHealthPackageId] = useState("");
   const [error, setError] = useState(null);
 
   const user = useAuthContext()
@@ -17,6 +19,7 @@ const HealthPackages = () => {
           }
         });
         const data = await response.json();
+        console.log(user);
         
         if (!response.ok) {
           throw new Error(data.message || "Could not fetch health packages.");
@@ -32,6 +35,30 @@ const HealthPackages = () => {
     }
   }, [user]);
 
+  const subscribe = async (name) => {
+    const response = await fetch('/api/patient/subscribe', {
+      method: 'POST',
+      body: JSON.stringify({healthPackageName: name}),
+      headers: {
+        'Authorization': `Bearer ${user.user.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    const json = await response.json()
+
+    if (!response.ok) {
+      setError(json.error)
+     // console.log(json)
+     window.alert(error);
+    }
+    if (response.ok) {
+      setError(null)
+     // console.log('new Health Package added:', json)
+      window.alert('new Health Package added');
+    }
+   // window.location.reload();
+}
+
   return (
     <div className="health-packages">
       <h1>Available Health Packages</h1>
@@ -43,6 +70,8 @@ const HealthPackages = () => {
       ) : (
         <ul>
           {healthPackages.map((hp) => (
+            <>
+            <div className='Admin-details'>
             <li key={hp.name}>
               <div className='name'>{hp.name}</div>
               <div>description: {hp.description}</div>
@@ -52,6 +81,9 @@ const HealthPackages = () => {
               <div>Medicine Discount: {hp.discounts.pharmacyMedicine * 100}%</div>
               <div>Family Member Discount: {hp.discounts.familySubscription * 100}%</div>
             </li>
+              <span className='span1' onClick={() => subscribe(hp.name)}>Subscribe</span>
+            </div>
+              </>
           ))}
         </ul>
       )}
