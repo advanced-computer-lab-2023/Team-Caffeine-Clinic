@@ -8,6 +8,8 @@ const Doctor = require('../models/doctor');
 const Patient = require('../models/Patient');
 const admin = require('../models/admin');
 
+const bcrypt = require('bcrypt')
+
 //get all Admins 
 const getAdmins = async (req, res) => {
     const admins = await Admin.find().sort({createdAt: -1});

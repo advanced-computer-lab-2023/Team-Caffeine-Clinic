@@ -14,7 +14,7 @@ const AdminChangePassword = () => {
       adminId: user._id // Assuming you have adminId as part of the user context
     };
     
-    const response = await fetch('/api/adminchangepassword', {
+    const response = await fetch('/api/Admin/adminchangepassword', {
       method: 'POST',
       body: JSON.stringify(admin),
       headers: {

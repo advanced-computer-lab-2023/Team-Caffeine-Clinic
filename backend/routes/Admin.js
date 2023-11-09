@@ -24,7 +24,7 @@ const {createAdmin,
 
 const router = express.Router();
 
-//router.use(requireAdminAuth)
+router.use(requireAdminAuth)
 
 //Admin routes
 router.get('/viewAdmins', getAdmins);
