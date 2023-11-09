@@ -35,7 +35,7 @@ import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
 import { useAuthContext } from './hooks/useAuthContext';
-
+import AdminChangePassword from './pages/AdminChangePassword';
 
 
 function App() {
@@ -108,6 +108,12 @@ function App() {
               path="/viewPatientsAdmin"
               element =  {<ViewPatientHome/>}
                 />
+              <Route 
+              path="/admin/AdminChangePassword" 
+              element={<AdminChangePassword />} 
+              />
+
+
             </Routes>
           </UsernameProvider>
         </div>

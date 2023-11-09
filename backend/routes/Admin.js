@@ -15,7 +15,8 @@ const {createAdmin,
     viewPatients,
     deleteDocApp,
     createHealthPackage,
-    createPlatPackage} = require('../controllers/adminController');
+    createPlatPackage,
+    adminchangepassword} = require('../controllers/adminController');
 
     const {requireAdminAuth} = require('../middleware/requrieAuth')
 
@@ -30,6 +31,7 @@ router.get('/viewAdmins', getAdmins);
 router.get('/getAdmin/:id', getAdmin);
 router.post('/addAdmin', createAdmin);
 router.delete('/:id', deleteAdmin);
+router.post('/adminchangepassword', adminchangepassword);
 
 //Doctor & Doctor application routes
 router.delete('/deleteApp/:id',deleteDocApp);
