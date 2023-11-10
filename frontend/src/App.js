@@ -26,18 +26,34 @@ import ViewAdmin from "./pages/ViewAdmins"
 import AdminHome from "./pages/AdminHome";
 import DoctorAppHome from './pages/viewDoctorApps';
 import ViewDoctorHome from './pages/viewDoctors';
+import AppointmentsComponent from './pages/PatientfilterAppointments';
 import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
-import Appointments from './pages/Appointments';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
-import { useAuthContext } from './hooks/useAuthContext';
 import PatientDetails from './pages/ViewPatientDetails';
+import { useAuthContext } from './hooks/useAuthContext';          
+import AddAvailableDateFunc from './pages/AddAvailableDate';
+import DoctorHealthRecords from './pages/DoctorHealthRecords';
+import PatientHealthRecords from './pages/PatientHealthRecord';
+import CompletedAppointments from './pages/follow-up';
+import App1 from './pages/employmentContract';
+import contractNAV from './components/ContractNavBar';
+
+import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
 
 
+
+
+import PaymentHandler from './components/PaymentHandler'
+
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
 
 function App() {
   const { user } = useAuthContext()
@@ -53,8 +69,11 @@ function App() {
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
               <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
-              <Navigate to="/home"/> : (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
-             
+              <Navigate to="/home"/> : (user.type === 'Pending') ? 
+              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
+
+              <Route path="employmentContract" element={<WithcontractNavbar><App1 /></WithcontractNavbar>} />
+
               <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />
               <Route path="EditDocEmail" element={<WithDoctorNavbar><UpdateEmail /></WithDoctorNavbar>} />
@@ -63,22 +82,34 @@ function App() {
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><PatientsWithUpcomingAppointments /></WithDoctorNavbar>} />
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
+              <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
+              <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
+              <Route path="follow-up" element={<WithDoctorNavbar><CompletedAppointments /></WithDoctorNavbar>} />
+
+              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <PaymentHandler/> </Elements>}/>
+
 
 
               {/* Ibra - Salah */}
               <Route path='home' element={ <WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
+
+              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><PatientHealthRecords /></WithNavbarAndSidebar>} />
+
               <Route path='doctor/getSingleDoctor/:username' element={user ? <SingleDoctor /> : <Navigate to="/" /> }/>
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
               <Route path='healthPackages' element={user ? <WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='Perscriptions' element={user ? <WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='SinglePerscriptions/:id' element={user ? <WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar> : <Navigate to="/" />} />
-              <Route path='Appointments' element={user ? <WithNavbarAndSidebar><Appointments /></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
               <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
               <Route path='Filterbyavedates' element={user ? <WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><AppointmentsComponent /></WithNavbarAndSidebar>} />
 
+
+
+              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><AddFamilyMember /></WithNavbarAndSidebar>} />
 
               {/* Mo2 - Yas */}
               <Route
@@ -151,5 +182,16 @@ function WithDoctorNavbar({ children }) {
     </div>
   );
 }
+function WithcontractNavbar({ children }) {
+  return (
+    <div>
+      <contractNAV />
+      <div className="pages">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 
 export default App;

@@ -14,7 +14,8 @@ const DoctorDetails = ({ doctor }) => {
       <div className="details"><strong>affiliation: </strong>{doctor.affiliation}</div>
       <div className="details"><strong>email: </strong>{doctor.email}</div>
       <div className="details"><strong>education: </strong>{doctor.education}</div>
-      <div className="details"><strong>session price: </strong>{doctor.rateAfterDiscount + 0.1 * (doctor.rateAfterDiscount)}</div>
+      <div className="details"><strong>session price: </strong>{doctor.rateAfterDiscount}</div>
+      
     </div>
   )
 }

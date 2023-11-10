@@ -81,12 +81,15 @@ function generateOTP() {
 
 const forgotPass = async(req, res) => {
     const {email} = req.body
-    
+    console.log(email);
     // Verify Valid Mail
-    const user = await Patient.findOne({email: email})
+    let user = await Patient.findOne({email: email})
     if(!user){
-        console.log('shit');
-        return res.status(400).json({err: "Email Address is incorrect"})
+        user = await Doctor.findOne({email: email})
+        
+        if(!user){
+            return res.status(400).json({err: "Email Address is incorrect"})
+        }
     }
 
     const randomOTP = generateOTP();
@@ -124,43 +127,63 @@ const forgotPass = async(req, res) => {
     return res.status(200).json({mssg: "tmam"})
 }
 
-const verifyOTP = async(req, res) => {
-    const {otp, email} = req.body
+const verifyOTP = async (req, res) => {
+    const { otp, email } = req.body;
+    console.log(otp, email);
+    try {
+        const verify = await OTP.findOne({ email: email });
 
-    const verify = await OTP.findOne({email: email})
+        if (!verify) {
+            console.log("No OTP entry found for this email:", email);
+            return res.status(404).json({ mssg: "No OTP entry found for this email." });
+        }
 
-    if(verify.OTP != otp){
-        console.log("Wrong OTP");
-        return res.status(400).json({mssg: "Wrong OTP"})
+        console.log("OTP from DB:", verify.OTP, "OTP from user:", otp);
+
+        if (verify.OTP != otp) {
+            console.log("Wrong OTP");
+            return res.status(400).json({ mssg: "Wrong OTP" });
+        }
+
+        console.log("Correct OTP");
+        return res.status(200).json({ mssg: "OTP verified successfully" });
+    } catch (error) {
+        console.error("Error verifying OTP:", error);
+        return res.status(500).json({ mssg: "Internal Server Error" });
     }
+};
 
-    //console.log("tmam");
-    // If OTP is correct, you can allow the user to set a new password
-    return res.status(200).json({ mssg: "OTP verified successfully" });
-}
 
 const setPass = async(req, res) => {
     const {newPassword, email} = req.body
 
     const user = await Patient.findOne({email: email});
 
+    try{
+        Patient.setPassword(email, newPassword)
+        return res.status(202).json({ mssg: "Password Changed Successfully" });
+    } catch(error){
+        return res.status(400).json({error: error})
+    }
+    // const salt = await bcrypt.genSalt(10)
+    // const hash = await bcrypt.hash(newPassword, salt)
     
-    user.setPassword(newPassword, async(err) => {
-        if(err){
-            console.log(err);
-            return res.status(400).json({mssg: "Something went wrong"})
-        }
+    // user.setPassword(newPassword, async(err) => {
+    //     if(err){
+    //         console.log(err);
+    //         return res.status(400).json({mssg: "Something went wrong"})
+    //     }
 
-        try {
-            await user.save();
-            console.log("Password updated");
-            return res.status(202).json({ mssg: "Password Changed Successfully" });
-        } catch (err) {
-            console.log(err);
-            return res.status(400).json({ mssg: "Error saving user with new password" });
-        }
+    //     try {
+    //         await user.save();
+    //         console.log("Password updated");
+    //         return res.status(202).json({ mssg: "Password Changed Successfully" });
+    //     } catch (err) {
+    //         console.log(err);
+    //         return res.status(400).json({ mssg: "Error saving user with new password" });
+    //     }
        
-    })
+    // })
 
 }
 
@@ -234,9 +257,6 @@ const viewFilterPerscriptions = async (req, res) => {
 }
 
 const estimateRate = async (req, res) => {
-    console.log('yady el neela');
-
-    console.log(req.session);
 
     const patient = req.user
     // const patientId = req.query.patientId;
@@ -279,6 +299,7 @@ const estimateRate = async (req, res) => {
 
         const doctorRates = doctors.map(doctor => {
             let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+            rateAfterDiscount = rateAfterDiscount + 0.1 * (rateAfterDiscount);
             return {
                 username: doctor.username,
                 email: doctor.email,
@@ -326,27 +347,242 @@ const getSinglePerscription = async(req, res) => {
     }
 }
 
-const getAppointments = async(req, res) => {
-    const patient = req.user
-    const patientUsername = patient.username
 
+
+const addPatientToDoctor = async(req, res,dr) => {
     try {
+        //const { dusername, pusername } = req.body;
 
+        const dusername= dr;
+        const pusername = req.user.username;
+
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: dusername });
+
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // Find the patient by username
+        const patient = await Patient.findOne({ username: pusername });
+
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+
+        // Add the patient's username to the doctor's list of patients if it is not there
+        if (!doctor.patients.includes(patient.username)) {
+            doctor.patients.push(patient.username);
+        }
+        await doctor.save();
+
+        res.status(200).json(doctor);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+const createAppointment = async(req, res) => {
+    try {
+        const pusername = req.user.username;
+        const dusername = req.query.doctorusername;
+        const appointmentDate = req.query.date;
+        const status = "upcoming";
+
+
+        // Find the doctor and patient by username
+        const doctor = await Doctor.findOne({ username: dusername });
+        const patient = await Patient.findOne({ username: pusername });
+
+        if (!doctor || !patient) {
+            return res.status(400).json({ message: 'Doctor or patient not found' }); }
+
+            doctor.availableDates= doctor.availableDates.filter(item => item != appointmentDate);
+
+
+        // Check if there is an existing appointment with the same details
+        const existingAppointment = await Appointment.findOne({
+            doctor: doctor.username,
+            patient: patient.username,
+            appointmentDate: appointmentDate,
+            status: status
+        });
+        console.log('ana hena');
+        if (existingAppointment) {
+            return res.status(400).json({ message: 'Appointment with the same details already exists' });
+        }
+        
+        // Create a new appointment
+        const appointment = new Appointment({
+            doctor: doctor.username, // Reference the doctor by username
+            patient: patient.username, // Reference the patient by username
+            appointmentDate: appointmentDate,
+            status: status // Convert the appointmentDate to a Date object
+        });
+
+        await appointment.save();
+        await doctor.save();
+        const newreq = req
+        const newres = res
+            // Use the addPatientToDoctor function to add the patient to the doctor's list
+        await addPatientToDoctor(newreq, newres,dusername);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+const getAppointments = async (req, res) => {
+    try {
+        const patientUsername = req.user.username;
         const date = req.query.date;
         const status = req.query.status;
+        let filter = { patient: patientUsername };
 
-        let filter = {};
+        const appointments = await Appointment.find(filter);
 
-        if (date) filter.appointmentDate = date; // Case-insensitive regex search
-        if (status) filter.status = new RegExp(status, 'i');
-        if (patientUsername) filter.patient = patientUsername
+        let filteredAppointments = appointments.filter(appointment => {
+            let isMatched = true;
 
+            if (date) {
+                isMatched = isMatched && appointment.appointmentDate.includes(date);
+            }
 
-        const appointement = await Appointment.find(filter)
-        res.status(200).json(appointement)
+            if (status) {
+                isMatched = isMatched && appointment.status === status;
+            }
+
+            return isMatched;
+        });
+
+        res.json(filteredAppointments);
     } catch (error) {
-        res.status(400).send(error);
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching appointments.' });
     }
+};
+
+
+const selectpatient = async(req, res) => {
+    try {
+        const patientname = req.user.username;
+         // Get the patient name from the URL parameter
+
+        // Retrieve the patient details by their name
+        const selectedPatient = await Patient.findOne({ username: patientname })
+
+        if (!selectedPatient) {
+            return res.status(404).json({ error: 'Patient not found.' });
+        }
+
+        res.json({ patient: selectedPatient });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while selecting the patient.' });
+    }
+}
+
+const getWallet = async(req, res) => {
+    try {
+        const user = req.user
+
+        res.status(200).json({wallet: user.wallet})
+
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while selecting the patient.' });
+    }
+}
+
+
+const payWithWallet = async (req, res) => {
+    const user = req.user
+    
+    const {amount, doctorUsername} = req.query
+
+    const newPatientWallet = user.wallet - parseInt(amount, 10)
+
+    try {
+        const doctor = await Doctor.findOne({username: doctorUsername})
+
+        if(!doctor){
+            return res.status(400).json({error: 'Doctor Not Found'})
+        }
+
+        const newDoctorWallet = doctor.wallet + parseInt(amount, 10)
+
+        await Doctor.findByIdAndUpdate(doctor._id, {wallet: newDoctorWallet})
+        
+        await Patient.findByIdAndUpdate(user._id, {wallet: newPatientWallet})
+
+        return res.status(200).json({mssg: 'Successful'})
+    } catch (error) {
+        return res.status(400).json({error: error})
+    }
+}
+
+const linkFamilyMember = async(req, res) => {
+    const user = req.user
+    const filter = req.query.EmailorPhhone
+    const relation = req.query.relation
+    // const {filter, relation} = req.body // filter is either email or phone number
+    let patient;
+    try {
+        
+        if(filter.includes("@")){
+            patient = await Patient.findOne({email: filter})
+        } else{
+            patient = await Patient.findOne({mobile_number: filter})
+        }    
+
+        if(!patient){
+            return res.status(400).json({mssg: "Patient not Found"})
+        }
+        
+        updateFamilyMember(user, patient, relation)
+        return res.status(200).json(user)
+    } catch (error) {
+        return res.status(400).json({error: error})
+    }
+    
+}
+
+async function updateFamilyMember(user, patient, relation) {
+    await Patient.findOneAndUpdate(
+        { _id: user._id }, 
+        { $push: {  
+            
+                family_members: patient._id,
+                relation: relation
+                } 
+        })
+
+    let reverseRelation;
+
+    switch(relation){
+        case "Wife":
+            reverseRelation = "Husband"
+            break
+        case "Husband": 
+            reverseRelation = "Wife"
+            break
+        case "Sibling":
+            reverseRelation = "Sibling"
+            break
+        case "Father":
+        case "Mother":
+            if(user.gender === "male")
+                reverseRelation = "Son"
+            else
+                reverseRelation = "Daughter"
+    }
+
+    await Patient.findOneAndUpdate(
+        { _id: patient._id }, 
+        { $push: { 
+                family_members: user._id,
+                relation: reverseRelation
+                } 
+        })
 }
 
 const subscribeToHealthPackage = async (req, res) => { 
@@ -448,4 +684,10 @@ module.exports = {
     subscribeToHealthPackage,
     unsubscribeFromHealthPackage,
     getHealthPackage
+    linkFamilyMember,
+    createAppointment,
+    addPatientToDoctor,
+    selectpatient,
+    getWallet,
+    payWithWallet
 }
