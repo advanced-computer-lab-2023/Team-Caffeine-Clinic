@@ -74,8 +74,10 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
             Authorization: `Bearer ${user.token}`,
           },
         });
-
         // Handle response
+        if(response.ok && onPaymentResult){
+          onPaymentResult();
+        }
       } catch (error) {
         setError(error);
       }
