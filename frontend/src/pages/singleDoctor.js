@@ -3,11 +3,28 @@ import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useAuthContext } from '../hooks/useAuthContext';
 
+import PaymentForm from '../components/PaymentHandler';
+
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
+
+
 const SingleDoctor = () => {
   const { username } = useParams();
   const [doctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
   const { user } = useAuthContext();
+  
+  const [doctorIndex, setIndex] = useState(null)
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
+  const openPopup = (theIndex) => {
+    setPopupOpen(true);
+    setIndex(theIndex)
+  };
+
 
   const handleCreateAppointment = async (date) => {
     try {
@@ -46,6 +63,7 @@ const SingleDoctor = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log(data.rateAfterDiscount);
         setDoctor(data);
       } catch (error) {
         setError(error.message);
@@ -77,7 +95,7 @@ const SingleDoctor = () => {
               {doctor.availableDates.map((date, index) => (
                 <li key={index}>
                   {date}{' '}
-                  <button onClick={() => handleCreateAppointment(doctor.availableDates[index])}>
+                  <button onClick={() => openPopup(doctor.availableDates[index])/*() => handleCreateAppointment(doctor.availableDates[index])*/}>
                     Book Appointment
                   </button>
                 </li>
@@ -86,7 +104,11 @@ const SingleDoctor = () => {
           ) : (
             'No Dates available'
           )}
+         
         </div>
+        {isPopupOpen && (
+                  <Elements stripe={stripePromise}> <PaymentForm username={doctor.username} amount={doctor.rateAfterDiscount} onPaymentResult={() => handleCreateAppointment(doctorIndex)}/> </Elements>
+                  )}
       </div>
     </>
   );

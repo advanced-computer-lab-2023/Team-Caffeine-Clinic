@@ -7,7 +7,6 @@ const getHealthPackages = async (req, res) => {
   try {
     const healthPackages = await HealthPackage.find();
 
-    console.log(healthPackages);
     res.status(200).send(healthPackages)
     ;
   } catch (error) {

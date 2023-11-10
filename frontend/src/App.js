@@ -45,8 +45,12 @@ import contractNAV from './components/ContractNavBar';
 
 
 
+import PaymentHandler from './components/PaymentHandler'
 
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
+const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
 
 function App() {
   const { user } = useAuthContext()
@@ -78,6 +82,8 @@ function App() {
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
               <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
               <Route path="follow-up" element={<WithDoctorNavbar><CompletedAppointments /></WithDoctorNavbar>} />
+
+              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <PaymentHandler/> </Elements>}/>
 
 
 

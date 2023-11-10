@@ -143,23 +143,31 @@ const setPass = async(req, res) => {
 
     const user = await Patient.findOne({email: email});
 
+    try{
+        Patient.setPassword(email, newPassword)
+        return res.status(202).json({ mssg: "Password Changed Successfully" });
+    } catch(error){
+        return res.status(400).json({error: error})
+    }
+    // const salt = await bcrypt.genSalt(10)
+    // const hash = await bcrypt.hash(newPassword, salt)
     
-    user.setPassword(newPassword, async(err) => {
-        if(err){
-            console.log(err);
-            return res.status(400).json({mssg: "Something went wrong"})
-        }
+    // user.setPassword(newPassword, async(err) => {
+    //     if(err){
+    //         console.log(err);
+    //         return res.status(400).json({mssg: "Something went wrong"})
+    //     }
 
-        try {
-            await user.save();
-            console.log("Password updated");
-            return res.status(202).json({ mssg: "Password Changed Successfully" });
-        } catch (err) {
-            console.log(err);
-            return res.status(400).json({ mssg: "Error saving user with new password" });
-        }
+    //     try {
+    //         await user.save();
+    //         console.log("Password updated");
+    //         return res.status(202).json({ mssg: "Password Changed Successfully" });
+    //     } catch (err) {
+    //         console.log(err);
+    //         return res.status(400).json({ mssg: "Error saving user with new password" });
+    //     }
        
-    })
+    // })
 
 }
 
@@ -233,9 +241,6 @@ const viewFilterPerscriptions = async (req, res) => {
 }
 
 const estimateRate = async (req, res) => {
-    console.log('yady el neela');
-
-    console.log(req.session);
 
     const patient = req.user
     // const patientId = req.query.patientId;
@@ -278,6 +283,7 @@ const estimateRate = async (req, res) => {
 
         const doctorRates = doctors.map(doctor => {
             let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+            rateAfterDiscount = rateAfterDiscount + 0.1 * (rateAfterDiscount);
             return {
                 username: doctor.username,
                 email: doctor.email,
@@ -367,7 +373,6 @@ const createAppointment = async(req, res) => {
         const appointmentDate = req.query.date;
         const status = "upcoming";
 
-        console.log(dusername);
 
         // Find the doctor and patient by username
         const doctor = await Doctor.findOne({ username: dusername });
@@ -386,7 +391,7 @@ const createAppointment = async(req, res) => {
             appointmentDate: appointmentDate,
             status: status
         });
-
+        console.log('ana hena');
         if (existingAppointment) {
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
@@ -461,6 +466,43 @@ const selectpatient = async(req, res) => {
     }
 }
 
+const getWallet = async(req, res) => {
+    try {
+        const user = req.user
+
+        res.status(200).json({wallet: user.wallet})
+
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while selecting the patient.' });
+    }
+}
+
+
+const payWithWallet = async (req, res) => {
+    const user = req.user
+    
+    const {amount, doctorUsername} = req.query
+    
+console.log(doctorUsername);
+
+    const newPatientWallet = user.wallet - parseInt(amount, 10)
+
+    try {
+        const doctor = await Doctor.findOne({username: doctorUsername})
+
+        if(!doctor){
+            return res.status(400).json({error: 'Doctor Not Found'})
+        }
+
+        const newDoctorWallet = doctor.wallet + parseInt(amount, 10)
+
+        await Doctor.findByIdAndUpdate(doctor._id, {wallet: newDoctorWallet})
+        
+        await Patient.findByIdAndUpdate(user._id, {wallet: newPatientWallet})
+    } catch (error) {
+        return res.status(400).json({error: error})
+    }
+}
 
 module.exports = {
     signUp,
@@ -474,6 +516,7 @@ module.exports = {
     forgotPass,
     verifyOTP,
     createAppointment,addPatientToDoctor,
-    selectpatient
-
+    selectpatient,
+    getWallet,
+    payWithWallet
 }

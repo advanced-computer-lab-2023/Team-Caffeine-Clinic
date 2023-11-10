@@ -23,9 +23,10 @@ const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
 const forgotPass = require('./routes/forgotPass');
 const patientRoute = require('./routes/patient')
-const emplymentContract = require('./routes/emplymentContract')
 
- 
+const stripe = require('./routes/stripe')
+
+const emplymentContract = require('./routes/emplymentContract')
 const Patient = require('./models/Patient')
 
 const healthPackageController = require('./controllers/healthPackagesController');
@@ -33,6 +34,7 @@ const Appointment = require('./routes/appointments');
 
 const Doctor = require('./models/doctor');
 const Admin = require('./models/admin');
+
 // const./models/admin= require('cors');
 
 
@@ -152,7 +154,8 @@ const getSession = (req, res) => {
 //     }
 //   }
 // ));
-
+app.use('/api', forgotPass)
+app.use('/api', stripe)
 
 // middleware
 app.use('/api', login)
@@ -167,8 +170,6 @@ app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
 app.use('/api/patient', patientRoute)
 app.use('/api', Appointment)
-app.use('/api', forgotPass)
-
 
 
 // // // catch 404 and forward to error handler
