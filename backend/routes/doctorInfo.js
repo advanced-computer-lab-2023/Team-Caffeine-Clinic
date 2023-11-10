@@ -21,7 +21,10 @@ const {
     getAllHealthRecords,
     addPatientToDoctor,
     myPatients,
-    add_available_slots
+    add_available_slots,
+    getCompletedAppointmentsForDoctor,
+    createfollowUPAppointment,
+    changeToFollowUp
     
     
 } = require('../controllers/doctorInfocontroller')
@@ -67,12 +70,18 @@ router.get('/searchmyPatients', searchmyPatients)
 
 //create a doctor
 router.post('/createDoctor', createDoctor)
+router.get('/getCompletedAppointmentsForDoctor', getCompletedAppointmentsForDoctor)
+router.post('/createfollowUPAppointment', createfollowUPAppointment)
 
 
 //update doctor info 
 router.patch('/updateDoctor', updateDoctorProfile)
 router.patch('/updateRate', updateRate)
 router.patch('/updateEmail', updateEmail)
+
+
+router.patch('/changeToFollowUp', changeToFollowUp)
+
 
 //add my available time slots for appointments
 router.patch('/add_available_slots', add_available_slots)

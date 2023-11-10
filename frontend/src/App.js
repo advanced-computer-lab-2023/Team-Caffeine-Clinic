@@ -34,8 +34,16 @@ import EditHealthPackage from './pages/EditHealthPackage';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
-import { useAuthContext } from './hooks/useAuthContext';
+import { useAuthContext } from './hooks/useAuthContext';          
 import AddAvailableDateFunc from './pages/AddAvailableDate';
+import DoctorHealthRecords from './pages/DoctorHealthRecords';
+import PatientHealthRecords from './pages/PatientHealthRecord';
+import CompletedAppointments from './pages/follow-up';
+import App1 from './pages/employmentContract';
+import contractNAV from './components/ContractNavBar';
+
+
+
 
 import PaymentHandler from './components/PaymentHandler'
 
@@ -58,8 +66,11 @@ function App() {
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
               <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
-              <Navigate to="/home"/> : (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
-             
+              <Navigate to="/home"/> : (user.type === 'Pending') ? 
+              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
+
+              <Route path="employmentContract" element={<WithcontractNavbar><App1 /></WithcontractNavbar>} />
+
               <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />
               <Route path="EditDocEmail" element={<WithDoctorNavbar><UpdateEmail /></WithDoctorNavbar>} />
@@ -69,6 +80,8 @@ function App() {
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
+              <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
+              <Route path="follow-up" element={<WithDoctorNavbar><CompletedAppointments /></WithDoctorNavbar>} />
 
               <Route path="PayHandler" element={<Elements stripe={stripePromise}> <PaymentHandler/> </Elements>}/>
 
@@ -77,6 +90,9 @@ function App() {
               {/* Ibra - Salah */}
               <Route path='home' element={ <WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
+
+              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><PatientHealthRecords /></WithNavbarAndSidebar>} />
+
               <Route path='doctor/getSingleDoctor/:username' element={user ? <SingleDoctor /> : <Navigate to="/" /> }/>
               <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
               <Route path='healthPackages' element={user ? <WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar> : <Navigate to="/" />} />
@@ -157,5 +173,16 @@ function WithDoctorNavbar({ children }) {
     </div>
   );
 }
+function WithcontractNavbar({ children }) {
+  return (
+    <div>
+      <contractNAV />
+      <div className="pages">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 
 export default App;

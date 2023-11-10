@@ -55,7 +55,11 @@ const doctorSchema = new Schema({
     }],
     wallet:{
         type:Number,
-        default:0 }
+        default:0 },
+    AcceptedContract:{
+        type: Boolean,
+        default: false
+    }
 });
 
 //doctorSchema.plugin(passportLocalMongoose)

@@ -23,8 +23,10 @@ const login  = require('./routes/login');
 const healthPackageRoutes = require('./routes/healthPackages');
 const forgotPass = require('./routes/forgotPass');
 const patientRoute = require('./routes/patient')
+
 const stripe = require('./routes/stripe')
 
+const emplymentContract = require('./routes/emplymentContract')
 const Patient = require('./models/Patient')
 
 const healthPackageController = require('./controllers/healthPackagesController');
@@ -161,6 +163,7 @@ app.use('/api', signUp)
 app.get('/getSession', getSession)
 app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
+app.use('/api/emplymentContract', emplymentContract)
 app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
 app.use('/api/doctorInfo', doctorInfoRoutes);
