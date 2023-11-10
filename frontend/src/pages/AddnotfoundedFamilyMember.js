@@ -221,10 +221,6 @@ const SignUp = () => {
                 <br /><br />
                 <button onClick={(e) =>handleButtonClick(e)}>Add Family Member</button>
 
-                <Link className='login-button' to="/">
-                login instead
-            </Link>
-
                 </form>
             </div>
         </header>
