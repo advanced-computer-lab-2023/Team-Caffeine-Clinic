@@ -80,12 +80,15 @@ function generateOTP() {
 
 const forgotPass = async(req, res) => {
     const {email} = req.body
-    
+    console.log(email);
     // Verify Valid Mail
-    const user = await Patient.findOne({email: email})
+    let user = await Patient.findOne({email: email})
     if(!user){
-        console.log('shit');
-        return res.status(400).json({err: "Email Address is incorrect"})
+        user = await Doctor.findOne({email: email})
+        
+        if(!user){
+            return res.status(400).json({err: "Email Address is incorrect"})
+        }
     }
 
     const randomOTP = generateOTP();
