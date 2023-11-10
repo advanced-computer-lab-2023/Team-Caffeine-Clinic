@@ -683,7 +683,7 @@ module.exports = {
     verifyOTP,
     subscribeToHealthPackage,
     unsubscribeFromHealthPackage,
-    getHealthPackage
+    getHealthPackage,
     linkFamilyMember,
     createAppointment,
     addPatientToDoctor,
