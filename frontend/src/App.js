@@ -37,7 +37,7 @@ import ForgotPass from './pages/ForgotPass';
 import { useAuthContext } from './hooks/useAuthContext';
 import AdminChangePassword from './pages/AdminChangePassword';
 import DoctorChangePassword from './pages/DoctorChangePassword';
-
+import PatientChangePassword from './pages/PatientChangePassword';
 
 function App() {
   const { user } = useAuthContext()
@@ -84,6 +84,9 @@ function App() {
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
               <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
               <Route path='Filterbyavedates' element={user ? <WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><PatientChangePassword /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              
+
 
 
               {/* Mo2 - Yas */}

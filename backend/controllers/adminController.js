@@ -288,7 +288,7 @@ const updateHealthPack = async (req, res) => {
 }
 
   
-// const bcrypt = require('bcryptjs'); // Ensure you have bcryptjs installed and required
+//const bcrypt = require('bcryptjs'); // Ensure you have bcryptjs installed and required
 
 const adminchangepassword = async (req, res) => {
   const { newPassword } = req.body; // The new password is expected to be sent in the body of the request

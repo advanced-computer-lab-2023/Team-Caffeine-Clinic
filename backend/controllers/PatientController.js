@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken')
 
 const nodemailer = require('nodemailer');
 
+const bcrypt = require('bcrypt');
+
 
 // Import Models
 const Patient = require('../models/Patient');
@@ -348,6 +350,40 @@ const getAppointments = async(req, res) => {
     }
 }
 
+
+const patientchangepassword = async (req, res) => {
+    const { newPassword } = req.body;
+    const patientId = req.user._id;
+  
+    if (!mongoose.Types.ObjectId.isValid(patientId)) {
+      return res.status(404).json({ error: 'Invalid patient ID' });
+    }
+  
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
+  
+    if (!passwordRequirements.test(newPassword)) {
+      return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+    }
+  
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(newPassword, salt);
+  
+      const patient = await Patient.findById(patientId);
+      
+      if (!patient) {
+        return res.status(404).json({ error: 'Patient not found' });
+      }
+  
+      patient.password = hash;
+      await patient.save();
+  
+      res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
 module.exports = {
     signUp,
     viewFilterPerscriptions,
@@ -358,5 +394,6 @@ module.exports = {
     changePass,
     setPass,
     forgotPass,
-    verifyOTP
+    verifyOTP,
+    patientchangepassword
 }

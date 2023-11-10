@@ -5,6 +5,8 @@ const healthPackage = require('../models/healthPackageModel')
 
 const Appointment = require('../models/appointment')
 
+const bcrypt = require('bcrypt');
+
 
 // Get all doctors with optional name and/or speciality filter
 const getDoctors = async (req, res) => {
@@ -91,8 +93,6 @@ const getAppointments = async(req, res) => {
       res.status(400).send(error);
   }
 }
-
-const bcrypt = require('bcrypt');
 
 const doctorchangepassword = async (req, res) => {
   const { newPassword } = req.body; // The new password is expected to be sent in the body of the request
