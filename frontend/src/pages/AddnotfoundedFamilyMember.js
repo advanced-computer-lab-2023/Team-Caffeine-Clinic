@@ -110,7 +110,7 @@ const SignUp = () => {
 
     return(
         <header>
-            <h1>Sign Up</h1>
+            <h1>Add Family Member</h1>
 
             
             <br />
