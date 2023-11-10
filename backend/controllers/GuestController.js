@@ -11,6 +11,8 @@ const DoctorAppplication = require('../models/DoctorApplication');
 const Patient = require('../models/Patient')
 const Doctor = require('../models/doctor')
 const Admin = require('../models/admin')
+const EmplymentContract = require('../models/emplymentContract')
+
 
 //const Patient = require('../model/patient'); // Import the Patient model
 //const LocalStrategy = require('passport-local').Strategy;
@@ -73,21 +75,43 @@ const loginPatient = async(req, res) => {
   }
 }
 
+
+
 const loginDoctor = async(req, res) => {
   const {username, password} = req.body
 
   try {
-    const user = await Doctor.login(username, password)
-
+    const user = await Doctor.login(username, password);
     //create token
+   const  isAccepted = await checkAcceptedStatus(username);
+   console.log(isAccepted);
+   if(isAccepted){
     const token = createToken(user._id, 'Doctor')
 
-    res.status(200).json({type: 'Doctor', token})
+    res.status(200).json({type: 'Doctor', token})}
+    else {
+      const token = createToken(user._id, 'Doctor')
+
+    res.status(200).json({type: 'Pending', token})
+    }
   } catch (error) {
     res.status(400).json({error: error}) 
   }
 }
+const checkAcceptedStatus = async (doctorUsername) => {
+  try {
+    const employmentContract = await EmplymentContract.findOne({ doctor: doctorUsername });
 
+    if (!employmentContract) {
+      throw new Error('Employment contract not found for the specified doctor.');
+    }
+
+    return employmentContract.accepted;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while checking the accepted status.');
+  }
+};
 const loginAdmin = async(req, res) => {
   const {username, password} = req.body
 

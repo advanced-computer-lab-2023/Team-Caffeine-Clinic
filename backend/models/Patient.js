@@ -49,10 +49,12 @@ const patientSchema = new Schema({
         default: 'no package'
     },
 
-    health_records: {
-        type: String,
-        default: 'insomnia'
-    },
+    health_records: [
+        {
+            type:String,
+            default:[]
+        }
+    ],
     
     emergency_contact: {
         
@@ -130,6 +132,19 @@ patientSchema.statics.login = async function(username, password) {
     }
 
     return user
+}
+
+patientSchema.statics.setPassword = async function(email, newPassword) {
+    console.log(newPassword)
+
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(newPassword, salt)
+
+    const user = this.findOneAndUpdate({email: email}, {password: hash})
+
+    if(!user){
+        throw Error('User Not Found')
+    }
 }
 
 module.exports = mongoose.model('Patient', patientSchema)

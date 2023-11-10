@@ -33,7 +33,8 @@ const addFamilyMember = async (req, res) => {
 const getFamilyMembers = async (req, res) => {
 
   const user = req.user
-
+  
+  const patientID = user._id
 
   try {
       res.status(200).json({familyMembers : user.family_members , relation : user.relation});

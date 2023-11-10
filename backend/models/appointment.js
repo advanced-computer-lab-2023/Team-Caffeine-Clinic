@@ -13,13 +13,13 @@ const appointmentSchema = new Schema({
     required: true,
   },
   appointmentDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   status: {
     type: String,
     required: true,
-    enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
+    enum: ['upcoming', 'completed', 'cancelled', 'rescheduled','FollowUp'],
     default :'upcoming'
   }
 
