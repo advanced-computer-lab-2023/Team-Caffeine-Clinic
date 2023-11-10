@@ -34,6 +34,7 @@ import EditHealthPackage from './pages/EditHealthPackage';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
+import PatientDetails from './pages/ViewPatientDetails';
 import { useAuthContext } from './hooks/useAuthContext';          
 import AddAvailableDateFunc from './pages/AddAvailableDate';
 import DoctorHealthRecords from './pages/DoctorHealthRecords';
@@ -138,6 +139,10 @@ function App() {
               <Route
               path="/viewPatientsAdmin"
               element =  {<ViewPatientHome/>}
+                />
+                <Route
+              path="/viewPatientsDetails"
+              element =  {<WithNavbarAndSidebar><PatientDetails/></WithNavbarAndSidebar>}
                 />
             </Routes>
           </UsernameProvider>
