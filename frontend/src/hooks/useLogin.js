@@ -36,7 +36,7 @@ export const useLogin = () => {
 
         if(!response.ok){
             setIsLoading(false)
-            setError(json.error)
+            setError("Login failed. Please check your username and password and try again.")
         }
 
         if(response.ok){
