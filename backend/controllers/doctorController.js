@@ -29,7 +29,6 @@ const getDoctors = async (req, res) => {
 // Get doctor details by username
 const getSingleDoctor = async (req, res) => {
   const patient = req.user
-  console.log(patient);
   const patientHealthPackage = patient.health_package;
   try {
       const doctor = await Doctor.findOne({ username: req.params.username });
@@ -47,11 +46,14 @@ const getSingleDoctor = async (req, res) => {
                   affiliation: doctor.affiliation,
                   education: doctor.education,
                   originalRate: doctor.rate,
-                  rateAfterDiscount: doctor.rate
+                  rateAfterDiscount: doctor.rate,
+                  availableDates: doctor.availableDates
               }
           return res.status(200).json(doctormap); // Return here
       }
       let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+      rateAfterDiscount = rateAfterDiscount + 0.1 * (rateAfterDiscount);
+
       const doctormap = {
         username: doctor.username,
         email: doctor.email,
@@ -60,7 +62,8 @@ const getSingleDoctor = async (req, res) => {
         affiliation: doctor.affiliation,
         education: doctor.education,
         originalRate: doctor.rate,
-        rateAfterDiscount: rateAfterDiscount
+        rateAfterDiscount: rateAfterDiscount,
+        availableDates: doctor.availableDates
       }
     return res.status(200).json(doctormap);
   } catch (error) {
@@ -68,30 +71,35 @@ const getSingleDoctor = async (req, res) => {
   }
 };
 
+const getAppointments = async (req, res) => {
+    try {
+        const doctorUsername = req.user.username;
+        const date = req.query.date;
+        const status = req.query.status;
+        let filter = { doctor: doctorUsername };
 
-const getAppointments = async(req, res) => {
-  const doctor = req.user
-  const doctorUsername = doctor.username
+        const appointments = await Appointment.find(filter);
 
-  try {
+        let filteredAppointments = appointments.filter(appointment => {
+            let isMatched = true;
 
-      const date = req.query.date;
-      const status = req.query.status;
+            if (date) {
+                isMatched = isMatched && appointment.appointmentDate.includes(date);
+            }
 
-      let filter = {};
+            if (status) {
+                isMatched = isMatched && appointment.status === status;
+            }
 
-      if (date) filter.appointmentDate = date; 
-      if (status) filter.status = new RegExp(status, 'i');
-      if (doctorUsername) filter.doctor = doctorUsername
+            return isMatched;
+        });
 
-
-      const appointement = await Appointment.find(filter)
-      res.status(200).json(appointement)
-  } catch (error) {
-      res.status(400).send(error);
-  }
-}
-
+        res.json(filteredAppointments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching appointments.' });
+    }
+};
 
 
 

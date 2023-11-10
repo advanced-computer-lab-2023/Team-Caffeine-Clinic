@@ -48,7 +48,7 @@ const PatientsWithUpcomingAppointments = () => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <ol>
         {patients.map((patient, index) => (
-          <li key={index}>{` ${patient.name} - Appointment Date: ${patient.appointmentDate}`}</li>
+          <li key={index}>{` ${patient.patient} - Appointment Date: ${patient.appointmentDate}`}</li>
         ))}
       </ol>
     </div>

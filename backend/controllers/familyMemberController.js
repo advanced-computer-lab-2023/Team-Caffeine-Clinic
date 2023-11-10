@@ -33,8 +33,6 @@ const addFamilyMember = async (req, res) => {
 const getFamilyMembers = async (req, res) => {
 
   const user = req.user
-
-  console.log(req.session);
   
   const patientID = user._id
 
