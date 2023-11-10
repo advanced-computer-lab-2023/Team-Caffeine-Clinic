@@ -123,20 +123,32 @@ const forgotPass = async(req, res) => {
     return res.status(200).json({mssg: "tmam"})
 }
 
-const verifyOTP = async(req, res) => {
-    const {otp, email} = req.body
+const verifyOTP = async (req, res) => {
+    const { otp, email } = req.body;
+    console.log(otp, email);
+    try {
+        const verify = await OTP.findOne({ email: email });
 
-    const verify = await OTP.findOne({email: email})
+        if (!verify) {
+            console.log("No OTP entry found for this email:", email);
+            return res.status(404).json({ mssg: "No OTP entry found for this email." });
+        }
 
-    if(verify.OTP != otp){
-        console.log("Wrong OTP");
-        return res.status(400).json({mssg: "Wrong OTP"})
+        console.log("OTP from DB:", verify.OTP, "OTP from user:", otp);
+
+        if (verify.OTP != otp) {
+            console.log("Wrong OTP");
+            return res.status(400).json({ mssg: "Wrong OTP" });
+        }
+
+        console.log("Correct OTP");
+        return res.status(200).json({ mssg: "OTP verified successfully" });
+    } catch (error) {
+        console.error("Error verifying OTP:", error);
+        return res.status(500).json({ mssg: "Internal Server Error" });
     }
+};
 
-    //console.log("tmam");
-    // If OTP is correct, you can allow the user to set a new password
-    return res.status(200).json({ mssg: "OTP verified successfully" });
-}
 
 const setPass = async(req, res) => {
     const {newPassword, email} = req.body
