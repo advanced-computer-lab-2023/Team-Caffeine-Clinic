@@ -35,6 +35,7 @@ import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
 import { useAuthContext } from './hooks/useAuthContext';
+import PatientDetails from './pages/ViewPatientDetails';
 
 
 
@@ -107,6 +108,10 @@ function App() {
               <Route
               path="/viewPatientsAdmin"
               element =  {<ViewPatientHome/>}
+                />
+                <Route
+              path="/viewPatientsDetails"
+              element =  {<WithNavbarAndSidebar><PatientDetails/></WithNavbarAndSidebar>}
                 />
             </Routes>
           </UsernameProvider>

@@ -15,6 +15,7 @@ const Doctor = require('../models/doctor');
 const healthPackage = require('../models/healthPackageModel');
 const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
+//const { default: HealthPackages } = require('../../frontend/src/pages/HealthPackages')
 
 
 // Passport local Strategy
@@ -351,6 +352,8 @@ const getAppointments = async(req, res) => {
 const subscribeToHealthPackage = async (req, res) => { 
     try {
 
+        const patient = req.user;
+
         const { healthPackageName } = req.body;
         console.log(healthPackageName);
 
@@ -360,8 +363,12 @@ const subscribeToHealthPackage = async (req, res) => {
             return res.status(404).json({ error: 'Patient or HealthPackage not found' });
         }
 
+        if (patient.health_package == HealthPackage.name) {
+            return res.status(200).json({ error: 'You are already subscribed to this health package'});
+        } 
+
         const updatedPatient = await Patient.findOneAndUpdate(
-            { _id: req.user._id },
+            { _id: patient._id },
             { health_package: HealthPackage.name },
             { new: true } 
         );
@@ -377,6 +384,55 @@ const subscribeToHealthPackage = async (req, res) => {
     }
 }
 
+const unsubscribeFromHealthPackage = async (req, res) => { 
+    try {
+       const patient = req.user;
+
+       if (patient.health_package == 'No package') {
+        return res.status(404).json({ error: 'You are not subscribed to any package' });
+       }
+
+        const updatedPatient = await Patient.findOneAndUpdate(
+            { _id: patient._id },
+            { health_package: 'No package' },
+            { new: true } 
+        );
+
+        if (!updatedPatient) {
+            return res.status(404).json({ error: 'Patient or HealthPackage not found' });
+        }
+        
+        res.json({ message: 'Unsubscription successful' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+}
+
+const getHealthPackage = async (req, res) => { 
+    try {
+        const patient = req.user
+
+       // console.log(_id);
+            const HealthPackageName = patient.health_package;
+            console.log(HealthPackageName);
+
+            const HealthPackage = await healthPackage.findOne({ name: HealthPackageName }).exec();
+
+            // if (HealthPackage.name == "no Package"){
+            //     return res.status(404).json({ error:'error '});
+            // }
+           
+         res.status(200).json(HealthPackage);
+         console.log(HealthPackage);
+        }
+         catch (error) {
+            console.log(error);
+            res.status(400).send(error);
+        }
+    }
+
+
 
 module.exports = {
     signUp,
@@ -389,5 +445,7 @@ module.exports = {
     setPass,
     forgotPass,
     verifyOTP,
-    subscribeToHealthPackage
+    subscribeToHealthPackage,
+    unsubscribeFromHealthPackage,
+    getHealthPackage
 }
