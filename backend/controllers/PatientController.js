@@ -497,8 +497,6 @@ const payWithWallet = async (req, res) => {
     const user = req.user
     
     const {amount, doctorUsername} = req.query
-    
-console.log(doctorUsername);
 
     const newPatientWallet = user.wallet - parseInt(amount, 10)
 
@@ -514,6 +512,8 @@ console.log(doctorUsername);
         await Doctor.findByIdAndUpdate(doctor._id, {wallet: newDoctorWallet})
         
         await Patient.findByIdAndUpdate(user._id, {wallet: newPatientWallet})
+
+        return res.status(200).json({mssg: 'Successful'})
     } catch (error) {
         return res.status(400).json({error: error})
     }

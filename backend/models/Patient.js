@@ -83,7 +83,12 @@ const patientSchema = new Schema({
     relation: [{
         type: String,
         enum: ["Wife", "Husband", "Daughter", "Father", "Mother", "Sibling", "Son"]
-    }]
+    }],
+
+    wallet: {
+        type: Number,
+        default: 0
+    }
 
 }, {timestamps: true})
 
