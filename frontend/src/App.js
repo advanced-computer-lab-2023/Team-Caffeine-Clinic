@@ -36,6 +36,8 @@ import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
 import { useAuthContext } from './hooks/useAuthContext';
 
+import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
+
 
 
 function App() {
@@ -78,6 +80,8 @@ function App() {
               <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
               <Route path='Filterbyavedates' element={user ? <WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar> : <Navigate to="/" />} />
 
+
+              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><AddFamilyMember /></WithNavbarAndSidebar>} />
 
               {/* Mo2 - Yas */}
               <Route

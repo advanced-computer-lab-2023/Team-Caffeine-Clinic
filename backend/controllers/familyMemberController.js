@@ -34,13 +34,9 @@ const getFamilyMembers = async (req, res) => {
 
   const user = req.user
 
-  console.log(req.session);
-  
-  const patientID = user._id
 
   try {
-      const familyMembers = await FamilyMember.find({patientID});
-      res.status(200).send(familyMembers);
+      res.status(200).json({familyMembers : user.family_members , relation : user.relation});
   } catch (error) {
       res.status(400).send('error getting familyMembers')
   }

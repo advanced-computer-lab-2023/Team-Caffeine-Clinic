@@ -350,7 +350,9 @@ const getAppointments = async(req, res) => {
 
 const linkFamilyMember = async(req, res) => {
     const user = req.user
-    const {filter, relation} = req.body // filter is either email or phone number
+    const filter = req.query.EmailorPhhone
+    const relation = req.query.relation
+    // const {filter, relation} = req.body // filter is either email or phone number
     let patient;
     try {
         
@@ -361,13 +363,13 @@ const linkFamilyMember = async(req, res) => {
         }    
 
         if(!patient){
-            res.status(400).json({mssg: "Patient not Found"})
+            return res.status(400).json({mssg: "Patient not Found"})
         }
         
         updateFamilyMember(user, patient, relation)
-        res.status(200).json(user)
+        return res.status(200).json(user)
     } catch (error) {
-        res.status(400).json({error: error})
+        return res.status(400).json({error: error})
     }
     
 }
@@ -375,7 +377,8 @@ const linkFamilyMember = async(req, res) => {
 async function updateFamilyMember(user, patient, relation) {
     await Patient.findOneAndUpdate(
         { _id: user._id }, 
-        { $push: { 
+        { $push: {  
+            
                 family_members: patient._id,
                 relation: relation
                 } 
