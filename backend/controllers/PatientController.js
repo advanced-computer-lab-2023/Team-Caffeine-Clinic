@@ -479,7 +479,9 @@ const payWithWallet = async (req, res) => {
     
     const {amount, doctorUsername} = req.query
     
-    const newPatientWallet = user.wallet - amount
+console.log(doctorUsername);
+
+    const newPatientWallet = user.wallet - parseInt(amount, 10)
 
     try {
         const doctor = await Doctor.findOne({username: doctorUsername})
@@ -488,7 +490,7 @@ const payWithWallet = async (req, res) => {
             return res.status(400).json({error: 'Doctor Not Found'})
         }
 
-        const newDoctorWallet = doctor.wallet + amount
+        const newDoctorWallet = doctor.wallet + parseInt(amount, 10)
 
         await Doctor.findByIdAndUpdate(doctor._id, {wallet: newDoctorWallet})
         

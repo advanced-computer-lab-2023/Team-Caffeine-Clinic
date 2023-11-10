@@ -51,36 +51,6 @@ const SingleDoctor = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchWallet = async () => {
-  //     try {
-  //       const response = await fetch('/api/patient/getWallet', {
-  //         headers: {
-  //           Authorization: `Bearer ${user.token}`,
-  //         }
-  //       })
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       const data = await response.json();
-  //       setWallet(data)
-  //     } catch (error) {
-        
-  //     }
-  //   }
-  //   if(user){
-  //     fetchWallet()
-  //   }
-  // }, [user])
-
-  const handleWallet = async () => {
-    try {
-      
-    } catch (error) {
-      
-    }
-  }
-
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
