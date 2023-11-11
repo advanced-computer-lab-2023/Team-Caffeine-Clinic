@@ -9,12 +9,18 @@ function LoginForm() {
 
   const { login, error, isLoading } = useLogin()
 
+  
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    await login(username, password)
-    
-  }
+    try {
+      await login(username, password);
+      // Redirect to the appropriate dashboard after successful login
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  };
+
 
   // const handleLogin = async (e) => {
   //   e.preventDefault();
@@ -70,28 +76,35 @@ function LoginForm() {
     <div>
       <form className='login-form' onSubmit={handleSubmit}>
         <input
-        className='input-login'
+          className='input-login'
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
-        className='input-login'
+          className='input-login'
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className='login-button' type="submit" disabled={isLoading}> Log In </button>{' '}
+        <button className='login-button' type="submit" disabled={isLoading}>
+          Log In
+        </button>{' '}
         <Link to="/forgotPass"> Forgot your Password? </Link>
-        <Link to="/signup"><button className='login-button'>Sign Up</button></Link>{' '}
-        <Link to="/doctorApplication"><button className='login-button'>Sign Up As a Doctor</button></Link>
+        <Link to="/signup">
+          <button className='login-button'>Sign Up</button>
+        </Link>{' '}
+        <Link to="/doctorApplication">
+          <button className='login-button'>Sign Up As a Doctor</button>
+        </Link>
 
-        {error && <div className='error'>{ error }</div>}
+        {error && <div className='error-message'>{error}</div>}
       </form>
     </div>
   );
+
 }
 
 export default LoginForm;
