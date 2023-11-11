@@ -359,6 +359,7 @@ const addPatientToDoctor = async(req, res,dr) => {
 
         // Find the doctor by username
         const doctor = await Doctor.findOne({ username: dusername });
+        console.log()
 
         if (!doctor) {
             return res.status(404).json({ message: 'Doctor not found' });
@@ -370,6 +371,9 @@ const addPatientToDoctor = async(req, res,dr) => {
         if (!patient) {
             return res.status(404).json({ message: 'Patient not found' });
         }
+        console.log(doctor)
+        console.log(patient)
+
 
         // Add the patient's username to the doctor's list of patients if it is not there
         if (!doctor.patients.includes(patient.username)) {
@@ -445,17 +449,28 @@ const createAppointment = async(req, res) => {
         if (existingAppointment) {
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
-        
+        const getTransaction = await Transaction.findOne({
+            appointmentDate:appointmentDate,
+            paymentOption:'Appointment',
+            doctor:doctor.username,
+            patient:patient.username,
+            Refunded:false
+        });
+        const transactionID = getTransaction._id;
+        console.log(transactionID)
+
         // Create a new appointment
         const appointment = new Appointment({
             doctor: doctor.username, // Reference the doctor by username
-            patient: patient.username, // Reference the patient by username
+            patient: patient.username,
+            transactionId:transactionID, // Reference the patient by username
             appointmentDate: appointmentDate,
             status: status // Convert the appointmentDate to a Date object
         });
 
         await appointment.save();
         await doctor.save();
+        console.log(appointment);
         const newreq = req
         const newres = res
             // Use the addPatientToDoctor function to add the patient to the doctor's list
@@ -495,11 +510,21 @@ const createAppointmentfam = async(req, res) => {
         if (existingAppointment) {
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
+
+        const getTransaction = await Transaction.findOne({
+            appointmentDate:appointmentDate,
+            paymentOption:'Appointment',
+            doctor:doctor.username,
+            patient:patient.username
+        });
+
+        const transactionID = getTransaction.transactionId;
         
         // Create a new appointment
         const appointment = new Appointment({
             doctor: doctor.username, // Reference the doctor by username
-            patient: patient.username, // Reference the patient by username
+            patient: patient.username,
+            transactionId:transactionID,// Reference the patient by username
             appointmentDate: appointmentDate,
             status: status // Convert the appointmentDate to a Date object
         });
@@ -521,11 +546,12 @@ const getAppointments = async (req, res) => {
         const patientUsername = req.user.username;
         const date = req.query.date;
         const status = req.query.status;
+
         let filter = { patient: patientUsername };
 
         const appointments = await Appointment.find(filter);
 
-        let filteredAppointments = appointments.filter(appointment => {
+        const filteredAppointments = await Promise.all(appointments.map(async appointment => {
             let isMatched = true;
 
             if (date) {
@@ -536,15 +562,83 @@ const getAppointments = async (req, res) => {
                 isMatched = isMatched && appointment.status === status;
             }
 
-            return isMatched;
-        });
+            // Check if the appointment has a transaction and the transaction is not refunded
+            if (appointment.transactionId) {
+                const transaction = await Transaction.findById(appointment.transactionId);
+                isMatched = isMatched && transaction && !transaction.Refunded;
+            }
 
-        res.json(filteredAppointments);
+            return isMatched ? appointment : null;
+        }));
+
+        // Remove null values from the array (appointments without matching transactions)
+        const finalAppointments = filteredAppointments.filter(appointment => appointment !== null);
+
+        res.json(finalAppointments);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while fetching appointments.' });
     }
 };
+const refundAppointment = async (req, res) => {
+    try {
+        const appointmentdate = req.query.appointmentdate;
+        const doc = req.query.doc;
+        const patient = req.user.username;
+        const transactionID = req.query.transactionID;
+        console.log(appointmentdate);
+
+        // Find the appointment by ID
+        const appointment = await Appointment.findOne({
+            doctor:doc,
+            patient:patient,
+            appointmentDate:appointmentdate,
+        });
+        console.log(appointment);
+
+        const patient1 = await Patient.findOne({username:patient});
+        const doctor1 = await Doctor.findOne({username:doc});
+
+        // Check if the appointment exists
+        if (!appointment) {
+            return res.status(404).json({ error: 'Appointment not found.' });
+        }
+
+        // Check if the appointment has a transaction
+        if (!appointment.transactionId) {
+            return res.status(400).json({ error: 'Appointment does not have a transaction.' });
+        }
+
+        // Find the transaction by ID
+        const transaction = await Transaction.findById(appointment.transactionId);
+
+        // Check if the transaction exists
+        if (!transaction) {
+            return res.status(404).json({ error: 'Transaction not found.' });
+        }
+
+        // Check if the transaction has already been refunded
+        if (transaction.Refunded) {
+            return res.status(400).json({ error: 'Transaction has already been refunded.' });
+        }
+
+        // Perform the refund by updating the transaction
+        transaction.Refunded = true;
+          patient1.wallet+=transaction.value;
+          doctor1.wallet-=transaction.value;
+          await doctor1.save();
+          await patient1.save();
+        await transaction.save();
+
+        // Optionally, you can update the appointment status or perform any other necessary actions
+
+        res.json({ message: 'Appointment refunded successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while processing the refund.' });
+    }
+};
+
 
 
 const selectpatient = async(req, res) => {
@@ -751,7 +845,7 @@ const getHealthPackage = async (req, res) => {
             res.status(400).send(error);
         }
     }
-    const addTransactionAppointmentfam = async (req, res) => {
+ const addTransactionAppointmentfam = async (req, res) => {
         try {
           // Get data from req.query
         //  const { doctorUsername, patientUsername, appointmentDate, transactionValue } = req.query;
@@ -767,6 +861,8 @@ const getHealthPackage = async (req, res) => {
           // Assuming you have 'Doctor' and 'Patient' models
           const doctorExists = await Doctor.exists({ username: doctorUsername });
           const patientExists = await Patient.exists({ username: patientUsername });
+
+          
       
           if (!doctorExists || !patientExists) {
             return res.status(404).json({ error: 'Doctor or patient not found.' });
@@ -851,5 +947,5 @@ module.exports = {
     addPatientToDoctor,
     selectpatient,
     getWallet,
-    payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam
+    payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,refundAppointment
 }

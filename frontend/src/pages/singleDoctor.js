@@ -62,10 +62,7 @@ const SingleDoctor = () => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          date: date,
-        }),
+        }
       });
     
 
@@ -97,10 +94,7 @@ const SingleDoctor = () => {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify({
-            date: date,
-          }),
+          }
         });
       
   

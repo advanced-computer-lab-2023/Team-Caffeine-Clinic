@@ -12,6 +12,11 @@ const appointmentSchema = new Schema({
     ref: 'Patient', 
     required: true,
   },
+  transactionId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'transaction',
+    default:""
+  },
   appointmentDate: {
     type: String,
     required: true,

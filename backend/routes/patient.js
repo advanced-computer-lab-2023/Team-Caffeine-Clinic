@@ -13,7 +13,7 @@ const {
     getAppointments,
     selectpatient, 
     getWallet, 
-    payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam
+    payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,refundAppointment
 } = require('../controllers/PatientController')
 
 const {
@@ -24,6 +24,9 @@ router.use(requireAuth)
 //add appointment  
 router.post('/createAppointment', createAppointment)
 router.post('/createAppointmentfam', createAppointmentfam)
+
+
+router.post('/refundAppointment', refundAppointment)
 
 
 router.post('/addTransactionAppointment', addTransactionAppointment)
