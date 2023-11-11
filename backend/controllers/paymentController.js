@@ -17,8 +17,7 @@ const pay = async (req, res) => {
 }
 
 const updateDoctorWallet = async (req, res) => {
-    const {amount} = req.query
-    const {doctorUsername} = req.body
+    const {amount, doctorUsername} = req.query
     try{
         const doctor = await Doctor.findOne({username: doctorUsername})
 

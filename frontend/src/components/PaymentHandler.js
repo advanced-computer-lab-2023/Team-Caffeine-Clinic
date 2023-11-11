@@ -39,27 +39,29 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
 
   useEffect(() => {
     // Fetch client secret
-    const fetchClientSecret = async () => {
-      const url = `/api/create-payment-intent?amount=${amount}`;
+      if(username){
+      const fetchClientSecret = async () => {
+        const url = `/api/create-payment-intent?amount=${amount}`;
 
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // You might need to include additional headers like authorization tokens here
-        },
-        body: JSON.stringify({username} ),
-      });
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // You might need to include additional headers like authorization tokens here
+          },
+          body: JSON.stringify({username} ),
+        });
 
-      if (!response.ok) {
-        // Handle error
-      }
+        if (!response.ok) {
+          // Handle error
+        }
 
-      const json = await response.json();
-      setClientSecret(json.clientSecret);
-    };
+        const json = await response.json();
+        setClientSecret(json.clientSecret);
+      };
 
-    fetchClientSecret();
+      fetchClientSecret();
+    } 
   }, [amount]);
 
   const handleWallet = async () => {
@@ -102,14 +104,22 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
       setError(error.message);
       setPaymentResult('Payment failed');
 
-      if (onPaymentResult) {
-        onPaymentResult('Payment failed');
-      }
     } else if (paymentIntent.status === 'succeeded') {
       setPaymentResult('Payment succeeded');
 
       if (onPaymentResult) {
-        onPaymentResult('Payment succeeded');
+        //onPaymentResult();
+        const addToDoctorWalletResponse = fetch(`/api/updateDoctorWallet?amount=${amount}&doctorUsername=${username}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if(addToDoctorWalletResponse.ok){
+          onPaymentResult();
+          setError('Payment Successful')
+        }
       }
 
       console.log('payment confirmed');
