@@ -6,6 +6,8 @@ const passportLocalMongoose = require('passport-local-mongoose')
 const jwt = require('jsonwebtoken')
 
 const nodemailer = require('nodemailer');
+const HealthPackageModel = require('../models/healthPackageModel'); 
+const HealthPackagesTransaction  = require('../models/HealthPackages_Transaction'); 
 
 
 // Import Models
@@ -26,10 +28,186 @@ const Transaction = require('../models/transaction');
 // passport.serializeUser(Patient.serializeUser());
 // passport.deserializeUser(Patient.deserializeUser());
 
+const addHealthPackageTransactionfam = async (req, res) => {
+    try {
+     //   const { value, patientId, healthPackageName } = req.params;
+
+     const value = req.query.value;
+     const patientId = req.query.patientId;
+     const healthPackageName = req.query.healthPackageName;
+
+        // Find the patient
+        const patient = await Patient.findone({username:patientId});
+        if (!patient) {
+            return res.status(404).json({ error: 'Patient not found' });
+        }
+
+        // Find the health package by name
+        const HealthPackage = await healthPackage.findOne({ name: healthPackageName });
+        if (!HealthPackage) {
+            return res.status(404).json({ error: 'HealthPackage not found' });
+        }
+
+        // Create a new transaction
+        const newTransaction = new Transaction({
+            value:value,
+            paymentOption: 'healthPackages',
+            patient: patientId,
+            healthPackage: HealthPackage.name,
+        });
+
+        patient.health_package=healthPackageName;
+
+        await patient.save();
+        // Save the transaction
+        await newTransaction.save();
+        const newreq = req;
+        const newres = res;
+
+       await createHealthPackagesTransaction(newreq,newres,newTransaction._id,patientId,healthPackageName);
+
+    } catch (error) {
+        return res.status(500).json({ error: `Error adding health package transaction: ${error.message}` });
+    }
+};
+const createHealthPackagesTransaction = async (req, res,transactionId,patientId,healthPackageId) => {
+  
+
+    try {
+        // Check if the referenced models exist
+        const transaction = await Transaction.findById(transactionId);
+        if (!transaction) {
+            return res.status(404).json({ error: 'Transaction not found' });
+        }
+
+        const patient = await Patient.findById(patientId);
+        if (!patient) {
+            return res.status(404).json({ error: 'Patient not found' });
+        }
+
+        const healthPackage = await HealthPackageModel.findById(healthPackageId);
+        if (!healthPackage) {
+            return res.status(404).json({ error: 'HealthPackageModel not found' });
+        }
+
+        // Create a new HealthPackagesTransaction instance
+        const healthPackagesTransaction = new HealthPackagesTransaction({
+            transactionId:transactionId,
+            patient: patientId,
+            healthPackage: healthPackageId,
+        });
+
+        // Save the new document
+        await healthPackagesTransaction.save();
+
+        // You can customize the success response as needed
+        return res.status(201).json({ message: 'HealthPackagesTransaction created successfully', healthPackagesTransaction });
+    } catch (error) {
+        // Handle the error and send an appropriate error response
+        return res.status(500).json({ error: `Error creating HealthPackagesTransaction: ${error.message}` });
+    }
+};
+const addHealthPackageTransaction = async (req, res) => {
+    try {
+     //   const { value, patientId, healthPackageName } = req.params;
+
+     const value = req.query.value;
+     const patientId = req.user.username;
+     const healthPackageName = req.query.healthPackageName;
+
+        // Find the patient
+        const patient = await Patient.findone({username:patientId});
+        if (!patient) {
+            return res.status(404).json({ error: 'Patient not found' });
+        }
+
+        // Find the health package by name
+        const HealthPackage = await healthPackage.findOne({ name: healthPackageName });
+        if (!HealthPackage) {
+            return res.status(404).json({ error: 'HealthPackage not found' });
+        }
+
+        // Create a new transaction
+        const newTransaction = new Transaction({
+            value:value,
+            paymentOption: 'healthPackages',
+            patient: patientId,
+            healthPackage: HealthPackage.name,
+        });
+        
+        patient.health_package=healthPackageName;
+        await patient.save();
+        // Save the transaction
+        await newTransaction.save();
+        const newreq = req;
+        const newres = res;
+
+       await createHealthPackagesTransaction(newreq,newres,newTransaction._id,patientId,healthPackageName);
+
+    } catch (error) {
+        return res.status(500).json({ error: `Error adding health package transaction: ${error.message}` });
+    }
+};
+const markHealthPackageTransactionAsRefunded = async (req, res) => {
+    try {
+      //  const { patientUsername, healthPackageName } = req.params;
+      const patientUsernam = req.user.username;
+
+      const healthPackageName = req.query.healthPackageName;
+
+      const patient = await Patient.findone({
+        username:patientUsernam
+      })
+
+      if(!patient){
+        return res.status(404).json({ error: 'Patient is  not found' });
+
+      }
+        // Find the health package transaction based on patient username and health package name
+        const healthPackageTransaction = await HealthPackagesTransaction.findOne({
+            patient: patientUsernam,
+            healthPackage: healthPackageName,
+        });
+
+        if (!healthPackageTransaction) {
+            return res.status(404).json({ error: 'Health package transaction not found' });
+        }
+
+        // Find the corresponding transaction
+        const transaction = await Transaction.findById(healthPackageTransaction.transactionId);
+
+        if (!transaction) {
+            return res.status(404).json({ error: 'Transaction not found' });
+        }
+
+        const healthPackage = await HealthPackageModel.findone({
+            name:healthPackageName
+        })
+
+        if(!healthPackage){
+            return res.status(404).json({ error: 'Health package  not found' });
+
+        }
+
+        patient.wallet+=healthPackage.basePrice;
+        // Mark the transaction as refunded
+        transaction.Refunded = true;
+
+        // Save the updated transaction
+        await transaction.save();
+        await patient.save();
+
+        return res.status(200).json({ message: 'Transaction marked as refunded', transaction });
+    } catch (error) {
+        return res.status(500).json({ error: `Error marking transaction as refunded: ${error.message}` });
+    }
+};
+
+
+
 const createToken = (_id) => {
     return jwt.sign({_id: _id}, process.env.SECRET, {expiresIn: '3d'})
 }
-
 //Sign up as a new Patient
 const signUp = async(req, res) => {
     const {username, password, name, email, dob, gender, mobile_number, health_package, Efull_name, Emobile_number, relation} = req.body
@@ -58,7 +236,6 @@ const signUp = async(req, res) => {
         
     // })
 }
-
 const changePass = async(req, res) => {
     const {oldPassword, newPassword} = req.body
 
@@ -70,7 +247,6 @@ const changePass = async(req, res) => {
         }
     })
 }
-
 function generateOTP() {
     // Generate a random number between 100000 and 999999
     const min = 100000;
@@ -79,7 +255,6 @@ function generateOTP() {
   
     return otp;
   }
-
 const forgotPass = async(req, res) => {
     const {email} = req.body
     console.log(email);
@@ -127,7 +302,6 @@ const forgotPass = async(req, res) => {
 
     return res.status(200).json({mssg: "tmam"})
 }
-
 const verifyOTP = async (req, res) => {
     const { otp, email } = req.body;
     console.log(otp, email);
@@ -153,8 +327,6 @@ const verifyOTP = async (req, res) => {
         return res.status(500).json({ mssg: "Internal Server Error" });
     }
 };
-
-
 const setPass = async(req, res) => {
     const {newPassword, email} = req.body
 
@@ -187,7 +359,6 @@ const setPass = async(req, res) => {
     // })
 
 }
-
 //View and Filter Perscriptions
 // const viewFilterPerscriptions = async (req, res) => {
 //     const user = req.user
@@ -256,7 +427,6 @@ const viewFilterPerscriptions = async (req, res) => {
         res.status(400).send(error);
     }
 }
-
 const estimateRate = async (req, res) => {
 
     const patient = req.user
@@ -318,8 +488,6 @@ const estimateRate = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
-
-
   // Function to filter doctors by availability on a certain date and time
   const filterDoctorsByAvailability = async (req, res) => {
     const  date  = req.query.date;
@@ -334,7 +502,6 @@ const estimateRate = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   };
-
 const getSinglePerscription = async(req, res) => {
     const _id = req.params.perscID
 
@@ -659,7 +826,6 @@ const selectpatient = async(req, res) => {
         res.status(500).json({ error: 'An error occurred while selecting the patient.' });
     }
 }
-
 const getWallet = async(req, res) => {
     try {
         const user = req.user
@@ -670,8 +836,6 @@ const getWallet = async(req, res) => {
         res.status(500).json({ error: 'An error occurred while selecting the patient.' });
     }
 }
-
-
 const payWithWallet = async (req, res) => {
     const user = req.user
     
@@ -697,7 +861,6 @@ const payWithWallet = async (req, res) => {
         return res.status(400).json({error: error})
     }
 }
-
 const linkFamilyMember = async(req, res) => {
     const user = req.user
     const filter = req.query.EmailorPhhone
@@ -723,7 +886,6 @@ const linkFamilyMember = async(req, res) => {
     }
     
 }
-
 async function updateFamilyMember(user, patient, relation) {
     await Patient.findOneAndUpdate(
         { _id: user._id }, 
@@ -762,7 +924,6 @@ async function updateFamilyMember(user, patient, relation) {
                 } 
         })
 }
-
 const subscribeToHealthPackage = async (req, res) => { 
     try {
 
@@ -797,7 +958,6 @@ const subscribeToHealthPackage = async (req, res) => {
         res.status(500).send(error);
     }
 }
-
 const unsubscribeFromHealthPackage = async (req, res) => { 
     try {
        const patient = req.user;
@@ -822,7 +982,6 @@ const unsubscribeFromHealthPackage = async (req, res) => {
         res.status(500).send(error);
     }
 }
-
 const getHealthPackage = async (req, res) => { 
     try {
         const patient = req.user
@@ -947,5 +1106,6 @@ module.exports = {
     addPatientToDoctor,
     selectpatient,
     getWallet,
-    payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,refundAppointment
+    payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
+    refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam
 }

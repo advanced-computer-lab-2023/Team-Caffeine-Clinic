@@ -1,14 +1,20 @@
 import HealthPackDetails from '../components/HealthPackDetails';
 import { useAuthContext } from "../hooks/useAuthContext";
 import React, { useEffect, useState } from 'react';
-//import axios from 'axios';
 
 const HealthPackages = () => {
   const [healthPackages, setHealthPackages] = useState([]);
-  const [HealthPackageId, setHealthPackageId] = useState("");
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [showFamilyMembers, setShowFamilyMembers] = useState(true);
+  const [showHealthPackages, setShowHealthPackages] = useState(true); // Change to true
+  const [fampay, setfampay] = useState(false); // Change to true
+  const [famusername, setfamusername] = useState(''); // Change to true
+
+
+
   const [error, setError] = useState(null);
 
-  const user = useAuthContext()
+  const user = useAuthContext();
 
   useEffect(() => {
     const fetchHealthPackages = async () => {
@@ -18,72 +24,143 @@ const HealthPackages = () => {
             'Authorization': `Bearer ${user.user.token}`
           }
         });
-        const data = await response.json();
-        console.log(user);
-        
+
         if (!response.ok) {
-          throw new Error(data.message || "Could not fetch health packages.");
+          throw new Error(response.statusText);
         }
 
+        const data = await response.json();
         setHealthPackages(data);
       } catch (err) {
         setError(err.message);
       }
     };
-    if(user){
+
+    if (user) {
       fetchHealthPackages();
     }
   }, [user]);
 
-  const subscribe = async (name) => {
-    const response = await fetch('/api/patient/subscribe', {
-      method: 'POST',
-      body: JSON.stringify({healthPackageName: name}),
-      headers: {
-        'Authorization': `Bearer ${user.user.token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    const json = await response.json()
+  const fetchFamilyMembers = async () => {
+    try {
+      const response = await fetch(`/api/familyMembers/getFamilyMembers`, {
+        headers: {
+          Authorization: `Bearer ${user.user.token}`,
+        },
+      });
 
-    if (!response.ok) {
-      setError(json.error)
-     // console.log(json)
-     window.alert(error);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const familyMembersData = await response.json();
+      setFamilyMembers(familyMembersData.familyMembers);
+    } catch (error) {
+      setError(error.message);
     }
-    if (response.ok) {
-      setError(null)
-     // console.log('new Health Package added:', json)
-      window.alert('new Health Package added');
+  };
+
+  const subscribe = async (hpname,value,patientusername) => {
+    if(!fampay){
+    try {
+      const response2 = await fetch(`/api/patient/addHealthPackageTransaction?value=${value}&healthPackageName=${hpname}`, {
+        method: 'POST',
+        headers: {
+        
+          Authorization: `Bearer ${user.user.token}`,
+        },
+      });
+      if(!response2.ok){
+        throw new Error('Network response was not ok');
+
+      }
+      
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+    }}else{
+      try {
+        const response2 = await fetch(`/api/patient/addHealthPackageTransactionfam?value=${value}&patientId=${patientusername}&healthPackageName=${hpname}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.user.token}`,
+          },
+        });
+        if(!response2.ok){
+          throw new Error('Network response was not ok');
+  
+        }
+       
+        window.location.reload();
+  
+      } catch (error) {
+        console.error('Error creating appointment:', error);
+      }
     }
-   // window.location.reload();
-}
+  };
+
+  const handleMyselfClick = () => {
+    setShowFamilyMembers(false);
+    setShowHealthPackages(false);
+  };
+
+  const handleFamilyMembersClick = () => {
+    fetchFamilyMembers();
+  };
+
+  const handleFamilyMemberSubscribe = (name) => {
+    setShowFamilyMembers(false);
+    setShowHealthPackages(false);
+    setfampay(true);
+    setfamusername(name);
+    
+  };
 
   return (
     <div className="health-packages">
-      <h1>Available Health Packages</h1>
+      <div>
+        {showFamilyMembers && (
+          <>
+            <button onClick={handleMyselfClick}>For Myself</button>
+            <button onClick={handleFamilyMembersClick}>For Family Members</button>
+          </>
+        )}
+      </div>
+
+      {showFamilyMembers && familyMembers.length > 0 && (
+        <div>
+          <h2>Family Members</h2>
+          <ul>
+            {familyMembers.map((familyMember) => (
+              <li key={familyMember.id}>
+                {familyMember.name}
+                <button onClick={() => handleFamilyMemberSubscribe(familyMember.username)}>Subscribe</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {error && <p className="error-message">{error}</p>}
 
-      {healthPackages.length === 0 ? (
+      {showHealthPackages || healthPackages.length === 0 ? (
         <p>No health packages available.</p>
       ) : (
         <ul>
           {healthPackages.map((hp) => (
-            <>
-            <div className='Admin-details'>
-            <li key={hp.name}>
-              <div className='name'>{hp.name}</div>
-              <div>description: {hp.description}</div>
-              <div>Services Included: {hp.servicesIncluded}</div>
-              <div>basePrice: {hp.basePrice}</div>
-              <div>Doctor Session Discount: {hp.discounts.doctorSession * 100}%</div>
-              <div>Medicine Discount: {hp.discounts.pharmacyMedicine * 100}%</div>
-              <div>Family Member Discount: {hp.discounts.familySubscription * 100}%</div>
-            </li>
-              <span className='span1' onClick={() => subscribe(hp.name)}>Subscribe</span>
+            <div className='Admin-details' key={hp.name}>
+              <li>
+                <div className='name'>{hp.name}</div>
+                <div>description: {hp.description}</div>
+                <div>Services Included: {hp.servicesIncluded}</div>
+                <div>basePrice: {hp.basePrice}</div>
+                <div>Doctor Session Discount: {hp.discounts.doctorSession * 100}%</div>
+                <div>Medicine Discount: {hp.discounts.pharmacyMedicine * 100}%</div>
+                <div>Family Member Discount: {hp.discounts.familySubscription * 100}%</div>
+              </li>
+              <span className='span1' onClick={() =>fampay? subscribe(hp.name,hp.basePrice,famusername):subscribe(hp.name,hp.basePrice)}>Subscribe</span>
             </div>
-              </>
           ))}
         </ul>
       )}
@@ -92,61 +169,3 @@ const HealthPackages = () => {
 };
 
 export default HealthPackages;
-
-
-// const HealthPackages = () => {
-
-//     const [doctors, setDoctors] = useState(null);
-//     const [nameFilter, setNameFilter] = useState('');
-//     const [specialityFilter, setSpecialityFilter] = useState('');
-
-//     useEffect(() => {
-//       const fetchDoctors = async () => {
-//         let url = '/api/doctors/getDoctors';
-
-//         const params = new URLSearchParams();
-//         if (nameFilter) params.append('name', nameFilter);
-//         if (specialityFilter) params.append('speciality', specialityFilter);
-//         if (params.toString()) url += `?${params.toString()}`;
-
-//         const response = await fetch(url);
-//         const json = await response.json();
-
-//         if (response.ok) {
-//           setDoctors(json)
-//         }
-//       }
-//       fetchDoctors();
-//     }, [nameFilter, specialityFilter])
-
-//     return (
-//       <div className="doctors">
-//         {/* Filter section */}
-//         <div className="filters">
-//           <input 
-//             type="text" 
-//             placeholder="Filter by name" 
-//             value={nameFilter}
-//             onChange={(e) => setNameFilter(e.target.value)} 
-//             className="filter-input"
-//           />
-//           <input 
-//             type="text" 
-//             placeholder="Filter by speciality" 
-//             value={specialityFilter}
-//             onChange={(e) => setSpecialityFilter(e.target.value)}
-//             className="filter-input" 
-//           />
-//         </div>
-
-//         {/* Doctors list */}
-//         <div className='doctors'>
-//           {doctors && doctors.map((doctor) => (
-//             <DoctorDetails key={doctor.username} doctor={doctor} />
-//           ))}
-//         </div>
-//       </div>
-//   )
-// }
-
-// export default Doctors;
