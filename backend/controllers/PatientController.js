@@ -17,6 +17,7 @@ const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
 //const { default: HealthPackages } = require('../../frontend/src/pages/HealthPackages')
 
+const Transaction = require('../models/transaction');
 
 // Passport local Strategy
 //passport.use(Patient.createStrategy());
@@ -382,6 +383,39 @@ const addPatientToDoctor = async(req, res,dr) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+const addPatientToDoctorfam = async(req, res,dr,ph) => {
+    try {
+        //const { dusername, pusername } = req.body;
+
+        const dusername= dr;
+        const pusername = ph;
+
+        // Find the doctor by username
+        const doctor = await Doctor.findOne({ username: dusername });
+
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // Find the patient by username
+        const patient = await Patient.findOne({ username: pusername });
+
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+
+        // Add the patient's username to the doctor's list of patients if it is not there
+        if (!doctor.patients.includes(patient.username)) {
+            doctor.patients.push(patient.username);
+        }
+        await doctor.save();
+
+        res.status(200).json(doctor);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 const createAppointment = async(req, res) => {
     try {
         const pusername = req.user.username;
@@ -426,6 +460,56 @@ const createAppointment = async(req, res) => {
         const newres = res
             // Use the addPatientToDoctor function to add the patient to the doctor's list
         await addPatientToDoctor(newreq, newres,dusername);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+const createAppointmentfam = async(req, res) => {
+    try {
+        const pusername = req.query.patient;
+        const dusername = req.query.doctorusername;
+        const appointmentDate = req.query.date;
+        const status = "upcoming";
+
+
+        // Find the doctor and patient by username
+        const doctor = await Doctor.findOne({ username: dusername });
+        const patient = await Patient.findOne({ username: pusername });
+
+        if (!doctor || !patient) {
+            return res.status(400).json({ message: 'Doctor or patient not found' }); }
+
+            doctor.availableDates= doctor.availableDates.filter(item => item != appointmentDate);
+
+
+        // Check if there is an existing appointment with the same details
+        const existingAppointment = await Appointment.findOne({
+            doctor: doctor.username,
+            patient: patient.username,
+            appointmentDate: appointmentDate,
+            status: status
+        });
+        console.log('ana hena');
+        if (existingAppointment) {
+            return res.status(400).json({ message: 'Appointment with the same details already exists' });
+        }
+        
+        // Create a new appointment
+        const appointment = new Appointment({
+            doctor: doctor.username, // Reference the doctor by username
+            patient: patient.username, // Reference the patient by username
+            appointmentDate: appointmentDate,
+            status: status // Convert the appointmentDate to a Date object
+        });
+
+        await appointment.save();
+        await doctor.save();
+        const newreq = req
+        const newres = res
+            // Use the addPatientToDoctor function to add the patient to the doctor's list
+        await addPatientToDoctorfam(newreq, newres,dusername,pusername);
 
     } catch (error) {
         console.error(error);
@@ -667,7 +751,85 @@ const getHealthPackage = async (req, res) => {
             res.status(400).send(error);
         }
     }
+    const addTransactionAppointmentfam = async (req, res) => {
+        try {
+          // Get data from req.query
+        //  const { doctorUsername, patientUsername, appointmentDate, transactionValue } = req.query;
+            const doctorUsername = req.query.doctorUsername;
+            const patientUsername = req.query.patient;
+            const appointmentDate = req.query.appointmentDate;
+            const transactionValue = req.query.transactionValue;
+      
+          // Set payment option to 'Appointment'
+          const paymentOption = 'Appointment';
+      
+          // Check if the doctor and patient exist (you may want to handle this more robustly in a real-world scenario)
+          // Assuming you have 'Doctor' and 'Patient' models
+          const doctorExists = await Doctor.exists({ username: doctorUsername });
+          const patientExists = await Patient.exists({ username: patientUsername });
+      
+          if (!doctorExists || !patientExists) {
+            return res.status(404).json({ error: 'Doctor or patient not found.' });
+          }
 
+          // Create a new transaction
+          const newTransaction = new Transaction({
+            value: transactionValue,
+            appointmentDate:appointmentDate,
+            paymentOption:"Appointment",
+            doctor: doctorUsername,
+            patient: patientUsername,
+          });
+      
+          // Save the transaction to the database
+          await newTransaction.save();
+      
+          res.status(201).json({ message: 'Appointment transaction added successfully.' });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
+        }
+      };
+const addTransactionAppointment = async (req, res) => {
+        try {
+          // Get data from req.query
+        //  const { doctorUsername, patientUsername, appointmentDate, transactionValue } = req.query;
+            const doctorUsername = req.query.doctorUsername;
+            const patientUsername = req.user.username;
+            const appointmentDate = req.query.appointmentDate;
+            const transactionValue = req.query.transactionValue;
+            console.log(transactionValue+"herereee")
+      
+          // Set payment option to 'Appointment'
+          const paymentOption = 'Appointment';
+      
+          // Check if the doctor and patient exist (you may want to handle this more robustly in a real-world scenario)
+          // Assuming you have 'Doctor' and 'Patient' models
+          const doctorExists = await Doctor.exists({ username: doctorUsername });
+          const patientExists = await Patient.exists({ username: patientUsername });
+      
+          if (!doctorExists || !patientExists) {
+            return res.status(404).json({ error: 'Doctor or patient not found.' });
+          }
+
+          // Create a new transaction
+          const newTransaction = new Transaction({
+            value: transactionValue,
+            appointmentDate:appointmentDate,
+            paymentOption:"Appointment",
+            doctor: doctorUsername,
+            patient: patientUsername,
+          });
+      
+          // Save the transaction to the database
+          await newTransaction.save();
+      
+          res.status(201).json({ message: 'Appointment transaction added successfully.' });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
+        }
+      };
 
 
 module.exports = {
@@ -689,5 +851,5 @@ module.exports = {
     addPatientToDoctor,
     selectpatient,
     getWallet,
-    payWithWallet
+    payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam
 }
