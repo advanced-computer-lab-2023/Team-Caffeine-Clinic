@@ -63,6 +63,7 @@ const HealthPackages = () => {
   const subscribe = async (hpname,value,patientusername) => {
     if(!fampay){
     try {
+     
       const response2 = await fetch(`/api/patient/addHealthPackageTransaction?value=${value}&healthPackageName=${hpname}`, {
         method: 'POST',
         headers: {
@@ -80,10 +81,14 @@ const HealthPackages = () => {
       console.error('Error creating appointment:', error);
     }}else{
       try {
+        console.log(value)
+        console.log(hpname)
+        console.log(patientusername)
+
         const response2 = await fetch(`/api/patient/addHealthPackageTransactionfam?value=${value}&patientId=${patientusername}&healthPackageName=${hpname}`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            
             Authorization: `Bearer ${user.user.token}`,
           },
         });
