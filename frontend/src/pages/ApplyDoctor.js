@@ -17,6 +17,10 @@ const SignUp = () => {
     const [rate, setRate] = useState('');
     const [affiliation, setAffiliation] = useState('');
     const [education, setEducation] = useState('');
+    const [ID, setID] = useState(null);
+    const [Medical_licenses, setMedical_licenses] = useState(null);
+    const [Medical_degree, setMedical_degree] = useState(null);
+
     
     const [error, setError] = useState(null);
 
@@ -25,7 +29,8 @@ const SignUp = () => {
 
         const DoctorApplication = {
             username: username, password: password, email: email, 
-            name: name, speciality: speciality, rate: rate, affiliation: affiliation, education: education
+            name: name, speciality: speciality, rate: rate, affiliation: affiliation, education: education,
+            ID:ID,Medical_licenses:Medical_licenses,Medical_degree:Medical_degree
         }
         
 
@@ -45,6 +50,9 @@ const SignUp = () => {
         }
 
         if(response.ok){
+            setID('');
+            setMedical_licenses('');
+            setMedical_degree('');
             setUsername('')
             setPassword('')
             setEmail('')
@@ -58,7 +66,46 @@ const SignUp = () => {
             setMessage("Doctor Application Created Successfully")
         }
     }
-
+    const fileToBase64 = (file, cb) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+          cb(null, reader.result)
+        }
+        reader.onerror = function (error) {
+          cb(error, null)
+        }
+      }
+      const onUploadFileChangeID = ({ target }) => {
+        if (target.files < 1 || !target.validity.valid) {
+          return
+        }
+        fileToBase64(target.files[0], (err, result) => {
+          if (result) {
+            setID(result)
+          }
+        })
+      }
+      const onUploadFileChangeMedical_licenses = ({ target }) => {
+        if (target.files < 1 || !target.validity.valid) {
+          return
+        }
+        fileToBase64(target.files[0], (err, result) => {
+          if (result) {
+            setMedical_licenses(result)
+          }
+        })
+      }
+      const onUploadFileChangeMedical_degree = ({ target }) => {
+        if (target.files < 1 || !target.validity.valid) {
+          return
+        }
+        fileToBase64(target.files[0], (err, result) => {
+          if (result) {
+            setMedical_degree(result)
+          }
+        })
+      }
     return(
         <header>
             <h1>Sign Up</h1>
@@ -133,7 +180,38 @@ const SignUp = () => {
                     onChange={e => setEducation(e.target.value)}
                     type="text" />
                 </label>
-                <br /><br />
+                <br />
+                <label>
+                Upload ID(pdf):
+                        <input
+                        type="file"
+                        class="form-control"
+                        accept="application/pdf"
+                        required
+                        onChange={onUploadFileChangeID}/>
+                </label>
+                <br />
+                <label>
+                Upload Medical_licenses(pdf):
+                        <input
+                        type="file"
+                        class="form-control"
+                        accept="application/pdf"
+                        required
+                        onChange={onUploadFileChangeMedical_licenses}/>
+                </label>
+                <br />
+                <label>
+                Upload Medical_degree(pdf):
+                        <input
+                        type="file"
+                        class="form-control"
+                        accept="application/pdf"
+                        required
+                        onChange={onUploadFileChangeMedical_degree}/>
+                </label>
+                <br />
+                
                 <Button variant="dark" type="submit">
                     Apply
                 </Button>

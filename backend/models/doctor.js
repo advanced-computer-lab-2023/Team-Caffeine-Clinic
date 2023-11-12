@@ -59,6 +59,15 @@ const doctorSchema = new Schema({
     AcceptedContract:{
         type: Boolean,
         default: false
+    },
+    ID:{
+        type:String
+    },
+    Medical_licenses :{
+        type:String
+    },
+    Medical_degree:{
+        type:String
     }
 });
 
