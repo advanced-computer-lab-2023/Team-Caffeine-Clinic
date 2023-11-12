@@ -74,7 +74,6 @@ const addHealthPackageTransactionfam = async (req, res) => {
 };
 const createHealthPackagesTransaction = async (req, res,transactionId,patientUsername,healthPackageId) => {
   
-    console.log('Entered Function');
     try {
         // Check if the referenced models exist
         const transaction = await Transaction.findById(transactionId);
@@ -92,11 +91,17 @@ const createHealthPackagesTransaction = async (req, res,transactionId,patientUse
             return res.status(404).json({ error: 'HealthPackageModel not found' });
         }
 
+        // Calculate expiration date (one year from the current date)
+        const expirationDate = new Date();
+        expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+
         // Create a new HealthPackagesTransaction instance
         const healthPackagesTransaction = new HealthPackagesTransaction({
             transactionId:transactionId,
             patient: patientUsername,
             healthPackage: healthPackageId,
+            state: 'subscribed',
+            cancel_renewal_time: expirationDate
         });
 
         // Save the new document
@@ -619,7 +624,7 @@ const createAppointment = async(req, res) => {
             appointmentDate: appointmentDate,
             status: status
         });
-        console.log('ana hena');
+        
         if (existingAppointment) {
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
@@ -631,7 +636,6 @@ const createAppointment = async(req, res) => {
             Refunded:false
         });
         const transactionID = getTransaction._id;
-        console.log(transactionID)
 
         // Create a new appointment
         const appointment = new Appointment({
@@ -680,20 +684,19 @@ const createAppointmentfam = async(req, res) => {
             appointmentDate: appointmentDate,
             status: status
         });
-        console.log('ana hena');
+
         if (existingAppointment) {
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
 
         const getTransaction = await Transaction.findOne({
-            appointmentDate:appointmentDate,
+            //appointmentDate:appointmentDate,
             paymentOption:'Appointment',
             doctor:doctor.username,
             patient:patient.username
         });
 
-        const transactionID = getTransaction.transactionId;
-        
+        const transactionID = getTransaction._id;
         // Create a new appointment
         const appointment = new Appointment({
             doctor: doctor.username, // Reference the doctor by username
@@ -827,10 +830,10 @@ const selectpatient = async(req, res) => {
             return res.status(404).json({ error: 'Patient not found.' });
         }
 
-        res.json({ patient: selectedPatient });
+        return res.status(200).json({ patient: selectedPatient });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'An error occurred while selecting the patient.' });
+        return res.status(500).json({ error: 'An error occurred while selecting the patient.' });
     }
 }
 const getWallet = async(req, res) => {
@@ -969,19 +972,23 @@ const unsubscribeFromHealthPackage = async (req, res) => {
     try {
        const patient = req.user;
 
-       if (patient.health_package == 'No package') {
+       if (patient.health_package == 'Unsubscribed') {
         return res.status(404).json({ error: 'You are not subscribed to any package' });
        }
 
+       const transactoin = await HealthPackagesTransaction.findOne({patient: patient.username, state: 'subscribed'})
+
         const updatedPatient = await Patient.findOneAndUpdate(
             { _id: patient._id },
-            { health_package: 'No package' },
+            { health_package: 'Unsubscribed' },
             { new: true } 
         );
 
         if (!updatedPatient) {
             return res.status(404).json({ error: 'Patient or HealthPackage not found' });
         }
+
+        const updatePackageTransaction = await HealthPackagesTransaction.findOne({name})
         
         res.json({ message: 'Unsubscription successful' });
     } catch (error) {

@@ -126,15 +126,17 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
 
       if (onPaymentResult) {
         //onPaymentResult();
+        console.log(username);
         if(username){
-          const addToDoctorWalletResponse = fetch(`/api/updateDoctorWallet?amount=${amount}&doctorUsername=${username}`, {
+          const addToDoctorWalletResponse = await fetch(`/api/updateDoctorWallet?amount=${amount}&doctorUsername=${username}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
           })
-
+         console.log(addToDoctorWalletResponse.ok);
           if(addToDoctorWalletResponse.ok){
+            console.log('ana hena');
             onPaymentResult();
             setError('Payment Successful')
           }

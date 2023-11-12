@@ -46,7 +46,7 @@ const patientSchema = new Schema({
 
     health_package: { 
         type: String, 
-        default: 'no package'
+        default: 'Unsubscribed'
     },
 
     health_records: [

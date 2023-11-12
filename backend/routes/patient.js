@@ -27,6 +27,10 @@ const {
 } = require('../controllers/familyMemberController')
 
 const {
+    checkOnHealthPackageTransaction
+} = require('../controllers/healthPackagesController')
+
+const {
     requireAuth,
 } = require('../middleware/requrieAuth')
 
@@ -78,5 +82,7 @@ router.post('/healthPackagePayWithWallet', healthPackagePayWithWallet)
 router.post('/linkFamilyMember', linkFamilyMember)
 
 router.post('/patientchangepassword', patientchangepassword);
+
+router.post('/checkOnHealthPackageTransaction', checkOnHealthPackageTransaction)
 
 module.exports = router

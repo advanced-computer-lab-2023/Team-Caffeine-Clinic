@@ -28,8 +28,10 @@ const updateDoctorWallet = async (req, res) => {
         const newDoctorWallet = doctor.wallet + parseInt(amount, 10)
 
         await Doctor.findByIdAndUpdate(doctor._id, {wallet: newDoctorWallet})
+
+        return res.status(200).json('Wallet Updated')
     } catch(error){
-        res.status(401).json({error: error})
+        return res.status(401).json({error: error})
     }
 }
 

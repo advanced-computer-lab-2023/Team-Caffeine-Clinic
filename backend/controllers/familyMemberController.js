@@ -49,6 +49,10 @@ const getFamilyDiscount = async(req, res) => {
 
   const healthPackageName = user.health_package
 
+  if(healthPackageName === "Unsubscribed"){
+    return res.status(200).json({discount: 0})
+  }
+
   try {
     const healthPackage = await HealthPackage.findOne({name: healthPackageName})
 
@@ -57,6 +61,7 @@ const getFamilyDiscount = async(req, res) => {
     return res.status(200).json({discount: familyDiscount})
     
   } catch (error) {
+      
     return res.status(400).send('error getting HealthPackage')
   }
 }

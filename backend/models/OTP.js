@@ -10,8 +10,10 @@ const OTPSchema = new Schema ({
     OTP: {
         type: String,
         required: true
-    }
-} , {timestamps: true})
+    },
+    
+    createdAt: { type: Date, expires: 3600 }
+})
 
 
 module.exports = mongoose.model('OTP',OTPSchema);
