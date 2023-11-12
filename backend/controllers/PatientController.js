@@ -230,6 +230,13 @@ const signUp = async(req, res) => {
         mobile_number, health_package, emergency_contact})
 
     try {
+        // Regular expression to check for at least one capital letter and one number
+        const passwordRequirements = /^(?=.[A-Z])(?=.\d)/;
+
+        if (!passwordRequirements.test(password)) {
+            return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+        }
+
         const user = await Patient.signUp(patient)
 
         res.status(200).json({username, user})
@@ -341,6 +348,13 @@ const verifyOTP = async (req, res) => {
 };
 const setPass = async(req, res) => {
     const {newPassword, email} = req.body
+
+    // Regular expression to check for at least one capital letter and one number
+    const passwordRequirements = /^(?=.[A-Z])(?=.\d)/;
+
+    if (!passwordRequirements.test(newPassword)) {
+        return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+    }
 
     const user = await Patient.findOne({email: email});
 
