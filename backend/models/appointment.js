@@ -12,14 +12,19 @@ const appointmentSchema = new Schema({
     ref: 'Patient', 
     required: true,
   },
+  transactionId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'transaction',
+    default:""
+  },
   appointmentDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   status: {
     type: String,
     required: true,
-    enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
+    enum: ['upcoming', 'completed', 'cancelled', 'rescheduled','FollowUp'],
     default :'upcoming'
   }
 

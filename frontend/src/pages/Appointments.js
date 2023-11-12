@@ -20,11 +20,12 @@ const Appointments = () => {
         if (stateFilter) params.append('status', stateFilter);
         if (params.toString()) url += `?${params.toString()}`;
 
-        console.log(url);
+       
+        
 
         const response = await fetch(url, {
           headers: {
-            'Authorization': `Bearer ${user.token}`
+            'Authorization': `Bearer ${user.user.token}`
           }
         });
         const json = await response.json();
