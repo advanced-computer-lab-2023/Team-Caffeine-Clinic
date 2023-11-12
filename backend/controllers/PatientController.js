@@ -1011,26 +1011,43 @@ const unsubscribeFromHealthPackage = async (req, res) => {
 }
 
 const getHealthPackage = async (req, res) => { 
-    try {
-        const patient = req.user
 
-       // console.log(_id);
-            const HealthPackageName = patient.health_package;
-            console.log(HealthPackageName);
+    const patient = req.user
+    let transaction = await HealthPackagesTransaction.findOne({patient: patient.username, state: 'subscribed'})
 
-            const HealthPackage = await healthPackage.findOne({ name: HealthPackageName }).exec();
+    if(!transaction){
+        transaction = await HealthPackagesTransaction.findOne({patient: patient.username, state: 'cancelled'})
+        if(!transaction) return res.status(400).json({error: 'No Package Transaction Found'})
+    }
 
-            // if (HealthPackage.name == "no Package"){
-            //     return res.status(404).json({ error:'error '});
-            // }
+    const HealthPackageName = patient.health_package;
+    console.log(HealthPackageName);
+    const HealthPackage = await healthPackage.findOne({ name: HealthPackageName }).exec();
+
+    if (!HealthPackage) {
+        return res.status(400).json({error: 'No Package Found'})
+    }
+
+    res.status(200).json({transaction: transaction, healthPackage: HealthPackage});
+
+    // try {
+    //    // console.log(_id);
+    //         const HealthPackageName = patient.health_package;
+    //         console.log(HealthPackageName);
+
+    //         const HealthPackage = await healthPackage.findOne({ name: HealthPackageName }).exec();
+
+    //         // if (HealthPackage.name == "no Package"){
+    //         //     return res.status(404).json({ error:'error '});
+    //         // }
            
-         res.status(200).json(HealthPackage);
-         console.log(HealthPackage);
-        }
-         catch (error) {
-            console.log(error);
-            res.status(400).send(error);
-        }
+    //      res.status(200).json(HealthPackage);
+    //      console.log(HealthPackage);
+    //     }
+    //      catch (error) {
+    //         console.log(error);
+    //         res.status(400).send(error);
+    //     }
     }
  const addTransactionAppointmentfam = async (req, res) => {
         try {
@@ -1161,12 +1178,28 @@ const patientchangepassword = async (req, res) => {
         }
 
 
+        const familyMembersHealthPackages = [];
+
+        for(let i = 0; i < (patient.family_members).length; i++){
+            const member = patient.family_members[i]
+
+            const transaction = await HealthPackagesTransaction.findOne({patient: member.username, state: { $in: ['subscribed', 'cancelled'] }})
+
+            if(!transaction){
+                const input = {username: member.username, name: member.name, state: 'Unsubscribed', healthPackage: 'None'}
+                familyMembersHealthPackages[i] = input
+            }
+            else{
+                familyMembersHealthPackages[i] = {username: member.username, name: member.name, ...transaction};
+            }
+        }
+
     
-        const familyMembersHealthPackages = patient.family_members.map(member => ({
-            username: member.username,
-            name: member.name,
-            health_package: member.health_package,
-        }));
+        // const familyMembersHealthPackages = patient.family_members.map(member => ({
+        //     username: member.username,
+        //     name: member.name,
+        //     health_package: member.health_package,
+        // }));
 
         return res.status(200).json({familyMembersHealthPackages});
 

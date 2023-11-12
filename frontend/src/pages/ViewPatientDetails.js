@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 //import axios from 'axios';
 
 const HealthPackages = () => {
-  const [HealthPackage, setHealthPackage] = useState([]);
+  const [HealthPackage, setHealthPackage] = useState(null);
+  const [transaction, setTransaction] = useState(null)
   const [FamilyHealthPackage, setFamilyHealthPackage] = useState([]);
   const [HealthPackageId, setHealthPackageId] = useState("");
   const [error, setError] = useState(null);
@@ -25,8 +26,8 @@ const HealthPackages = () => {
           throw new Error(data.message || "Could not fetch health packages.");
         }
 
-        setHealthPackage(data);
-        console.log(data);
+        setHealthPackage(data.healthPackage);
+        setTransaction(data.transaction)
       } catch (err) {
         setError(err.message);
       }
@@ -91,6 +92,7 @@ useEffect(() => {
       if (!response.ok) {
         throw new Error(data.message || "Could not fetch health packages.");
       }
+      console.log(data);
       setFamilyHealthPackage(data.familyMembersHealthPackages);
     } catch (err) {
       setError(err.message);
@@ -119,22 +121,21 @@ useEffect(() => {
         <ul>
           {/* {HealthPackages.map((hp) => ( */}
             <>
+            {(HealthPackage && transaction) ?
             <div className='Admin-details'>
-            <li key={HealthPackage.name}>
-              <div className='name'>{HealthPackage.name}</div>
-              <div>description: {HealthPackage.description}</div>
-              <div>Services Included: {HealthPackage.servicesIncluded}</div>
-              <div>basePrice: {HealthPackage.basePrice}</div>
-              {HealthPackage.discounts && (
-          <>
-            <div>Doctor Session Discount: {HealthPackage.discounts.doctorSession * 100}%</div>
-            <div>Medicine Discount: {HealthPackage.discounts.pharmacyMedicine * 100}%</div>
-            <div>Family Member Discount: {HealthPackage.discounts.familySubscription * 100}%</div>
-          </>
-        )}
+            <li key={transaction.healthPackage}>
+              <div className='name'>{transaction.healthPackage}</div>
+              <div>Status: {transaction.state}</div>
+              {(transaction.state === 'cancelled') ?
+              <div>End Date: {transaction.cancel_renewal_time}</div> : <div>Renewal Date: {transaction.cancel_renewal_time}</div>}
+              <div>Doctor Session Discount: {HealthPackage.discounts.doctorSession * 100}%</div>
+              <div>Medicine Discount: {HealthPackage.discounts.pharmacyMedicine * 100}%</div>
+              <div>Family Health Package Discount: {HealthPackage.discounts.familySubscription * 100}%</div>
             </li>
-              <span className='span1' onClick={() => unsubscribe()}>Unsubscribe</span>
-            </div>
+              {(transaction.state === 'subscribed') ? 
+              <span className='span1' onClick={() => unsubscribe()}>Unsubscribe</span> : <div></div>}
+            </div> 
+            : <div> ....Loading </div>}
               </>
           {/* ))} */}
         </ul>
@@ -150,8 +151,15 @@ useEffect(() => {
       <ul>
         {FamilyHealthPackage && (FamilyHealthPackage.map((member) => (
           <li key={member.id}>
-            <strong>Name:</strong> {member.name}, <strong>Health Package:</strong> {member.health_package}
-            <button onClick={() => unsubscribeFamilyMember(member.username)}>Cancel Subscription</button>
+            <div className='Admin-details'>
+            <div className='name'> {member.name} </div> 
+            <strong>Health Package:</strong> {member._doc.healthPackage}
+            <div><strong>Status:</strong> {member._doc.state}</div>
+            {(member._doc.state === 'cancelled') ?
+              <div><strong>End Date:</strong> {member._doc.cancel_renewal_time}</div> : <div><strong>Renewal Date:</strong> {member._doc.cancel_renewal_time}</div>}
+              {(member._doc.state === 'subscribed') ?
+              <span onClick={() => unsubscribeFamilyMember(member.username)}>Cancel Subscription</span> : <div></div>}
+            </div>
           </li>
         )))}
       </ul>
