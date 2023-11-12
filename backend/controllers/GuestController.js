@@ -47,9 +47,9 @@ const createToken = (_id, type) => {
 
 //Apply as a Doctor
 const applyDoctor = async(req, res) => {
-    const {username, password, email, name, speciality, rate, affiliation, education, availableDates} = req.body
+    const {username, password, email, name, speciality, rate, affiliation, education, availableDates,ID,Medical_licenses,Medical_degree} = req.body
 
-    const doctorApp = new DoctorAppplication({username, password, email, name, speciality, rate, affiliation, education, availableDates})
+    const doctorApp = new DoctorAppplication({username, password, email, name, speciality, rate, affiliation, education, availableDates,ID,Medical_licenses,Medical_degree})
 
     await doctorApp.save()
 

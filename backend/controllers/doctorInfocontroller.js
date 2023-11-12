@@ -150,11 +150,14 @@ const createDoctor = async(req, res) => {
         education,
         availableDates,
         patients,
+        ID,
+        Medical_licenses,
+        Medical_degree
     } = req.body;
 
     const doctor = new Doctor({
         username: username, password: password, name: name, speciality: speciality, rate: rate, affiliation: affiliation,
-        email: email, education: education, availableDates: availableDates, patients: patients
+        email: email, education: education, availableDates: availableDates, patients: patients , ID:ID , Medical_licenses:Medical_licenses,Medical_degree:Medical_degree
     })
 
     try {

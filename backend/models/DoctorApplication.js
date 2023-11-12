@@ -43,7 +43,16 @@ const applicationSchema = new Schema({
        required: true,
        default:[]
        
-    }]
+    }],
+    ID:{
+        type:String
+    },
+    Medical_licenses :{
+        type:String
+    },
+    Medical_degree:{
+        type:String
+    }
 });
 
 module.exports = mongoose.model('DoctorApplication', applicationSchema);

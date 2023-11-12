@@ -53,6 +53,42 @@ const DocAppDetails = ({ Appl }) => {
       // Handle the response accordingly
    
   };
+  const base64toBlob = (data) => {
+    // Cut the prefix data:application/pdf;base64 from the raw base 64
+    let base64WithoutPrefix;
+if (data) {
+   base64WithoutPrefix = data.substr('data:application/pdf;base64,'.length);
+  // Rest of your code that uses base64WithoutPrefix
+} else {
+  // Handle the case when data is undefined or null
+  console.error('Data is undefined or null');
+}
+    const bytes = atob(base64WithoutPrefix);
+    let length = bytes.length;
+    let out = new Uint8Array(length);
+
+    while (length--) {
+        out[length] = bytes.charCodeAt(length);
+    }
+
+    return new Blob([out], { type: 'application/pdf' });
+  };
+  const viewID = async () => {
+    const blob = base64toBlob(Appl.ID);
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    }
+    const viewMedical_degree = async () => {
+      const blob = base64toBlob(Appl.Medical_degree);
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      }
+
+      const viewMedical_licenses = async () => {
+        const blob = base64toBlob(Appl.Medical_licenses);
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        }
 
   const handleReject = async () => {
     const response = await fetch(`/api/Admin/deleteApp/${Appl._id}`, {
@@ -77,6 +113,10 @@ const DocAppDetails = ({ Appl }) => {
       <p><strong>Education: </strong>{Appl.education}</p>
       <p><strong>Available Dates: </strong>{Appl.availableDates}</p>
       <p><strong>Created At: </strong>{Appl.createdAt}</p>
+      <strong> View Doctor's ID</strong> <text onClick={viewID} style={{cursor:"pointer",color:" blue"}}  >View here </text> <p></p>
+      <strong> View Medical_licenses</strong> <text onClick={viewMedical_licenses} style={{cursor:"pointer",color:" blue"}}  >View here </text> <p></p>
+      <strong> View Medical_degree</strong> <text onClick={viewMedical_degree} style={{cursor:"pointer",color:" blue"}}  >View here </text> <p></p>
+
       {showFields && (
         <>
           <input
