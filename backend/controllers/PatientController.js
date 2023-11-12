@@ -196,7 +196,7 @@ const markHealthPackageTransactionAsRefunded = async (req, res) => {
 
         }
 
-        patient.wallet+=healthPackage.basePrice;
+        // patient.wallet+=healthPackage.basePrice;
         // Mark the transaction as refunded
         transaction.Refunded = true;
 
