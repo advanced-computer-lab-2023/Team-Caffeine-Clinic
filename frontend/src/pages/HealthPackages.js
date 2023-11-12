@@ -2,6 +2,13 @@ import HealthPackDetails from '../components/HealthPackDetails';
 import { useAuthContext } from "../hooks/useAuthContext";
 import React, { useEffect, useState } from 'react';
 
+import PaymentForm from '../components/PaymentHandler';
+
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
+
 const HealthPackages = () => {
   const [healthPackages, setHealthPackages] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -9,12 +16,47 @@ const HealthPackages = () => {
   const [showHealthPackages, setShowHealthPackages] = useState(true); // Change to true
   const [fampay, setfampay] = useState(false); // Change to true
   const [famusername, setfamusername] = useState(''); // Change to true
+  const [Hpackage, setPackage] = useState(null)
+  const [amount, setAmount] = useState(null)
+  const [discount, setDiscount] = useState(0)
+  const [isPopupOpen, setPopupOpen] = useState(false);
 
 
 
   const [error, setError] = useState(null);
 
   const user = useAuthContext();
+  
+  useEffect(() => {
+    const fetchFamilyMemberDiscount = async () => {
+      try {
+        const response = await fetch('/api/patient/getFamilyDiscount', {
+          headers: {
+            'Authorization': `Bearer ${user.user.token}`
+          }
+        })
+
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+        setDiscount(data.discount)
+
+      } catch (err) {
+        setError(err)
+      }
+    }
+    if(user){
+      fetchFamilyMemberDiscount()
+    }
+  }, [user])
+
+  const openPopup = (healthPackageName, healthPackagePrice) => {
+    setPopupOpen(true);
+    setPackage(healthPackageName)
+    setAmount(healthPackagePrice)
+  };
 
   useEffect(() => {
     const fetchHealthPackages = async () => {
@@ -164,7 +206,16 @@ const HealthPackages = () => {
                 <div>Medicine Discount: {hp.discounts.pharmacyMedicine * 100}%</div>
                 <div>Family Member Discount: {hp.discounts.familySubscription * 100}%</div>
               </li>
-              <span className='span1' onClick={() =>fampay? subscribe(hp.name,hp.basePrice,famusername):subscribe(hp.name,hp.basePrice)}>Subscribe</span>
+              <span className='span1' onClick={() => openPopup(hp.name, hp.basePrice)}>Subscribe</span>
+
+              {isPopupOpen && (
+              <Elements stripe={stripePromise}>
+              <PaymentForm
+                amount={amount - (amount * discount)}
+                onPaymentResult={() =>fampay? subscribe(Hpackage, (amount - (amount * discount)), famusername):subscribe(Hpackage,amount)}
+              />
+            </Elements>
+              )}
             </div>
           ))}
         </ul>

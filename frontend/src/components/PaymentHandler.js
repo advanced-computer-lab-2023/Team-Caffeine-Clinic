@@ -12,9 +12,12 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
   const [wallet, setWallet] = useState(null);
   const [showCardElement, setShowCardElement] = useState(false); // New state variable
   const { user } = useAuthContext();
+  const [loadingWallet, setLoadingWallet] = useState(true); // New state variable
+
 
   useEffect(() => {
     // Fetch wallet data
+    console.log('na3am');
     const fetchWallet = async () => {
       try {
         const response = await fetch('/api/patient/getWallet', {
@@ -27,8 +30,12 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
         }
         const data = await response.json();
         setWallet(data);
-      } catch (error) {
+      } catch (err) {
         // Handle error
+        setError(err)
+      } finally {
+        // Set loadingWallet to false regardless of success or failure
+        setLoadingWallet(false);
       }
     };
 
@@ -39,7 +46,6 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
 
   useEffect(() => {
     // Fetch client secret
-      if(username){
       const fetchClientSecret = async () => {
         const url = `/api/create-payment-intent?amount=${amount}`;
 
@@ -48,8 +54,7 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
           headers: {
             'Content-Type': 'application/json',
             // You might need to include additional headers like authorization tokens here
-          },
-          body: JSON.stringify({username} ),
+          }
         });
 
         if (!response.ok) {
@@ -61,21 +66,33 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
       };
 
       fetchClientSecret();
-    } 
   }, [amount]);
 
   const handleWallet = async () => {
+    console.log(wallet);
     if (amount > wallet.wallet) {
       setError('Not Enough in Wallet');
     } else {
       try {
-        const response = await fetch(`/api/patient/payWithWallet?amount=${amount}&doctorUsername=${username}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
+        let response;
+        if(username){
+          response = await fetch(`/api/patient/payWithWallet?amount=${amount}&doctorUsername=${username}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.token}`,
+            },
+          });
+      }
+        else{
+          response = await fetch(`/api/patient/healthPackagePayWithWallet?amount=${amount}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.token}`,
+            },
+          })
+        }
         // Handle response
         if(response.ok && onPaymentResult){
           onPaymentResult();
@@ -109,16 +126,22 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
 
       if (onPaymentResult) {
         //onPaymentResult();
-        const addToDoctorWalletResponse = fetch(`/api/updateDoctorWallet?amount=${amount}&doctorUsername=${username}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+        if(username){
+          const addToDoctorWalletResponse = fetch(`/api/updateDoctorWallet?amount=${amount}&doctorUsername=${username}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
 
-        if(addToDoctorWalletResponse.ok){
-          onPaymentResult();
-          setError('Payment Successful')
+          if(addToDoctorWalletResponse.ok){
+            onPaymentResult();
+            setError('Payment Successful')
+          }
+        }
+
+        else{
+          onPaymentResult()
         }
       }
 
@@ -129,7 +152,8 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
   return (
     <div className="popup-container">
       <div className="popup-content">
-        {!showCardElement && (
+        {loadingWallet && <div>Loading wallet...</div>}
+        {!loadingWallet && !showCardElement && (
           <>
             <button onClick={handleWallet} className="pay-button">Pay with Wallet</button>
             <button onClick={handleCreditCard} className="pay-button">Pay with Credit Card</button>
@@ -139,13 +163,16 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
 
         {showCardElement && (
           <div className="payment-form-container">
-          <form className="payment-form" onSubmit={handleSubmit}>
-            <CardElement />
-            <button type="submit" className="pay-button">Pay</button>
-          </form>
+            <form className="payment-form" onSubmit={handleSubmit}>
+              <CardElement />
+              <button type="submit" className="pay-button">Pay</button>
+            </form>
           </div>
         )}
-        <Link to='/doctors'> <button>Cancel</button> </Link>
+
+        <Link to='/doctors'>
+          <button>Cancel</button>
+        </Link>
       </div>
     </div>
   );
