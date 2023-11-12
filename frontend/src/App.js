@@ -36,6 +36,7 @@ import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
 
 import { useAuthContext } from './hooks/useAuthContext';
+
 import AdminChangePassword from './pages/AdminChangePassword';
 import DoctorChangePassword from './pages/DoctorChangePassword';
 import PatientChangePassword from './pages/PatientChangePassword';
@@ -52,6 +53,8 @@ import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
 
 
 import PaymentHandler from './components/PaymentHandler'
+
+import ProtectedRoute from './components/ProtectedRoute';
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -94,20 +97,22 @@ function App() {
         <div className='Navbar'>
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
-              <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
+
+            <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
               <Navigate to="/home"/> : (user.type === 'Pending') ? 
               <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
+             
+            <Route path="employmentContract" element={<WithcontractNavbar><App1 /></WithcontractNavbar>} />
 
-              <Route path="employmentContract" element={<WithcontractNavbar><App1 /></WithcontractNavbar>} />
+            <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="seedoc" element={<WithDoctorNavbar><ProtectedRoute><DoctorInfo /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="EditDocEmail" element={<WithDoctorNavbar><ProtectedRoute><UpdateEmail /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="EditDocHos" element={<WithDoctorNavbar><ProtectedRoute><UpdateAffiliation /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="ViewPatients" element={<WithDoctorNavbar><ProtectedRoute><MyPatients /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="UpcomingAppointments" element={<WithDoctorNavbar><ProtectedRoute><PatientsWithUpcomingAppointments /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="SearchPatient" element={<WithDoctorNavbar><ProtectedRoute><SelectPatient /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="DocAppointments" element={<WithDoctorNavbar><ProtectedRoute><AppointmentDoc /></ProtectedRoute></WithDoctorNavbar>} />
 
-              <Route path="EditDocRate" element={<WithDoctorNavbar><EditMyDoc /></WithDoctorNavbar>} />
-              <Route path="seedoc" element={<WithDoctorNavbar><DoctorInfo /></WithDoctorNavbar>} />
-              <Route path="EditDocEmail" element={<WithDoctorNavbar><UpdateEmail /></WithDoctorNavbar>} />
-              <Route path="EditDocHos" element={<WithDoctorNavbar><UpdateAffiliation /></WithDoctorNavbar>} />
-              <Route path="ViewPatients" element={<WithDoctorNavbar><MyPatients /></WithDoctorNavbar>} />
-              <Route path="UpcomingAppointments" element={<WithDoctorNavbar><PatientsWithUpcomingAppointments /></WithDoctorNavbar>} />
-              <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
-              <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
 
               <Route 
               path="/doctor/DoctorChangePassword" 
@@ -124,61 +129,37 @@ function App() {
 
 
               {/* Ibra - Salah */}
-              <Route path='home' element={ <WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
-              <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
 
               <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><PatientHealthRecords /></WithNavbarAndSidebar>} />
+                          
+              <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
+              <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='healthPackages' element={<WithNavbarAndSidebar><ProtectedRoute><HealthPackages /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='Perscriptions' element={<WithNavbarAndSidebar><ProtectedRoute><Perscription /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
+              
+              <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
+                
+              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><PatientChangePassword /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><AppointmentsComponent /></WithNavbarAndSidebar>} />
+              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><AddFamilyMember /></WithNavbarAndSidebar>} />
 
-              <Route path='doctor/getSingleDoctor/:username' element={user ? <SingleDoctor /> : <Navigate to="/" /> }/>
-              <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
-              <Route path='healthPackages' element={user ? <WithNavbarAndSidebar><HealthPackages /></WithNavbarAndSidebar> : <Navigate to="/" />} />
-              <Route path='Perscriptions' element={user ? <WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar> : <Navigate to="/" />} />
-              <Route path='SinglePerscriptions/:id' element={user ? <WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              {/* Public Routes */}
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
               <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
-              <Route path='Filterbyavedates' element={user ? <WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar> : <Navigate to="/" />} />
-
-              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><PatientChangePassword /></WithNavbarAndSidebar> : <Navigate to="/" />} />
-              
-
-              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><AppointmentsComponent /></WithNavbarAndSidebar>} />
-
-
-
-
-              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><AddFamilyMember /></WithNavbarAndSidebar>} />
 
               {/* Mo2 - Yas */}
-              <Route
-              path="/AdminHome"
-              element =  {<AdminHome/>}
-              />
-              <Route
-              path="/ViewAdmin"
-              element =  {<ViewAdmin/>}
-                />
-              <Route
-              path="/viewDoctorApps"
-              element =  {<DoctorAppHome/>}
-                />
-              <Route
-              path="/viewDoctors"
-              element =  {<ViewDoctorHome/>}
-                />
-              <Route
-              path="/viewHealthPacks"
-              element =  {<HPHome/>}
-                />
-              <Route
-              path="/editHP/:id"
-              element =  {<EditHealthPackage/>}
-              />
-              <Route
-              path="/viewPatientsAdmin"
-              element =  {<ViewPatientHome/>}
-                />
-
+              <Route path="/AdminHome" element={<ProtectedRoute><AdminHome/></ProtectedRoute>} />
+              <Route path="/ViewAdmin" element={<ProtectedRoute><ViewAdmin/></ProtectedRoute>} />
+              <Route path="/viewDoctorApps" element={<ProtectedRoute><DoctorAppHome/></ProtectedRoute>} />
+              <Route path="/viewDoctors" element={<ProtectedRoute><ViewDoctorHome/></ProtectedRoute>} />
+              <Route path="/viewHealthPacks" element={<ProtectedRoute><HPHome/></ProtectedRoute>} />
+              <Route path="/editHP/:id" element={<ProtectedRoute><EditHealthPackage/></ProtectedRoute>} />
+              <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome/></ProtectedRoute>} />
+                                                
               <Route 
               path="/admin/AdminChangePassword" 
               element={<AdminChangePassword />} 

@@ -32,6 +32,7 @@ export const useLogin = () => {
       // Handle patient login error
       console.error('Patient login error:', patientError.message);
 
+
       try {
         let response = await fetch('http://localhost:4000/api/loginAsDoctor', {
           method: 'POST',
@@ -41,6 +42,11 @@ export const useLogin = () => {
 
         if (response.status !== 200) {
           throw new Error('Doctor login failed');
+
+        if(!response.ok){
+            setIsLoading(false)
+            setError("Login failed. Please check your username and password and try again.")
+
         }
 
         const json = await response.json();
