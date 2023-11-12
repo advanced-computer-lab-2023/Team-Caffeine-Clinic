@@ -5,6 +5,7 @@ const passport = require('passport')
 const router = express.Router()
 
 const {
+    getFamilyMembersHealthPackages,
     filterDoctorsByAvailability,
     patientchangepassword,
     subscribeToHealthPackage, unsubscribeFromHealthPackage, getHealthPackage,
@@ -68,6 +69,8 @@ router.get('/getAppointments',getAppointments)
 router.get('/getFamilyDiscount', getFamilyDiscount)
 
 router.get('/selectpatient',selectpatient)
+
+router.get('/getFamilyMembersHealthPackages',getFamilyMembersHealthPackages)
 
 // Wallet
 router.get('/getWallet', getWallet)
