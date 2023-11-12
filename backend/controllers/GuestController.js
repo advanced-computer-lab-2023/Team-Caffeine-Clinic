@@ -11,6 +11,8 @@ const DoctorAppplication = require('../models/DoctorApplication');
 const Patient = require('../models/Patient')
 const Doctor = require('../models/doctor')
 const Admin = require('../models/admin')
+const EmplymentContract = require('../models/emplymentContract')
+
 
 //const Patient = require('../model/patient'); // Import the Patient model
 //const LocalStrategy = require('passport-local').Strategy;
@@ -45,9 +47,9 @@ const createToken = (_id, type) => {
 
 //Apply as a Doctor
 const applyDoctor = async(req, res) => {
-    const {username, password, email, name, speciality, rate, affiliation, education, availableDates} = req.body
+    const {username, password, email, name, speciality, rate, affiliation, education, availableDates,ID,Medical_licenses,Medical_degree} = req.body
 
-    const doctorApp = new DoctorAppplication({username, password, email, name, speciality, rate, affiliation, education, availableDates})
+    const doctorApp = new DoctorAppplication({username, password, email, name, speciality, rate, affiliation, education, availableDates,ID,Medical_licenses,Medical_degree})
 
     await doctorApp.save()
 
@@ -73,21 +75,43 @@ const loginPatient = async(req, res) => {
   }
 }
 
+
+
 const loginDoctor = async(req, res) => {
   const {username, password} = req.body
 
   try {
-    const user = await Doctor.login(username, password)
-
+    const user = await Doctor.login(username, password);
     //create token
+   const  isAccepted = await checkAcceptedStatus(username);
+   console.log(isAccepted);
+   if(isAccepted){
     const token = createToken(user._id, 'Doctor')
 
-    res.status(200).json({type: 'Doctor', token})
+    res.status(200).json({type: 'Doctor', token})}
+    else {
+      const token = createToken(user._id, 'Doctor')
+
+    res.status(200).json({type: 'Pending', token})
+    }
   } catch (error) {
     res.status(400).json({error: error}) 
   }
 }
+const checkAcceptedStatus = async (doctorUsername) => {
+  try {
+    const employmentContract = await EmplymentContract.findOne({ doctor: doctorUsername });
 
+    if (!employmentContract) {
+      throw new Error('Employment contract not found for the specified doctor.');
+    }
+
+    return employmentContract.accepted;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while checking the accepted status.');
+  }
+};
 const loginAdmin = async(req, res) => {
   const {username, password} = req.body
 
@@ -100,6 +124,7 @@ const loginAdmin = async(req, res) => {
     res.status(200).json({type: 'Admin', token})
   } catch (error) {
     res.status(400).json({error: error}) 
+    console.log(error);
   }
 }
 

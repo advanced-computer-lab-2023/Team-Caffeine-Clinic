@@ -52,7 +52,23 @@ const doctorSchema = new Schema({
     patients: [{
         type: String, 
         ref: 'Patient'
-    }]
+    }],
+    wallet:{
+        type:Number,
+        default:0 },
+    AcceptedContract:{
+        type: Boolean,
+        default: false
+    },
+    ID:{
+        type:String
+    },
+    Medical_licenses :{
+        type:String
+    },
+    Medical_degree:{
+        type:String
+    }
 });
 
 //doctorSchema.plugin(passportLocalMongoose)
@@ -99,6 +115,19 @@ doctorSchema.statics.login = async function(username, password) {
     }
 
     return user
+}
+
+doctorSchema.statics.setPassword = async function(email, newPassword) {
+    console.log(newPassword)
+
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(newPassword, salt)
+
+    const user = this.findOneAndUpdate({email: email}, {password: hash})
+
+    if(!user){
+        throw Error('User Not Found')
+    }
 }
 
 module.exports = mongoose.model('Doctor', doctorSchema);

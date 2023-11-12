@@ -1,6 +1,6 @@
 
 // App.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import DoctorInfo from './pages/seedoc';
 import Navbar from './components/Navbar';
@@ -26,24 +26,69 @@ import ViewAdmin from "./pages/ViewAdmins"
 import AdminHome from "./pages/AdminHome";
 import DoctorAppHome from './pages/viewDoctorApps';
 import ViewDoctorHome from './pages/viewDoctors';
+import AppointmentsComponent from './pages/PatientfilterAppointments';
 import HPHome from './pages/viewHealthPacks';
 import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
-import Appointments from './pages/Appointments';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
+
 import { useAuthContext } from './hooks/useAuthContext';
+
+import AdminChangePassword from './pages/AdminChangePassword';
+import DoctorChangePassword from './pages/DoctorChangePassword';
+import PatientChangePassword from './pages/PatientChangePassword';
+
+import PatientDetails from './pages/ViewPatientDetails';       
+import AddAvailableDateFunc from './pages/AddAvailableDate';
+import DoctorHealthRecords from './pages/DoctorHealthRecords';
+import PatientHealthRecords from './pages/PatientHealthRecord';
+import CompletedAppointments from './pages/follow-up';
+import App1 from './pages/employmentContract';
+import contractNAV from './components/ContractNavBar';
+
+import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
+
+
+import PaymentHandler from './components/PaymentHandler'
+
 import ProtectedRoute from './components/ProtectedRoute';
 
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
+const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
 
 function App() {
   const { user } = useAuthContext()
   const [doctor, setDoctor] = useState(null)
   const [patient, setPatient] = useState(null)
   const [admin, setAdmin] = useState(null)
+
+  useEffect(() => {
+    // Set up a timer to call removeExpiredTransactions every, for example, 1 hour
+    const timerId = setInterval(() => {
+      const checkOnHealthPackageTransaction = async() =>{
+        
+        const response = await fetch('/api/patient/checkOnHealthPackageTransaction', {
+          method: 'POST'
+        })
+
+        if(!response){
+          throw Error('Problem in API')
+        }
+
+      }
+        checkOnHealthPackageTransaction()
+      
+      //removeExpiredTransactions();
+    }, 60 * 1000); // 1 minute in milliseconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(timerId);
+  }, []);
 
 
   return (
@@ -52,8 +97,13 @@ function App() {
         <div className='Navbar'>
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
-            <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? <Navigate to="/home"/> : (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
+
+            <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
+              <Navigate to="/home"/> : (user.type === 'Pending') ? 
+              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
              
+            <Route path="employmentContract" element={<WithcontractNavbar><App1 /></WithcontractNavbar>} />
+
             <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><ProtectedRoute><DoctorInfo /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="EditDocEmail" element={<WithDoctorNavbar><ProtectedRoute><UpdateEmail /></ProtectedRoute></WithDoctorNavbar>} />
@@ -64,7 +114,24 @@ function App() {
               <Route path="DocAppointments" element={<WithDoctorNavbar><ProtectedRoute><AppointmentDoc /></ProtectedRoute></WithDoctorNavbar>} />
 
 
+              <Route 
+              path="/doctor/DoctorChangePassword" 
+              element={<WithDoctorNavbar><DoctorChangePassword /></WithDoctorNavbar>} 
+            />
+
+              
+              <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
+              <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
+              <Route path="follow-up" element={<WithDoctorNavbar><CompletedAppointments /></WithDoctorNavbar>} />
+
+              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <PaymentHandler/> </Elements>}/>
+
+
+
               {/* Ibra - Salah */}
+
+              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><PatientHealthRecords /></WithNavbarAndSidebar>} />
+                          
               <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
@@ -72,8 +139,12 @@ function App() {
               <Route path='healthPackages' element={<WithNavbarAndSidebar><ProtectedRoute><HealthPackages /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='Perscriptions' element={<WithNavbarAndSidebar><ProtectedRoute><Perscription /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='Appointments' element={<WithNavbarAndSidebar><ProtectedRoute><Appointments /></ProtectedRoute></WithNavbarAndSidebar>} />
+              
               <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
+                
+              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><PatientChangePassword /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><AppointmentsComponent /></WithNavbarAndSidebar>} />
+              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><AddFamilyMember /></WithNavbarAndSidebar>} />
 
               {/* Public Routes */}
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
@@ -88,6 +159,18 @@ function App() {
               <Route path="/viewHealthPacks" element={<ProtectedRoute><HPHome/></ProtectedRoute>} />
               <Route path="/editHP/:id" element={<ProtectedRoute><EditHealthPackage/></ProtectedRoute>} />
               <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome/></ProtectedRoute>} />
+                                                
+              <Route 
+              path="/admin/AdminChangePassword" 
+              element={<AdminChangePassword />} 
+              />
+
+
+                <Route
+              path="/viewPatientsDetails"
+              element =  {<WithNavbarAndSidebar><PatientDetails/></WithNavbarAndSidebar>}
+                />
+
             </Routes>
           </UsernameProvider>
         </div>
@@ -126,5 +209,16 @@ function WithDoctorNavbar({ children }) {
     </div>
   );
 }
+function WithcontractNavbar({ children }) {
+  return (
+    <div>
+      <contractNAV />
+      <div className="pages">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 
 export default App;

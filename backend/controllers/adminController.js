@@ -6,6 +6,9 @@ const HealthPackage = require('../models/healthPackageModel');
 const DoctorApplication = require('../models/DoctorApplication');
 const Doctor = require('../models/doctor');
 const Patient = require('../models/Patient');
+const admin = require('../models/admin');
+
+const bcrypt = require('bcrypt')
 
 //get all Admins 
 const getAdmins = async (req, res) => {
@@ -282,7 +285,53 @@ const updateHealthPack = async (req, res) => {
     }
   
     res.status(200).json(healthpackage)
+}
+
+  
+//const bcrypt = require('bcryptjs'); // Ensure you have bcryptjs installed and required
+
+const adminchangepassword = async (req, res) => {
+  const { newPassword } = req.body; // The new password is expected to be sent in the body of the request
+  const adminId = req.user._id; // Get the admin's ID from the user object in the request
+
+  if (!mongoose.Types.ObjectId.isValid(adminId)) {
+    return res.status(404).json({ error: 'Invalid admin ID' });
   }
+
+  // Regular expression to check for at least one capital letter and one number
+  const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
+
+  if (!passwordRequirements.test(newPassword)) {
+    return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+  }
+
+  try {
+    const salt = await bcrypt.genSalt(10); // Generate a salt
+    const hash = await bcrypt.hash(newPassword, salt); // Hash the new password with the salt
+
+    // Find the admin by ID
+    const admin = await Admin.findById(adminId);
+    
+    if (!admin) {
+      return res.status(404).json({ error: 'Admin not found' });
+    }
+    
+    // Set the new password to the hashed password
+    admin.password = hash;
+
+    // Save the admin with the new hashed password
+    await admin.save();
+
+    // Respond with a success message
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+  
+  
  
 
 module.exports = {
@@ -301,5 +350,6 @@ module.exports = {
     viewPatients,
     createHealthPackage,
     deleteDocApp,
-    deletePatient
+    deletePatient,
+    adminchangepassword
 }

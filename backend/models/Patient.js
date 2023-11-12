@@ -23,7 +23,8 @@ const patientSchema = new Schema({
 
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     dob: {
@@ -39,18 +40,21 @@ const patientSchema = new Schema({
 
     mobile_number: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     health_package: { 
         type: String, 
-        default: 'no package'
+        default: 'Unsubscribed'
     },
 
-    health_records: {
-        type: String,
-        default: 'insomnia'
-    },
+    health_records: [
+        {
+            type:String,
+            default:[]
+        }
+    ],
     
     emergency_contact: {
         
@@ -68,7 +72,22 @@ const patientSchema = new Schema({
             type: String,
             required: true,
             enum: ['Wife', 'Husband', 'Child', "Father", "Mother", "Sibling"]
-        },
+        }
+    },
+
+    family_members: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Patient'
+    }],
+
+    relation: [{
+        type: String,
+        enum: ["Wife", "Husband", "Daughter", "Father", "Mother", "Sibling", "Son"]
+    }],
+
+    wallet: {
+        type: Number,
+        default: 0
     }
 
 }, {timestamps: true})
@@ -118,6 +137,19 @@ patientSchema.statics.login = async function(username, password) {
     }
 
     return user
+}
+
+patientSchema.statics.setPassword = async function(email, newPassword) {
+    console.log(newPassword)
+
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(newPassword, salt)
+
+    const user = await this.findOneAndUpdate({email: email}, {password: hash})
+
+    if(!user){
+        throw Error('User Not Found')
+    }
 }
 
 module.exports = mongoose.model('Patient', patientSchema)

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Patient = require('../models/Patient');
 
 const passport = require('passport');
+const HealthPackage = require('../models/healthPackageModel');
 // passport.serializeUser(Patient.serializeUser());
 // passport.deserializeUser(Patient.deserializeUser());
 
@@ -33,18 +34,37 @@ const addFamilyMember = async (req, res) => {
 const getFamilyMembers = async (req, res) => {
 
   const user = req.user
-
-  console.log(req.session);
   
   const patientID = user._id
 
   try {
-      const familyMembers = await FamilyMember.find({patientID});
-      res.status(200).send(familyMembers);
+      res.status(200).json({familyMembers : user.family_members , relation : user.relation});
   } catch (error) {
       res.status(400).send('error getting familyMembers')
   }
 };
+
+const getFamilyDiscount = async(req, res) => {
+  const user = req.user
+
+  const healthPackageName = user.health_package
+
+  if(healthPackageName === "Unsubscribed"){
+    return res.status(200).json({discount: 0})
+  }
+
+  try {
+    const healthPackage = await HealthPackage.findOne({name: healthPackageName})
+
+    const familyDiscount = healthPackage.discounts.familySubscription
+
+    return res.status(200).json({discount: familyDiscount})
+    
+  } catch (error) {
+      
+    return res.status(400).send('error getting HealthPackage')
+  }
+}
 
 // // Get registered family members with id
 // router.get('/:patientID', async (req, res) => {
@@ -58,6 +78,7 @@ const getFamilyMembers = async (req, res) => {
 
 module.exports = {
   addFamilyMember,
-  getFamilyMembers
+  getFamilyMembers,
+  getFamilyDiscount
 }
 

@@ -27,8 +27,13 @@ const Home = () => {
             <Link to="/viewHealthPacks">
                       <button>View Health Packages</button>
                 </Link>
-            <Link to="/viewPatientsAdmin">
+        
+                <Link to="/viewPatientsAdmin">
                       <button>View Patients</button>
+                </Link>
+            {/* Corrected the link to point to the admin change password page */}
+            <Link to="/admin/AdminChangePassword">
+                        <button>Change Password</button>
                 </Link>
             <Link to="/" onClick={handleClick}>
                       <button>log out</button>

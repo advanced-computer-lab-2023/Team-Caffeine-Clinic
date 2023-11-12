@@ -17,7 +17,7 @@ const requireAuth = async(req, res, next) => {
     try {
         const {_id} = jwt.verify(token, process.env.SECRET)
     
-        req.user = await Patient.findById(_id)
+        req.user = await Patient.findById(_id).populate('family_members')
         req.type = 'Patient'
         next()
 
