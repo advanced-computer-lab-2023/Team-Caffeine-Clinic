@@ -102,7 +102,7 @@ function App() {
               <Navigate to="/home"/> : (user.type === 'Pending') ? 
               <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
              
-            <Route path="employmentContract" element={<WithcontractNavbar><App1 /></WithcontractNavbar>} />
+            <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
 
             <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><ProtectedRoute><DoctorInfo /></ProtectedRoute></WithDoctorNavbar>} />
@@ -116,21 +116,21 @@ function App() {
 
               <Route 
               path="/doctor/DoctorChangePassword" 
-              element={<WithDoctorNavbar><DoctorChangePassword /></WithDoctorNavbar>} 
+              element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
             />
 
               
-              <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
-              <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
-              <Route path="follow-up" element={<WithDoctorNavbar><CompletedAppointments /></WithDoctorNavbar>} />
+              <Route path="AddAvailableDate" element={<WithDoctorNavbar><ProtectedRoute><AddAvailableDateFunc /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="getAllHealthRecords" element={<WithDoctorNavbar><ProtectedRoute><DoctorHealthRecords /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="follow-up" element={<WithDoctorNavbar><ProtectedRoute><CompletedAppointments /></ProtectedRoute></WithDoctorNavbar>} />
 
-              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <PaymentHandler/> </Elements>}/>
+              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <ProtectedRoute><PaymentHandler/></ProtectedRoute> </Elements>}/>
 
 
 
               {/* Ibra - Salah */}
 
-              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><PatientHealthRecords /></WithNavbarAndSidebar>} />
+              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
                           
               <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
@@ -142,9 +142,9 @@ function App() {
               
               <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
                 
-              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><PatientChangePassword /></WithNavbarAndSidebar> : <Navigate to="/" />} />
-              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><AppointmentsComponent /></WithNavbarAndSidebar>} />
-              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><AddFamilyMember /></WithNavbarAndSidebar>} />
+              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
 
               {/* Public Routes */}
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
@@ -162,13 +162,13 @@ function App() {
                                                 
               <Route 
               path="/admin/AdminChangePassword" 
-              element={<AdminChangePassword />} 
+              element={<ProtectedRoute><AdminChangePassword /></ProtectedRoute>} 
               />
 
 
                 <Route
               path="/viewPatientsDetails"
-              element =  {<WithNavbarAndSidebar><PatientDetails/></WithNavbarAndSidebar>}
+              element =  {<WithNavbarAndSidebar><ProtectedRoute><PatientDetails/></ProtectedRoute></WithNavbarAndSidebar>}
                 />
 
             </Routes>
