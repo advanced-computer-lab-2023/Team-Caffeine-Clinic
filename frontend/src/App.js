@@ -1,6 +1,6 @@
 
 // App.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import DoctorInfo from './pages/seedoc';
 import Navbar from './components/Navbar';
@@ -51,8 +51,6 @@ import contractNAV from './components/ContractNavBar';
 import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
 
 
-
-
 import PaymentHandler from './components/PaymentHandler'
 
 import { Elements } from "@stripe/react-stripe-js";
@@ -65,6 +63,33 @@ function App() {
   const [doctor, setDoctor] = useState(null)
   const [patient, setPatient] = useState(null)
   const [admin, setAdmin] = useState(null)
+
+  useEffect(() => {
+    // Set up a timer to call removeExpiredTransactions every, for example, 1 hour
+    const timerId = setInterval(() => {
+      const checkOnHealthPackageTransaction = async() =>{
+        
+        const response = await fetch('/api/patient/checkOnHealthPackageTransaction', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        })
+
+        if(!response){
+          throw Error('Problem in API')
+        }
+
+      }
+      if(user){
+        checkOnHealthPackageTransaction()
+      }
+      //removeExpiredTransactions();
+    }, 60 * 1000); // 1 minute in milliseconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(timerId);
+  }, [user]);
 
 
   return (
