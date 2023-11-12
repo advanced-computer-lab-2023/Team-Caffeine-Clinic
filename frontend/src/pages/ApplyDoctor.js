@@ -33,7 +33,7 @@ const SignUp = () => {
             ID:ID,Medical_licenses:Medical_licenses,Medical_degree:Medical_degree
         }
         
-
+       console.log( ID)
         const response = await fetch('/api/applyDoctor', {
             method: 'POST',
             body: JSON.stringify(DoctorApplication),

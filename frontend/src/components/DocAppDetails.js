@@ -55,8 +55,14 @@ const DocAppDetails = ({ Appl }) => {
   };
   const base64toBlob = (data) => {
     // Cut the prefix data:application/pdf;base64 from the raw base 64
-    const base64WithoutPrefix = data.substr('data:application/pdf;base64,'.length);
-
+    let base64WithoutPrefix;
+if (data) {
+   base64WithoutPrefix = data.substr('data:application/pdf;base64,'.length);
+  // Rest of your code that uses base64WithoutPrefix
+} else {
+  // Handle the case when data is undefined or null
+  console.error('Data is undefined or null');
+}
     const bytes = atob(base64WithoutPrefix);
     let length = bytes.length;
     let out = new Uint8Array(length);
