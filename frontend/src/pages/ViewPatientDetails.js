@@ -58,25 +58,50 @@ const HealthPackages = () => {
     }
 }
 
-const getFamilyMembersHealthPackages = async () => {
-  try {
-    const response = await fetch('/api/patient/getFamilyMembersHealthPackages', {
-      headers: {
-        'Authorization': `Bearer ${user.user.token}`
-      }
-    });  
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.message || "Could not fetch health packages.");
+const unsubscribeFamilyMember = async (familyMember) => {
+  const response = await fetch(`/api/patient/unsubscribe?familyMemberUsername=${familyMember}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${user.user.token}`,
+      'Content-Type': 'application/json'
     }
-
-    setFamilyHealthPackage(data);
-    console.log(data);
-  } catch (err) {
-    setError(err.message);
+  })
+  const json = await response.json()
+  if (!response.ok) {
+    setError(json.error)
+   window.alert(error);
   }
-};
+  if (response.ok) {
+    setError(null)
+    window.alert('Unsubcribed from health package');
+    window.location.reload(); 
+  }
+}
+
+useEffect(() => {
+  const getFamilyMembersHealthPackages = async () => {
+    try {
+      const response = await fetch('/api/patient/getFamilyMembersHealthPackages', {
+        headers: {
+          'Authorization': `Bearer ${user.user.token}`
+        }
+      });  
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || "Could not fetch health packages.");
+      }
+      setFamilyHealthPackage(data.familyMembersHealthPackages);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  if(user){
+    getFamilyMembersHealthPackages()
+  }
+}, [user])
+
 
 
 
@@ -123,11 +148,12 @@ const getFamilyMembersHealthPackages = async () => {
 
 <h2>Family Members Health Package</h2>
       <ul>
-        {FamilyHealthPackage.map((member) => (
+        {FamilyHealthPackage && (FamilyHealthPackage.map((member) => (
           <li key={member.id}>
             <strong>Name:</strong> {member.name}, <strong>Health Package:</strong> {member.health_package}
+            <button onClick={() => unsubscribeFamilyMember(member.username)}>Cancel Subscription</button>
           </li>
-        ))}
+        )))}
       </ul>
 
 

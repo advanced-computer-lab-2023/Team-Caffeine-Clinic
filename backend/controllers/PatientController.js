@@ -973,11 +973,22 @@ const unsubscribeFromHealthPackage = async (req, res) => {
     try {
        const patient = req.user;
 
-       if (patient.health_package == 'Unsubscribed') {
-        return res.status(404).json({ error: 'You are not subscribed to any package' });
+       const {familyMemberUsername} = req.query
+
+       let username
+
+       if(familyMemberUsername){
+        username = familyMemberUsername
+       } else {
+            username = patient.username
+            
+            if (patient.health_package == 'Unsubscribed') {
+                return res.status(404).json({ error: 'You are not subscribed to any package' });
+            }
        }
 
-       const HpTransaction = await HealthPackagesTransaction.findOneAndUpdate({patient: patient.username, state: 'subscribed'}, 
+
+       const HpTransaction = await HealthPackagesTransaction.findOneAndUpdate({patient: username, state: 'subscribed'}, 
        {state: 'cancelled'})
 
         if (!HpTransaction) {
@@ -1152,7 +1163,7 @@ const patientchangepassword = async (req, res) => {
 
     
         const familyMembersHealthPackages = patient.family_members.map(member => ({
-            id: member._id,
+            username: member.username,
             name: member.name,
             health_package: member.health_package,
         }));

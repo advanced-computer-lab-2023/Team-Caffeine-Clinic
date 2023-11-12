@@ -23,28 +23,51 @@ const getHealthPackages = async (req, res) => {
 
 const checkOnHealthPackageTransaction = async (req, res) => {
   console.log('na3am');
-  const user = req.user
-  const hp = user.health_package
 
-  let HpTransaction = await HealthPackages_Transaction.findOne({patient: user.username, healthPackage: hp, state: 'subscribed'})
+  const HpTransactionSubscribed = await HealthPackages_Transaction.find({state: 'subscribed'})
 
-  if(!HpTransaction){
-    HpTransaction = await HealthPackages_Transaction.findOne({patient: user.username, healthPackage: hp, state: 'cancelled'})
-    if(!HpTransaction) return res.status(401).json({error: 'No HP Transaction Found'})
+  const HpTransactionCancelled = await HealthPackages_Transaction.find({state: 'cancelled'})
+
+
+  if(!HpTransactionSubscribed && !HpTransactionCancelled){
+    return res.status(200).json({error: 'No HP Transaction Found'})
   }
 
   const currentDate = new Date()
 
   try {
-    const transaction = await Transaction.findOne(HpTransaction.transactionId)
-
-    const comment = transaction.comments + ' Unsubscribed '
-
-    if(HpTransaction.cancel_renewal_time < currentDate){
-      await HealthPackages_Transaction.findByIdAndUpdate(HpTransaction._id, {state: 'unsubscribed'})
-      await Patient.findByIdAndUpdate(user._id, {health_package: 'Unsubscribed'})
-      await Transaction.findOneAndUpdate(HpTransaction.transactionId, {commments: comment})
+    for(let i = 0; i < HpTransactionSubscribed.length; i++){
+      const HpTransaction = HpTransactionSubscribed[i]
+  
+      const username = HpTransaction.patient
+  
+      const transaction = await Transaction.findOne(HpTransaction.transactionId)
+  
+      const comment = transaction.comments + ' Unsubscribed '
+  
+      if(HpTransaction.cancel_renewal_time < currentDate){
+        await HealthPackages_Transaction.findByIdAndUpdate(HpTransaction._id, {state: 'unsubscribed'})
+        await Patient.findOneAndUpdate({username: username}, {health_package: 'Unsubscribed'})
+        await Transaction.findOneAndUpdate(HpTransaction.transactionId, {commments: comment})
+      }
     }
+
+    for(let i = 0; i < HpTransactionCancelled.length; i++){
+      const HpTransaction = HpTransactionCancelled[i]
+  
+      const username = HpTransaction.patient
+  
+      const transaction = await Transaction.findOne(HpTransaction.transactionId)
+  
+      const comment = transaction.comments + ' Unsubscribed '
+  
+      if(HpTransaction.cancel_renewal_time < currentDate){
+        await HealthPackages_Transaction.findByIdAndUpdate(HpTransaction._id, {state: 'unsubscribed'})
+        await Patient.findOneAndUpdate({username: username}, {health_package: 'Unsubscribed'})
+        await Transaction.findOneAndUpdate(HpTransaction.transactionId, {comments: comment})
+      }
+    }
+
     return res.status(200).json({mssg: 'Checking on Health Package Done'})
   } catch (error) {
     console.log(error);

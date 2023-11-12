@@ -70,10 +70,7 @@ function App() {
       const checkOnHealthPackageTransaction = async() =>{
         
         const response = await fetch('/api/patient/checkOnHealthPackageTransaction', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${user.token}`
-          }
+          method: 'POST'
         })
 
         if(!response){
@@ -81,15 +78,14 @@ function App() {
         }
 
       }
-      if(user){
         checkOnHealthPackageTransaction()
-      }
+      
       //removeExpiredTransactions();
     }, 60 * 1000); // 1 minute in milliseconds
 
     // Clean up the interval when the component unmounts
     return () => clearInterval(timerId);
-  }, [user]);
+  }, []);
 
 
   return (

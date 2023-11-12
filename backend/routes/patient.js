@@ -35,6 +35,10 @@ const {
     requireAuth,
 } = require('../middleware/requrieAuth')
 
+
+router.post('/checkOnHealthPackageTransaction', checkOnHealthPackageTransaction)
+
+
 router.use(requireAuth)
 //add appointment  
 router.post('/createAppointment', createAppointment)
@@ -86,6 +90,5 @@ router.post('/linkFamilyMember', linkFamilyMember)
 
 router.post('/patientchangepassword', patientchangepassword);
 
-router.post('/checkOnHealthPackageTransaction', checkOnHealthPackageTransaction)
 
 module.exports = router

@@ -95,6 +95,7 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
         }
         // Handle response
         if(response.ok && onPaymentResult){
+          window.alert('Payment Successful');
           onPaymentResult();
         }
       } catch (error) {
@@ -137,12 +138,14 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
          console.log(addToDoctorWalletResponse.ok);
           if(addToDoctorWalletResponse.ok){
             console.log('ana hena');
+            window.alert('Payment Successful');
             onPaymentResult();
             setError('Payment Successful')
           }
         }
 
         else{
+          window.alert('Payment Successful');
           onPaymentResult()
         }
       }

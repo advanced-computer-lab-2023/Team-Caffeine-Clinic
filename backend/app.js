@@ -157,6 +157,8 @@ const getSession = (req, res) => {
 app.use('/api', forgotPass)
 app.use('/api', stripe)
 
+app.use('/api/patient', patientRoute)
+
 // middleware
 app.use('/api', login)
 app.use('/api', signUp)
@@ -168,7 +170,6 @@ app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
 app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
-app.use('/api/patient', patientRoute)
 app.use('/api', Appointment)
 
 
