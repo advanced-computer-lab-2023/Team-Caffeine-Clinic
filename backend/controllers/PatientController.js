@@ -976,26 +976,26 @@ const unsubscribeFromHealthPackage = async (req, res) => {
         return res.status(404).json({ error: 'You are not subscribed to any package' });
        }
 
-       const transactoin = await HealthPackagesTransaction.findOne({patient: patient.username, state: 'subscribed'})
+       const transactoin = await HealthPackagesTransaction.findOneAndUpdate({patient: patient.username, state: 'subscribed'}, 
+       {state: 'cancelled'})
 
-        const updatedPatient = await Patient.findOneAndUpdate(
-            { _id: patient._id },
-            { health_package: 'Unsubscribed' },
-            { new: true } 
-        );
+        // const updatedPatient = await Patient.findOneAndUpdate(
+        //     { _id: patient._id },
+        //     { health_package: 'Unsubscribed' },
+        //     { new: true } 
+        // );
 
-        if (!updatedPatient) {
-            return res.status(404).json({ error: 'Patient or HealthPackage not found' });
+        if (!transactoin) {
+            return res.status(404).json({ error: 'HealthPackage Transaction not found' });
         }
 
-        const updatePackageTransaction = await HealthPackagesTransaction.findOne({name})
-        
-        res.json({ message: 'Unsubscription successful' });
+        return res.json({ message: 'Unsubscription successful' });
     } catch (error) {
         console.error(error);
-        res.status(500).send(error);
+        return res.status(500).send(error);
     }
 }
+
 const getHealthPackage = async (req, res) => { 
     try {
         const patient = req.user
