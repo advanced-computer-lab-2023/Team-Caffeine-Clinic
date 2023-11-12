@@ -5,6 +5,8 @@ const passport = require('passport')
 const router = express.Router()
 
 const {
+    filterDoctorsByAvailability,
+    patientchangepassword,
     subscribeToHealthPackage, unsubscribeFromHealthPackage, getHealthPackage,
     linkFamilyMember,
     filterDoctorsByAvailability,
@@ -63,5 +65,7 @@ router.post('/payWithWallet', payWithWallet)
 
 
 router.post('/linkFamilyMember', linkFamilyMember)
+
+router.post('/patientchangepassword', patientchangepassword);
 
 module.exports = router

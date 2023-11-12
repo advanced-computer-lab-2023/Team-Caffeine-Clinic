@@ -34,6 +34,12 @@ import EditHealthPackage from './pages/EditHealthPackage';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
+
+import { useAuthContext } from './hooks/useAuthContext';
+import AdminChangePassword from './pages/AdminChangePassword';
+import DoctorChangePassword from './pages/DoctorChangePassword';
+import PatientChangePassword from './pages/PatientChangePassword';
+
 import PatientDetails from './pages/ViewPatientDetails';
 import { useAuthContext } from './hooks/useAuthContext';          
 import AddAvailableDateFunc from './pages/AddAvailableDate';
@@ -82,6 +88,13 @@ function App() {
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><PatientsWithUpcomingAppointments /></WithDoctorNavbar>} />
               <Route path="SearchPatient" element={<WithDoctorNavbar><SelectPatient /></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><AppointmentDoc /></WithDoctorNavbar>} />
+
+              <Route 
+              path="/doctor/DoctorChangePassword" 
+              element={<WithDoctorNavbar><DoctorChangePassword /></WithDoctorNavbar>} 
+            />
+
+              
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><AddAvailableDateFunc /></WithDoctorNavbar>} />
               <Route path="getAllHealthRecords" element={<WithDoctorNavbar><DoctorHealthRecords /></WithDoctorNavbar>} />
               <Route path="follow-up" element={<WithDoctorNavbar><CompletedAppointments /></WithDoctorNavbar>} />
@@ -105,7 +118,12 @@ function App() {
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
               <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
               <Route path='Filterbyavedates' element={user ? <WithNavbarAndSidebar><DoctorList /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+
+              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><PatientChangePassword /></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              
+
               <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><AppointmentsComponent /></WithNavbarAndSidebar>} />
+
 
 
 
@@ -140,10 +158,18 @@ function App() {
               path="/viewPatientsAdmin"
               element =  {<ViewPatientHome/>}
                 />
+
+              <Route 
+              path="/admin/AdminChangePassword" 
+              element={<AdminChangePassword />} 
+              />
+
+
                 <Route
               path="/viewPatientsDetails"
               element =  {<WithNavbarAndSidebar><PatientDetails/></WithNavbarAndSidebar>}
                 />
+
             </Routes>
           </UsernameProvider>
         </div>

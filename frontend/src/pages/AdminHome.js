@@ -31,6 +31,10 @@ const Home = () => {
                 <Link to="/">
                       <button>Log Out</button>
                 </Link>
+            {/* Corrected the link to point to the admin change password page */}
+            <Link to="/admin/AdminChangePassword">
+                        <button>Change Password</button>
+                </Link>
             <Link to="/" onClick={handleClick}>
                       <button>log out</button>
                 </Link>
