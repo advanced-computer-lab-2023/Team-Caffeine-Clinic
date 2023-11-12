@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 const HealthPackages = () => {
   const [HealthPackage, setHealthPackage] = useState([]);
+  const [FamilyHealthPackage, setFamilyHealthPackage] = useState([]);
   const [HealthPackageId, setHealthPackageId] = useState("");
   const [error, setError] = useState(null);
 
@@ -30,6 +31,8 @@ const HealthPackages = () => {
         setError(err.message);
       }
     };
+
+
     if(user){
       fetchHealthPackages();
     }
@@ -54,6 +57,30 @@ const HealthPackages = () => {
       window.location.reload(); 
     }
 }
+
+const getFamilyMembersHealthPackages = async () => {
+  try {
+    const response = await fetch('/api/patient/getFamilyMembersHealthPackages', {
+      headers: {
+        'Authorization': `Bearer ${user.user.token}`
+      }
+    });  
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || "Could not fetch health packages.");
+    }
+
+    setFamilyHealthPackage(data);
+    console.log(data);
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+
+
+
 
   return (
     <div className="health-packages">
@@ -86,8 +113,27 @@ const HealthPackages = () => {
               </>
           {/* ))} */}
         </ul>
+
+
+
       )}
+
+
+
+
+<h2>Family Members Health Package</h2>
+      <ul>
+        {FamilyHealthPackage.map((member) => (
+          <li key={member.id}>
+            <strong>Name:</strong> {member.name}, <strong>Health Package:</strong> {member.health_package}
+          </li>
+        ))}
+      </ul>
+
+
     </div>
+    
+
   );
 };
 

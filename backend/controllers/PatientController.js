@@ -1135,7 +1135,35 @@ const patientchangepassword = async (req, res) => {
     }
   };
 
+
+  const getFamilyMembersHealthPackages = async (req ,res) => {
+    try {
+        const patient = req.user
+      
+        
+
+        if (!patient) {
+            throw new Error('Patient not found');
+        }
+
+
+    
+        const familyMembersHealthPackages = patient.family_members.map(member => ({
+            id: member._id,
+            name: member.name,
+            health_package: member.health_package,
+        }));
+
+        return res.status(200).json({familyMembersHealthPackages});
+
+    } catch (error) {
+        return res.status(500).json({error});
+    }
+};
+
+
 module.exports = {
+    getFamilyMembersHealthPackages,
     signUp,
     viewFilterPerscriptions,
     getSinglePerscription,
