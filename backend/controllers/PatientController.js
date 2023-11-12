@@ -37,7 +37,7 @@ const addHealthPackageTransactionfam = async (req, res) => {
      const healthPackageName = req.query.healthPackageName;
 
         // Find the patient
-        const patient = await Patient.findone({username:patientId});
+        const patient = await Patient.findOne({username:patientId});
         if (!patient) {
             return res.status(404).json({ error: 'Patient not found' });
         }
@@ -70,9 +70,9 @@ const addHealthPackageTransactionfam = async (req, res) => {
         return res.status(500).json({ error: `Error adding health package transaction: ${error.message}` });
     }
 };
-const createHealthPackagesTransaction = async (req, res,transactionId,patientId,healthPackageId) => {
+const createHealthPackagesTransaction = async (req, res,transactionId,patientUsername,healthPackageId) => {
   
-
+    console.log('Entered Function');
     try {
         // Check if the referenced models exist
         const transaction = await Transaction.findById(transactionId);
@@ -80,12 +80,12 @@ const createHealthPackagesTransaction = async (req, res,transactionId,patientId,
             return res.status(404).json({ error: 'Transaction not found' });
         }
 
-        const patient = await Patient.findById(patientId);
+        const patient = await Patient.findOne({username: patientUsername});
         if (!patient) {
             return res.status(404).json({ error: 'Patient not found' });
         }
 
-        const healthPackage = await HealthPackageModel.findById(healthPackageId);
+        const healthPackage = await HealthPackageModel.findOne({name: healthPackageId});
         if (!healthPackage) {
             return res.status(404).json({ error: 'HealthPackageModel not found' });
         }
@@ -93,7 +93,7 @@ const createHealthPackagesTransaction = async (req, res,transactionId,patientId,
         // Create a new HealthPackagesTransaction instance
         const healthPackagesTransaction = new HealthPackagesTransaction({
             transactionId:transactionId,
-            patient: patientId,
+            patient: patientUsername,
             healthPackage: healthPackageId,
         });
 
@@ -101,6 +101,7 @@ const createHealthPackagesTransaction = async (req, res,transactionId,patientId,
         await healthPackagesTransaction.save();
 
         // You can customize the success response as needed
+        console.log('Successful isa');
         return res.status(201).json({ message: 'HealthPackagesTransaction created successfully', healthPackagesTransaction });
     } catch (error) {
         // Handle the error and send an appropriate error response
@@ -114,18 +115,20 @@ const addHealthPackageTransaction = async (req, res) => {
      const value = req.query.value;
      const patientId = req.user.username;
      const healthPackageName = req.query.healthPackageName;
+     console.log('Befire Patient Fetch');
 
         // Find the patient
-        const patient = await Patient.findone({username:patientId});
+        const patient = await Patient.findOne({username:patientId});
         if (!patient) {
             return res.status(404).json({ error: 'Patient not found' });
         }
-
+        console.log('After Patient Fetch');
         // Find the health package by name
         const HealthPackage = await healthPackage.findOne({ name: healthPackageName });
         if (!HealthPackage) {
             return res.status(404).json({ error: 'HealthPackage not found' });
         }
+        console.log('After Health Package Fetch');
 
         // Create a new transaction
         const newTransaction = new Transaction({
@@ -134,16 +137,18 @@ const addHealthPackageTransaction = async (req, res) => {
             patient: patientId,
             healthPackage: HealthPackage.name,
         });
-        
+        console.log('After Transaction Creation');
+
         patient.health_package=healthPackageName;
         await patient.save();
         // Save the transaction
         await newTransaction.save();
+        console.log('After Saving');
         const newreq = req;
         const newres = res;
 
        await createHealthPackagesTransaction(newreq,newres,newTransaction._id,patientId,healthPackageName);
-
+       console.log('After Function Creation');
     } catch (error) {
         return res.status(500).json({ error: `Error adding health package transaction: ${error.message}` });
     }
