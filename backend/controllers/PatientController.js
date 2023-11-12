@@ -162,7 +162,7 @@ const markHealthPackageTransactionAsRefunded = async (req, res) => {
 
       const healthPackageName = req.query.healthPackageName;
 
-      const patient = await Patient.findone({
+      const patient = await Patient.findOne({
         username:patientUsernam
       })
 

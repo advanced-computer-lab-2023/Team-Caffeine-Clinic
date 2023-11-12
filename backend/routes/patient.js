@@ -9,7 +9,6 @@ const {
     patientchangepassword,
     subscribeToHealthPackage, unsubscribeFromHealthPackage, getHealthPackage,
     linkFamilyMember,
-    filterDoctorsByAvailability,
     createAppointment, 
     addPatientToDoctor,
     getAppointments,

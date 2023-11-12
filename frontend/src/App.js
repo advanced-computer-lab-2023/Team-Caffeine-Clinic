@@ -40,8 +40,7 @@ import AdminChangePassword from './pages/AdminChangePassword';
 import DoctorChangePassword from './pages/DoctorChangePassword';
 import PatientChangePassword from './pages/PatientChangePassword';
 
-import PatientDetails from './pages/ViewPatientDetails';
-import { useAuthContext } from './hooks/useAuthContext';          
+import PatientDetails from './pages/ViewPatientDetails';       
 import AddAvailableDateFunc from './pages/AddAvailableDate';
 import DoctorHealthRecords from './pages/DoctorHealthRecords';
 import PatientHealthRecords from './pages/PatientHealthRecord';
