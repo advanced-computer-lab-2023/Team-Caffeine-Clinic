@@ -12,6 +12,8 @@ const Sidebar = () => {
       <Link to="/PatientfilterAppointments">My Appointments </Link>
       <Link to="/PatientHealthRecord">My Health record </Link>
       <Link to="/patient/PatientChangePassword">Change Password</Link>
+      <Link to="/PatientAddDocs">Add my documents for my medical history </Link>
+
     </div>
   )
 }

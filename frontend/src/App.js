@@ -50,11 +50,10 @@ import App1 from './pages/employmentContract';
 import contractNAV from './components/ContractNavBar';
 
 import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
-
-
 import PaymentHandler from './components/PaymentHandler'
 
 import ProtectedRoute from './components/ProtectedRoute';
+import DocumentUpload  from './pages/PatientAddDocs';
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -141,7 +140,8 @@ function App() {
               <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
               
               <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
-                
+              <Route path='PatientAddDocs' element={<WithNavbarAndSidebar><ProtectedRoute><DocumentUpload /></ProtectedRoute></WithNavbarAndSidebar>} />
+
               <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
