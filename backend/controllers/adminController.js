@@ -8,7 +8,8 @@ const Doctor = require('../models/doctor');
 const Patient = require('../models/Patient');
 const admin = require('../models/admin');
 
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const EmplymentContract = require('../models/emplymentContract');
 
 //get all Admins 
 const getAdmins = async (req, res) => {
@@ -104,12 +105,14 @@ const deleteDoctor = async(req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({error: 'No such doctor'})
     }
-  
+    
     const doc = await Doctor.findOneAndDelete({_id: id})
-  
+
     if(!doc) {
       return res.status(400).json({error: 'No such doctor'})
     }
+
+    const employmentContract = await EmplymentContract.findOneAndDelete({doctor: doc.username})
   
     res.status(200).json(doc)
 }
