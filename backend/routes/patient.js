@@ -16,7 +16,8 @@ const {
     selectpatient, 
     getWallet, 
     payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
-    refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam
+    refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction
+    ,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument
 } = require('../controllers/PatientController')
 
 const {
@@ -50,6 +51,10 @@ router.post('/addHealthPackageTransaction', addHealthPackageTransaction)
 router.post('/addHealthPackageTransactionfam', addHealthPackageTransactionfam)
 router.post('/markHealthPackageTransactionAsRefunded', markHealthPackageTransactionAsRefunded)
 
+
+router.post('/saveDocuments', saveDocuments)
+router.get('/viewMyDocuments',viewMyDocuments)
+router.post('/deleteDocument', deleteDocument)
 
 
 

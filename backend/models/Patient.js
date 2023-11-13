@@ -89,7 +89,19 @@ const patientSchema = new Schema({
     wallet: {
         type: Number,
         default: 0
-    }
+    },
+    Documents: [
+        {
+            description: {
+                type: String,
+                unique:true
+                
+            },
+            content: {
+                type: String,
+            },
+        }
+    ],
 
 }, {timestamps: true})
 

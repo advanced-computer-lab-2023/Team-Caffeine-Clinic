@@ -23,7 +23,7 @@ const appointmentSchema = new Schema({
   status: {
     type: String,
     required: true,
-    enum: ['upcoming', 'completed', 'cancelled', 'rescheduled','FollowUp'],
+    enum: ['upcoming', 'completed', 'cancelled', 'rescheduled','FollowUp','completedAndFollwingUP'],
     default :'upcoming'
   }
 

@@ -33,6 +33,10 @@ const DoctorNavbar =()=>{
                 <Link className="doctor-buttons" to="/AddAvailableDate"><h3>Add My Available Time Slots</h3></Link>
                 <Link className="doctor-buttons" to="/getAllHealthRecords"><h3>Patient Health records</h3></Link>
                 <Link className="doctor-buttons" to="/follow-up"><h3>schedule a follow-up for a patient</h3></Link>
+                <Link className="doctor-buttons" to="/seepatientdocs"><h3>My Patietnts DOCS</h3></Link>
+                <Link className="doctor-buttons" to="/Docaddpatientdocs"><h3>Add to my Patietnts DOCS</h3></Link>
+
+
 
 
 
