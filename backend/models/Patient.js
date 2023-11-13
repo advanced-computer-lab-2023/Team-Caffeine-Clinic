@@ -140,7 +140,7 @@ patientSchema.statics.login = async function(username, password) {
 }
 
 patientSchema.statics.setPassword = async function(email, newPassword) {
-    console.log(newPassword)
+    console.log(email, newPassword)
 
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(newPassword, salt)

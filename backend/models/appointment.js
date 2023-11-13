@@ -14,8 +14,7 @@ const appointmentSchema = new Schema({
   },
   transactionId: {
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'transaction',
-    default:""
+    ref: 'transaction'
   },
   appointmentDate: {
     type: String,
