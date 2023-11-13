@@ -231,7 +231,7 @@ const signUp = async(req, res) => {
 
     try {
         // Regular expression to check for at least one capital letter and one number
-        const passwordRequirements = /^(?=.[A-Z])(?=.\d)/;
+        const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
 
         if (!passwordRequirements.test(password)) {
             return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
@@ -350,10 +350,10 @@ const setPass = async(req, res) => {
     const {newPassword, email} = req.body
 
     // Regular expression to check for at least one capital letter and one number
-    const passwordRequirements = /^(?=.[A-Z])(?=.\d)/;
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
 
     if (!passwordRequirements.test(newPassword)) {
-        return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+        return res.status(500).json({ error: 'Password must contain at least one capital letter and one number.' });
     }
 
     const user = await Patient.findOne({email: email});
@@ -364,25 +364,6 @@ const setPass = async(req, res) => {
     } catch(error){
         return res.status(400).json({error: error})
     }
-    // const salt = await bcrypt.genSalt(10)
-    // const hash = await bcrypt.hash(newPassword, salt)
-    
-    // user.setPassword(newPassword, async(err) => {
-    //     if(err){
-    //         console.log(err);
-    //         return res.status(400).json({mssg: "Something went wrong"})
-    //     }
-
-    //     try {
-    //         await user.save();
-    //         console.log("Password updated");
-    //         return res.status(202).json({ mssg: "Password Changed Successfully" });
-    //     } catch (err) {
-    //         console.log(err);
-    //         return res.status(400).json({ mssg: "Error saving user with new password" });
-    //     }
-       
-    // })
 
 }
 //View and Filter Perscriptions
@@ -1182,32 +1163,29 @@ const patientchangepassword = async (req, res) => {
 
 
   const getFamilyMembersHealthPackages = async (req ,res) => {
-    try {
-        const patient = req.user
+    
+    const patient = req.user
       
         
 
-        if (!patient) {
-            throw new Error('Patient not found');
+    if (!patient) {
+        throw new Error('Patient not found');
+    }
+    const familyMembersHealthPackages = [];
+    for(let i = 0; i < (patient.family_members).length; i++){
+        const member = patient.family_members[i]
+        const transaction = await HealthPackagesTransaction.findOne({patient: member.username, state: { $in: ['subscribed', 'cancelled'] }})
+        
+        if(!transaction){
+            const input = {username: member.username, name: member.name, state: 'unsubscribed', healthPackage: 'None'}
+            familyMembersHealthPackages[i] = input
         }
-
-
-        const familyMembersHealthPackages = [];
-
-        for(let i = 0; i < (patient.family_members).length; i++){
-            const member = patient.family_members[i]
-
-            const transaction = await HealthPackagesTransaction.findOne({patient: member.username, state: { $in: ['subscribed', 'cancelled'] }})
-
-            if(!transaction){
-                const input = {username: member.username, name: member.name, state: 'Unsubscribed', healthPackage: 'None'}
-                familyMembersHealthPackages[i] = input
-            }
-            else{
-                familyMembersHealthPackages[i] = {username: member.username, name: member.name, ...transaction};
-            }
+        else{
+            const state = transaction.state
+            familyMembersHealthPackages[i] = {username: member.username, name: member.name, state: state, ...transaction};
         }
-
+    }
+    try {
     
         // const familyMembersHealthPackages = patient.family_members.map(member => ({
         //     username: member.username,
