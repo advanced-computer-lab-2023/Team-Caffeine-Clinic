@@ -35,9 +35,9 @@ const getAdmin = async (req, res) => {
 
 //Create a new Admin 
 const createAdmin = async (req, res) => {
-    const {Username , Password} = req.body;
+    const {Username, Password, Email} = req.body;
 
-    const admin = new Admin({username: Username, password: Password})
+    const admin = new Admin({username: Username, password: Password, email: Email})
 
     try {
       const user = await Admin.signUp(admin)

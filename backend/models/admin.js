@@ -13,6 +13,11 @@ const adminSchema = new Schema ({
     password: {
         type: String,
         required: true
+    },
+
+    email: {
+        type: String,
+        unique: true
     }
 
 } , {timestamps: true})
@@ -35,7 +40,7 @@ adminSchema.statics.signUp = async function(admin) {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
 
-    const user = await this.create({username: admin.username, password: hash})
+    const user = await this.create({username: admin.username, password: hash, email: admin.email})
 
     return user
 }
@@ -59,6 +64,19 @@ adminSchema.statics.login = async function(username, password) {
     }
 
     return user
+}
+
+adminSchema.statics.setPassword = async function(email, newPassword) {
+    console.log(newPassword)
+
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(newPassword, salt)
+
+    const user = await this.findOneAndUpdate({email: email}, {password: hash})
+    
+    if(!user){
+        throw Error('User Not Found')
+    }
 }
 
 module.exports = mongoose.model('admin',adminSchema);

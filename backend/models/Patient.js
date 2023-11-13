@@ -8,7 +8,8 @@ const Schema = mongoose.Schema
 const patientSchema = new Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     password: {

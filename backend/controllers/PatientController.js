@@ -22,6 +22,7 @@ const OTP = require('../models/OTP');
 //const { default: HealthPackages } = require('../../frontend/src/pages/HealthPackages')
 
 const Transaction = require('../models/transaction');
+const Admin = require('../models/admin')
 
 // Passport local Strategy
 //passport.use(Patient.createStrategy());
@@ -237,6 +238,24 @@ const signUp = async(req, res) => {
             return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
         }
 
+        let exists = await Doctor.findOne({
+            $or: [
+                { username: username },
+                { email: email }
+            ]
+        })
+
+        if(exists) return res.status(400).json({error: 'Username or Email in use'})
+
+        exists = await Admin.findOne({
+            $or: [
+                { username: username },
+                { email: email }
+            ]
+        })
+
+        if(exists) return res.status(400).json({error: 'Username or Email in use'})
+
         const user = await Patient.signUp(patient)
 
         res.status(200).json({username, user})
@@ -283,7 +302,10 @@ const forgotPass = async(req, res) => {
         user = await Doctor.findOne({email: email})
         
         if(!user){
-            return res.status(400).json({err: "Email Address is incorrect"})
+            user = await Admin.findOne({email: email})
+            if(!user){
+                return res.status(400).json({err: "Email Address is incorrect"})
+            }
         }
     }
 
@@ -340,6 +362,7 @@ const verifyOTP = async (req, res) => {
         }
 
         console.log("Correct OTP");
+    await OTP.deleteOne({_id: verify._id})
         return res.status(200).json({ mssg: "OTP verified successfully" });
     } catch (error) {
         console.error("Error verifying OTP:", error);
@@ -356,14 +379,25 @@ const setPass = async(req, res) => {
         return res.status(500).json({ error: 'Password must contain at least one capital letter and one number.' });
     }
 
-    const user = await Patient.findOne({email: email});
+    let user = await Patient.findOne({email: email});
 
-    try{
-        Patient.setPassword(email, newPassword)
+    if(!user){
+        user = await Doctor.findOne({email: email})
+        
+        if(!user){
+            user = await Admin.findOne({email: email})
+            if(!user){
+                return res.status(400).json({err: "Email Address is incorrect"})
+            }
+            Admin.setPassword(email, newPassword)
+            return res.status(202).json({ mssg: "Password Changed Successfully" });
+        }
+        Doctor.setPassword(email, newPassword)
         return res.status(202).json({ mssg: "Password Changed Successfully" });
-    } catch(error){
-        return res.status(400).json({error: error})
     }
+
+    Patient.setPassword(email, newPassword)
+    return res.status(202).json({ mssg: "Password Changed Successfully" });
 
 }
 //View and Filter Perscriptions
