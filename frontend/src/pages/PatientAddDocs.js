@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import { useAuthContext } from '../hooks/useAuthContext'; // Replace 'path-to-auth-context' with the actual path
-
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const DocumentUpload = () => {
   const [username, setUsername] = useState('');
   const [documents, setDocuments] = useState([]);
-  const [descriptions, setDescriptions] = useState(['']); // Initialize with an empty description
-  const [base64Strings, setBase64Strings] = useState([]); // Store base64 representations
-  const [successMessage, setSuccessMessage] = useState('')
-  const { user } = useAuthContext()
-
+  const [descriptions, setDescriptions] = useState([]);
+  const [base64Strings, setBase64Strings] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuthContext();
 
   const handleFileChange = (event, index) => {
     const newDocuments = [...documents];
     newDocuments[index] = event.target.files[0];
     setDocuments(newDocuments);
 
-    // Convert the file to base64
     fileToBase64(event.target.files[0], (err, result) => {
       if (result) {
         const newBase64Strings = [...base64Strings];
@@ -36,38 +34,38 @@ const DocumentUpload = () => {
     setDocuments([...documents, null]);
     setDescriptions([...descriptions, '']);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    const formData = new FormData();
-    formData.append('username', username);
-    let num = 0;
-    base64Strings.forEach((base64String, index) => {
-      formData.append('documents', base64String);
-      formData.append('descriptions', descriptions[index]);
-      num++;
-    });
-    
+
+    setLoading(true);
+
+    const data = {
+      documents: base64Strings,
+      descriptions: descriptions,
+    };
 
     try {
-     const response= await fetch(`/api/patient/saveDocuments`, {
+      const response = await fetch(`/api/patient/saveDocuments/`, {
         method: 'POST',
-        body: formData,
+        body: JSON.stringify(data),
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user.token}` // Adding the authorization token
-          }
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`,
+        },
       });
 
-      if(!response.ok){
-        setSuccessMessage('Erorr in the Inputs')
-      }
-      else {
-        setSuccessMessage('Successfully Uplouded'+' '+num+''+'documents');
+      if (!response.ok) {
+        setSuccessMessage('Error in the Inputs');
+      } else {
+        setSuccessMessage(`Successfully Uploaded ${base64Strings.length} documents`);
+        resetForm(); // Call the resetForm function on success
       }
     } catch (error) {
       console.error('Error uploading documents:', error.message);
-      // Handle error, e.g., show an error message
+      setSuccessMessage('Error uploading documents');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,6 +94,15 @@ const DocumentUpload = () => {
     };
   };
 
+  // Function to reset the form state
+  const resetForm = () => {
+    setUsername('');
+    setDocuments([]);
+    setDescriptions([]);
+    setBase64Strings([]);
+    setSuccessMessage('');
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -117,10 +124,11 @@ const DocumentUpload = () => {
         <button type="button" onClick={addFileField}>
           Add Document
         </button>
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Saving...' : 'Submit'}
+        </button>
       </form>
-      <div>   {successMessage && <p>{successMessage}</p>}
-</div>
+      <div>{successMessage && <p>{successMessage}</p>}</div>
     </div>
   );
 };

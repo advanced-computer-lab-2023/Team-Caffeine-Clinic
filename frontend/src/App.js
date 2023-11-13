@@ -34,6 +34,10 @@ import EditHealthPackage from './pages/EditHealthPackage';
 import AppointmentDoc from './pages/AppointmentDoc';
 import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
+import ViewDocuments from './pages/seeanddeletdocs';
+import DoctorDocuments from './pages/seepatientdocs';
+
+
 
 import { useAuthContext } from './hooks/useAuthContext';
 
@@ -111,6 +115,7 @@ function App() {
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><ProtectedRoute><PatientsWithUpcomingAppointments /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="SearchPatient" element={<WithDoctorNavbar><ProtectedRoute><SelectPatient /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><ProtectedRoute><AppointmentDoc /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="seepatientdocs" element={<WithDoctorNavbar><ProtectedRoute><DoctorDocuments /></ProtectedRoute></WithDoctorNavbar>} />
 
 
               <Route 
@@ -141,6 +146,7 @@ function App() {
               
               <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='PatientAddDocs' element={<WithNavbarAndSidebar><ProtectedRoute><DocumentUpload /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='seeanddeletdocs' element={<WithNavbarAndSidebar><ProtectedRoute><ViewDocuments /></ProtectedRoute></WithNavbarAndSidebar>} />
 
               <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
               <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />

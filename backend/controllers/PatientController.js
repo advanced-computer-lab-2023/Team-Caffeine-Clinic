@@ -1204,22 +1204,32 @@ const patientchangepassword = async (req, res) => {
 
 const saveDocuments =   async (req, res) => {
     const  username  = req.user.username;
-    const documents = req.body.documents;
-    const descriptions = req.body.descriptions
+    const {documents,descriptions} = req.body;
+ 
+   
+
+    if (!Array.isArray(documents) || !Array.isArray(descriptions)) {
+        return res.status(400).json({ message: 'Invalid format for documents or descriptions' });
+    }
 
     try {
         // Find the patient by username
+
+        console.log("ana hena tani ")
+
         const patient = await Patient.findOne({ username: username });
+        console.log("ana hena tani2 ")
 
         if (!patient) {
             return res.status(404).json({ message: 'Patient not found' });
         }
+        console.log(documents.length+"   "+ descriptions.length)
 
-        // Validate that the length of descriptions and documents arrays are the same
-        if (descriptions.length !== documents.length) {
+        if (documents.length !== descriptions.length) {
             return res.status(400).json({ message: 'Descriptions and documents arrays must have the same length' });
         }
-
+        console.log("ana hena 4")
+       
         // Map through the arrays and push documents with descriptions to the patient's Documents array
         descriptions.forEach((description, index) => {
             patient.Documents.push({
@@ -1227,6 +1237,7 @@ const saveDocuments =   async (req, res) => {
                 content: documents[index],
             });
         });
+        console.log("ana hena tani ")
 
         // Save the updated patient to the database
         await patient.save();
@@ -1237,7 +1248,58 @@ const saveDocuments =   async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
+const viewMyDocuments = async (req, res) => {
+    try {
+      const username = req.user.username; // Get the username from the authenticated user
+      const patient = await Patient.findOne({ username:username }); // Fetch only the username and Documents fields
+  
+      if (!patient) {
+        return res.status(404).json({ message: 'Patient not found' });
+      }
+  
+      res.status(200).json({
+        username: patient.username,
+        documents: patient.Documents,
+      });
+    } catch (error) {
+      console.error('Error viewing patient documents:', error.message);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  const deleteDocument = async (req, res) => {
+    try {
+      //const { patientId, description } = req.body;
+      const patientId = req.user.username;
+      const description = req.query.description;
+  
+      // Find the patient by ID
+      const patient = await Patient.findOne({username:patientId});
+  
+      if (!patient) {
+        return res.status(404).json({ message: 'Patient not found' });
+      }
+  
+      // Find the index of the document with the given description
+      const documentIndex = patient.Documents.findIndex(
+        (document) => document.description === description
+      );
+  
+      if (documentIndex === -1) {
+        return res.status(404).json({ message: 'Document not found' });
+      }
+  
+      // Remove the document from the array
+      patient.Documents.splice(documentIndex, 1);
+  
+      // Save the updated patient to the database
+      await patient.save();
+  
+      return res.status(200).json({ message: 'Document deleted successfully', patient });
+    } catch (error) {
+      console.error('Error deleting document:', error.message);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
 
 module.exports = {
     getFamilyMembersHealthPackages,
@@ -1262,5 +1324,5 @@ module.exports = {
     getWallet,
     payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
     refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,
-    markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments
+    markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument
 }

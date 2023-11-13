@@ -614,7 +614,56 @@ const changeToFollowUp = async (req, res) => {
     }
   };
 
+  const getDocumentsForLoggedInDoctorPatients = async (req, res) => {
+    try {
+      // Assuming the doctor's ID is stored in req.user.id
+      const doctorId = req.user.username;
+  
+      // Find the doctor by ID
+      const doctor = await Doctor.findOne({username:doctorId});
+  
+      if (!doctor) {
+        return res.status(404).json({ error: 'Doctor not found' });
+      }
+      console.log("gbna el doc")
+      // Get the list of patient usernames associated with the doctor
+      const patientUsernames = doctor.patients;
+      if(!patientUsernames){
+        return res.status(404).json({ error: 'Doctor has no paitents' });
 
+      }
+      console.log("gbna el patients")
+
+  
+      // Fetch documents for each patient
+      const documentsForPatients = await Promise.all(
+        patientUsernames.map(async (patientUsername) => {
+          // Find the patient by username
+          const patient = await Patient.findOne({ username: patientUsername });
+  
+          if (!patient) {
+            console.warn(`Patient with username ${patientUsername} not found.`);
+            return null;
+          }
+  
+          // Fetch documents for the patient
+          const documents = patient.Documents;
+  
+          return {
+            patientUsername: patient.username,
+            documents,
+          };
+        })
+      );
+  
+      const result = documentsForPatients.filter((patientDocuments) => patientDocuments !== null);
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error retrieving documents for doctor patients:', error.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
 
   
 module.exports = {
@@ -634,5 +683,6 @@ module.exports = {
     add_available_slots,
     getCompletedAppointmentsForDoctor,
     createfollowUPAppointment,
-    changeToFollowUp
+    changeToFollowUp,
+    getDocumentsForLoggedInDoctorPatients
 };

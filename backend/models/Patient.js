@@ -93,6 +93,7 @@ const patientSchema = new Schema({
         {
             description: {
                 type: String,
+                unique:true
                 
             },
             content: {
