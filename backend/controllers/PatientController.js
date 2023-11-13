@@ -1223,6 +1223,44 @@ const patientchangepassword = async (req, res) => {
 };
 
 
+
+const saveDocuments =   async (req, res) => {
+    const  username  = req.user.username;
+    const documents = req.body.documents;
+    const descriptions = req.body.descriptions
+
+    try {
+        // Find the patient by username
+        const patient = await Patient.findOne({ username: username });
+
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+
+        // Validate that the length of descriptions and documents arrays are the same
+        if (descriptions.length !== documents.length) {
+            return res.status(400).json({ message: 'Descriptions and documents arrays must have the same length' });
+        }
+
+        // Map through the arrays and push documents with descriptions to the patient's Documents array
+        descriptions.forEach((description, index) => {
+            patient.Documents.push({
+                description:description,
+                content: documents[index],
+            });
+        });
+
+        // Save the updated patient to the database
+        await patient.save();
+
+        return res.status(200).json({ message: 'Documents saved successfully', patient });
+    } catch (error) {
+        console.error('Error saving documents:', error.message);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
 module.exports = {
     getFamilyMembersHealthPackages,
     signUp,
@@ -1245,5 +1283,6 @@ module.exports = {
     selectpatient,
     getWallet,
     payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
-    refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam
+    refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,
+    markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments
 }
