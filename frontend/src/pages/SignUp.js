@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 import { useEffect, useState} from 'react';
 
@@ -7,10 +7,13 @@ import {Button, Form} from 'react-bootstrap'
 const SignUp = () => {
     const current = new Date().toISOString().split("T")[0]
 
+    const navigate = useNavigate()
+
     const [message, setMessage] = useState('')
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isValid, setIsValid] = useState(true);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [dob, setDob] = useState('');
@@ -23,6 +26,18 @@ const SignUp = () => {
     const [ERelation, setERelation] = useState('');
     
     const [error, setError] = useState(null);
+
+    const handlePasswordChange = (event) => {
+        const newPassword = event.target.value;
+        setPassword(newPassword);
+    
+        // Define your password validation regex
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    
+        // Validate the password against the regex
+        const isValidPassword = passwordRegex.test(newPassword);
+        setIsValid(isValidPassword);
+      }; 
 
     const register = async (e) => {
         e.preventDefault()
@@ -64,6 +79,8 @@ const SignUp = () => {
             setHealthRecords('')
             setError(null)
             console.log("Patient Created", json[0]);
+            window.alert('Signed Up Successfully')
+            navigate('/')
             setMessage("Patient Created Successfuly")
         }
     }
@@ -89,13 +106,15 @@ const SignUp = () => {
                     />
                 </label>
                 <hr />
-                <label>
-                    Password: 
-                    <input 
+                <label htmlFor="password">Password:</label>
+                <input
+                    type="password"
+                    id="password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    type="text" />
-                </label>
+                    onChange={handlePasswordChange}
+                    className={isValid ? 'valid' : 'invalid'}
+                />
+                {!isValid && <p className="error-message">Password must be at least 8 characters long and include at least one letter and one number.</p>}
                 <hr />
                 <label>
                     Name: 
@@ -162,12 +181,21 @@ const SignUp = () => {
                 </label>
                 <br />
                 <label>
-                    Relation to the Patient: 
-                    <input 
-                    value={ERelation}
-                    onChange={e => setERelation(e.target.value)}
-                    type="text" />
-                </label>
+                    Relation to the Patient:
+                    <select
+                        value={ERelation}
+                        onChange={(e) => setERelation(e.target.value)}
+                    >
+                        <option value="">Select Relation</option>
+                        <option value="Father">Father</option>
+                        <option value="Mother">Mother</option>
+                        <option value="Sibling">Sibling</option>
+                        <option value="Child">Child</option>
+                        <option value="Husband">Husband</option>
+                        <option value="Wife">Wife</option>
+                        {/* Add more options as needed */}
+                    </select>
+                    </label>
                 <br/>
                 
                 <label>

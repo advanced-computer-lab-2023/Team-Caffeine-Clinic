@@ -506,8 +506,18 @@ button:hover {
 }
 
 .error-message {
-  color: #ff0000;
-  margin-top: 10px;
+  color: #f44336; /* Red color for error message */
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+
+.valid {
+  border: 1px solid #4caf50; /* Green border for valid input */
+}
+
+.invalid {
+  border: 1px solid #f44336; /* Red border for invalid input */
 }
 
 /* Add more styles as needed */
