@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
-import { Link } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { useLogout } from '../hooks/useLogout'
 
 import "../index.css"
@@ -11,7 +11,10 @@ const App1 = () => {
   const [employmentContract, setEmploymentContract] = useState(null);
   const [username, setUsername] = useState('');
   const [error, setError] = useState(null);
+
   const user = useAuthContext();
+  const navigate = useNavigate();
+  
   const { logout } = useLogout();
 
 
@@ -33,13 +36,18 @@ const App1 = () => {
 
   const acceptContract = async () => {
     try {
-      await fetch(`/api/emplymentContract/acceptContract?username=${username}`, {
+      const response = await fetch(`/api/emplymentContract/acceptContract?username=${username}`, {
         method: 'PATCH', 
         headers: {
             'Authorization': `Bearer ${user.user.token}`
         }
       });
       // handle success if needed
+      if(response){
+        window.alert('Welcome Doctor')
+        navigate('/seedoc')
+      }
+
     } catch (error) {
       console.error('Error accepting contract:', error);
       setError('Error accepting the contract. Please try again later.');
@@ -48,13 +56,16 @@ const App1 = () => {
 
   const rejectContract = async () => {
     try {
-      await fetch(`/api/emplymentContract/rejectContract?username=${username}`, {
+      const response = await fetch(`/api/emplymentContract/rejectContract?username=${username}`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${user.user.token}`
         }
       });
       // handle success if needed
+      if(response){
+        logout()
+      }
     } catch (error) {
       console.error('Error rejecting contract:', error);
       setError('Error rejecting the contract. Please try again later.');
