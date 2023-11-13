@@ -25,9 +25,10 @@ const HealthPackages = () => {
         if (!response.ok) {
           throw new Error(data.message || "Could not fetch health packages.");
         }
-
-        setHealthPackage(data.healthPackage);
-        setTransaction(data.transaction)
+        if(data){
+          setHealthPackage(data.healthPackage);
+          setTransaction(data.transaction)
+        }
       } catch (err) {
         setError(err.message);
       }
@@ -153,12 +154,14 @@ useEffect(() => {
           <li key={member.id}>
             <div className='Admin-details'>
             <div className='name'> {member.name} </div> 
+            {(member.state !== 'unsubscribed') ?
+            <div>
             <strong>Health Package:</strong> {member._doc.healthPackage}
             <div><strong>Status:</strong> {member._doc.state}</div>
             {(member._doc.state === 'cancelled') ?
               <div><strong>End Date:</strong> {member._doc.cancel_renewal_time}</div> : <div><strong>Renewal Date:</strong> {member._doc.cancel_renewal_time}</div>}
               {(member._doc.state === 'subscribed') ?
-              <span onClick={() => unsubscribeFamilyMember(member.username)}>Cancel Subscription</span> : <div></div>}
+              <div><span onClick={() => unsubscribeFamilyMember(member.username)}>Cancel Subscription</span></div> : <div></div>} </div> : <div>Status: {member.state}</div> }
             </div>
           </li>
         )))}

@@ -8,7 +8,8 @@ const Schema = mongoose.Schema
 const patientSchema = new Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     password: {
@@ -88,7 +89,19 @@ const patientSchema = new Schema({
     wallet: {
         type: Number,
         default: 0
-    }
+    },
+    Documents: [
+        {
+            description: {
+                type: String,
+                unique:true
+                
+            },
+            content: {
+                type: String,
+            },
+        }
+    ],
 
 }, {timestamps: true})
 
@@ -140,7 +153,7 @@ patientSchema.statics.login = async function(username, password) {
 }
 
 patientSchema.statics.setPassword = async function(email, newPassword) {
-    console.log(newPassword)
+    console.log(email, newPassword)
 
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(newPassword, salt)

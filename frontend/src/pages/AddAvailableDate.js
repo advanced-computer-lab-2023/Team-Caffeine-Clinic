@@ -16,6 +16,13 @@ const AddAvailableDateFunc = () => {
     const minutes = selectedDate.getMinutes();
 
     const formattedDate = `${year}\\${month}\\${day}:${hours}:${minutes}`;
+    const toady = new Date();
+    if(toady>selectedDate){
+      setSuccessMessage('Time slot has already passed please enter a Valid Time Slot ');
+    }
+    else {
+      setSuccessMessage("");
+    }
     setTimeSlot(JSON.stringify(formattedDate));
   };
 

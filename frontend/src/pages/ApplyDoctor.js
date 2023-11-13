@@ -23,6 +23,7 @@ const SignUp = () => {
     const [ID, setID] = useState(null);
     const [Medical_licenses, setMedical_licenses] = useState(null);
     const [Medical_degree, setMedical_degree] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     
     const [error, setError] = useState(null);
@@ -40,48 +41,63 @@ const SignUp = () => {
     }; 
 
     const register = async (e) => {
-        e.preventDefault()
+      e.preventDefault();
+      setLoading(true);
 
-        const DoctorApplication = {
-            username: username, password: password, email: email, 
-            name: name, speciality: speciality, rate: rate, affiliation: affiliation, education: education,
-            ID:ID,Medical_licenses:Medical_licenses,Medical_degree:Medical_degree
-        }
-        
-        const response = await fetch('/api/applyDoctor', {
-            method: 'POST',
-            body: JSON.stringify(DoctorApplication),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+      const DoctorApplication = {
+          username,
+          password,
+          email,
+          name,
+          speciality,
+          rate,
+          affiliation,
+          education,
+          ID,
+          Medical_licenses,
+          Medical_degree,
+      };
 
-        const json = await response.json()
+      try {
+          const response = await fetch('/api/applyDoctor', {
+              method: 'POST',
+              body: JSON.stringify(DoctorApplication),
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
 
-        if(!response.ok){
-            setError(json.error)
-            console.log(error);
-        }
+          const json = await response.json();
 
-        if(response.ok){
-            setID('');
-            setMedical_licenses('');
-            setMedical_degree('');
-            setUsername('')
-            setPassword('')
-            setEmail('')
-            setAffiliation('')
-            setEducation('')
-            setRate('')
-            setName('')
-            setSpeciality('')
-            setError(null)
-            console.log("Doctor Application Created", json[0]);
-            window.alert('Doctor Application Created Successfully')
-            navigate('/')
-            setMessage("Doctor Application Created Successfully")
-        }
-    }
+          if (!response.ok) {
+              setError(json.error);
+              console.log(error);
+          } else {
+              setID('');
+              setMedical_licenses('');
+              setMedical_degree('');
+              setUsername('');
+              setPassword('');
+              setEmail('');
+              setAffiliation('');
+              setEducation('');
+              setRate('');
+              setName('');
+              setSpeciality('');
+              setError(null);
+              console.log('Doctor Application Created', json[0]);
+              window.alert('Doctor Application Created Successfully')
+              navigate('/')
+              setMessage('Doctor Application Created Successfully');
+          }
+      } catch (error) {
+          console.error('Error during registration:', error);
+          setError('An error occurred during registration.');
+      } finally {
+          setLoading(false);
+      }
+  };
+
     const fileToBase64 = (file, cb) => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -141,6 +157,7 @@ const SignUp = () => {
                     />
                 </label>
                 <hr />
+
                 <label htmlFor="password">Password:</label>
                 <input
                     type="password"
@@ -150,6 +167,7 @@ const SignUp = () => {
                     className={isValid ? 'valid' : 'invalid'}
                 />
                 {!isValid && <p className="error-message">Password must be at least 8 characters long and include at least one letter and one number.</p>}
+
                 <hr />
                 <label>
                     Name: 
@@ -230,9 +248,9 @@ const SignUp = () => {
                 </label>
                 <br />
                 
-                <Button variant="dark" type="submit">
-                    Apply
-                </Button>
+                <Button variant="dark" type="submit" disabled={loading}>
+                        {loading ? 'Applying...' : 'Apply'}
+                    </Button>
 
                 <Link className='login-button' to="/">
                 login instead

@@ -4,6 +4,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 const AdminForm = () => {
   const [Username, setUsername] = useState('')
   const [Password, setPassword] = useState('')
+  const [Email, setEmail] = useState('')
   const [error, setError] = useState(null)
 
   const {user} = useAuthContext()
@@ -11,7 +12,7 @@ const AdminForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const admin = {Username,Password}
+    const admin = {Username, Password, Email}
     
     const response = await fetch('/api/Admin/addAdmin', {
       method: 'POST',
@@ -52,6 +53,13 @@ const AdminForm = () => {
         type="password"  
         onChange={(e) => setPassword(e.target.value)} 
         value={Password}
+      />
+
+      <label>Email:</label>
+      <input 
+        type="email"  
+        onChange={(e) => setEmail(e.target.value)} 
+        value={Email}
       />
 
       <button>Add Admin</button>

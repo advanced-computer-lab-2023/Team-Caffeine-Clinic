@@ -38,7 +38,7 @@ const CompletedAppointments = ({ doctorId }) => {
         setNewDate(date);
     };
 
-    const handleSaveDate = async (patientId, date) => {
+    const handleSaveDate = async (patientId, date, olddate) => {
         const selectedDate = new Date(date);
         const year = selectedDate.getFullYear();
         const month = selectedDate.getMonth() + 1;
@@ -48,13 +48,14 @@ const CompletedAppointments = ({ doctorId }) => {
 
         const formattedDate1 = `${year}\\${month}\\${day}:${hours}:${minutes}`;
         const formattedDate = JSON.stringify(formattedDate1);
+        console.log(olddate)
         try {
 
            
               
               
               
-            const response = await fetch(`/api/doctorInfo/createfollowUPAppointment?patientId=${patientId}&date=${formattedDate}`, {
+            const response = await fetch(`/api/doctorInfo/createfollowUPAppointment?patientId=${patientId}&date=${formattedDate}&olddate=${olddate}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${user.user.token}`
@@ -112,7 +113,7 @@ const CompletedAppointments = ({ doctorId }) => {
                                 value={newDate}
                                 onChange={(e) => setNewDate(e.target.value)}
                             />
-                            <button onClick={() => handleSaveDate(appointment.patient, newDate) }>
+                            <button onClick={() => handleSaveDate(appointment.patient, newDate,appointment.appointmentDate) }>
                                 Save
                             </button>
                             <button onClick={handleCancelEdit}>Cancel</button>

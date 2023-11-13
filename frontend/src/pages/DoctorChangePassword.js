@@ -32,7 +32,7 @@ const DoctorChangePassword = () => {
       setPassword('');
       setError(null);
       console.log('Password updated successfully:', json);
-      navigate('/doctor/dashboard'); // Redirect to the doctor dashboard or another page
+      navigate('/seedoc'); // Redirect to the doctor dashboard or another page
     }
   };
 
