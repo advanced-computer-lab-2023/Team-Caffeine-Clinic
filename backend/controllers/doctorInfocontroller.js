@@ -565,8 +565,25 @@ const getCompletedAppointmentsForDoctor = async (req, res) => {
     const doctorId = req.user.username;
     const patientId = req.query.patientId;
     const date = req.query.date;
+    const olddate = req.query.olddate;
+    console.log(olddate);
+
 
     try {
+        const updatedApp = await Appointment.findOneAndUpdate(
+            {
+              doctor: doctorId,
+              patient: patientId,
+              appointmentDate: olddate,
+            },
+            { $set: { status: 'completedAndFollwingUP' } },
+            { new: true } // To return the updated document
+          );
+
+          if (!updatedApp) {
+            // Handle the case where no matching appointment is found
+            return res.status(400).json({ error: 'no ccompleted appoinmnet' });
+          } 
         // Check if the appointment already exists
         const existingAppointment = await Appointment.findOne({ doctor: doctorId, patient: patientId, appointmentDate: date });
 
@@ -665,6 +682,48 @@ const changeToFollowUp = async (req, res) => {
     }
   };
 
+  const saveDocumentsForPatient = async (req, res) => {
+    try {
+      const doctorUsername = req.user.username; // Assuming you have the doctor's username in the request user object
+      const { patientUsername, descriptions, documents } = req.body;
+  
+      console.log(doctorUsername)
+      console.log(patientUsername)
+
+      // Find the doctor by username
+      const doctor = await Doctor.findOne({ username: doctorUsername });
+  
+      if (!doctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+      }
+  
+      // Find the patient by username
+      const patient = await Patient.findOne({ username: patientUsername });
+  
+      if (!patient) {
+        return res.status(404).json({ message: 'Patient not found' });
+      }
+  
+      // Add the documents to the patient's Documents array
+      for (let i = 0; i < documents.length; i++) {
+        const newDocument = {
+          description: descriptions[i],
+          content: documents[i],
+        };
+  
+        patient.Documents.push(newDocument);
+      }
+  
+      await patient.save();
+  
+      res.status(201).json({ message: 'Documents saved successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while saving the documents.' });
+    }
+  };
+  
+
   
 module.exports = {
     getAllHealthRecords,
@@ -684,5 +743,6 @@ module.exports = {
     getCompletedAppointmentsForDoctor,
     createfollowUPAppointment,
     changeToFollowUp,
-    getDocumentsForLoggedInDoctorPatients
+    getDocumentsForLoggedInDoctorPatients,
+    saveDocumentsForPatient
 };

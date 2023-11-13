@@ -36,6 +36,8 @@ import DoctorList from './pages/Filterbyavedates'
 import ForgotPass from './pages/ForgotPass';
 import ViewDocuments from './pages/seeanddeletdocs';
 import DoctorDocuments from './pages/seepatientdocs';
+import AddDocuments from './pages/Docaddpatientdocs';
+
 
 
 
@@ -116,6 +118,7 @@ function App() {
               <Route path="SearchPatient" element={<WithDoctorNavbar><ProtectedRoute><SelectPatient /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><ProtectedRoute><AppointmentDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seepatientdocs" element={<WithDoctorNavbar><ProtectedRoute><DoctorDocuments /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="Docaddpatientdocs" element={<WithDoctorNavbar><ProtectedRoute><AddDocuments /></ProtectedRoute></WithDoctorNavbar>} />
 
 
               <Route 

@@ -26,7 +26,8 @@ const {
     getCompletedAppointmentsForDoctor,
     createfollowUPAppointment,
     changeToFollowUp,
-    getDocumentsForLoggedInDoctorPatients
+    getDocumentsForLoggedInDoctorPatients,
+    saveDocumentsForPatient
     
     
 } = require('../controllers/doctorInfocontroller')
@@ -57,6 +58,7 @@ router.get('/getAllHealthRecords', getAllHealthRecords)
 
 router.get('/getDocumentsForLoggedInDoctorPatients', getDocumentsForLoggedInDoctorPatients)
 
+router.post('/saveDocumentsForPatient', saveDocumentsForPatient)
 
 //filter  a doctor by speciality and/or availability on a certain date and at a specific time
 //router.get('/filterDoctorsByAvailability',filterDoctorsByAvailability)
