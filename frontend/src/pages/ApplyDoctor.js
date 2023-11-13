@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 import { useEffect, useState} from 'react';
 
@@ -7,10 +7,13 @@ import {Button, Form} from 'react-bootstrap'
 const SignUp = () => {
     const current = new Date().toISOString().split("T")[0]
 
+    const navigate = useNavigate()
+
     const [message, setMessage] = useState('')
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isValid, setIsValid] = useState(true);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [speciality, setSpeciality] = useState('');
@@ -24,6 +27,18 @@ const SignUp = () => {
 
     
     const [error, setError] = useState(null);
+
+    const handlePasswordChange = (event) => {
+      const newPassword = event.target.value;
+      setPassword(newPassword);
+  
+      // Define your password validation regex
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  
+      // Validate the password against the regex
+      const isValidPassword = passwordRegex.test(newPassword);
+      setIsValid(isValidPassword);
+    }; 
 
     const register = async (e) => {
       e.preventDefault();
@@ -71,6 +86,8 @@ const SignUp = () => {
               setSpeciality('');
               setError(null);
               console.log('Doctor Application Created', json[0]);
+              window.alert('Doctor Application Created Successfully')
+              navigate('/')
               setMessage('Doctor Application Created Successfully');
           }
       } catch (error) {
@@ -80,6 +97,7 @@ const SignUp = () => {
           setLoading(false);
       }
   };
+
     const fileToBase64 = (file, cb) => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -139,14 +157,17 @@ const SignUp = () => {
                     />
                 </label>
                 <hr />
-                <label>
-    Password: 
-    <input 
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        type="password" // Set the type to "password"
-    />
-</label>
+
+                <label htmlFor="password">Password:</label>
+                <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    className={isValid ? 'valid' : 'invalid'}
+                />
+                {!isValid && <p className="error-message">Password must be at least 8 characters long and include at least one letter and one number.</p>}
+
                 <hr />
                 <label>
                     Name: 

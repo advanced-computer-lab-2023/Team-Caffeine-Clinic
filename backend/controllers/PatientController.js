@@ -224,15 +224,18 @@ const createToken = (_id) => {
 //Sign up as a new Patient
 const signUp = async(req, res) => {
     const {username, password, name, email, dob, gender, mobile_number, health_package, Efull_name, Emobile_number, relation} = req.body
-
+    
     const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
+    console.log(password, relation);
 
     const patient = new Patient({username, password, name, email, dob, gender, 
         mobile_number, health_package, emergency_contact})
 
     try {
         // Regular expression to check for at least one capital letter and one number
-        const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
+
+        const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
 
         if (!passwordRequirements.test(password)) {
             return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
