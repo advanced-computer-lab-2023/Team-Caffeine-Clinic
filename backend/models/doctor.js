@@ -123,7 +123,7 @@ doctorSchema.statics.setPassword = async function(email, newPassword) {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(newPassword, salt)
 
-    const user = this.findOneAndUpdate({email: email}, {password: hash})
+    const user = await this.findOneAndUpdate({email: email}, {password: hash})
 
     if(!user){
         throw Error('User Not Found')

@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 function ForgotPass() {
+    const navigate = useNavigate()
+
     const [email, setEmail] = useState('');
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOTP] = useState('');
+    const [emailVisible, setEmailVisible] = useState(true);
     const [otpVerified, setOtpVerified] = useState(false);
     const [newPassword, setNewPassword] = useState(''); 
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
+    const [disableEmail, setDisableEmail] = useState(false)
+    const [disableVerify, setDisableVerify] = useState(false)
+    
     const sendEmail = async() => {
         try{
         const response = await fetch('http://localhost:4000/api/forgotPass', {
@@ -21,6 +28,8 @@ function ForgotPass() {
 
           if(response.ok){
             setOtpSent(true);
+            setDisableEmail(true)
+            setEmailVisible(false)
             setSuccessMessage('OTP sent to your email.');
             setErrorMessage('');
           } else {
@@ -49,6 +58,8 @@ function ForgotPass() {
     
             if (response.ok) {
                 setOtpVerified(true);
+                setDisableVerify(true)
+                setOtpSent(false)
                 setSuccessMessage('OTP verified. You can now set a new password.');
                 setErrorMessage('');
             } else {
@@ -76,6 +87,8 @@ function ForgotPass() {
             if (response.ok) {
                 setSuccessMessage('Password has been reset successfully.');
                 setErrorMessage('');
+                window.alert('Password has been reset successfully.');
+                navigate('/')
             } else {
                 setErrorMessage('Failed to reset password. Please try again.');
             }
@@ -91,6 +104,7 @@ function ForgotPass() {
             {errorMessage && <p className="error">{errorMessage}</p>}
             {successMessage && <p className="success">{successMessage}</p>}
     
+            {emailVisible ? (
             <div>
                 <label htmlFor="email"><strong>Email:</strong></label>
                 <input
@@ -98,9 +112,10 @@ function ForgotPass() {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={disableEmail}
                 />
-                <button onClick={sendEmail}> Send OTP </button>
-            </div>
+                <button onClick={sendEmail} disabled={disableEmail}> Send OTP </button>
+            </div> ) : <div><label htmlFor="email"><strong>Email:</strong></label> {email} </div> }
     
             {otpSent && (
                 <div>
@@ -110,8 +125,9 @@ function ForgotPass() {
                         id="otp"
                         value={otp}
                         onChange={(e) => setOTP(e.target.value)}
+                        disabled={disableVerify}
                     />
-                    <button onClick={verifyOTP}> Verify OTP </button>
+                    <button onClick={verifyOTP} disabled={disableVerify}> Verify OTP </button>
                 </div>
             )}
             

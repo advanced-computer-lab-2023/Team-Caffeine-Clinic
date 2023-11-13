@@ -565,8 +565,25 @@ const getCompletedAppointmentsForDoctor = async (req, res) => {
     const doctorId = req.user.username;
     const patientId = req.query.patientId;
     const date = req.query.date;
+    const olddate = req.query.olddate;
+    console.log(olddate);
+
 
     try {
+        const updatedApp = await Appointment.findOneAndUpdate(
+            {
+              doctor: doctorId,
+              patient: patientId,
+              appointmentDate: olddate,
+            },
+            { $set: { status: 'completedAndFollwingUP' } },
+            { new: true } // To return the updated document
+          );
+
+          if (!updatedApp) {
+            // Handle the case where no matching appointment is found
+            return res.status(400).json({ error: 'no ccompleted appoinmnet' });
+          } 
         // Check if the appointment already exists
         const existingAppointment = await Appointment.findOne({ doctor: doctorId, patient: patientId, appointmentDate: date });
 
@@ -614,7 +631,98 @@ const changeToFollowUp = async (req, res) => {
     }
   };
 
+  const getDocumentsForLoggedInDoctorPatients = async (req, res) => {
+    try {
+      // Assuming the doctor's ID is stored in req.user.id
+      const doctorId = req.user.username;
+  
+      // Find the doctor by ID
+      const doctor = await Doctor.findOne({username:doctorId});
+  
+      if (!doctor) {
+        return res.status(404).json({ error: 'Doctor not found' });
+      }
+      console.log("gbna el doc")
+      // Get the list of patient usernames associated with the doctor
+      const patientUsernames = doctor.patients;
+      if(!patientUsernames){
+        return res.status(404).json({ error: 'Doctor has no paitents' });
 
+      }
+      console.log("gbna el patients")
+
+  
+      // Fetch documents for each patient
+      const documentsForPatients = await Promise.all(
+        patientUsernames.map(async (patientUsername) => {
+          // Find the patient by username
+          const patient = await Patient.findOne({ username: patientUsername });
+  
+          if (!patient) {
+            console.warn(`Patient with username ${patientUsername} not found.`);
+            return null;
+          }
+  
+          // Fetch documents for the patient
+          const documents = patient.Documents;
+  
+          return {
+            patientUsername: patient.username,
+            documents,
+          };
+        })
+      );
+  
+      const result = documentsForPatients.filter((patientDocuments) => patientDocuments !== null);
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error retrieving documents for doctor patients:', error.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+  const saveDocumentsForPatient = async (req, res) => {
+    try {
+      const doctorUsername = req.user.username; // Assuming you have the doctor's username in the request user object
+      const { patientUsername, descriptions, documents } = req.body;
+  
+      console.log(doctorUsername)
+      console.log(patientUsername)
+
+      // Find the doctor by username
+      const doctor = await Doctor.findOne({ username: doctorUsername });
+  
+      if (!doctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+      }
+  
+      // Find the patient by username
+      const patient = await Patient.findOne({ username: patientUsername });
+  
+      if (!patient) {
+        return res.status(404).json({ message: 'Patient not found' });
+      }
+  
+      // Add the documents to the patient's Documents array
+      for (let i = 0; i < documents.length; i++) {
+        const newDocument = {
+          description: descriptions[i],
+          content: documents[i],
+        };
+  
+        patient.Documents.push(newDocument);
+      }
+  
+      await patient.save();
+  
+      res.status(201).json({ message: 'Documents saved successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while saving the documents.' });
+    }
+  };
+  
 
   
 module.exports = {
@@ -634,5 +742,7 @@ module.exports = {
     add_available_slots,
     getCompletedAppointmentsForDoctor,
     createfollowUPAppointment,
-    changeToFollowUp
+    changeToFollowUp,
+    getDocumentsForLoggedInDoctorPatients,
+    saveDocumentsForPatient
 };

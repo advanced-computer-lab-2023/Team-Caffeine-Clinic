@@ -22,6 +22,7 @@ const OTP = require('../models/OTP');
 //const { default: HealthPackages } = require('../../frontend/src/pages/HealthPackages')
 
 const Transaction = require('../models/transaction');
+const Admin = require('../models/admin')
 
 // Passport local Strategy
 //passport.use(Patient.createStrategy());
@@ -231,11 +232,29 @@ const signUp = async(req, res) => {
 
     try {
         // Regular expression to check for at least one capital letter and one number
-        const passwordRequirements = /^(?=.[A-Z])(?=.\d)/;
+        const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
 
         if (!passwordRequirements.test(password)) {
             return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
         }
+
+        let exists = await Doctor.findOne({
+            $or: [
+                { username: username },
+                { email: email }
+            ]
+        })
+
+        if(exists) return res.status(400).json({error: 'Username or Email in use'})
+
+        exists = await Admin.findOne({
+            $or: [
+                { username: username },
+                { email: email }
+            ]
+        })
+
+        if(exists) return res.status(400).json({error: 'Username or Email in use'})
 
         const user = await Patient.signUp(patient)
 
@@ -283,7 +302,10 @@ const forgotPass = async(req, res) => {
         user = await Doctor.findOne({email: email})
         
         if(!user){
-            return res.status(400).json({err: "Email Address is incorrect"})
+            user = await Admin.findOne({email: email})
+            if(!user){
+                return res.status(400).json({err: "Email Address is incorrect"})
+            }
         }
     }
 
@@ -340,6 +362,7 @@ const verifyOTP = async (req, res) => {
         }
 
         console.log("Correct OTP");
+    await OTP.deleteOne({_id: verify._id})
         return res.status(200).json({ mssg: "OTP verified successfully" });
     } catch (error) {
         console.error("Error verifying OTP:", error);
@@ -350,39 +373,31 @@ const setPass = async(req, res) => {
     const {newPassword, email} = req.body
 
     // Regular expression to check for at least one capital letter and one number
-    const passwordRequirements = /^(?=.[A-Z])(?=.\d)/;
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
 
     if (!passwordRequirements.test(newPassword)) {
-        return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+        return res.status(500).json({ error: 'Password must contain at least one capital letter and one number.' });
     }
 
-    const user = await Patient.findOne({email: email});
+    let user = await Patient.findOne({email: email});
 
-    try{
-        Patient.setPassword(email, newPassword)
+    if(!user){
+        user = await Doctor.findOne({email: email})
+        
+        if(!user){
+            user = await Admin.findOne({email: email})
+            if(!user){
+                return res.status(400).json({err: "Email Address is incorrect"})
+            }
+            Admin.setPassword(email, newPassword)
+            return res.status(202).json({ mssg: "Password Changed Successfully" });
+        }
+        Doctor.setPassword(email, newPassword)
         return res.status(202).json({ mssg: "Password Changed Successfully" });
-    } catch(error){
-        return res.status(400).json({error: error})
     }
-    // const salt = await bcrypt.genSalt(10)
-    // const hash = await bcrypt.hash(newPassword, salt)
-    
-    // user.setPassword(newPassword, async(err) => {
-    //     if(err){
-    //         console.log(err);
-    //         return res.status(400).json({mssg: "Something went wrong"})
-    //     }
 
-    //     try {
-    //         await user.save();
-    //         console.log("Password updated");
-    //         return res.status(202).json({ mssg: "Password Changed Successfully" });
-    //     } catch (err) {
-    //         console.log(err);
-    //         return res.status(400).json({ mssg: "Error saving user with new password" });
-    //     }
-       
-    // })
+    Patient.setPassword(email, newPassword)
+    return res.status(202).json({ mssg: "Password Changed Successfully" });
 
 }
 //View and Filter Perscriptions
@@ -1182,32 +1197,29 @@ const patientchangepassword = async (req, res) => {
 
 
   const getFamilyMembersHealthPackages = async (req ,res) => {
-    try {
-        const patient = req.user
+    
+    const patient = req.user
       
         
 
-        if (!patient) {
-            throw new Error('Patient not found');
+    if (!patient) {
+        throw new Error('Patient not found');
+    }
+    const familyMembersHealthPackages = [];
+    for(let i = 0; i < (patient.family_members).length; i++){
+        const member = patient.family_members[i]
+        const transaction = await HealthPackagesTransaction.findOne({patient: member.username, state: { $in: ['subscribed', 'cancelled'] }})
+        
+        if(!transaction){
+            const input = {username: member.username, name: member.name, state: 'unsubscribed', healthPackage: 'None'}
+            familyMembersHealthPackages[i] = input
         }
-
-
-        const familyMembersHealthPackages = [];
-
-        for(let i = 0; i < (patient.family_members).length; i++){
-            const member = patient.family_members[i]
-
-            const transaction = await HealthPackagesTransaction.findOne({patient: member.username, state: { $in: ['subscribed', 'cancelled'] }})
-
-            if(!transaction){
-                const input = {username: member.username, name: member.name, state: 'Unsubscribed', healthPackage: 'None'}
-                familyMembersHealthPackages[i] = input
-            }
-            else{
-                familyMembersHealthPackages[i] = {username: member.username, name: member.name, ...transaction};
-            }
+        else{
+            const state = transaction.state
+            familyMembersHealthPackages[i] = {username: member.username, name: member.name, state: state, ...transaction};
         }
-
+    }
+    try {
     
         // const familyMembersHealthPackages = patient.family_members.map(member => ({
         //     username: member.username,
@@ -1222,6 +1234,106 @@ const patientchangepassword = async (req, res) => {
     }
 };
 
+
+
+const saveDocuments =   async (req, res) => {
+    const  username  = req.user.username;
+    const {documents,descriptions} = req.body;
+ 
+   
+
+    if (!Array.isArray(documents) || !Array.isArray(descriptions)) {
+        return res.status(400).json({ message: 'Invalid format for documents or descriptions' });
+    }
+
+    try {
+        // Find the patient by username
+
+        console.log("ana hena tani ")
+
+        const patient = await Patient.findOne({ username: username });
+        console.log("ana hena tani2 ")
+
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+        console.log(documents.length+"   "+ descriptions.length)
+
+        if (documents.length !== descriptions.length) {
+            return res.status(400).json({ message: 'Descriptions and documents arrays must have the same length' });
+        }
+        console.log("ana hena 4")
+       
+        // Map through the arrays and push documents with descriptions to the patient's Documents array
+        descriptions.forEach((description, index) => {
+            patient.Documents.push({
+                description:description,
+                content: documents[index],
+            });
+        });
+        console.log("ana hena tani ")
+
+        // Save the updated patient to the database
+        await patient.save();
+
+        return res.status(200).json({ message: 'Documents saved successfully', patient });
+    } catch (error) {
+        console.error('Error saving documents:', error.message);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+const viewMyDocuments = async (req, res) => {
+    try {
+      const username = req.user.username; // Get the username from the authenticated user
+      const patient = await Patient.findOne({ username:username }); // Fetch only the username and Documents fields
+  
+      if (!patient) {
+        return res.status(404).json({ message: 'Patient not found' });
+      }
+  
+      res.status(200).json({
+        username: patient.username,
+        documents: patient.Documents,
+      });
+    } catch (error) {
+      console.error('Error viewing patient documents:', error.message);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  const deleteDocument = async (req, res) => {
+    try {
+      //const { patientId, description } = req.body;
+      const patientId = req.user.username;
+      const description = req.query.description;
+  
+      // Find the patient by ID
+      const patient = await Patient.findOne({username:patientId});
+  
+      if (!patient) {
+        return res.status(404).json({ message: 'Patient not found' });
+      }
+  
+      // Find the index of the document with the given description
+      const documentIndex = patient.Documents.findIndex(
+        (document) => document.description === description
+      );
+  
+      if (documentIndex === -1) {
+        return res.status(404).json({ message: 'Document not found' });
+      }
+  
+      // Remove the document from the array
+      patient.Documents.splice(documentIndex, 1);
+  
+      // Save the updated patient to the database
+      await patient.save();
+  
+      return res.status(200).json({ message: 'Document deleted successfully', patient });
+    } catch (error) {
+      console.error('Error deleting document:', error.message);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
 
 module.exports = {
     getFamilyMembersHealthPackages,
@@ -1245,5 +1357,6 @@ module.exports = {
     selectpatient,
     getWallet,
     payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
-    refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam
+    refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,
+    markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument
 }
