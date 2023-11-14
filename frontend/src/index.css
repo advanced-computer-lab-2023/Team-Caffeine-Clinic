@@ -228,6 +228,15 @@ header a {
   margin-bottom: 100px;
 }
 
+.patient-change-password-page {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 100px;
+  margin-left: 210px;
+  font: 32px;
+  margin-bottom: 100px;
+}
+
 .familyMemberDetails .span {
   position: absolute;
   top: 20px;
