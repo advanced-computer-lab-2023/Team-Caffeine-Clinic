@@ -192,7 +192,7 @@ const HealthPackages = () => {
       {error && <p className="error-message">{error}</p>}
 
       {showHealthPackages || healthPackages.length === 0 ? (
-        <p>No health packages available.</p>
+        <></>
       ) : (
         <ul>
           {healthPackages.map((hp) => (
@@ -206,7 +206,7 @@ const HealthPackages = () => {
                 <div>Medicine Discount: {hp.discounts.pharmacyMedicine * 100}%</div>
                 <div>Family Member Discount: {hp.discounts.familySubscription * 100}%</div>
               </li>
-              <span className='span1' onClick={() => openPopup(hp.name, hp.basePrice)}>Subscribe</span>
+              <span className='span' onClick={() => openPopup(hp.name, hp.basePrice)}>Subscribe</span>
 
               {isPopupOpen && (
               <Elements stripe={stripePromise}>

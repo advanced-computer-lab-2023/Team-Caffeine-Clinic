@@ -73,10 +73,13 @@ header a {
   border-radius: 4px;
   margin: 20px auto;
   padding: 20px;
-  position: relative;
+  position:relative;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
-  width: 400px;
+  width: 80vw;
+  box-sizing: border-box;
 }
+
+
 .pageheader{
   display: inline-block;  
 }
@@ -214,11 +217,37 @@ header a {
 .create-form button:hover {
   background-color: #0056b3;
 }
-.familyMembers{
+
+
+.familyMemberDetails{
   display: grid;
   grid-template-columns: 1fr;
   gap: 100px;
-  margin-left: 130px;
+  margin-left: 210px;
+  font: 32px;
+  margin-bottom: 100px;
+}
+
+.familyMemberDetails .span {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: #f1f1f1;
+   padding: 6px; 
+  border-radius: 10%;
+  color: #333;
+}
+
+
+.familyMembers{
+  margin-left: 200px;
+  font-size: 24px;
+  gap: 0px;
+  margin-bottom:20px ;
+} 
+.familyMembers h1 {
+  margin-bottom: 50px ;
 }
 
 .perscButton{
@@ -237,10 +266,6 @@ header a {
 
 .message{
   color: green;
-}
-
-.Admin-details {
-  width: 1000px;
 }
 
 .Admin-details h4 {
