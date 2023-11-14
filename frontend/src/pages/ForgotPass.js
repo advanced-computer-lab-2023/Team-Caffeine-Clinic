@@ -7,6 +7,7 @@ function ForgotPass() {
     const [email, setEmail] = useState('');
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOTP] = useState('');
+    const [isValid, setIsValid] = useState(true);
     const [emailVisible, setEmailVisible] = useState(true);
     const [otpVerified, setOtpVerified] = useState(false);
     const [newPassword, setNewPassword] = useState(''); 
@@ -15,6 +16,18 @@ function ForgotPass() {
 
     const [disableEmail, setDisableEmail] = useState(false)
     const [disableVerify, setDisableVerify] = useState(false)
+
+    const handlePasswordChange = (event) => {
+        const newPassword = event.target.value;
+        setNewPassword(newPassword);
+    
+        // Define your password validation regex
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
+    
+        // Validate the password against the regex
+        const isValidPassword = passwordRegex.test(newPassword);
+        setIsValid(isValidPassword);
+      }; 
     
     const sendEmail = async() => {
         try{
@@ -138,9 +151,11 @@ function ForgotPass() {
                         type="password"
                         id="new-password"
                         value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
+                        onChange={handlePasswordChange}
+                        className={isValid ? 'valid' : 'invalid'}
                     />
                     <button onClick={handleSetNewPassword}> Change Password </button>
+                    {!isValid && <div className="error">Password must be at least 8 characters long and include at least one letter and one number.</div>}
                 </div>
             )}
         </div>
