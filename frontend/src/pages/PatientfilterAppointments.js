@@ -87,7 +87,6 @@ const AppointmentsComponent = () => {
                   <p>Doctor: {result.doctor}</p>
                   <p>Date: {result.appointmentDate}</p>
                   <p>Status: {result.status}</p>
-                  <p>Trans: {result.status}</p>
 
                   <button onClick={() => refundAppointment(result.appointmentDate,result.doctor,result.transactionId)}>Refund</button>
                 </div>

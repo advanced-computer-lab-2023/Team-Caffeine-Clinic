@@ -109,12 +109,20 @@ const FamilyMembers = () => {
         />
 
       <label htmlFor="find">Enter the relation:</label>
-       <input
-        type="text"
-        id="realtion"
-        value={Newrelation}
-        onChange={handleNewrelation}
-        />
+      <select
+      id="relation"
+      value={Newrelation}
+      onChange={handleNewrelation}
+    >
+      <option value="Wife">Wife</option>
+      <option value="Husband">Husband</option>
+      <option value="Daughter">Daughter</option>
+      <option value="Father">Father</option>
+      <option value="Mother">Mother</option>
+      <option value="Sibling">Sibling</option>
+      <option value="Son">Son</option>
+    </select>
+
         <button onClick={() => linkFamilyMember(NpEmail , Newrelation)}>Add Family Member</button>
         <p>{message}</p>
         {/* {isfind === false && redirectToSignUp && <Redirect to="/signup" />} */}
