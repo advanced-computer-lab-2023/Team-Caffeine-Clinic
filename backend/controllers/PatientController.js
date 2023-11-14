@@ -234,11 +234,11 @@ const signUp = async(req, res) => {
     try {
         // Regular expression to check for at least one capital letter and one number
 
-        const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
 
 
         if (!passwordRequirements.test(password)) {
-            return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+            return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
         }
 
         let exists = await Doctor.findOne({
@@ -376,10 +376,11 @@ const setPass = async(req, res) => {
     const {newPassword, email} = req.body
 
     // Regular expression to check for at least one capital letter and one number
-    const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
+
 
     if (!passwordRequirements.test(newPassword)) {
-        return res.status(500).json({ error: 'Password must contain at least one capital letter and one number.' });
+        return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
     }
 
     let user = await Patient.findOne({email: email});
@@ -1173,11 +1174,12 @@ const patientchangepassword = async (req, res) => {
       return res.status(404).json({ error: 'Invalid patient ID' });
     }
   
-    const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
-  
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
+
     if (!passwordRequirements.test(newPassword)) {
-      return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+        return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
     }
+
   
     try {
       const salt = await bcrypt.genSalt(10);

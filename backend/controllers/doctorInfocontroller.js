@@ -432,11 +432,13 @@ const doctorchangepassword = async (req, res) => {
   }
 
   // Regular expression to check for at least one capital letter and one number
-  const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
+  const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
 
-  if (!passwordRequirements.test(newPassword)) {
-    return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
-  }
+
+    if (!passwordRequirements.test(newPassword)) {
+        return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
+    }
+
 
   try {
     const salt = await bcrypt.genSalt(10); // Generate a salt

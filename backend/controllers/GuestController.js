@@ -49,6 +49,13 @@ const createToken = (_id, type) => {
 const applyDoctor = async(req, res) => {
     const {username, password, email, name, speciality, rate, affiliation, education, availableDates,ID,Medical_licenses,Medical_degree} = req.body
 
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
+
+
+    if (!passwordRequirements.test(password)) {
+        return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
+    }
+
     const doctorApp = new DoctorAppplication({username, password, email, name, speciality, rate, affiliation, education, availableDates,ID,Medical_licenses,Medical_degree})
 
     await doctorApp.save()

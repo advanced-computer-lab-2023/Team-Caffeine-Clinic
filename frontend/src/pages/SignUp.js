@@ -32,7 +32,7 @@ const SignUp = () => {
         setPassword(newPassword);
     
         // Define your password validation regex
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
     
         // Validate the password against the regex
         const isValidPassword = passwordRegex.test(newPassword);

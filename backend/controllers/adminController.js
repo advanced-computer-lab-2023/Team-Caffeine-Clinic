@@ -40,6 +40,13 @@ const createAdmin = async (req, res) => {
 
     const admin = new Admin({username: Username, password: Password, email: Email})
 
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
+
+
+    if (!passwordRequirements.test(Password)) {
+        return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
+    }
+
     try {
       const user = await Admin.signUp(admin)
 
@@ -302,10 +309,10 @@ const adminchangepassword = async (req, res) => {
   }
 
   // Regular expression to check for at least one capital letter and one number
-  const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)/;
+  const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
 
   if (!passwordRequirements.test(newPassword)) {
-    return res.status(400).json({ error: 'Password must contain at least one capital letter and one number.' });
+      return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
   }
 
   try {
