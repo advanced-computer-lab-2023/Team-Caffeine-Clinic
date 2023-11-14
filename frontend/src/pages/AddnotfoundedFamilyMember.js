@@ -109,6 +109,7 @@ const SignUp = () => {
 
 
     return(
+        <div className='add_family_member'>
         <header>
             <h1>Add Family Member</h1>
 
@@ -224,6 +225,7 @@ const SignUp = () => {
                 </form>
             </div>
         </header>
+        </div>
     )
 }
 

@@ -921,6 +921,10 @@ const linkFamilyMember = async(req, res) => {
         if(!patient){
             return res.status(400).json({mssg: "Patient not Found"})
         }
+
+        if(patient.username === user.username){
+            return res.status(500).json({mssg: "Gebly Hadwa Yabny We Batal Habal"})
+        }
         
         updateFamilyMember(user, patient, relation)
         return res.status(200).json(user)

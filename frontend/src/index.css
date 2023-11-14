@@ -218,8 +218,7 @@ header a {
   background-color: #0056b3;
 }
 
-
-.familyMemberDetails{
+.add_family_member {
   display: grid;
   grid-template-columns: 1fr;
   gap: 100px;
@@ -229,6 +228,15 @@ header a {
 }
 
 .patient-change-password-page {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 100px;
+  margin-left: 210px;
+  font: 32px;
+  margin-bottom: 100px;
+}
+
+.familyMemberDetails{
   display: grid;
   grid-template-columns: 1fr;
   gap: 100px;

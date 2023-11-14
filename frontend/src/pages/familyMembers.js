@@ -42,6 +42,11 @@ const FamilyMembers = () => {
         });
   
         const data = await response.json();
+
+        if(response.status === 500) {
+          window.alert(data.mssg)
+          return
+        }
   
         if (!response.ok) {
           setisfind(false)
