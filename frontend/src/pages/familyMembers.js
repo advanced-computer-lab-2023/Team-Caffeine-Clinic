@@ -89,14 +89,14 @@ const FamilyMembers = () => {
   };
 
     return (
-      <div className="familyMembers">
-
-        {/* familyMembers list */}
-        <div className='familyMembers'>
+      <>
+      <div className='familyMemberDetails'>
           {familyMembers && familyMembers.map((familyMember , index ) => (
             <FamilyMemberDetails key={index} familyMember={familyMember} relation = {relation[index]}  />
           ))} 
         </div>
+        
+          <div className="familyMembers">
         <h1>Add the email or the phone number of the family member you want to add and  the relation
         </h1>
         
@@ -106,7 +106,7 @@ const FamilyMembers = () => {
         id="find"
         value={NpEmail}
         onChange={handleNpEmail}
-       />
+        />
 
       <label htmlFor="find">Enter the relation:</label>
        <input
@@ -114,12 +114,12 @@ const FamilyMembers = () => {
         id="realtion"
         value={Newrelation}
         onChange={handleNewrelation}
-       />
+        />
         <button onClick={() => linkFamilyMember(NpEmail , Newrelation)}>Add Family Member</button>
         <p>{message}</p>
         {/* {isfind === false && redirectToSignUp && <Redirect to="/signup" />} */}
-       
       </div>
+        </>
   )
 }
 
