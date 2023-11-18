@@ -417,7 +417,7 @@ div.error {
 .error-message {
   color: red;
 }
-.input-login {
+/* .input-login {
   width: 25%;
   padding: 12px 20px;
   border: 2px solid #3498db;
@@ -435,17 +435,92 @@ div.error {
   font-size: 16px;
   max-width: 200px;
 }
-button:hover {
-  background-color: #63a7d4;
-}
 .login-form {
   display: flex;
   justify-content: center;
   flex-direction: column;
   margin-top: 300px;
   align-items: center;
+} */
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.3); 
 }
 
+.logo {
+  height: 100px; /* You can adjust this value to fit your logo's size */
+
+}
+
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.login-form {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+}
+
+.login-page {
+  position: relative;
+  height: 100vh;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.input-login {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #4b7bec;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #3867d6;
+}
+
+.login-button:disabled {
+  background-color: #a5b1c2;
+}
+
+.error-message {
+  color: #ff6b6b;
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+button:hover {
+  background-color: #63a7d4;
+}
 .doctor-buttons {
   display: inline-block;
   margin: 10px;
@@ -562,8 +637,13 @@ button:hover {
   border: 1px solid #f44336; /* Red border for invalid input */
 }
 
-/* Add more styles as needed */
-/* Style for the form container */
+.forgot-password-link {
+  color: #ff6b6b; 
+  text-decoration: none; 
+  font-weight: bold; 
+  margin-left: 70px;
+}
 
-
-/* You can customize the styles further as per your design preferences */
+.forgot-password-link:hover {
+  text-decoration: underline; 
+}
