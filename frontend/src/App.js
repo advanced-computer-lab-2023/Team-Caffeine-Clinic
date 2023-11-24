@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import DoctorInfo from './pages/seedoc';
-import Navbar from './components/Navbar';
+import { Link } from 'react-router-dom'
+// import Navbar from './components/Navbar';
 import EditMyDoc from './pages/EditDocRate';
 import UpdateEmail from './pages/EditDocEmail';
 import UpdateAffiliation from './pages/EditDocHos';
@@ -37,16 +38,10 @@ import ForgotPass from './pages/ForgotPass';
 import ViewDocuments from './pages/seeanddeletdocs';
 import DoctorDocuments from './pages/seepatientdocs';
 import AddDocuments from './pages/Docaddpatientdocs';
-
-
-
-
 import { useAuthContext } from './hooks/useAuthContext';
-
 import AdminChangePassword from './pages/AdminChangePassword';
 import DoctorChangePassword from './pages/DoctorChangePassword';
 import PatientChangePassword from './pages/PatientChangePassword';
-
 import PatientDetails from './pages/ViewPatientDetails';       
 import AddAvailableDateFunc from './pages/AddAvailableDate';
 import DoctorHealthRecords from './pages/DoctorHealthRecords';
@@ -54,10 +49,8 @@ import PatientHealthRecords from './pages/PatientHealthRecord';
 import CompletedAppointments from './pages/follow-up';
 import App1 from './pages/employmentContract';
 import contractNAV from './components/ContractNavBar';
-
 import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler'
-
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload  from './pages/PatientAddDocs';
 
@@ -95,11 +88,10 @@ function App() {
     return () => clearInterval(timerId);
   }, []);
 
-
   return (
     <div className="App">
       <BrowserRouter>
-        <div className='Navbar'>
+        <div>
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
 
@@ -121,7 +113,7 @@ function App() {
               <Route path="Docaddpatientdocs" element={<WithDoctorNavbar><ProtectedRoute><AddDocuments /></ProtectedRoute></WithDoctorNavbar>} />
 
 
-              <Route 
+              <Route
               path="/doctor/DoctorChangePassword" 
               element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
             />
@@ -136,25 +128,23 @@ function App() {
 
 
               {/* Ibra - Salah */}
+                <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
+                            
+                <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
+                <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='healthPackages' element={<WithNavbarAndSidebar><ProtectedRoute><HealthPackages /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='Perscriptions' element={<WithNavbarAndSidebar><ProtectedRoute><Perscription /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
+                
+                <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='PatientAddDocs' element={<WithNavbarAndSidebar><ProtectedRoute><DocumentUpload /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='seeanddeletdocs' element={<WithNavbarAndSidebar><ProtectedRoute><ViewDocuments /></ProtectedRoute></WithNavbarAndSidebar>} />
 
-              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
-                          
-              <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
-              <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='healthPackages' element={<WithNavbarAndSidebar><ProtectedRoute><HealthPackages /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='Perscriptions' element={<WithNavbarAndSidebar><ProtectedRoute><Perscription /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
-              
-              <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='PatientAddDocs' element={<WithNavbarAndSidebar><ProtectedRoute><DocumentUpload /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='seeanddeletdocs' element={<WithNavbarAndSidebar><ProtectedRoute><ViewDocuments /></ProtectedRoute></WithNavbarAndSidebar>} />
-
-              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
-              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
-
+                <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
+                <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
               {/* Public Routes */}
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
@@ -175,22 +165,14 @@ function App() {
               />
 
 
-                <Route
+              <Route
               path="/viewPatientsDetails"
               element =  {<WithNavbarAndSidebar><ProtectedRoute><PatientDetails/></ProtectedRoute></WithNavbarAndSidebar>}
-                />
+              />
 
             </Routes>
           </UsernameProvider>
         </div>
-        {/* <Routes>
-            <Route path='' element={<WithNavbarAndSidebar><Home /></WithNavbarAndSidebar>} />
-            <Route path='doctors' element={<WithNavbarAndSidebar><Doctors /></WithNavbarAndSidebar>} />
-            <Route path='familyMembers' element={<WithNavbarAndSidebar><FamilyMembers /></WithNavbarAndSidebar>} />
-            <Route path='Perscriptions' element={<WithNavbarAndSidebar><Perscription /></WithNavbarAndSidebar>} />
-            <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><SinglePerscriptions /></WithNavbarAndSidebar>} />
-            <Route path='/signup' element={<SignUp />} />
-        </Routes> */}
       </BrowserRouter>
     </div>
   );
@@ -198,9 +180,10 @@ function App() {
 
 function WithNavbarAndSidebar({ children }) {
   return (
-    <div>
+    <div className='MainContent'>
       <Sidebar />
-      <Navbar />
+      <Link to="/home" className='home-button'>Home</Link>
+      {/* <Navbar /> */}
       <div className="pages">
         {children}
       </div>
@@ -210,7 +193,7 @@ function WithNavbarAndSidebar({ children }) {
 
 function WithDoctorNavbar({ children }) {
   return (
-    <div>
+    <div className='MainContent'>
       <DoctorNavbar />
       <div className="pages">
         {children}

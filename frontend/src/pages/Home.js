@@ -30,11 +30,10 @@ const Home = () => {
 
   return (
     <div className='home'>
-    <h2 className='welcome-message'>Welcome to Home Page</h2>
     {selectedPatient && (
       <div>
-        <h3>Selected Patient Details</h3>
-        <p>Username: {selectedPatient.username}</p>
+        <h3>Information</h3>
+        <p><strong>Username:</strong> {selectedPatient.username}</p>
         <p>Name: {selectedPatient.name}</p>
         <p>Email: {selectedPatient.email}</p>
         <p>Date of Birth: {selectedPatient.dob}</p>
