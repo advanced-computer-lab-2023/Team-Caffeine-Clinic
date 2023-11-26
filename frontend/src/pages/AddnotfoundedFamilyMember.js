@@ -121,6 +121,7 @@ const SignUp = () => {
             <br /><br />
             <div className="signUp">
                 <form className="createPatient" onSubmit={register}>
+                <div className="form-section">
                 Username: 
                 <label className="label">
                     <input
@@ -184,7 +185,10 @@ const SignUp = () => {
                     type="text" />
                 </label>
                 <hr />
-                Emergency Contact:
+
+                </div>
+             <div className="form-section">
+               <strong> Emergency Contact</strong>
                 <br /> <br />
                 <label>
                     Full Name: 
@@ -212,15 +216,18 @@ const SignUp = () => {
                 <br/>
                 
                 <label>
-                    Health Record: 
+                    Health Record: (emergency contact)
                     <input 
                     value={healthRecords}
                     onChange={(e) => setHealthRecords(e.target.value)}
                     type="text" />
                 </label>
-                
                 <br /><br />
-                <button onClick={(e) =>handleButtonClick(e)}>Add Family Member</button>
+                </div>
+
+                <div className="button-container">
+  <button onClick={(e) => handleButtonClick(e)}>Add Family Member</button>
+</div>
 
                 </form>
             </div>

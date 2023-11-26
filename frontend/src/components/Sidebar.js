@@ -9,6 +9,7 @@ const Sidebar = () => {
 
   return (
     <div className="Sidebar">
+      <NavLink to="/oldhome" activeClassName="active">Old Home</NavLink>
       <NavLink to="/doctors" activeClassName="active">Doctors</NavLink>
       <NavLink to="/familyMembers" activeClassName="active">Family Members</NavLink>
       <NavLink to="/Perscriptions" activeClassName="active">Prescriptions</NavLink>

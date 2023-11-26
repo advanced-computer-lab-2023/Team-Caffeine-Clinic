@@ -13,6 +13,7 @@ import UsernameProvider  from './pages/UsernameContext'; // Import the context
 import PatientsWithUpcomingAppointments from './pages/UpcomingAppointments'
 import SelectPatient from './pages/SearchPatient'
 import Home from './pages/Home';
+import OldHome from './pages/OldHome';
 import Sidebar from './components/Sidebar';
 import SignUp from './pages/SignUp';
 import Doctors from './pages/doctors';
@@ -131,6 +132,7 @@ function App() {
                 <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
                             
                 <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='OldHome' element={<WithNavbarAndSidebar><ProtectedRoute><OldHome /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
                 <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
