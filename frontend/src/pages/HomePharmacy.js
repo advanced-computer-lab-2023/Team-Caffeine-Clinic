@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <><header>
       <Navbar />
-    </header><div className="home">
+    </header><div className="home-pharmacy">
         <div className="workouts">
           {medicines && medicines.map(medicine => (
             <MedicineDetails key={medicine._id} medicine={medicine} />
