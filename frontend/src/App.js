@@ -1,62 +1,84 @@
-
-// App.js
+// React and Router
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+
+// Pages
+import Home from './pages/Home';
+import OldHome from './pages/OldHome';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import ForgotPass from './pages/ForgotPass';
+import FilterResults from './pages/FilterResults';
+import HomePharmacy from './pages/HomePharmacy';
+import SearchResults from './pages/SearchResults';
+import EditResults from './pages/EditResults';
+import AddMedicinePicture from './pages/AddMedPicture';
+import ApplyPharmacist from './pages/ApplyPharmacist';
+import PatientHomePharmacy from './pages/PatientHomePharmacy';
+import PatientNavbar from './components/PatientNavbar';
+import PatientSidebar from './components/PatientSidebar';
+import Cart from './pages/Cart';
+import AdminHome from './pages/AdminHome';
+import ViewAdmin from './pages/ViewAdmins';
+import ViewPatientHome from './pages/viewPatientsAdmin';
+import SinglePharmacist from './pages/singlePharm';
+import PharmApp from './pages/viewPharmApp';
+import Pharmacist from './pages/viewPharm';
+import Addresses from './pages/Addresses';
+import Orders from './pages/Orders';
+import Checkout from './pages/Checkout';
+import HPHome from './pages/viewHealthPacks';
 import DoctorInfo from './pages/seedoc';
-import { Link } from 'react-router-dom'
-// import Navbar from './components/Navbar';
 import EditMyDoc from './pages/EditDocRate';
 import UpdateEmail from './pages/EditDocEmail';
 import UpdateAffiliation from './pages/EditDocHos';
 import MyPatients from './pages/ViewPatients';
-import UsernameProvider  from './pages/UsernameContext'; // Import the context
-import PatientsWithUpcomingAppointments from './pages/UpcomingAppointments'
-import SelectPatient from './pages/SearchPatient'
-import Home from './pages/Home';
-import OldHome from './pages/OldHome';
+import UsernameProvider from './pages/UsernameContext';
+import PatientsWithUpcomingAppointments from './pages/UpcomingAppointments';
+import SelectPatient from './pages/SearchPatient';
 import Sidebar from './components/Sidebar';
-import SignUp from './pages/SignUp';
 import Doctors from './pages/doctors';
 import FamilyMembers from './pages/familyMembers';
 import HealthPackages from './pages/HealthPackages';
 import Perscription from './pages/Perscriptions';
-import SinglePerscriptions from './pages/SinglePerscriptionDetails'
+import SinglePerscriptions from './pages/SinglePerscriptionDetails';
 import DoctorNavbar from './components/DoctorNavbar';
-import ApplyDoctor from './pages/ApplyDoctor'
-import Login from './pages/Login'
-import ViewAdmin from "./pages/ViewAdmins"
-import AdminHome from "./pages/AdminHome";
+import ApplyDoctor from './pages/ApplyDoctor';
 import DoctorAppHome from './pages/viewDoctorApps';
 import ViewDoctorHome from './pages/viewDoctors';
 import AppointmentsComponent from './pages/PatientfilterAppointments';
-import HPHome from './pages/viewHealthPacks';
-import ViewPatientHome from './pages/viewPatientsAdmin';
 import SingleDoctor from './pages/singleDoctor';
 import EditHealthPackage from './pages/EditHealthPackage';
 import AppointmentDoc from './pages/AppointmentDoc';
-import DoctorList from './pages/Filterbyavedates'
-import ForgotPass from './pages/ForgotPass';
+import DoctorList from './pages/Filterbyavedates';
 import ViewDocuments from './pages/seeanddeletdocs';
 import DoctorDocuments from './pages/seepatientdocs';
 import AddDocuments from './pages/Docaddpatientdocs';
-import { useAuthContext } from './hooks/useAuthContext';
 import AdminChangePassword from './pages/AdminChangePassword';
 import DoctorChangePassword from './pages/DoctorChangePassword';
 import PatientChangePassword from './pages/PatientChangePassword';
-import PatientDetails from './pages/ViewPatientDetails';       
+import PatientDetails from './pages/ViewPatientDetails';
 import AddAvailableDateFunc from './pages/AddAvailableDate';
 import DoctorHealthRecords from './pages/DoctorHealthRecords';
 import PatientHealthRecords from './pages/PatientHealthRecord';
 import CompletedAppointments from './pages/follow-up';
 import App1 from './pages/employmentContract';
 import contractNAV from './components/ContractNavBar';
-import  AddFamilyMember  from './pages/AddnotfoundedFamilyMember';
-import PaymentHandler from './components/PaymentHandler'
+import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
+import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
-import DocumentUpload  from './pages/PatientAddDocs';
+import DocumentUpload from './pages/PatientAddDocs';
 
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+// Stripe
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+// Components
+import AdminNavbar from './components/AdminNavbar';
+
+// Context
+import { useAuthContext } from './hooks/useAuthContext';
+
 
 const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
 
@@ -172,6 +194,104 @@ function App() {
               element =  {<WithNavbarAndSidebar><ProtectedRoute><PatientDetails/></ProtectedRoute></WithNavbarAndSidebar>}
               />
 
+
+              {/* pharmacy */}
+            <Route 
+              path="/" 
+              element={!user ? <Login /> : (user.type === 'Patient') ? 
+              <Navigate to="/Medicines"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} 
+            />
+            <Route 
+              path="/Medicines" 
+              element={ user && <HomePharmacy /> }
+            />
+            <Route
+              path="/Addresses" 
+              element={<Addresses />} 
+            />
+            <Route
+              path="/Checkout" 
+              element={<Checkout />} 
+            />
+            <Route
+              path="/Orders" 
+              element={<Orders />} 
+            />
+            <Route 
+              path="/search/:search" 
+              element={ user && <SearchResults /> }
+              />
+            <Route 
+              path={`/filter/:filter`}
+              element={ user && <FilterResults /> }
+            />
+            <Route 
+              path="/editMedicine/:Name" 
+              element={user&& user.type=="Pharmacist" && <EditResults /> }
+            />   
+            <Route 
+              path="/addMedicinePicture/:Name" 
+              element={user&& user.type=="Pharmacist" && <AddMedicinePicture/> }
+            />
+
+            {/*Ibra*/}
+            <Route 
+              path="/login" 
+              element={!user ? <Login /> : (user.type === 'Patient') ? 
+              <Navigate to="/Medicines"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
+          
+            <Route 
+              path="/signup" 
+              element={<SignUp />} 
+            />
+            <Route 
+              path="/applyPharmacist" 
+              element={<ApplyPharmacist />} 
+            />
+
+            <Route
+            path='/patientHome'
+            element={user&& user.type=="Patient" && <WithNavbarAndSidebarPharmacy><PatientHomePharmacy /></WithNavbarAndSidebarPharmacy> }
+            />
+            <Route
+            path='/Cart'
+            element={user&& user.type=="Patient" && <Cart /> }
+            />
+
+            {/*Admin*/}
+            <Route
+              path="/AdminHome"
+              element =  {user&& user.type=="Admin" &&<AdminNavbarAndSidebar><AdminHome/></AdminNavbarAndSidebar> }
+              />
+              <Route
+              path="/ViewAdmin"
+              element =  {user&& user.type=="Admin" && <AdminNavbarAndSidebar><ViewAdmin/></AdminNavbarAndSidebar>}
+                />
+              <Route
+              path="/viewPatientsAdmin"
+              element = {user&& user.type=="Admin" &&<AdminNavbarAndSidebar><ViewPatientHome/></AdminNavbarAndSidebar>}
+                />
+              <Route
+              path="getSinglePharmacist/:username"
+              element =  { user && user.type=="Admin" && <AdminNavbarAndSidebar><SinglePharmacist/></AdminNavbarAndSidebar> }
+                />
+              <Route
+              path="viewPharmacistApps"
+              element = { user&& user.type=="Admin" && <AdminNavbarAndSidebar><PharmApp/></AdminNavbarAndSidebar> }
+                />
+              <Route
+              path="viewPharmacists"
+              element ={ user&& user.type=="Admin" && <AdminNavbarAndSidebar><Pharmacist/></AdminNavbarAndSidebar> }
+                />
+              <Route
+              path="viewHealthPacks"
+              element ={ user&& user.type=="Admin" && <AdminNavbarAndSidebar><HPHome/></AdminNavbarAndSidebar> }
+                />
+              <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/Medicines"/>} />
+                
+                
+
+
             </Routes>
           </UsernameProvider>
         </div>
@@ -186,6 +306,18 @@ function WithNavbarAndSidebar({ children }) {
       <Sidebar />
       <Link to="/home" className='home-button'>Home</Link>
       {/* <Navbar /> */}
+      <div className="pages">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function WithNavbarAndSidebarPharmacy({ children }) {
+  return (
+    <div>
+      <PatientSidebar />
+      <PatientNavbar />
       <div className="pages">
         {children}
       </div>
@@ -214,5 +346,16 @@ function WithcontractNavbar({ children }) {
   );
 }
 
+
+function AdminNavbarAndSidebar({ children }) {
+  return (
+    <div>
+      <AdminNavbar />{console.log(children)}
+      <div className="pages">
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export default App;

@@ -13,37 +13,70 @@ const Doctor = require('../models/doctor')
 const Admin = require('../models/admin')
 const EmplymentContract = require('../models/emplymentContract')
 
-
-//const Patient = require('../model/patient'); // Import the Patient model
-//const LocalStrategy = require('passport-local').Strategy;
-
-//passport.use('patient-local', new LocalStrategy(Patient.authenticate()));
-
-
-
-// Passport local Strategy
-// passport.use('patient-local', Patient.createStrategy());
-//passport.use('doctor-local', Doctor.createStrategy());
-//passport.use('admin-local', Admin.createStrategy());
-
-// To use with sessions
-// passport.serializeUser(Patient.serializeUser());
-// passport.deserializeUser(Patient.deserializeUser());
-// passport.serializeUser(Doctor.serializeUser());
-// passport.deserializeUser(Doctor.deserializeUser());
-// passport.serializeUser(Admin.serializeUser());
-// passport.deserializeUser(Admin.deserializeUser());
-
-
-
-//const LocalStrategy = require('passport-local').Strategy;
+const Pharmacist = require('../models/Pharmacist')
 
 
 const createToken = (_id, type) => {
   return jwt.sign({_id: _id, type: type}, process.env.SECRET, {expiresIn: '3d'})
 }
 
+//Sign up as a new Patient
+const signUp = async(req, res) => {
+  const {username, password, name, email, dob, gender, mobile_number, health_package, Efull_name, Emobile_number, relation} = req.body
 
+  const emergency_contact = {full_name: Efull_name, mobile_number: Emobile_number, relation_to_the_patient: relation} 
+
+  const patient = new Patient({username, password, name, email, dob, gender, 
+      mobile_number, health_package, emergency_contact})
+
+      const passwordRequirements = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/;
+
+      if (!passwordRequirements.test(password)) {
+        console.log("ah yany")
+        return res.status(400).json({ error: 'Password Does not meet minimum requirments.' });
+      } 
+      else
+      if((password).length<6){
+        return res.status(400).json({ error: 'Password length must be at least 6.' });
+      }
+      else
+      {
+      try { 
+      const user = await Patient.signUp(patient)
+      res.status(200).json({username, user})
+      } catch (error) {
+      res.status(400).json({error: error.message})
+      }
+      }
+}
+
+//Apply as a Pharmacist
+const applyPharmacist = async(req, res) => {
+  const {ID,License,Degree,username, password, email, name, speciality, rate, affiliation, education} = req.body
+
+  const pharmacistApp = new PharmacistAppplication({ID,License,Degree,username, password, email, name, speciality, rate, affiliation, education})
+  
+  const passwordRequirements = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/;
+
+  if (!passwordRequirements.test(password)) {
+    console.log("ah yany")
+    return res.status(400).json({ error: 'Password Does not meet minimum requirments.' });
+  } 
+  else
+  if((password+"").length()<6){
+    return res.status(400).json({ error: 'Password length must be at least 6.' });
+  }
+         else
+             {
+
+       try {
+           await pharmacistApp.save()       
+           res.status(200).json({pharmacistApp})
+          } catch (error) {
+          res.status(400).json({error:"Error"});
+         }
+           }
+}
 
 //Apply as a Doctor
 const applyDoctor = async(req, res) => {
@@ -82,7 +115,19 @@ const loginPatient = async(req, res) => {
   }
 }
 
+const loginPharmacist = async(req, res) => {
+  const {username, password} = req.body
 
+  try {
+    const user = await Pharmacist.login(username, password)
+    //create token
+    const token = createToken(user._id, 'Pharmacist')
+
+    res.status(200).json({type: 'Pharmacist', token})
+  } catch (error) {
+    res.status(400).json({error: error}) 
+  }
+}
 
 const loginDoctor = async(req, res) => {
   const {username, password} = req.body
@@ -231,6 +276,7 @@ const logout = function(req, res, next) {
     });
   }
 
+
 module.exports = {
     applyDoctor,
     loginPatientfunc,
@@ -240,5 +286,9 @@ module.exports = {
     loginPatient,
     loginDoctor,
     loginfunc,
-    logout
+    logout,
+    signUp,
+    //pharmacy
+    applyPharmacist,
+    loginPharmacist,
 }

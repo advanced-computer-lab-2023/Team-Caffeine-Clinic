@@ -17,7 +17,19 @@ const {
     getWallet, 
     payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
     refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction
-    ,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument
+    ,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument,
+    //pharmacy
+    viewCart,
+    incAmount,
+    decAmount,
+    addToCart,
+    deleteFromCart,
+    addAddresses,
+    deliveryaddresses,
+    newOrder,
+    orders,
+    deleteOrder,
+    getCartPrice
 } = require('../controllers/PatientController')
 
 const {
@@ -36,6 +48,7 @@ const {
     requireAuth,
 } = require('../middleware/requrieAuth')
 
+// const {payWithWallet} = require('../controllers/paymentController')
 
 router.post('/checkOnHealthPackageTransaction', checkOnHealthPackageTransaction)
 
@@ -94,6 +107,20 @@ router.post('/healthPackagePayWithWallet', healthPackagePayWithWallet)
 router.post('/linkFamilyMember', linkFamilyMember)
 
 router.post('/patientchangepassword', patientchangepassword);
+
+//pharmacy
+router.get("/userCart", viewCart);
+router.get("/getCartPrice", getCartPrice)
+router.put("/addToCart/:Name",addToCart);
+router.delete('/deleteFromCart/:Name', deleteFromCart);
+router.put("/incAmount/:Name", incAmount);
+router.put("/decAmount/:Name",decAmount);
+router.post('/addAddress', addAddresses)
+router.get('/deliveryaddresses', deliveryaddresses)
+router.post('/neworder', newOrder)
+router.get('/orders', orders)
+router.post('/cancelorder/:_id', deleteOrder)
+router.post('/payWithWallet', payWithWallet)
 
 
 module.exports = router

@@ -51,12 +51,14 @@ adminSchema.statics.login = async function(username, password) {
         throw Error('All fields must be filled')
     }
 
-    const user = await this.findOne({ username: username })
+    const user = await this.findOne({ username })
     
     if(!user){
         throw Error('Incorrect Username')
     }
-    
+    console.log("henaaaa")
+    console.log(password)
+    console.log(user.password)
     const match = await bcrypt.compare(password, user.password)
 
     if(!match){

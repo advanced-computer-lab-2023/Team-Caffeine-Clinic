@@ -6,7 +6,6 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 const ViewPatientHome =  () => {
     const [Patients , setPatients] = useState(null);
-
     const {user} = useAuthContext()
 
     useEffect(() => {

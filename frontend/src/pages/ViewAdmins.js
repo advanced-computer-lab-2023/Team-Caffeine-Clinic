@@ -6,7 +6,6 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 const AdminHome = () => {
   const [admins, setAdmins] = useState(null);
-
   const {user} = useAuthContext()
 
   useEffect(() => {

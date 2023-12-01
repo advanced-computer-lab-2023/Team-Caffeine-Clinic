@@ -50,6 +50,7 @@ function LoginForm() {
           <Link to="/doctorApplication">
             <button className='login-button'>Sign Up As a Doctor</button>
           </Link>
+          <Link to="/applyPharmacist"><button className='login-button'>Sign Up As a Pharmacist</button></Link>
           {error && <div className='error-message'>{error}</div>}
         </form>
       </div>

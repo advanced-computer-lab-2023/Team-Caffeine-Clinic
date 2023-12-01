@@ -20,12 +20,21 @@ const Home = () => {
                 </Link>
             <Link to="/viewDoctorApps">
                       <button>View Doctor Applications</button>
-                </Link>
+            </Link>
+            <Link to="/viewPharmacistApps">
+                      <button>View Pharmacist Applications</button>
+            </Link>
             <Link to="/viewDoctors">
                       <button>View Doctors</button>
-                      </Link>
+            </Link>
+            <Link to="/viewPharmacists">
+                      <button>View Pharmacists</button>
+            </Link>
             <Link to="/viewHealthPacks">
                       <button>View Health Packages</button>
+                </Link>
+                <Link to="/Medicines">
+                      <button>View Medicines</button>
                 </Link>
         
                 <Link to="/viewPatientsAdmin">

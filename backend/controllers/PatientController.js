@@ -6,8 +6,9 @@ const passportLocalMongoose = require('passport-local-mongoose')
 const jwt = require('jsonwebtoken')
 
 const nodemailer = require('nodemailer');
-const HealthPackageModel = require('../models/healthPackageModel'); 
+const HealthPackage = require('../models/healthPackageModel'); 
 const HealthPackagesTransaction  = require('../models/HealthPackages_Transaction'); 
+const Medicine = require('../models/Medicine.js');
 
 const bcrypt = require('bcrypt');
 
@@ -16,20 +17,12 @@ const bcrypt = require('bcrypt');
 const Patient = require('../models/Patient');
 const Perscriptions = require('../models/Perscriptions');
 const Doctor = require('../models/doctor');
-const healthPackage = require('../models/healthPackageModel');
 const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
-//const { default: HealthPackages } = require('../../frontend/src/pages/HealthPackages')
 
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin')
 
-// Passport local Strategy
-//passport.use(Patient.createStrategy());
-
-// To use with sessions
-// passport.serializeUser(Patient.serializeUser());
-// passport.deserializeUser(Patient.deserializeUser());
 
 const addHealthPackageTransactionfam = async (req, res) => {
     try {
@@ -46,7 +39,7 @@ const addHealthPackageTransactionfam = async (req, res) => {
         }
 
         // Find the health package by name
-        const HealthPackage = await healthPackage.findOne({ name: healthPackageName });
+        const HealthPackage = await HealthPackage.findOne({ name: healthPackageName });
         if (!HealthPackage) {
             return res.status(404).json({ error: 'HealthPackage not found' });
         }
@@ -56,7 +49,7 @@ const addHealthPackageTransactionfam = async (req, res) => {
             value:value,
             paymentOption: 'healthPackages',
             patient: patientId,
-            healthPackage: HealthPackage.name,
+            HealthPackage: HealthPackage.name,
         });
 
         patient.health_package=healthPackageName;
@@ -87,8 +80,8 @@ const createHealthPackagesTransaction = async (req, res,transactionId,patientUse
             return res.status(404).json({ error: 'Patient not found' });
         }
 
-        const healthPackage = await HealthPackageModel.findOne({name: healthPackageId});
-        if (!healthPackage) {
+        const HealthPackage = await HealthPackage.findOne({name: healthPackageId});
+        if (!HealthPackage) {
             return res.status(404).json({ error: 'HealthPackageModel not found' });
         }
 
@@ -100,7 +93,7 @@ const createHealthPackagesTransaction = async (req, res,transactionId,patientUse
         const healthPackagesTransaction = new HealthPackagesTransaction({
             transactionId:transactionId,
             patient: patientUsername,
-            healthPackage: healthPackageId,
+            HealthPackage: healthPackageId,
             state: 'subscribed',
             cancel_renewal_time: expirationDate
         });
@@ -132,7 +125,7 @@ const addHealthPackageTransaction = async (req, res) => {
         }
         console.log('After Patient Fetch');
         // Find the health package by name
-        const HealthPackage = await healthPackage.findOne({ name: healthPackageName });
+        const HealthPackage = await HealthPackage.findOne({ name: healthPackageName });
         if (!HealthPackage) {
             return res.status(404).json({ error: 'HealthPackage not found' });
         }
@@ -143,7 +136,7 @@ const addHealthPackageTransaction = async (req, res) => {
             value:value,
             paymentOption: 'healthPackages',
             patient: patientId,
-            healthPackage: HealthPackage.name,
+            HealthPackage: HealthPackage.name,
         });
         console.log('After Transaction Creation');
 
@@ -179,7 +172,7 @@ const markHealthPackageTransactionAsRefunded = async (req, res) => {
         // Find the health package transaction based on patient username and health package name
         const healthPackageTransaction = await HealthPackagesTransaction.findOne({
             patient: patientUsernam,
-            healthPackage: healthPackageName,
+            HealthPackage: healthPackageName,
         });
 
         if (!healthPackageTransaction) {
@@ -193,11 +186,11 @@ const markHealthPackageTransactionAsRefunded = async (req, res) => {
             return res.status(404).json({ error: 'Transaction not found' });
         }
 
-        const healthPackage = await HealthPackageModel.findone({
+        const HealthPackage = await HealthPackage.findone({
             name:healthPackageName
         })
 
-        if(!healthPackage){
+        if(!HealthPackage){
             return res.status(404).json({ error: 'Health package  not found' });
 
         }
@@ -496,7 +489,7 @@ const estimateRate = async (req, res) => {
         const doctors = await Doctor.find(filter);
         const patientHealthPackage = patient.health_package;
 
-        const HealthPackage = await healthPackage.findOne({ name: patientHealthPackage });
+        const HealthPackage = await HealthPackage.findOne({ name: patientHealthPackage });
 
         if (!HealthPackage) {
             const doctormap = doctors.map(doctor => {
@@ -979,7 +972,7 @@ const subscribeToHealthPackage = async (req, res) => {
         const { healthPackageName } = req.body;
         console.log(healthPackageName);
 
-        const HealthPackage = await healthPackage.findOne({ name: healthPackageName });
+        const HealthPackage = await HealthPackage.findOne({ name: healthPackageName });
 
         if (!HealthPackage) {
             return res.status(404).json({ error: 'Patient or HealthPackage not found' });
@@ -1059,13 +1052,13 @@ const getHealthPackage = async (req, res) => {
 
     const HealthPackageName = patient.health_package;
     console.log(HealthPackageName);
-    const HealthPackage = await healthPackage.findOne({ name: HealthPackageName }).exec();
+    const HealthPackage = await HealthPackage.findOne({ name: HealthPackageName }).exec();
 
     if (!HealthPackage) {
         return res.status(400).json({error: 'No Package Found'})
     }
 
-    res.status(200).json({transaction: transaction, healthPackage: HealthPackage});
+    res.status(200).json({transaction: transaction, HealthPackage: HealthPackage});
 
     // try {
     //    // console.log(_id);
@@ -1220,7 +1213,7 @@ const patientchangepassword = async (req, res) => {
         const transaction = await HealthPackagesTransaction.findOne({patient: member.username, state: { $in: ['subscribed', 'cancelled'] }})
         
         if(!transaction){
-            const input = {username: member.username, name: member.name, state: 'unsubscribed', healthPackage: 'None'}
+            const input = {username: member.username, name: member.name, state: 'unsubscribed', HealthPackage: 'None'}
             familyMembersHealthPackages[i] = input
         }
         else{
@@ -1344,6 +1337,330 @@ const viewMyDocuments = async (req, res) => {
     }
   };
 
+
+////////////////////////////////////////////////////////
+
+
+const medicineDiscountedPrice = async(req, res) => {
+    const user = req.user
+    const HPname = user.health_package
+    
+
+    try {
+        const discount = 0 
+        const healthPackage = await HealthPackage.findOne({name: HPname})
+
+        if(healthPackage) discount = healthPackage.discounts.pharmacyMedicine
+
+        res.status(200).send(discount)
+        
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
+const viewCart = async (req, res) => {
+    // console.log("aaaaah");
+    user=req.user;
+    var medicines=[] ;
+
+    const CartItems = user.cart
+    let price = 0;
+    for (let i = 0; i < CartItems.length; i++){
+        var medicine= await Medicine.findOne({_id:CartItems[i].medicineid});
+        price += medicine.Price * CartItems[i].amount
+        console.log('ana hena', price);
+    }  
+
+    try{
+            const CartItems = user.cart
+            for (let i = 0; i < CartItems.length; i++){
+                var medicine= await Medicine.findOne({_id:CartItems[i].medicineid});
+                const item = { Name: medicine.Name,
+                  MedicalUse: medicine.MedicalUse,
+                  Price: medicine.Price,
+                  Description: medicine.Description,
+                  Quantity: medicine.Quantity,
+                  activeIngredients: medicine.activeIngredients,
+                  Sales: medicine.Sales,
+                  Picture:medicine.Picture,
+                  Amount:CartItems[i].amount,
+                  price:price
+                }
+                medicines.push(item);
+            }  
+
+        res.status(200).send(medicines); 
+    }    
+    catch(error){
+    res.status(400).send({"error":error});
+    }
+  }
+
+  const incAmount = async (req, res) => {
+    const MedName=req.params.Name;
+    const medicine = await Medicine.findOne({Name:MedName}); 
+    var user = req.user;  
+    const quantity=medicine.Quantity;
+
+    Patient.findOne({_id: user._id , "cart.medicineid":medicine._id},async (err,json)=> {
+                const CartItems = json.cart
+                var amount=0;
+                for (let i = 0; i < CartItems.length; i++){
+                    if(CartItems[i].medicineid.equals(medicine._id)){
+                         amount= CartItems[i].amount;
+                        break;
+                    } 
+                }  
+                     amount = amount +1;
+                     if(amount>quantity){
+                        res.status(400).json({error:"Maximun Quantity reached"});
+                     }
+                     else{
+                    Patient.findOneAndUpdate({_id: user._id , "cart.medicineid":medicine._id}, {'$set': {
+                        'cart.$.amount': amount
+                    }}).catch(err => console.log(err));
+                    res.status(200).json(amount);
+                }
+            });
+  
+ } 
+
+ const decAmount = async (req, res) => {
+    const MedName=req.params.Name;
+    const medicine = await Medicine.findOne({Name:MedName}); 
+    var user = req.user;  
+
+    Patient.findOne({_id: user._id , "cart.medicineid":medicine._id},async (err,json)=> {
+        if(json){
+                const CartItems = json.cart
+                var amount=0;
+                for (let i = 0; i < CartItems.length; i++){
+                    if(CartItems[i].medicineid.equals(medicine._id)){
+                         amount= CartItems[i].amount;
+                        break;
+                    } 
+                }  
+                     amount = amount -1;
+                     if(amount==0){
+                     Patient.updateOne({_id:user._id }, {'$pull':{
+                        cart:{medicineid: medicine._id} }}).catch(err => console.log(err));}
+                     else{   
+                    Patient.findOneAndUpdate({_id: user._id , "cart.medicineid":medicine._id}, {'$set': {
+                        'cart.$.amount': amount
+                    }}).catch(err => console.log(err));
+                }
+                res.status(200).json(amount);
+            }
+            else{
+                res.status(400).json("Not in Cart");
+            }
+            });
+ } 
+
+ const addToCart = async(req,res) => {
+    console.log("hi")
+    const MedName=req.params.Name;
+    const medicine = await Medicine.findOne({Name:MedName}); 
+    var user = req.user;
+    console.log(user);
+    var cart ={
+        medicineid : medicine._id,
+        amount : 1
+        };  
+    const quantity=medicine.Quantity; 
+
+        Patient.findOne({_id: user._id , "cart.medicineid":medicine._id},async (err,json)=> {
+          
+            if(err) res.status(400).json({error:"Could not Add"});
+
+            if(json){
+                const CartItems = json.cart
+                var amount=0;
+                for (let i = 0; i < CartItems.length; i++){
+                    if(CartItems[i].medicineid.equals(medicine._id)){
+                         amount= CartItems[i].amount;
+                        break;
+                    } 
+                }  
+                amount = amount +1;
+                if(amount>quantity){
+                   res.status(400).json({error:"Maximum Amount Reached"});
+                }
+                else{
+               Patient.findOneAndUpdate({_id: user._id , "cart.medicineid":medicine._id}, {'$set': {
+                   'cart.$.amount': amount
+               }}).catch(err => console.log(err));
+               res.status(200).json(amount);
+                    }
+            }   
+            if(!json){
+                Patient.findOneAndUpdate({_id: user._id}, { '$push': { cart: cart } }).catch(err => console.log(err));
+                res.status(200).json(amount);
+            }
+     }); 
+  
+}
+
+const deleteFromCart = async(req,res) => {
+    const MedName=req.params.Name;
+    const medicine = await Medicine.findOne({Name:MedName}); 
+    var user = req.user;  
+
+    Patient.updateOne({_id:user._id }, {'$pull':{
+        cart:{medicineid: medicine._id} }}).catch(err => console.log(err));
+        
+        res.status(200).json("Deleted");
+}
+
+const addAddresses = async(req,res) => {
+        var user = req.user;
+        var address = req.body.address;
+        console.log(req.body);
+        const patient = await Patient.findOne({_id: user._id});
+        const Addresses= patient.deliveryaddresses;
+        if(Addresses.includes(address)){
+            res.status(400).json({error: "Duplicate Address"})
+        }
+        else{
+            try {
+                await Patient.findOneAndUpdate({_id: user._id},{$addToSet: {deliveryaddresses: 
+                    address
+                }});
+                res.status(200).json(address);
+            }
+            catch(error){
+                res.status(400).json({error: "Wrong entry"})
+            }
+        }
+}
+
+const deliveryaddresses = async(req,res) => {
+    var user = req.user;
+    res.status(200).json(user.deliveryaddresses);
+}
+
+const newOrder = async(req,res) => {
+    var user = req.user;
+    if(user.cart.length==0){
+        res.status(400).json({error: "Cart is empty"})
+    }
+    else{
+        var address = req.body.address;
+        const order = {
+            medicines : user.cart,
+            status :'In delivery',
+            deliveryaddress : address
+        }
+        try {
+            
+            await Patient.findOneAndUpdate({_id: user._id}, { '$push': { orders: order } }).catch(err => console.log(err));
+            const c1 = await Patient.findOne({_id : user._id})
+            await Patient.updateOne({_id: user._id}, { cart : [] } ).catch(err => console.log(err));
+            res.status(200).json(c1);
+        }
+        catch(error){
+            res.status(400).json({error: "Wrong entry"})
+        }
+    }
+}
+
+const orders = async(req,res) => {
+    var user = req.user;
+    const orders = user.orders;
+    var ordersreturn=[];
+    var TotalPrice=0;
+    try{
+        for (let j = 0; j < orders.length; j++){
+            TotalPrice=0;
+            const medicines = user.orders[j].medicines;
+            var ordermedicines=[] ;
+            for (let i = 0; i < medicines.length; i++){
+                var medicine= await Medicine.findOne({_id:medicines[i].medicineid});
+                const item = { 
+                    _id : medicine._id,
+                    Name: medicine.Name,
+                    MedicalUse: medicine.MedicalUse,
+                    Price: medicine.Price,
+                    Description: medicine.Description,
+                    Quantity: medicine.Quantity,
+                    activeIngredients: medicine.activeIngredients,
+                    Sales: medicine.Sales,
+                    Picture:medicine.Picture,
+                    amount:medicines[i].amount
+                }
+                TotalPrice+=medicines[i].amount*medicine.Price
+                ordermedicines.push(item);
+            }
+            var order = {
+                _id : orders[j]._id,
+                medicines : ordermedicines,
+                status : orders[j].status,
+                deliveryaddress : orders[j].deliveryaddress,
+                totalPrice:TotalPrice
+            }
+            ordersreturn.push(order);
+        }
+        res.status(200).json(ordersreturn);
+    }
+    catch(error){
+        res.status(400).json({error: "Error"})
+    }
+}
+
+const deleteOrder = async(req,res) => {
+    var user = req.user;
+    var id =  req.params._id;
+
+    const orders = user.orders
+    var medicines=null;
+
+    for (let i = 0; i < orders.length; i++){
+        if(orders[i]._id==id){
+            medicines=orders[i].medicines;
+            break;
+        }
+    }
+
+    let price = user.wallet;
+    for (let i = 0; i < medicines.length; i++){
+        var medicine= await Medicine.findOne({_id:medicines[i].medicineid});
+        price += medicine.Price * medicines[i].amount
+        console.log('ana hena', price);}
+
+    try {
+        await Patient.findOneAndUpdate({_id: user._id , "orders._id":id}, {'$set': {
+            'orders.$.status': 'Cancelled'
+        }}).catch(err => console.log(err));
+        await Patient.findOneAndUpdate({_id: user._id , "orders._id":id}, {wallet:price}).catch(err => console.log(err));
+        const c1 = await Patient.findOne({_id : user._id})
+        res.status(200).json(c1.orders);
+    }
+    catch(error){
+        res.status(400).json({error: "Wrong entry"})
+    }
+}
+
+const getCartPrice = async (req, res) => {
+    const user = req.user
+
+    try{
+        const CartItems = user.cart
+        let price = 0;
+        for (let i = 0; i < CartItems.length; i++){
+            var medicine= await Medicine.findOne({_id:CartItems[i].medicineid});
+            price += medicine.Price * CartItems[i].amount
+            console.log('ana hena', price);
+        }  
+
+    res.status(200).json(price); 
+}    
+catch(error){
+res.status(400).send({"error":error});
+}
+}
+
+
 module.exports = {
     getFamilyMembersHealthPackages,
     signUp,
@@ -1367,5 +1684,18 @@ module.exports = {
     getWallet,
     payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
     refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction,
-    markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument
+    markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument,
+    //pharmacy
+    medicineDiscountedPrice,
+    viewCart,
+    incAmount,
+    decAmount,
+    addToCart,
+    deleteFromCart,
+    deliveryaddresses,
+    newOrder,
+    orders,
+    deleteOrder,
+    addAddresses,
+    getCartPrice
 }

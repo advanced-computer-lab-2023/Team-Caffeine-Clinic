@@ -53,9 +53,28 @@ const healthPackagePayWithWallet = async (req, res) => {
     }
 }
 
+const payWithWallet = async (req, res) => {
+    const user = req.user
+    
+    const {amount} = req.query
+
+    const newPatientWallet = user.wallet - parseInt(amount, 10)
+
+    try {
+        
+        await Patient.findByIdAndUpdate(user._id, {wallet: newPatientWallet})
+
+        return res.status(200).json({mssg: 'Successful'})
+    } catch (error) {
+        return res.status(400).json({error: error})
+    }
+}
+
+
 
 module.exports = {
     pay,
     updateDoctorWallet,
-    healthPackagePayWithWallet
+    healthPackagePayWithWallet,
+    payWithWallet
 }

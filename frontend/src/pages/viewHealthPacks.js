@@ -6,7 +6,6 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 const HPHome =  () => {
     const [HP , setHP] = useState(null);
-    
     const {user} = useAuthContext()
 
     useEffect(() => {
