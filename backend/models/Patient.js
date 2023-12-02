@@ -133,8 +133,8 @@ const patientSchema = new Schema({
 
 // static signUp 
 patientSchema.statics.signUp = async function(patient) {
-    const { username, email, password } = patient;
-
+    const { username, password, name, email, dob, gender, mobile_number, health_package, emergency_contact } = patient;
+    console.log(patient);
     const usernameExists = await this.findOne({ username });
     const emailExists = await this.findOne({ email });
 
@@ -145,7 +145,8 @@ patientSchema.statics.signUp = async function(patient) {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
 
-    const newUser = { ...patient, password: hash };
+    const newUser = { username, password: hash, name, email, dob, gender, mobile_number, health_package, emergency_contact };
+    console.log(newUser);
     return await this.create(newUser);
 };
 

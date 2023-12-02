@@ -93,6 +93,8 @@ app.use('/api/patient', patientRoute)
 app.use('/api', login)
 app.use('/api', signUp)
 app.get('/getSession', getSession)
+app.use('/api/medicine', MedicineRoute)
+app.use('/api/pharmacists', pharmacistRoute);
 app.use('/api/perscription', Perscriptions)
 app.use('/api/Admin',adminsRoute)
 app.use('/api/emplymentContract', emplymentContract)
@@ -102,8 +104,7 @@ app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
 app.use('/api', Appointment)
 
-app.use('/api/medicine', MedicineRoute)
-app.use('/api/pharmacists', pharmacistRoute);
+
 
 // routes
 app.get('/', (req, res) => {

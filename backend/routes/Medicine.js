@@ -16,8 +16,9 @@ const {requirePharmacistAuth} = require('../middleware/requrieAuth');
 
 
 const router = express.Router();
-router.post("/addMedicine",requirePharmacistAuth,addMedicine);
 router.get("/viewAvailableMedicine", viewAvailableMedicine);
+
+router.post("/addMedicine",requirePharmacistAuth,addMedicine);
 router.get('/viewDiscountMedicine', viewDiscountMedicine);
 router.put("/editMedicine", requirePharmacistAuth,editMedicine);
 router.get("/search/:search",searchMedicine);

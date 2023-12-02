@@ -88,6 +88,7 @@ const viewDiscountMedicine = async (req, res) => {
     
 
 const viewAvailableMedicine = async (req, res) => {
+   console.log('ana hena');
    const medicines = await medicineModel.find({});
    console.log(medicines);
    res.status(200).send(medicines);
