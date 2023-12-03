@@ -25,7 +25,7 @@ const PharmAppDetails = ({ Appl }) => {
   
     const handleClick = async () => {
         createPharm();
-      const response = await fetch('/api/admin/deleteApp/' + Appl._id, {
+      const response = await fetch('/api/admin/deletePharmApp/' + Appl._id, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${user.token}`
@@ -39,7 +39,7 @@ const PharmAppDetails = ({ Appl }) => {
   }
   
   const handleClick2 = async () => {
-    const response = await fetch('/api/admin/deleteApp/' + Appl._id, {
+    const response = await fetch('/api/admin/deletePharmApp/' + Appl._id, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${user.token}`

@@ -59,7 +59,7 @@ router.post('/healthPackage/platinumpackage', createPlatPackage);
 router.patch('/updateHealthPackage/:id', updateHealthPack); 
 
 //Pharmacist
-router.delete('/deleteApp/:id',deletePharmApp);
+router.delete('/deletePharmApp/:id',deletePharmApp);
 router.post('/acceptApp',createPharmacist)
 router.get('/viewPharmacistApplication', viewPharmacistApplication);
 router.delete('/deletePharmacist/:id', deletePharmacist);

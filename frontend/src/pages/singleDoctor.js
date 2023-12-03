@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/PatientNavbar';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 import PaymentForm from '../components/PaymentHandler';

@@ -75,9 +75,34 @@ export const useLogin = () => {
           setIsLoading(false);
         } catch (adminError) {
           // Handle admin login error
-          console.error('Admin login error:', adminError.message);
-          setIsLoading(false);
-          setError('Login failed. Please check your credentials and try again.');
+
+          try {
+            let response2 = await fetch('/api/loginAsPharmacist', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username, password })
+            })
+
+            if (response2.status !== 200) {
+              throw new Error('Pharmacist login failed');
+            }
+
+            if (response2.ok) {
+              // save the user to local storage
+              const json = await response2.json()
+              localStorage.setItem('user', JSON.stringify(json))
+
+              //update AuthContext
+              dispatch({ type: 'LOGIN', payload: json })
+              setIsLoading(false)
+              window.open("/Medicines", "_self")
+            }
+          } catch (pharmacistError) {
+            console.error('Pharmacist login error:', pharmacistError.message);
+            setIsLoading(false);
+            setError('Login failed. Please check your credentials and try again.');
+          }
+
         }
       }
     }

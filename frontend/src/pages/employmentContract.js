@@ -45,6 +45,7 @@ const App1 = () => {
       // handle success if needed
       if(response){
         window.alert('Welcome Doctor')
+        user.type = "Doctor"
         navigate('/seedoc')
       }
 

@@ -120,7 +120,7 @@ function App() {
 
             <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
               <Navigate to="/home"/> : (user.type === 'Pending') ? 
-              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : <Navigate to="/AdminHome"/>} />
+              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
              
             <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
 
@@ -197,11 +197,6 @@ function App() {
 
               {/* pharmacy */}
             <Route 
-              path="/" 
-              element={!user ? <Login /> : (user.type === 'Patient') ? 
-              <Navigate to="/Medicines"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} 
-            />
-            <Route 
               path="/Medicines" 
               element={ user && <HomePharmacy /> }
             />
@@ -235,15 +230,6 @@ function App() {
             />
 
             {/*Ibra*/}
-            <Route 
-              path="/login" 
-              element={!user ? <Login /> : (user.type === 'Patient') ? 
-              <Navigate to="/Medicines"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
-          
-            <Route 
-              path="/signup" 
-              element={<SignUp />} 
-            />
             <Route 
               path="/applyPharmacist" 
               element={<ApplyPharmacist />} 

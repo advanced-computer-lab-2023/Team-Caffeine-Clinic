@@ -53,7 +53,7 @@ const healthPackagePayWithWallet = async (req, res) => {
     }
 }
 
-const payWithWallet = async (req, res) => {
+const payMedicineWithWallet = async (req, res) => {
     const user = req.user
     
     const {amount} = req.query
@@ -76,5 +76,5 @@ module.exports = {
     pay,
     updateDoctorWallet,
     healthPackagePayWithWallet,
-    payWithWallet
+    payMedicineWithWallet
 }

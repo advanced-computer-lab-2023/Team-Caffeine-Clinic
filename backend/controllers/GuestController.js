@@ -14,6 +14,7 @@ const Admin = require('../models/admin')
 const EmplymentContract = require('../models/emplymentContract')
 
 const Pharmacist = require('../models/Pharmacist')
+const PharmacistAppplication = require('../models/PharmacistApplication')
 
 
 const createToken = (_id, type) => {
@@ -63,7 +64,7 @@ const applyPharmacist = async(req, res) => {
     return res.status(400).json({ error: 'Password Does not meet minimum requirments.' });
   } 
   else
-  if((password+"").length()<6){
+  if((password+"").length<6){
     return res.status(400).json({ error: 'Password length must be at least 6.' });
   }
          else

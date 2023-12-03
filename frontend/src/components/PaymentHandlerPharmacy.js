@@ -75,24 +75,14 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
     } else {
       try {
         let response;
-        if(username){
-          response = await fetch(`/api/patient/payWithWallet?amount=${amount}&doctorUsername=${username}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${user.token}`,
-            },
-          });
-      }
-        else{
-          response = await fetch(`/api/patient/payWithWallet?amount=${amount}`, {
+          response = await fetch(`/api/patient/payMedicineWithWallet?amount=${amount}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${user.token}`,
             },
           })
-        }
+        
         // Handle response
         if(response.ok && onPaymentResult){
           window.alert('Payment Successful');

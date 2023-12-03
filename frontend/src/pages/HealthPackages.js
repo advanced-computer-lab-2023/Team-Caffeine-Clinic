@@ -120,7 +120,7 @@ const HealthPackages = () => {
       
       window.location.reload();
     } catch (error) {
-      console.error('Error creating appointment:', error);
+      console.error('Error Subscribing:', error);
     }}else{
       try {
         console.log(value)

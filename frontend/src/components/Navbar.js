@@ -39,7 +39,7 @@ const Navbar = () => {
       {user && user.type ==='Patient' && (<div><Link to="/cart"><button> Cart</button></Link>
       {' '}<Link to="/Addresses"><button> Addresses</button></Link>
       {' '}<Link to="/Orders"><button> Orders</button></Link></div>)}
-      <Link to="/login"><button onClick={handleClick}>Sign Out</button></Link>
+      <Link to="/"><button onClick={handleClick}>Sign Out</button></Link>
       </div>
       {error && <div className="error">{error}</div>}
     </header>

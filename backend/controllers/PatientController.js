@@ -125,8 +125,8 @@ const addHealthPackageTransaction = async (req, res) => {
         }
         console.log('After Patient Fetch');
         // Find the health package by name
-        const HealthPackage = await HealthPackage.findOne({ name: healthPackageName });
-        if (!HealthPackage) {
+        const healthPackage = await HealthPackage.findOne({ name: healthPackageName });
+        if (!healthPackage) {
             return res.status(404).json({ error: 'HealthPackage not found' });
         }
         console.log('After Health Package Fetch');
@@ -136,7 +136,7 @@ const addHealthPackageTransaction = async (req, res) => {
             value: value,
             paymentOption: 'healthPackages',
             patient: patientId,
-            HealthPackage: HealthPackage.name,
+            HealthPackage: healthPackage.name,
         });
         console.log('After Transaction Creation');
 
@@ -151,6 +151,7 @@ const addHealthPackageTransaction = async (req, res) => {
         await createHealthPackagesTransaction(newreq, newres, newTransaction._id, patientId, healthPackageName);
         console.log('After Function Creation');
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: `Error adding health package transaction: ${error.message}` });
     }
 };
@@ -487,13 +488,14 @@ const estimateRate = async (req, res) => {
 
         if (name) filter.name = new RegExp(name, 'i'); // Case-insensitive regex search
         if (speciality) filter.speciality = new RegExp(speciality, 'i');
-
+        console.log('Before Doctor');
         const doctors = await Doctor.find(filter);
+        console.log('After Doctor');
         const patientHealthPackage = patient.health_package;
 
-        const HealthPackage = await HealthPackage.findOne({ name: patientHealthPackage });
+        const healthPackage = await HealthPackage.findOne({ name: patientHealthPackage });
 
-        if (!HealthPackage) {
+        if (!healthPackage) {
             const doctormap = doctors.map(doctor => {
                 return {
                     username: doctor.username,
@@ -510,7 +512,7 @@ const estimateRate = async (req, res) => {
         }
 
         const doctorRates = doctors.map(doctor => {
-            let rateAfterDiscount = doctor.rate - (doctor.rate * HealthPackage.discounts.doctorSession);
+            let rateAfterDiscount = doctor.rate - (doctor.rate * healthPackage.discounts.doctorSession);
             rateAfterDiscount = rateAfterDiscount + 0.1 * (rateAfterDiscount);
             return {
                 username: doctor.username,
@@ -526,6 +528,7 @@ const estimateRate = async (req, res) => {
 
         return res.status(200).json(doctorRates); // Return here
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: error.message });
     }
 };

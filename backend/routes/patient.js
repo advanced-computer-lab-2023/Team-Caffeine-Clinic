@@ -33,7 +33,7 @@ const {
 } = require('../controllers/PatientController')
 
 const {
-    healthPackagePayWithWallet
+    healthPackagePayWithWallet, payMedicineWithWallet
 } = require('../controllers/paymentController')
 
 const {
@@ -47,6 +47,7 @@ const {
 const {
     requireAuth,
 } = require('../middleware/requrieAuth')
+
 
 // const {payWithWallet} = require('../controllers/paymentController')
 
@@ -120,7 +121,7 @@ router.get('/deliveryaddresses', deliveryaddresses)
 router.post('/neworder', newOrder)
 router.get('/orders', orders)
 router.post('/cancelorder/:_id', deleteOrder)
-router.post('/payWithWallet', payWithWallet)
+router.post('/payMedicineWithWallet', payMedicineWithWallet)
 
 
 module.exports = router
