@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
 // Pages
 import Home from './pages/Home';
-import OldHome from './pages/OldHome';
+import MyInformation from './pages/MyInformation';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ForgotPass from './pages/ForgotPass';
@@ -154,7 +154,7 @@ function App() {
                 <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
                             
                 <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='OldHome' element={<WithNavbarAndSidebar><ProtectedRoute><OldHome /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='myInformation' element={<WithNavbarAndSidebar><ProtectedRoute><MyInformation /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
                 <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
@@ -289,8 +289,11 @@ function App() {
 function WithNavbarAndSidebar({ children }) {
   return (
     <div className='MainContent'>
+      <div className='Sidebar'>
       <Sidebar />
-      <Link to="/home" className='home-button'>Home</Link>
+
+      {/* <Link to="/home" className='home-button'>Home</Link> */}
+      </div>
       {/* <Navbar /> */}
       <div className="pages">
         {children}

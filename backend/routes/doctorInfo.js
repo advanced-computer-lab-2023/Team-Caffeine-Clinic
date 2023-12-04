@@ -33,7 +33,6 @@ const {
 } = require('../controllers/doctorInfocontroller')
 
 const {
-    
     filterDoctorsByAvailability
 } = require('../controllers/PatientController')
 
@@ -61,7 +60,7 @@ router.get('/getDocumentsForLoggedInDoctorPatients', getDocumentsForLoggedInDoct
 router.post('/saveDocumentsForPatient', saveDocumentsForPatient)
 
 //filter  a doctor by speciality and/or availability on a certain date and at a specific time
-//router.get('/filterDoctorsByAvailability',filterDoctorsByAvailability)
+router.get('/filterDoctorsByAvailability',filterDoctorsByAvailability)
 
 //get all patient with a doc
 router.get('/myPatients', myPatients)

@@ -4,7 +4,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 .App {
-  display: flex;
   min-height: 100vh;
   background-color: #ebebeb;
 }
@@ -45,24 +44,53 @@ header a {
   text-decoration: none;
 }
 .pages{
-  max-width: 1400px;
   padding: 20px;
   margin: 0 auto;
 }
-.home .doctors{
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 100px;
-}
+
 
 .doctor-details {
-  background: #fff;
-  border-radius: 4px;
-  margin: 20px auto;
-  padding: 20px;
   position: relative;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+  background-color: #fff; /* White background */
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+  padding: 20px; /* Padding inside the container */
+  margin-top: 30px;
+  margin-bottom: 20px; /* Space between each doctor detail block */
+  transition: box-shadow 0.3s ease; /* Smooth transition for hover effect */
 }
+
+.doctor-details:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); /* Larger shadow on hover */
+}
+
+.doctor-details .name {
+  font-size: 1.7em; /* Larger font size for name */
+  margin-bottom: 0px; /* Space below the name */
+}
+
+.doctor-details .name a {
+  color: #007BFF; /* Accent color for the link */
+  text-decoration: none; /* Remove underline from link */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.doctor-details .name a:hover {
+  color: #0056b3; /* Darker shade on hover */
+}
+
+.doctor-details .details {
+  color: #666; /* Slightly darker text for readability */
+  margin-bottom: 2px; /* Space between each detail */
+  font-size: 1.2em; /* Smaller font size for details */
+}
+
+.doctor-details .details strong {
+  color: #333; /* Even darker color for emphasis */
+}
+
+
+
 .perscription-details {
   background: #fff;
   border-radius: 4px;
@@ -94,8 +122,12 @@ header a {
   justify-content: space-between;
   width: 100%;
   max-width: 600px; 
-  margin-top: 100px;
+  margin-top: 40px;
   margin-left: 250px;
+}
+
+.filters select {
+  border-radius: 10px;
 }
 .filter-input {
   flex: 1;
@@ -139,31 +171,33 @@ header a {
 .name{
   text-align: center;
   color: #1a7a66;
-  font-size: 40px;
+  font-size: 60px;
   font-style: bold;
 }
 
 .Sidebar {
-  width: 300px;
-  bottom: 0;
+  width: 200px;
+  height: 100vh; /* Set the height to be 100% of the viewport height */
+  position: fixed; /* Optional: if you want the sidebar to stay in place while scrolling */
   top: 0;
   left: 0;
-  min-height: 100vh;
   background-color: #105661;
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
+  padding-top: 10px;
+  overflow-y: auto; /* Optional: add scroll inside sidebar if content is too long */
+  margin: 0; /* Remove any default margin */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
-
 
 .Sidebar a {
   text-decoration: none;
   color: white;
-  padding: 18px 20px;
-  display: flex;
+  padding: 12px 13px;
+  display: flex; /* Ensure this is flex to properly align items */
   align-items: center;
   border-left: 3px solid transparent;
-  font-size: 22px;
+  font-size: 15px;
   transition: all 0.3s ease;
 }
 
@@ -172,47 +206,20 @@ header a {
   border-left: 3px solid #2ab4c9;
 }
 
+
 .MainContent {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* Stack child elements vertically */
+  overflow: auto; /* Add scroll if content overflows */
+  margin-left: 50px;
 }
 
 .icon {
   margin-right: 10px; /* adjust spacing between icon and text */
 }
-
-/* .Sidebar {
-  width: 180px;
-  height: 100%; 
-  background-color: #2c3e50;
-  padding: 30px 0;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 60px;
-}
-.Sidebar a {
-  text-decoration: none; 
-  color: #ecf0f1; 
-  padding: 10px 15px;
-  margin: 5px 0;
-  width: 160px;
-  text-align: center;
-  border-radius: 4px; 
-  transition: background-color 0.3s; 
-}
-
-.Sidebar a:hover {
-  background-color: #34495e; 
-} */
 .doctors {
-  margin-left: 120px;
-  z-index: 50;
-  width: 900px;
+  margin-left: 40px;
+  width: 1000px;
 }
 
 .create-form h3 {
@@ -292,6 +299,7 @@ header a {
   font-size: 24px;
   gap: 0px;
   margin-bottom:20px ;
+  width: 800px;
 } 
 .familyMembers h1 {
   margin-bottom: 50px ;
@@ -571,7 +579,7 @@ button:hover {
 .home-button {
   display: inline-block;
   margin: 35px 0 0 20px;
-  padding: 10px 20px;
+  padding: 8px 20px;
   background-color: #007bff;
   color: #fff;
   text-decoration: none;
@@ -579,7 +587,7 @@ button:hover {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  height: 50px;
+  height: 42px;
 }
 
 .home-button:hover {
@@ -667,6 +675,19 @@ button:hover {
   border: 1px solid #f44336; /* Red border for invalid input */
 }
 
+.no-prescriptions-message {
+  font-size: 1.2em; /* Slightly larger font size */
+  color: #6c757d; /* Subtle, professional color */
+  text-align: center; /* Center the text */
+  margin-top: 20px; /* Space at the top */
+  padding: 20px; /* Padding around the text */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f8f9fa; /* Light background color */
+  border: 1px solid #e0e0e0; /* Light border for definition */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+
 .forgot-password-link {
   color: #ff6b6b; 
   text-decoration: none; 
@@ -676,41 +697,6 @@ button:hover {
 
 .forgot-password-link:hover {
   text-decoration: underline; 
-}
-
-.home {
-  background-color: transparent; /* White background */
-  font-family: 'Poppins', sans-serif; /* Assuming Poppins is the font you want */
-  max-width: max-content; /* Fixed width */
-  margin: auto; /* Center in the middle of the page */
-  overflow: hidden; /* Ensures nothing spills out of the border-radius */
-  padding: 20px;
-  border: none; 
-  box-shadow: none;
-}
-
-
-.home h3 {
-  color: #2d2d2d;
-  margin-bottom: 15px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.home p {
-  color: #555; /* Slightly lighter text color for the paragraph */
-  margin-bottom: 10px;
-}
-
-.home ul {
-  list-style-type: none; /* Removes the default list styling */
-  padding: 0;
-}
-
-.home li {
-  margin-bottom: 5px;
-  padding: 10px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .all-info {
@@ -724,33 +710,25 @@ button:hover {
 }
 
 .box {
-  width: calc(40% - 10px);
   background-color: white;
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 50px;
-  margin: 40px 50px 0;
+  padding: 30px;
   height: fit-content;
   text-align: center;
 }
 
 .box h3 {
   color: #333; /* Adjust the color to match your design */
-  margin-bottom: 10px;
 }
 
 .box p {
   color: #666; /* Adjust the color to match your design */
-  line-height: 1.6;
+  line-height: 1.2;
 }
 
 .box p strong {
   color: #333; /* Adjust the color to match your design */
-}
-
-.box ul {
-  list-style-type: none;
-  padding: 0;
 }
 
 .box ul li {
@@ -802,7 +780,7 @@ button:hover {
   background-color: #105661; /*  */
   color: white;
   padding: 15px 20px;
-  margin-top: 20px;
+  margin-top: 30px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -927,6 +905,137 @@ button:hover {
   padding-top: 10px; 
 }
 
+.appointments-container {
+  font-family: 'Arial', sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.appointments-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: 'Arial', sans-serif;
+  align-items: center;
+  margin-top: 40px;
+  align-content: center;
+  margin-left: 200px;
+
+}
+
+.filter-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-left: 170px;
+  align-self: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 1000px;
+  margin-left: -20px;
+
+}
+
+#doctor-name {
+  font-size: 30px;
+  color: rgb(58, 112, 58);
+}
+.results-container {
+  background-color: #ffffff; /* Using a white background for a clean look */
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; /* Professional font */
+  display: flex;
+  min-width: 1000px;
+}
+
+.appointment-results {
+  display: flex; /* Establishes this container as a flex container */
+  flex-direction: column; /* Stacks the children (appointment items) vertically */
+  align-items: center; /* Aligns children in the center on the cross axis (horizontal centering) */
+  justify-content: flex-start; /* Aligns children at the start on the main axis (top of the container) */
+  max-width: 1300px; /* Optionally sets a max-width for larger screens */
+  margin: 0 auto; /* Centers the container itself within its parent */
+}
+
+
+.status {
+color: #004494
+}
+
+.appointment-item {
+  border-bottom: 1px solid #eaeaea; /* subtle separator */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 350px;
+}
+
+.appointment-item div {
+  margin: 20px;
+}
+
+.appointment-item {
+  text-align: center;
+}
+
+.appointment-item p {
+  font-size: 1.5rem; /* Smaller font size for less dominant info */
+  color: #333333; /* Dark grey for better readability */
+  margin: 4px 0; /* Reduce margin for a tighter look */
+  line-height: 1.6; /* Slightly increased line height for readability */
+}
+
+
+
+.refund-button {
+  background-color: #0056b3; /* Use a more professional color for the button */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500; /* Semi-bold font weight for the button text */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  text-transform: uppercase; /* Uppercase button text for design */
+  font-size: 0.8rem; /* Smaller font size for button */
+  max-width: 200px;
+  height: 50px;
+}
+
+.refund-button:hover {
+  background-color: #004494; /* Darker shade on hover for interaction feedback */
+}
+
+.error-message {
+  color: #d9534f; /* Error color */
+  font-size: 0.9rem; /* Consistent font size with other text */
+  padding-top: 1rem; /* Space above the error message */
+  font-weight: 400; /* Regular font weight for error messages */
+}
+
 
 /*pharmacy*/
 
@@ -947,18 +1056,94 @@ header a {
   color: #333;
   text-decoration: none;
 }
-.pages{
-  max-width: 1400px;
-  padding: 20px;
-  margin: 0 auto;
+
+.book-button {
+  display: inline-block;
+  text-align: center;
+  font-size: 20px;
+  padding-top: 13px;
+  background-color: rgb(47, 194, 125);
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 60px;
+  width: 250px;
 }
 
-/* homepage */
-/* .home {
+.book-button:hover {
+  background-color: rgb(44, 122, 86);
+}
+
+.book-doctor-button {
+  position: absolute;
+  top: 70%; 
+  right: 5%;
+  display: inline-block;
+  text-align: center;
+  font-size: 20px;
+  padding-top: 5px;
+  background-color: rgb(47, 194, 125);
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 40px;
+  width: 100px;
+}
+
+.book-doctor-button:hover {
+  background-color: rgb(44, 122, 86);
+}
+.input-group {
+  font-size: 22px; /* Adjust the size of the calendar icon */
+}
+
+.input-group input[type="date"] {
+  font-size: 20px; /* Adjust font size as needed */
+  padding: 12px; /* Increase padding to make the input field taller */
+  width: 100%; /* Full width of its container */
+  border: 1px solid #ccc; /* Styling the border */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Changes the cursor to indicate it's clickable */
+}
+
+/* You might also want to add some specific styles for Webkit browsers like Chrome and Safari */
+.input-group input[type="date"]::-webkit-calendar-picker-indicator {
+  font-size: 20px; /* Adjust the size of the calendar icon */
+  cursor: pointer;
+}
+
+/* For Firefox */
+.input-group input[type="date"]::-moz-calendar {
+  font-size: 20px; /* Adjust the size of the calendar icon */
+  cursor: pointer;
+}
+
+#status {
+  font-size: 20px; /* Adjust the size of the calendar icon */
+
+}
+.home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full height of the viewport */
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.myInformation {
   display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 100px;
-} */
+  grid-template-columns: 250px 1fr; /* Assuming 250px for the sidebar */
+  grid-template-rows: auto; /* Let content determine the row size */
+  min-height: 100vh; /* Full height of the viewport */
+  margin-left: 220px;
+  margin-top: 20px;
+}
 .workout-details {
   background: #fff;
   border-radius: 4px;
