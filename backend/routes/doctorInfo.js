@@ -27,7 +27,8 @@ const {
     createfollowUPAppointment,
     changeToFollowUp,
     getDocumentsForLoggedInDoctorPatients,
-    saveDocumentsForPatient
+    saveDocumentsForPatient,
+    rescheduleAppointment
     
     
 } = require('../controllers/doctorInfocontroller')
@@ -105,6 +106,8 @@ router.get('/appointments', getAppointments)
 
 // Route to handle doctor password change
 router.post('/doctorchangepassword', doctorchangepassword);
+
+router.patch('/rescheduleAppointment', rescheduleAppointment);
 
 
 module.exports = router

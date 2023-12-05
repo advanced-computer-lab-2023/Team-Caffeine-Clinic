@@ -725,6 +725,55 @@ const changeToFollowUp = async (req, res) => {
     }
   };
   
+  const rescheduleAppointment = async(req, res) => {
+    try {
+        const { appointmentId, newAppointmentDate } = req.body;
+
+        // Parsing the newAppointmentDate in the same format as used in patientsWithUpcomingAppointments
+        const parts = newAppointmentDate.split("\\");
+        if (parts.length !== 5) {
+            return res.status(400).json({ message: 'Invalid date format' });
+        }
+
+        const [year, month1, month, time, sec] = parts;
+        const [day, hour, min1] = sec.split(":");
+        const paddedYear = year[1] + year[2] + year[3] + year[4];
+        let min = 0;
+        if (min1[1] !== '"') {
+            min = min1[0] + min1[1];
+        } else {
+            min = min1[0];
+        }
+        const formattedDate = new Date(paddedYear, month - 1, day, hour, min);
+
+        // Find the appointment by ID
+        const appointment = await Appointment.findById(appointmentId);
+
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        // Check if the new date is in the past
+        const currentDate = new Date();
+        if (formattedDate < currentDate) {
+            return res.status(400).json({ message: 'Cannot reschedule to a past date' });
+        }
+
+        // Update the appointment date
+        appointment.appointmentDate = formattedDate;
+
+        // Save the updated appointment
+        await appointment.save();
+
+        res.status(200).json({ message: 'Appointment rescheduled successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
+
 
   
 module.exports = {
@@ -746,5 +795,6 @@ module.exports = {
     createfollowUPAppointment,
     changeToFollowUp,
     getDocumentsForLoggedInDoctorPatients,
-    saveDocumentsForPatient
+    saveDocumentsForPatient,
+    rescheduleAppointment
 };

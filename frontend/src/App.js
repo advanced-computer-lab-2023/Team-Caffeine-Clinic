@@ -68,6 +68,7 @@ import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
+import DocRescheduleAppointment from './pages/DocRescheduleAppointment';
 
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
@@ -139,6 +140,11 @@ function App() {
               <Route
               path="/doctor/DoctorChangePassword" 
               element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
+            />
+            
+            <Route
+              path="/doctor/DocRescheduleAppointment" 
+              element={<WithDoctorNavbar><ProtectedRoute><DocRescheduleAppointment /></ProtectedRoute></WithDoctorNavbar>} 
             />
 
               

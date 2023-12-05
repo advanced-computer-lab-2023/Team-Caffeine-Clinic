@@ -27,6 +27,8 @@ const DoctorNavbar =()=>{
                 <Link className="doctor-buttons" to="/DocAppointments"><h3>Appointments</h3></Link>
 
                 <Link className="doctor-buttons" to="/doctor/DoctorChangePassword"><h3>Change Password</h3></Link>
+
+                <Link className="doctor-buttons" to="/doctor/DocRescheduleAppointment"><h3>Reschedule Appointment</h3></Link>
                 
                 
                 <Link className="doctor-buttons" to="/" onClick={handleClick}><h3>Log Out</h3></Link>
