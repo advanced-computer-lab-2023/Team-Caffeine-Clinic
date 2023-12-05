@@ -80,7 +80,7 @@ const getAppointments = async (req, res) => {
         const status = req.query.status;
         let filter = { doctor: doctorUsername };
 
-        const appointments = await Appointment.find(filter);
+        const appointments = await Appointment.find(filter)
 
         let filteredAppointments = appointments.filter(appointment => {
             let isMatched = true;

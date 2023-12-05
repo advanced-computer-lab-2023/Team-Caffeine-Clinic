@@ -38,12 +38,16 @@ const RescheduleAppointment = () => {
         }
     
         // Format the date to YYYY-MM-DD if it's not already in that format
-        const formattedDate = new Date(newDate).toISOString().split('T')[0];
+        const formatted = new Date(newDate);
+        console.log(formatted);
+        const year = formatted.getFullYear();
+        const month = formatted.getMonth() + 1; // Adding 1 because getMonth() returns 0-indexed months
+        const day = formatted.getDate();
+        const hours = formatted.getHours();
+        const minutes = formatted.getMinutes();
+
+        const formattedDate = `"${year}\\\\${month}\\\\${day}:${hours}:${minutes}"`;
     
-        const appointmentData = {
-            appointmentId: selectedAppointment,
-            newDate: formattedDate
-        };
     
         fetch('/api/doctorInfo/rescheduleAppointment', {
             method: 'PATCH',
@@ -51,7 +55,7 @@ const RescheduleAppointment = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.token}`
             },
-            body: JSON.stringify(appointmentData)
+            body: JSON.stringify({formattedDate, selectedAppointment})
         })
         .then(response => response.json())
         .then(data => {
@@ -83,7 +87,7 @@ const RescheduleAppointment = () => {
                 >
                     {appointments.map(appointment => (
                         <option key={appointment._id} value={appointment._id}>
-                            {appointment.patientName} at {appointment.appointmentDate}
+                            {appointment.patient} at {appointment.appointmentDate}
                         </option>
                     ))}
                 </select>
@@ -91,7 +95,7 @@ const RescheduleAppointment = () => {
                 <label htmlFor="newDate">New Date:</label>
                 <input
                     id="newDate"
-                    type="date"
+                    type="datetime-local"
                     value={newDate}
                     onChange={(e) => setNewDate(e.target.value)}
                     required
