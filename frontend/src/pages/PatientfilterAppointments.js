@@ -14,6 +14,18 @@ const AppointmentsComponent = () => {
         fetchAppointments();
     }, [date, status]);
 
+    const handleFollowUpRequest = async(doctor, appointment) => {
+        const response = await fetch('/api/patient/requestFollowUp', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({doctor, appointment}),
+        })
+
+        if(response.status === 500) window.alert('Already Requested Follow Up')
+    }
 
     const handleDateChange = (event) => {
         setDate(event.target.value);
@@ -77,6 +89,7 @@ const AppointmentsComponent = () => {
               <option value="cancelled">Cancelled</option>
               <option value="rescheduled">Rescheduled</option>
               <option value="FollowUp">FollowUp</option>
+              <option value="completedAndFollwingUP">completedAndFollwingUP</option>
             </select>
           </div>
       
@@ -84,11 +97,14 @@ const AppointmentsComponent = () => {
             {results &&
               results.map((result, index) => (
                 <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }} key={index}>
-                  <p>Doctor: {result.doctor}</p>
+                  <p>Doctor: {result.name}</p>
                   <p>Date: {result.appointmentDate}</p>
                   <p>Status: {result.status}</p>
+                  {result.status === 'completed' && <button onClick={() => handleFollowUpRequest(result.doctor, result._id)}>Follow-Up</button>}
 
-                  <button onClick={() => refundAppointment(result.appointmentDate,result.doctor,result.transactionId)}>Refund</button>
+                  {(result.status === 'upcoming' || result.status === 'rescheduled') 
+                  && <button onClick={() => refundAppointment(result.appointmentDate,result.doctor,result.transactionId)}>Refund</button>}
+
                 </div>
               ))}
           </div>

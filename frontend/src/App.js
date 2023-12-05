@@ -69,6 +69,8 @@ import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
 
+import FollowUpRequests from './pages/FollowUpRequests';
+
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -145,6 +147,8 @@ function App() {
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><ProtectedRoute><AddAvailableDateFunc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="getAllHealthRecords" element={<WithDoctorNavbar><ProtectedRoute><DoctorHealthRecords /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="follow-up" element={<WithDoctorNavbar><ProtectedRoute><CompletedAppointments /></ProtectedRoute></WithDoctorNavbar>} />
+             
+              <Route path="FollowUpRequests" element={<WithDoctorNavbar><ProtectedRoute><FollowUpRequests /></ProtectedRoute></WithDoctorNavbar>} />
 
               <Route path="PayHandler" element={<Elements stripe={stripePromise}> <ProtectedRoute><PaymentHandler/></ProtectedRoute> </Elements>}/>
 

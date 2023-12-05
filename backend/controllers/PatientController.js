@@ -23,6 +23,8 @@ const OTP = require('../models/OTP');
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin')
 
+const FollowUpRequest = require('../models/followUpRequest')
+
 
 const addHealthPackageTransactionfam = async (req, res) => {
     try {
@@ -779,18 +781,22 @@ const getAppointments = async (req, res) => {
                 isMatched = isMatched && transaction && !transaction.Refunded;
             }
 
-            return isMatched ? appointment : null;
+            const doctor = await Doctor.findOne({ username: appointment.doctor })
+
+            const name = doctor.name
+
+            return isMatched ? { ...appointment.toObject(), name } : null;
         }));
 
         // Remove null values from the array (appointments without matching transactions)
         const finalAppointments = filteredAppointments.filter(appointment => appointment !== null);
-
-        res.json(finalAppointments);
+        res.status(200).json(finalAppointments);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while fetching appointments.' });
     }
 };
+
 const refundAppointment = async (req, res) => {
     try {
         const appointmentdate = req.query.appointmentdate;
@@ -1690,6 +1696,30 @@ const getCartPrice = async (req, res) => {
     }
 }
 
+const requestFollowUp = async (req, res) => {
+    const user = req.user
+    console.log('here');
+    const { doctor, appointment } = req.body;
+    console.log(doctor, appointment);
+
+    const exist = await FollowUpRequest.findOne({ appointment: appointment })
+
+    if (exist) {
+        return res.status(500).send('Exists')
+    }
+
+    try {
+        const request = new FollowUpRequest({ doctor: doctor, patient: user.username, appointment: appointment })
+        console.log('here2');
+        await request.save()
+
+        res.status(200).json({ "mssg": "Request Sent" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ "error": error });
+    }
+}
+
 
 module.exports = {
     getFamilyMembersHealthPackages,
@@ -1727,5 +1757,6 @@ module.exports = {
     orders,
     deleteOrder,
     addAddresses,
-    getCartPrice
+    getCartPrice,
+    requestFollowUp
 }

@@ -27,9 +27,10 @@ const {
     createfollowUPAppointment,
     changeToFollowUp,
     getDocumentsForLoggedInDoctorPatients,
-    saveDocumentsForPatient
-    
-    
+    saveDocumentsForPatient,
+    getFollowUpRequests,
+    acceptFollowUPAppointment,
+    rejectRequest
 } = require('../controllers/doctorInfocontroller')
 
 const {
@@ -49,6 +50,8 @@ router.use(requireDoctorAuth)
 router.get('/', (req, res) => {
     res.json({ mssg: 'get doctor info' })
 })
+
+router.get('/getFollowUpRequests', getFollowUpRequests)
 
 // //get a single patient
 router.get('/getDoctorByusername', getDoctorByusername)
@@ -79,7 +82,8 @@ router.get('/searchmyPatients', searchmyPatients)
 router.post('/createDoctor', createDoctor)
 router.get('/getCompletedAppointmentsForDoctor', getCompletedAppointmentsForDoctor)
 router.post('/createfollowUPAppointment', createfollowUPAppointment)
-
+router.post('/acceptFollowUPAppointment', acceptFollowUPAppointment)
+router.post('/rejectRequest', rejectRequest)
 
 //update doctor info 
 router.patch('/updateDoctor', updateDoctorProfile)

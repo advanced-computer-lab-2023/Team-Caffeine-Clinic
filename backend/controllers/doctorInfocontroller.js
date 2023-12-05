@@ -7,6 +7,9 @@ const Appointment = require('../models/appointment');
 const { json } = require('body-parser');
 const bcrypt = require('bcrypt');
 
+const FollowUpRequest = require('../models/followUpRequest')
+
+
 //add patients to a doc using the doc username so we can use it whenever we create an appointment 
 const addPatientToDoctor = async(req, res) => {
     try {
@@ -609,6 +612,56 @@ const getCompletedAppointmentsForDoctor = async (req, res) => {
     }
 };
 
+const acceptFollowUPAppointment = async (req, res) => {
+    const doctorId = req.user.username;
+    const patientId = req.query.patientId;
+    const date = req.query.date;
+    const olddate = req.query.olddate;
+    const { request } = req.body;
+    console.log(olddate);
+
+
+    try {
+        const updatedApp = await Appointment.findOneAndUpdate(
+            {
+              doctor: doctorId,
+              patient: patientId,
+              appointmentDate: olddate,
+            },
+            { $set: { status: 'completedAndFollwingUP' } },
+            { new: true } // To return the updated document
+          );
+
+          if (!updatedApp) {
+            // Handle the case where no matching appointment is found
+            return res.status(400).json({ error: 'no ccompleted appoinmnet' });
+          } 
+        // Check if the appointment already exists
+        const existingAppointment = await Appointment.findOne({ doctor: doctorId, patient: patientId, appointmentDate: date });
+
+        if (existingAppointment) {
+            return res.status(400).json({ error: 'Appointment already exists' });
+        }
+
+        // Create a new appointment
+        const appointment = new Appointment({
+            doctor: doctorId,
+            patient: patientId,
+            appointmentDate: date,
+            status: 'FollowUp', // Assuming the default status is 'upcoming'
+        });
+
+        await appointment.save();
+
+        await FollowUpRequest.deleteOne({_id: request})
+
+        res.status(200).json({ message: 'Appointment created successfully' });
+    } catch (error) {
+        console.error('Error creating appointment:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 const changeToFollowUp = async (req, res) => {
   const  doctorId = req.user.username;
   const patientId = req.query.patientId;
@@ -725,7 +778,31 @@ const changeToFollowUp = async (req, res) => {
     }
   };
   
+  const getFollowUpRequests = async(req, res) => {
+    console.log('okay');
+    const user = req.user
 
+    try {
+        const requests = await FollowUpRequest.find({doctor: user.username}).populate('appointment').exec()
+
+        res.status(200).json(requests)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error });
+    }
+  }
+
+  const rejectRequest = async(req, res) => {
+    const { request } = req.body
+
+    try {
+        await FollowUpRequest.deleteOne({_id: request})
+
+        res.status(200).send('Request Rejected')
+    } catch (error) {
+        res.status(500).json({err: 'Database Problem'})
+    }
+  }
   
 module.exports = {
     getAllHealthRecords,
@@ -746,5 +823,8 @@ module.exports = {
     createfollowUPAppointment,
     changeToFollowUp,
     getDocumentsForLoggedInDoctorPatients,
-    saveDocumentsForPatient
+    saveDocumentsForPatient,
+    getFollowUpRequests,
+    acceptFollowUPAppointment,
+    rejectRequest
 };
