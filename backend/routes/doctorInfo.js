@@ -30,7 +30,8 @@ const {
     saveDocumentsForPatient,
     getFollowUpRequests,
     acceptFollowUPAppointment,
-    rejectRequest
+    rejectRequest,
+    refundAppointment
 } = require('../controllers/doctorInfocontroller')
 
 const {
@@ -84,6 +85,7 @@ router.get('/getCompletedAppointmentsForDoctor', getCompletedAppointmentsForDoct
 router.post('/createfollowUPAppointment', createfollowUPAppointment)
 router.post('/acceptFollowUPAppointment', acceptFollowUPAppointment)
 router.post('/rejectRequest', rejectRequest)
+router.post('/refundAppointment', refundAppointment)
 
 //update doctor info 
 router.patch('/updateDoctor', updateDoctorProfile)

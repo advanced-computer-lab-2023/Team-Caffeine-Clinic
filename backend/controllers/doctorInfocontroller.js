@@ -4,6 +4,8 @@ const router = express.Router();
 const Doctor = require('../models/doctor'); // Import your Doctor model
 const Patient = require('../models/Patient'); // Import your Patient model
 const Appointment = require('../models/appointment');
+const Transaction = require('../models/transaction');
+
 const { json } = require('body-parser');
 const bcrypt = require('bcrypt');
 
@@ -505,7 +507,7 @@ const patientsWithUpcomingAppointments = async (req, res) => {
 
        
 
-        res.json(filteredAppointments);
+        res.status(200).json(filteredAppointments);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while listing upcoming appointments.' });
@@ -803,6 +805,71 @@ const changeToFollowUp = async (req, res) => {
         res.status(500).json({err: 'Database Problem'})
     }
   }
+
+  const refundAppointment = async (req, res) => {
+    try {
+        const appointmentdate = req.query.appointmentdate;
+        const patient = req.query.patient;
+        const doc = req.user.username;
+        const transactionID = req.query.transactionID;
+        console.log(appointmentdate);
+
+        // Find the appointment by ID
+        const appointment = await Appointment.findOne({
+            doctor: doc,
+            patient: patient,
+            appointmentDate: appointmentdate,
+        });
+        console.log(appointment);
+
+        const patient1 = await Patient.findOne({ username: patient });
+        const doctor1 = await Doctor.findOne({ username: doc });
+
+        // Check if the appointment exists
+        if (!appointment) {
+            return res.status(404).json({ error: 'Appointment not found.' });
+        }
+
+        // Check if the appointment has a transaction
+        if (!appointment.transactionId) {
+            console.log('transaction');
+            return res.status(400).json({ error: 'Appointment does not have a transaction.' });
+        }
+
+        // Find the transaction by ID
+        const transaction = await Transaction.findById(appointment.transactionId);
+
+        // Check if the transaction exists
+        if (!transaction) {
+            return res.status(404).json({ error: 'Transaction not found.' });
+        }
+
+        // Check if the transaction has already been refunded
+        if (transaction.Refunded) {
+            return res.status(400).json({ error: 'Transaction has already been refunded.' });
+        }
+
+        // Perform the refund by updating the transaction
+        transaction.Refunded = true;
+        patient1.wallet += transaction.value;
+        doctor1.wallet -= transaction.value;
+        await doctor1.save();
+        await patient1.save();
+        await transaction.save();
+        await Appointment.deleteOne({
+            doctor: doc,
+            patient: patient,
+            appointmentDate: appointmentdate,
+        });
+
+        // Optionally, you can update the appointment status or perform any other necessary actions
+
+        res.json({ message: 'Appointment refunded successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while processing the refund.' });
+    }
+};
   
 module.exports = {
     getAllHealthRecords,
@@ -826,5 +893,6 @@ module.exports = {
     saveDocumentsForPatient,
     getFollowUpRequests,
     acceptFollowUPAppointment,
-    rejectRequest
+    rejectRequest,
+    refundAppointment
 };

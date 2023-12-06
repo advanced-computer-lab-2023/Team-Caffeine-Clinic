@@ -846,6 +846,11 @@ const refundAppointment = async (req, res) => {
         await doctor1.save();
         await patient1.save();
         await transaction.save();
+        await Appointment.deleteOne({
+            doctor: doc,
+            patient: patient,
+            appointmentDate: appointmentdate,
+        });
 
         // Optionally, you can update the appointment status or perform any other necessary actions
 
