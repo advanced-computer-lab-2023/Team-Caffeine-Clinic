@@ -71,6 +71,9 @@ import DocumentUpload from './pages/PatientAddDocs';
 
 import FollowUpRequests from './pages/FollowUpRequests';
 
+import DoctorComponent from './components/DoctorComponent';
+import PatientComponent from './components/PatientComponent';
+
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -80,6 +83,7 @@ import AdminNavbar from './components/AdminNavbar';
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext';
+
 
 
 const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
@@ -93,19 +97,19 @@ function App() {
   useEffect(() => {
     // Set up a timer to call removeExpiredTransactions every, for example, 1 hour
     const timerId = setInterval(() => {
-      const checkOnHealthPackageTransaction = async() =>{
-        
+      const checkOnHealthPackageTransaction = async () => {
+
         const response = await fetch('/api/patient/checkOnHealthPackageTransaction', {
           method: 'POST'
         })
 
-        if(!response){
+        if (!response) {
           throw Error('Problem in API')
         }
 
       }
-        checkOnHealthPackageTransaction()
-      
+      checkOnHealthPackageTransaction()
+
       //removeExpiredTransactions();
     }, 60 * 1000); // 1 minute in milliseconds
 
@@ -120,13 +124,13 @@ function App() {
           <UsernameProvider> {/* Wrap your app with the UsernameProvider */}
             <Routes>
 
-            <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
-              <Navigate to="/home"/> : (user.type === 'Pending') ? 
-              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
-             
-            <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
+              <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ?
+                <Navigate to="/home" /> : (user.type === 'Pending') ?
+                  <Navigate to="/employmentContract" /> : (user.type === 'Doctor') ? <Navigate to="/seedoc" /> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines" /> : <Navigate to="/AdminHome" />} />
 
-            <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
+
+              <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><ProtectedRoute><DoctorInfo /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="EditDocEmail" element={<WithDoctorNavbar><ProtectedRoute><UpdateEmail /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="EditDocHos" element={<WithDoctorNavbar><ProtectedRoute><UpdateAffiliation /></ProtectedRoute></WithDoctorNavbar>} />
@@ -139,147 +143,148 @@ function App() {
 
 
               <Route
-              path="/doctor/DoctorChangePassword" 
-              element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
-            />
+                path="/doctor/DoctorChangePassword"
+                element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>}
+              />
 
-              
+
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><ProtectedRoute><AddAvailableDateFunc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="getAllHealthRecords" element={<WithDoctorNavbar><ProtectedRoute><DoctorHealthRecords /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="follow-up" element={<WithDoctorNavbar><ProtectedRoute><CompletedAppointments /></ProtectedRoute></WithDoctorNavbar>} />
-             
+
               <Route path="FollowUpRequests" element={<WithDoctorNavbar><ProtectedRoute><FollowUpRequests /></ProtectedRoute></WithDoctorNavbar>} />
 
-              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <ProtectedRoute><PaymentHandler/></ProtectedRoute> </Elements>}/>
+              <Route path="PayHandler" element={<Elements stripe={stripePromise}> <ProtectedRoute><PaymentHandler /></ProtectedRoute> </Elements>} />
 
 
 
               {/* Ibra - Salah */}
-                <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
-                            
-                <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='OldHome' element={<WithNavbarAndSidebar><ProtectedRoute><OldHome /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
-                <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='healthPackages' element={<WithNavbarAndSidebar><ProtectedRoute><HealthPackages /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='Perscriptions' element={<WithNavbarAndSidebar><ProtectedRoute><Perscription /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
-                
-                <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='PatientAddDocs' element={<WithNavbarAndSidebar><ProtectedRoute><DocumentUpload /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='seeanddeletdocs' element={<WithNavbarAndSidebar><ProtectedRoute><ViewDocuments /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
 
-                <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
-                <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='OldHome' element={<WithNavbarAndSidebar><ProtectedRoute><OldHome /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
+              <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='healthPackages' element={<WithNavbarAndSidebar><ProtectedRoute><HealthPackages /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='Perscriptions' element={<WithNavbarAndSidebar><ProtectedRoute><Perscription /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
+
+              <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='PatientAddDocs' element={<WithNavbarAndSidebar><ProtectedRoute><DocumentUpload /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='seeanddeletdocs' element={<WithNavbarAndSidebar><ProtectedRoute><ViewDocuments /></ProtectedRoute></WithNavbarAndSidebar>} />
+
+              <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
+              <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
               {/* Public Routes */}
-              <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
-              <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
-              <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home"/>} />
+              <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home" />} />
+              <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home" />} />
+              <Route path='doctorApplication' element={!user ? <ApplyDoctor /> : <Navigate to="/home" />} />
 
               {/* Mo2 - Yas */}
-              <Route path="/AdminHome" element={<ProtectedRoute><AdminHome/></ProtectedRoute>} />
-              <Route path="/ViewAdmin" element={<ProtectedRoute><ViewAdmin/></ProtectedRoute>} />
-              <Route path="/viewDoctorApps" element={<ProtectedRoute><DoctorAppHome/></ProtectedRoute>} />
-              <Route path="/viewDoctors" element={<ProtectedRoute><ViewDoctorHome/></ProtectedRoute>} />
-              <Route path="/viewHealthPacks" element={<ProtectedRoute><HPHome/></ProtectedRoute>} />
-              <Route path="/editHP/:id" element={<ProtectedRoute><EditHealthPackage/></ProtectedRoute>} />
-              <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome/></ProtectedRoute>} />
-                                                
-              <Route 
-              path="/admin/AdminChangePassword" 
-              element={<ProtectedRoute><AdminChangePassword /></ProtectedRoute>} 
+              <Route path="/AdminHome" element={<ProtectedRoute><AdminHome /></ProtectedRoute>} />
+              <Route path="/ViewAdmin" element={<ProtectedRoute><ViewAdmin /></ProtectedRoute>} />
+              <Route path="/viewDoctorApps" element={<ProtectedRoute><DoctorAppHome /></ProtectedRoute>} />
+              <Route path="/viewDoctors" element={<ProtectedRoute><ViewDoctorHome /></ProtectedRoute>} />
+              <Route path="/viewHealthPacks" element={<ProtectedRoute><HPHome /></ProtectedRoute>} />
+              <Route path="/editHP/:id" element={<ProtectedRoute><EditHealthPackage /></ProtectedRoute>} />
+              <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome /></ProtectedRoute>} />
+
+              <Route
+                path="/admin/AdminChangePassword"
+                element={<ProtectedRoute><AdminChangePassword /></ProtectedRoute>}
               />
 
 
               <Route
-              path="/viewPatientsDetails"
-              element =  {<WithNavbarAndSidebar><ProtectedRoute><PatientDetails/></ProtectedRoute></WithNavbarAndSidebar>}
+                path="/viewPatientsDetails"
+                element={<WithNavbarAndSidebar><ProtectedRoute><PatientDetails /></ProtectedRoute></WithNavbarAndSidebar>}
               />
 
 
               {/* pharmacy */}
-            <Route 
-              path="/Medicines" 
-              element={ user && <HomePharmacy /> }
-            />
-            <Route
-              path="/Addresses" 
-              element={<Addresses />} 
-            />
-            <Route
-              path="/Checkout" 
-              element={<Checkout />} 
-            />
-            <Route
-              path="/Orders" 
-              element={<Orders />} 
-            />
-            <Route 
-              path="/search/:search" 
-              element={ user && <SearchResults /> }
-              />
-            <Route 
-              path={`/filter/:filter`}
-              element={ user && <FilterResults /> }
-            />
-            <Route 
-              path="/editMedicine/:Name" 
-              element={user&& user.type=="Pharmacist" && <EditResults /> }
-            />   
-            <Route 
-              path="/addMedicinePicture/:Name" 
-              element={user&& user.type=="Pharmacist" && <AddMedicinePicture/> }
-            />
-
-            {/*Ibra*/}
-            <Route 
-              path="/applyPharmacist" 
-              element={<ApplyPharmacist />} 
-            />
-
-            <Route
-            path='/patientHome'
-            element={user&& user.type=="Patient" && <WithNavbarAndSidebarPharmacy><PatientHomePharmacy /></WithNavbarAndSidebarPharmacy> }
-            />
-            <Route
-            path='/Cart'
-            element={user&& user.type=="Patient" && <Cart /> }
-            />
-
-            {/*Admin*/}
-            <Route
-              path="/AdminHome"
-              element =  {user&& user.type=="Admin" &&<AdminNavbarAndSidebar><AdminHome/></AdminNavbarAndSidebar> }
+              <Route
+                path="/Medicines"
+                element={user && <HomePharmacy />}
               />
               <Route
-              path="/ViewAdmin"
-              element =  {user&& user.type=="Admin" && <AdminNavbarAndSidebar><ViewAdmin/></AdminNavbarAndSidebar>}
-                />
+                path="/Addresses"
+                element={<Addresses />}
+              />
               <Route
-              path="/viewPatientsAdmin"
-              element = {user&& user.type=="Admin" &&<AdminNavbarAndSidebar><ViewPatientHome/></AdminNavbarAndSidebar>}
-                />
+                path="/Checkout"
+                element={<Checkout />}
+              />
               <Route
-              path="getSinglePharmacist/:username"
-              element =  { user && user.type=="Admin" && <AdminNavbarAndSidebar><SinglePharmacist/></AdminNavbarAndSidebar> }
-                />
+                path="/Orders"
+                element={<Orders />}
+              />
               <Route
-              path="viewPharmacistApps"
-              element = { user&& user.type=="Admin" && <AdminNavbarAndSidebar><PharmApp/></AdminNavbarAndSidebar> }
-                />
+                path="/search/:search"
+                element={user && <SearchResults />}
+              />
               <Route
-              path="viewPharmacists"
-              element ={ user&& user.type=="Admin" && <AdminNavbarAndSidebar><Pharmacist/></AdminNavbarAndSidebar> }
-                />
+                path={`/filter/:filter`}
+                element={user && <FilterResults />}
+              />
               <Route
-              path="viewHealthPacks"
-              element ={ user&& user.type=="Admin" && <AdminNavbarAndSidebar><HPHome/></AdminNavbarAndSidebar> }
-                />
-              <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/Medicines"/>} />
-                
-                
+                path="/editMedicine/:Name"
+                element={user && user.type == "Pharmacist" && <EditResults />}
+              />
+              <Route
+                path="/addMedicinePicture/:Name"
+                element={user && user.type == "Pharmacist" && <AddMedicinePicture />}
+              />
+
+              {/*Ibra*/}
+              <Route
+                path="/applyPharmacist"
+                element={<ApplyPharmacist />}
+              />
+
+              <Route
+                path='/patientHome'
+                element={user && user.type == "Patient" && <WithNavbarAndSidebarPharmacy><PatientHomePharmacy /></WithNavbarAndSidebarPharmacy>}
+              />
+              <Route
+                path='/Cart'
+                element={user && user.type == "Patient" && <Cart />}
+              />
+
+              {/*Admin*/}
+              <Route
+                path="/AdminHome"
+                element={user && user.type == "Admin" && <AdminNavbarAndSidebar><AdminHome /></AdminNavbarAndSidebar>}
+              />
+              <Route
+                path="/ViewAdmin"
+                element={user && user.type == "Admin" && <AdminNavbarAndSidebar><ViewAdmin /></AdminNavbarAndSidebar>}
+              />
+              <Route
+                path="/viewPatientsAdmin"
+                element={user && user.type == "Admin" && <AdminNavbarAndSidebar><ViewPatientHome /></AdminNavbarAndSidebar>}
+              />
+              <Route
+                path="getSinglePharmacist/:username"
+                element={user && user.type == "Admin" && <AdminNavbarAndSidebar><SinglePharmacist /></AdminNavbarAndSidebar>}
+              />
+              <Route
+                path="viewPharmacistApps"
+                element={user && user.type == "Admin" && <AdminNavbarAndSidebar><PharmApp /></AdminNavbarAndSidebar>}
+              />
+              <Route
+                path="viewPharmacists"
+                element={user && user.type == "Admin" && <AdminNavbarAndSidebar><Pharmacist /></AdminNavbarAndSidebar>}
+              />
+              <Route
+                path="viewHealthPacks"
+                element={user && user.type == "Admin" && <AdminNavbarAndSidebar><HPHome /></AdminNavbarAndSidebar>}
+              />
+              <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/Medicines" />} />
+
+              <Route path='PatientCall' element={<PatientComponent />} />
+              <Route path='DoctorCall' element={<DoctorComponent />} />
 
 
             </Routes>

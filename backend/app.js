@@ -6,6 +6,8 @@ mongoose.set('strictQuery', false);
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
+const http = require('http');
+const socketIO = require('socket.io');
 
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -45,6 +47,36 @@ const pharmacistRoute = require('./routes/pharmacist')
 
 
 var app = express();
+// const server = http.createServer(app);
+// const io = socketIO(server);
+
+// io.on('connection', (socket) => {
+//   console.log('User connected');
+
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+
+//   // Handle WebRTC signaling events
+//   socket.on('offer', (data) => {
+//     socket.to(data.to).emit('offer', data);
+//   });
+
+//   socket.on('answer', (data) => {
+//     socket.to(data.to).emit('answer', data);
+//   });
+
+//   socket.on('ice-candidate', (data) => {
+//     socket.to(data.to).emit('ice-candidate', data.candidate);
+//   });
+// });
+
+// server.listen(3001, () => {
+//   console.log('Server running on port 3001');
+// });
+
+
+
 app.use(express.json({ limit: "200mb" }));
 app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 

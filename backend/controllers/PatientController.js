@@ -726,10 +726,11 @@ const createAppointmentfam = async (req, res) => {
         }
 
         const getTransaction = await Transaction.findOne({
-            //appointmentDate:appointmentDate,
+            appointmentDate:appointmentDate,
             paymentOption: 'Appointment',
             doctor: doctor.username,
-            patient: patient.username
+            patient: patient.username,
+            Refunded: false
         });
 
         const transactionID = getTransaction._id;
@@ -756,14 +757,23 @@ const createAppointmentfam = async (req, res) => {
 };
 const getAppointments = async (req, res) => {
     try {
-        const patientUsername = req.user.username;
+        const patient = req.query.patient
+        let patientUsername
+        if (patient) {
+            patientUsername = patient
+            console.log('ana hena');
+        }
+        else {
+            patientUsername = req.user.username;
+            console.log(patientUsername);
+        }
         const date = req.query.date;
         const status = req.query.status;
 
         let filter = { patient: patientUsername };
 
         const appointments = await Appointment.find(filter);
-
+        console.log(appointments);
         const filteredAppointments = await Promise.all(appointments.map(async appointment => {
             let isMatched = true;
 
@@ -778,7 +788,9 @@ const getAppointments = async (req, res) => {
             // Check if the appointment has a transaction and the transaction is not refunded
             if (appointment.transactionId) {
                 const transaction = await Transaction.findById(appointment.transactionId);
+                console.log(transaction);
                 isMatched = isMatched && transaction && !transaction.Refunded;
+                //console.log(isMatched);
             }
 
             const doctor = await Doctor.findOne({ username: appointment.doctor })
@@ -788,8 +800,11 @@ const getAppointments = async (req, res) => {
             return isMatched ? { ...appointment.toObject(), name } : null;
         }));
 
+        //console.log(filteredAppointments);
+
         // Remove null values from the array (appointments without matching transactions)
         const finalAppointments = filteredAppointments.filter(appointment => appointment !== null);
+        console.log(finalAppointments);
         res.status(200).json(finalAppointments);
     } catch (error) {
         console.error(error);
@@ -801,7 +816,17 @@ const refundAppointment = async (req, res) => {
     try {
         const appointmentdate = req.query.appointmentdate;
         const doc = req.query.doc;
-        const patient = req.user.username;
+        const username = req.query.username;
+        let patient
+        if (username) {
+            patient = username
+        }
+        else {
+            patient = req.user.username;
+        }
+
+        const user = req.user.username
+
         const transactionID = req.query.transactionID;
         console.log(appointmentdate);
 
@@ -813,7 +838,7 @@ const refundAppointment = async (req, res) => {
         });
         console.log(appointment);
 
-        const patient1 = await Patient.findOne({ username: patient });
+        const patient1 = await Patient.findOne({ username: user });
         const doctor1 = await Doctor.findOne({ username: doc });
 
         // Check if the appointment exists
@@ -1130,6 +1155,7 @@ const addTransactionAppointmentfam = async (req, res) => {
             paymentOption: "Appointment",
             doctor: doctorUsername,
             patient: patientUsername,
+            Refunded: false
         });
 
         // Save the transaction to the database
@@ -1703,9 +1729,18 @@ const getCartPrice = async (req, res) => {
 
 const requestFollowUp = async (req, res) => {
     const user = req.user
+
     console.log('here');
-    const { doctor, appointment } = req.body;
-    console.log(doctor, appointment);
+    const { doctor, appointment, patient } = req.body;
+    console.log(doctor, appointment, patient);
+
+    let username
+    if (patient) {
+        username = patient
+    }
+    else {
+        username = user.username
+    }
 
     const exist = await FollowUpRequest.findOne({ appointment: appointment })
 
@@ -1714,7 +1749,7 @@ const requestFollowUp = async (req, res) => {
     }
 
     try {
-        const request = new FollowUpRequest({ doctor: doctor, patient: user.username, appointment: appointment })
+        const request = new FollowUpRequest({ doctor: doctor, patient: username, appointment: appointment })
         console.log('here2');
         await request.save()
 

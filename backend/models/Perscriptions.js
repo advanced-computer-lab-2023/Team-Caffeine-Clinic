@@ -27,7 +27,8 @@ const prescriptionSchema = new Schema({
     },
 
     medicine: [{
-        type: String
+        type: Array,
+        default: []
     }]
 }, {timestamps: true})
 
