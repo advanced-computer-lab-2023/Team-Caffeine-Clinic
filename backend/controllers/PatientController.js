@@ -757,7 +757,6 @@ const getAppointments = async (req, res) => {
         const patientUsername = req.user.username;
         const date = req.query.date;
         const status = req.query.status;
-
         let filter = { patient: patientUsername };
 
         const appointments = await Appointment.find(filter);
@@ -1691,6 +1690,25 @@ const getCartPrice = async (req, res) => {
 }
 
 
+const rescheduleAppointmentPatient = async (req, res) => {
+    try {
+        const { formattedDate, selectedAppointment } = req.body;
+        // console.log(formattedDate, selectedAppointment);
+
+        // Find the appointment by ID
+        const appointment = await Appointment.findByIdAndUpdate(selectedAppointment, { appointmentDate: formattedDate });
+        
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+        res.status(200).json({ message: 'Appointment rescheduled successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
 module.exports = {
     getFamilyMembersHealthPackages,
     signUp,
@@ -1727,5 +1745,6 @@ module.exports = {
     orders,
     deleteOrder,
     addAddresses,
-    getCartPrice
+    getCartPrice,
+    rescheduleAppointmentPatient
 }

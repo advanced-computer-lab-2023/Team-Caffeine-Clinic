@@ -29,7 +29,8 @@ const {
     newOrder,
     orders,
     deleteOrder,
-    getCartPrice
+    getCartPrice,
+    rescheduleAppointmentPatient
 } = require('../controllers/PatientController')
 
 const {
@@ -123,5 +124,7 @@ router.get('/orders', orders)
 router.post('/cancelorder/:_id', deleteOrder)
 router.post('/payMedicineWithWallet', payMedicineWithWallet)
 
+
+router.patch('/rescheduleAppointmentPatient', rescheduleAppointmentPatient);
 
 module.exports = router

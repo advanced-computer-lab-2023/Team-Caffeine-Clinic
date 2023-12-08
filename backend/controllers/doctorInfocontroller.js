@@ -730,7 +730,7 @@ const saveDocumentsForPatient = async (req, res) => {
 const rescheduleAppointment = async (req, res) => {
     try {
         const { formattedDate, selectedAppointment } = req.body;
-        console.log(formattedDate, selectedAppointment);
+        // console.log(formattedDate, selectedAppointment);
 
         // Find the appointment by ID
         const appointment = await Appointment.findByIdAndUpdate(selectedAppointment, { appointmentDate: formattedDate });

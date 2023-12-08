@@ -69,6 +69,7 @@ import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
 import DocRescheduleAppointment from './pages/DocRescheduleAppointment';
+import PRescheduleAppointment from './pages/PRescheduleAppointment';
 
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
@@ -175,6 +176,9 @@ function App() {
                 <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
                 <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
+
+                <Route path="/patient/PRescheduleAppointment" element={<WithNavbarAndSidebar><ProtectedRoute><PRescheduleAppointment /></ProtectedRoute></WithNavbarAndSidebar>} />
+
               {/* Public Routes */}
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
