@@ -69,6 +69,13 @@ import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
 
+import AboutSection from './components/AboutSection';
+import HomeSection from './components/HomeSection';
+import ServicesSection from './components/ServicesSection';
+import ContactSection from './components/ContactSection';
+import AppointmentSection from './components/AppointmentSection';
+import ClinicPatientNavBar from './components/ClinicPatientNavBar';
+
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -289,12 +296,17 @@ function App() {
 function WithNavbarAndSidebar({ children }) {
   return (
     <div className='MainContent'>
+      <ClinicPatientNavBar />
       <div className='Sidebar'>
       <Sidebar />
-
-      {/* <Link to="/home" className='home-button'>Home</Link> */}
       </div>
-      {/* <Navbar /> */}
+      <body> 
+      <HomeSection />
+      <AboutSection />
+      <ServicesSection />
+      <AppointmentSection />
+      <ContactSection />
+      </body>
       <div className="pages">
         {children}
       </div>
