@@ -68,6 +68,8 @@ import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
+import ChatPage from './pages/ChatPage'
+
 
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
@@ -244,6 +246,11 @@ function App() {
             element={user&& user.type=="Patient" && <Cart /> }
             />
 
+            <Route
+            path='/Chat'
+            element={user&& user.type!="Admin" && <ChatPage />  }
+            />
+
             {/*Admin*/}
             <Route
               path="/AdminHome"
@@ -310,6 +317,7 @@ function WithNavbarAndSidebarPharmacy({ children }) {
     </div>
   );
 }
+
 
 function WithDoctorNavbar({ children }) {
   return (

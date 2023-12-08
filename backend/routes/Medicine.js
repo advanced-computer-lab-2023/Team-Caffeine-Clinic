@@ -12,10 +12,20 @@ const {viewAvailableMedicine,
     addPicture
 } = require("../controllers/MedicineController");
 
+const{
+    accessChat,
+    fetchChats,
+    allMessages,
+    sendMessage,
+    viewDoctors
+}=require('../controllers/ChatController')
+
 const {requirePharmacistAuth} = require('../middleware/requrieAuth');
 
 
 const router = express.Router();
+
+
 router.get("/viewAvailableMedicine", viewAvailableMedicine);
 
 router.post("/addMedicine",requirePharmacistAuth,addMedicine);
@@ -25,5 +35,16 @@ router.get("/search/:search",searchMedicine);
 router.get("/viewDistinct", viewDistinctMedicalUse);
 router.get("/filter/:filter",filterMedicine);
 router.put("/addPicture",requirePharmacistAuth ,addPicture);
+
+router.post("/chatPharma/accessChats",requirePharmacistAuth ,accessChat);
+
+router.get("/chatPharma/allChats",requirePharmacistAuth ,fetchChats);
+
+router.get("/chatPharma/getDoctors", requirePharmacistAuth,viewDoctors);
+
+router.get("/chatPharma/getMessages/:chatId", requirePharmacistAuth,allMessages);
+
+router.post("/chatPharma/sendMessage", requirePharmacistAuth,sendMessage);
+
 
 module.exports = router;

@@ -21,7 +21,7 @@ const Navbar = () => {
 
   }
   return (
-    <header>
+    <header   >
       <div className="container">
         <Link to="/Medicines">
           <h1>Pharmacy</h1>
@@ -39,6 +39,7 @@ const Navbar = () => {
       {user && user.type ==='Patient' && (<div><Link to="/cart"><button> Cart</button></Link>
       {' '}<Link to="/Addresses"><button> Addresses</button></Link>
       {' '}<Link to="/Orders"><button> Orders</button></Link></div>)}
+      {user && user.type !=='Admin'&& <Link to="/Chat"><button> Chat</button></Link>}
       <Link to="/"><button onClick={handleClick}>Sign Out</button></Link>
       </div>
       {error && <div className="error">{error}</div>}

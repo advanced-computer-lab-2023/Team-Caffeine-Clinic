@@ -53,7 +53,7 @@ const doctorSchema = new Schema({
         type: String, 
         ref: 'Patient'
     }],
-    wallet:{
+    wallet:{ 
         type:Number,
         default:0 },
     AcceptedContract:{

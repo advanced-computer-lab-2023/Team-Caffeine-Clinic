@@ -18,7 +18,9 @@ const {
     payWithWallet,addTransactionAppointment,createAppointmentfam,addTransactionAppointmentfam,
     refundAppointment,createHealthPackagesTransaction,addHealthPackageTransaction
     ,markHealthPackageTransactionAsRefunded,addHealthPackageTransactionfam,saveDocuments,viewMyDocuments,deleteDocument,
+
     //pharmacy
+    
     viewCart,
     incAmount,
     decAmount,
@@ -43,6 +45,16 @@ const {
 const {
     checkOnHealthPackageTransaction
 } = require('../controllers/healthPackagesController')
+
+const{
+    accessChat,
+    fetchChats,
+    allMessages,
+    viewPharmacists,
+    sendMessage,
+    viewDoctors,
+    viewPatientDoctors
+}=require('../controllers/ChatController')
 
 const {
     requireAuth,
@@ -122,6 +134,12 @@ router.post('/neworder', newOrder)
 router.get('/orders', orders)
 router.post('/cancelorder/:_id', deleteOrder)
 router.post('/payMedicineWithWallet', payMedicineWithWallet)
-
+//Chat with Pharmacist
+router.post("/chat/accessChats", accessChat);
+router.get("/chat/allChats", fetchChats);
+router.get("/chat/getMessages/:chatId", allMessages);
+router.get("/chat/viewPharmacists", viewPharmacists);
+router.post("/chat/sendMessage", sendMessage);
+router.get("/chat/getDoctors", viewPatientDoctors);
 
 module.exports = router
