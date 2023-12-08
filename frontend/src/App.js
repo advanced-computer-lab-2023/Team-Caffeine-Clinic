@@ -168,7 +168,7 @@ function App() {
               <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='healthPackages' element={<WithNavbarAndSidebar><ProtectedRoute><HealthPackages /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='Perscriptions' element={<WithNavbarAndSidebar><ProtectedRoute><Perscription /></ProtectedRoute></WithNavbarAndSidebar>} />
-              <Route path='SinglePerscriptions/:id' element={<WithNavbarAndSidebar><ProtectedRoute><SinglePerscriptions /></ProtectedRoute></WithNavbarAndSidebar>} />
+              <Route path='SinglePerscriptions/:id' element={<ProtectedRoute><SinglePerscriptions /></ProtectedRoute>} />
 
               <Route path='Filterbyavedates' element={<WithNavbarAndSidebar><ProtectedRoute><DoctorList /></ProtectedRoute></WithNavbarAndSidebar>} />
               <Route path='PatientAddDocs' element={<WithNavbarAndSidebar><ProtectedRoute><DocumentUpload /></ProtectedRoute></WithNavbarAndSidebar>} />

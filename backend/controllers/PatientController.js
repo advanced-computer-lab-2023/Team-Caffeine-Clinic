@@ -554,7 +554,7 @@ const getSinglePerscription = async (req, res) => {
     console.log(_id);
 
     try {
-        const perscription = await Perscriptions.findById(_id)
+        const perscription = await Perscriptions.findById(_id).populate('patientID')
         res.status(200).json(perscription)
     } catch (error) {
         res.status(400).send(error);

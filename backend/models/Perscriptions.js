@@ -3,6 +3,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const prescriptionSchema = new Schema({
+    appointment: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Appointment',
+    },
+
     patientID: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Patient',
@@ -27,9 +32,30 @@ const prescriptionSchema = new Schema({
     },
 
     medicine: [{
-        type: Array,
-        default: []
-    }]
+        type: String,
+        default: ""
+    }],
+
+    dosage: [{
+        type: String,
+        default: ""
+    }],
+
+    symptoms: [{
+        type: String,
+        default: ""
+    }],
+
+    tests: [{
+        type: String,
+        default: ""
+    }],
+
+    advice: {
+        type: String,
+        default: ""
+    }
+
 }, {timestamps: true})
 
 module.exports = mongoose.model('Perscriptions', prescriptionSchema)

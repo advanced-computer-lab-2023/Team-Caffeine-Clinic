@@ -6,8 +6,8 @@ mongoose.set('strictQuery', false);
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
-const http = require('http');
-const socketIO = require('socket.io');
+// const http = require('http');
+// const socketIO = require('socket.io');
 
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy

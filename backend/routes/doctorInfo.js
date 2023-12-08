@@ -39,6 +39,10 @@ const {
     filterDoctorsByAvailability
 } = require('../controllers/PatientController')
 
+const {
+    createPersc, getDoctorName, getPerscDetails
+} = require('../controllers/PerscriptionsController')
+
 const {requireDoctorAuth} = require('../middleware/requrieAuth')
 
 const router = express.Router()
@@ -51,6 +55,10 @@ router.use(requireDoctorAuth)
 router.get('/', (req, res) => {
     res.json({ mssg: 'get doctor info' })
 })
+
+router.get('/getPerscDetails', getPerscDetails)
+
+router.post('/addPerscription', createPersc)
 
 router.get('/getFollowUpRequests', getFollowUpRequests)
 
