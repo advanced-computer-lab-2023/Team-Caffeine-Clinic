@@ -1,6 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ContactSection = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showButton, setShowButton] = useState(true);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+  };
+
+  useEffect(() => {
+    if (isSubmitting) {
+      setShowButton(false);
+
+      // Simulate form submission delay and reset
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setShowButton(true);
+      }, 3000);
+    }
+  }, [isSubmitting]);
   return (
     <section id="contact" className="contact">
       <div className="container">
@@ -50,7 +69,7 @@ const ContactSection = () => {
 
           <div className="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" className="php-email-form">
+          <form onSubmit={handleSubmit} className="php-email-form">
               <div className="row">
                 <div className="col-md-6 form-group">
                   {/* <input type="text" name="name" className="form-control" id="name" placeholder="Your Name" required> */}
@@ -70,9 +89,16 @@ const ContactSection = () => {
                 <div className="error-message"></div>
                 <div className="sent-message">Your message has been sent. Thank you!</div>
               </div>
-              <div className="text-center"><button type="submit">Send Message</button></div>
+              <div className="text-center">
+              {showButton && <button type="submit" className={isSubmitting ? 'fade-button' : ''}>Send Message</button>}
+              </div>
             </form>
-
+            {isSubmitting && (
+              <div className="success-message">
+                <i className="bi bi-check-circle" style={{ color: 'green' }}></i>
+                <span>Your message has been sent. Thank you!</span>
+              </div>
+            )}
           </div>
 
         </div>

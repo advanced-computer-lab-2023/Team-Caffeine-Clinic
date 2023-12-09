@@ -1,6 +1,9 @@
 import React from 'react';
 
 const AppointmentSection = () => {
+  const linkStyle = {
+    textDecoration: 'none',
+ };
 
   const handleSubmit = (event) => {
     event.preventDefault();

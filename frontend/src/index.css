@@ -37,6 +37,11 @@ a {
   text-decoration: none;
 }
 
+Link {
+  color: #1977cc;
+  text-decoration: none;
+}
+
 a:hover {
   color: #3291e6;
   text-decoration: none;
@@ -207,6 +212,10 @@ h6 {
   color: #2c4964;
 }
 
+#header .logo Link {
+  color: #2c4964;
+}
+
 #header .logo img {
   max-height: 40px;
 }
@@ -294,6 +303,14 @@ h6 {
   border-color: #1977cc;
 }
 
+.navbar a:hover,
+.navbar .active,
+.navbar .active:focus,
+.navbar li:hover>Link {
+  color: #1977cc;
+  border-color: #1977cc;
+}
+
 .navbar .dropdown ul {
   display: block;
   position: absolute;
@@ -322,6 +339,15 @@ h6 {
   border: none;
 }
 
+.navbar .dropdown ul Link {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  color: #082744;
+  border: none;
+}
+
 .navbar .dropdown ul a i {
   font-size: 12px;
 }
@@ -329,6 +355,12 @@ h6 {
 .navbar .dropdown ul a:hover,
 .navbar .dropdown ul .active:hover,
 .navbar .dropdown ul li:hover>a {
+  color: #1977cc;
+}
+
+.navbar .dropdown ul a:hover,
+.navbar .dropdown ul .active:hover,
+.navbar .dropdown ul li:hover>Link {
   color: #1977cc;
 }
 
@@ -436,6 +468,12 @@ h6 {
   color: #1977cc;
 }
 
+.navbar-mobile a:hover,
+.navbar-mobile .active,
+.navbar-mobile li:hover>Link {
+  color: #1977cc;
+}
+
 .navbar-mobile .getstarted,
 .navbar-mobile .getstarted:focus {
   margin: 15px;
@@ -461,6 +499,10 @@ h6 {
   padding: 10px 20px;
 }
 
+.navbar-mobile .dropdown ul Link {
+  padding: 10px 20px;
+}
+
 .navbar-mobile .dropdown ul a i {
   font-size: 12px;
 }
@@ -468,6 +510,12 @@ h6 {
 .navbar-mobile .dropdown ul a:hover,
 .navbar-mobile .dropdown ul .active:hover,
 .navbar-mobile .dropdown ul li:hover>a {
+  color: #1977cc;
+}
+
+.navbar-mobile .dropdown ul a:hover,
+.navbar-mobile .dropdown ul .active:hover,
+.navbar-mobile .dropdown ul li:hover>Link {
   color: #1977cc;
 }
 
@@ -794,7 +842,16 @@ section {
   transition: 0.3s;
 }
 
+.about .icon-box .title Link {
+  color: #343a40;
+  transition: 0.3s;
+}
+
 .about .icon-box .title a:hover {
+  color: #1977cc;
+}
+
+.about .icon-box .title Link:hover {
   color: #1977cc;
 }
 
@@ -988,6 +1045,10 @@ section {
 }
 
 .services .icon-box h4 a {
+  color: #2c4964;
+}
+
+.services .icon-box h4 Link {
   color: #2c4964;
 }
 
@@ -1259,6 +1320,17 @@ section {
   background: #a0bcd5;
 }
 
+.doctors .member .social Link {
+  transition: ease-in-out 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  width: 32px;
+  height: 32px;
+  background: #a0bcd5;
+}
+
 .doctors .member .social a i {
   color: #fff;
   font-size: 16px;
@@ -1272,6 +1344,11 @@ section {
 .doctors .member .social a+a {
   margin-left: 8px;
 }
+
+.doctors .member .social Link+Link {
+  margin-left: 8px;
+}
+
 
 /*--------------------------------------------------------------
 # Frequently Asked Questions
@@ -1297,6 +1374,18 @@ section {
 }
 
 .faq .faq-list a {
+  display: block;
+  position: relative;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  padding: 0 30px;
+  outline: none;
+  cursor: pointer;
+}
+
+.faq .faq-list Link {
   display: block;
   position: relative;
   font-family: "Poppins", sans-serif;
@@ -1691,6 +1780,13 @@ section {
   line-height: 1;
 }
 
+#footer .footer-top .footer-links ul Link {
+  color: #777777;
+  transition: 0.3s;
+  display: inline-block;
+  line-height: 1;
+}
+
 #footer .footer-top .footer-links ul a:hover {
   text-decoration: none;
   color: #1977cc;
@@ -1764,8 +1860,52 @@ section {
   transition: 0.3s;
 }
 
+#footer .social-links Link {
+  font-size: 18px;
+  display: inline-block;
+  background: #1977cc;
+  color: #fff;
+  line-height: 1;
+  padding: 8px 0;
+  margin-right: 4px;
+  border-radius: 50%;
+  text-align: center;
+  width: 36px;
+  height: 36px;
+  transition: 0.3s;
+}
+
 #footer .social-links a:hover {
   background: #1c84e3;
   color: #fff;
   text-decoration: none;
 } 
+
+#footer .social-links Link:hover {
+  background: #1c84e3;
+  color: #fff;
+  text-decoration: none;
+} 
+
+.fade-button {
+  animation: fadeOut 2s;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+

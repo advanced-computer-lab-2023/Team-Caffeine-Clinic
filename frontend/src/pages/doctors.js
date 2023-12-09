@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useAuthContext } from "../hooks/useAuthContext";
 import DoctorDetails from '../components/DoctorDetails';
+import DoctorImage from '../assets/img/doctors/doctor.jpg';
 
 const Doctors = () => {
+  const linkStyle = {
+    textDecoration: 'none',
+ };
     const [doctors, setDoctors] = useState(null);
     const [nameFilter, setNameFilter] = useState('');
     const [specialityFilter, setSpecialityFilter] = useState('');
@@ -46,9 +50,16 @@ const Doctors = () => {
     }, [nameFilter, specialityFilter, user]);
 
     return (
-      <div className="doctors">
-        {/* Filter section */}
-        <div className="filters">
+
+
+
+        // <div className='doctors'>
+        //   {doctors && doctors.map((doctor) => (
+        //     <DoctorDetails key={doctor.username} doctor={doctor} />
+        //   ))}
+        // </div>
+<div>
+<div className="filters">
           <select 
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
@@ -56,7 +67,7 @@ const Doctors = () => {
           >
             <option value="">Select Name</option>
             {doctorNames.map((name, index) => (
-              <option key={index} value={name}>{name}</option>
+              <option key={index} value={name}>Dr. {name}</option>
             ))}
           </select>
 
@@ -71,15 +82,31 @@ const Doctors = () => {
             ))}
           </select>
           
-        </div>
+</div>
 
-        {/* Doctors list */}
-        <div className='doctors'>
-          {doctors && doctors.map((doctor) => (
-            <DoctorDetails key={doctor.username} doctor={doctor} />
-          ))}
+{doctors && doctors.map((doctor) => (
+<body>
+<div id="doctors" className="doctors">
+      <div className="container">
+  
+        <div className="row">
+          
+          <div className="col-lg-6 mt-4">
+            <div className="member d-flex align-items-start">
+              <div className="pic"><img src={DoctorImage} className="img-fluid" alt="Doctor" /></div>
+              <div className="member-info">
+                <h4>Dr. {doctor.name}</h4>
+                <span>{doctor.speciality}</span>
+                <p>Fees: {doctor.rateAfterDiscount} EGP</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+</body>
+))}
+</div>
     )
 }
 

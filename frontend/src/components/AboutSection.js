@@ -1,7 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 // You might need to import specific icon components or CSS here
 
 const AboutSection = () => {
+  const linkStyle = {
+    textDecoration: 'none',
+ };
   return (
     <section id="about" className="about">
       <div className="container-fluid">
@@ -19,21 +24,21 @@ const AboutSection = () => {
             {/* Booking Appointments */}
             <div className="icon-box">
               <div className="icon"><i className="bx bx-calendar"></i></div>
-              <h4 className="title"><a href="">Easy Appointment Booking</a></h4>
+              <h4 className="title"><Link to="/doctors" style={linkStyle}>Easy Appointment Booking</Link></h4>
               <p className="description">Experience hassle-free appointment scheduling with our streamlined online system, designed for your convenience.</p>
             </div>
 
             {/* Pharmacy Services */}
             <div className="icon-box">
               <div className="icon"><i className="bx bx-plus-medical"></i></div>
-              <h4 className="title"><a href="">Comprehensive Pharmacy</a></h4>
+              <h4 className="title"><Link to="/Medicines" style={linkStyle}>Comprehensive Pharmacy</Link></h4>
               <p className="description">Our on-site pharmacy offers a wide range of medications and health products, ensuring you have easy access to all your healthcare needs.</p>
             </div>
 
             {/* Medical Experts */}
             <div className="icon-box">
               <div className="icon"><i className="bx bx-clinic"></i></div>
-              <h4 className="title"><a href="">Expert Medical Team</a></h4>
+              <h4 className="title"><Link to="/doctors" style={linkStyle}>Expert Medical Team</Link></h4>
               <p className="description">Our skilled team of healthcare professionals encompasses various specialties, providing comprehensive care tailored to your unique health concerns.</p>
             </div>
 

@@ -1,7 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 // Import any necessary CSS or icons
 
 const ServicesSection = () => {
+  const linkStyle = {
+    textDecoration: 'none',
+ };
+
    return (
      <section id="services" className="services">
        <div className="container">
@@ -16,7 +21,7 @@ const ServicesSection = () => {
            <div className="col-lg-4 col-md-6 d-flex align-items-stretch">
              <div className="icon-box">
                <div className="icon"><i className="fas fa-heartbeat"></i></div>
-               <h4><a href="">Lore Itself</a></h4>
+               <h4><a href="" style={linkStyle}>Health Packages</a></h4>
                <p>What pains and what troubles will be endured by those who have softened and corrupted their pleasures</p>
              </div>
            </div>
@@ -25,8 +30,8 @@ const ServicesSection = () => {
            <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
              <div className="icon-box">
                <div className="icon"><i className="fas fa-pills"></i></div>
-               <h4><a href="">But that you may see</a></h4>
-               <p>Does not the anger of pain in rebuke in pleasure want to be a hair of pain</p>
+               <h4><Link to="/Perscriptions" style={linkStyle}>Prescriptions</Link></h4>
+               <p>Check old and recent prescriptions from your clinic visits. Collect now to buy.</p>
              </div>
            </div>
 
@@ -34,32 +39,8 @@ const ServicesSection = () => {
            <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
              <div className="icon-box">
                <div className="icon"><i className="fas fa-hospital-user"></i></div>
-               <h4><a href="">Great Sorrows</a></h4>
-               <p>Except they are blinded by lust, they do not come forth, they are in fault who do the duties</p>
-             </div>
-           </div>
-
-           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-             <div className="icon-box">
-               <div className="icon"><i className="fas fa-dna"></i></div>
-               <h4><a href="">No One</a></h4>
-               <p>But in truth we both accuse them and lead with just hatred those who deserve flattery</p>
-             </div>
-           </div>
-
-           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-             <div className="icon-box">
-               <div className="icon"><i className="fas fa-wheelchair"></i></div>
-               <h4><a href="">Delete card</a></h4>
-               <p>He who often chooses the pleasure of choosing will suffer the consequences</p>
-             </div>
-           </div>
-
-           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-             <div className="icon-box">
-               <div className="icon"><i className="fas fa-notes-medical"></i></div>
-               <h4><a href="">Divera don</a></h4>
-               <p>Like our snacks. Moreover, error flees, let it be less wise, let it be asperated</p>
+               <h4><Link to="/medicines" style={linkStyle}>Pharmacy</Link></h4>
+               <p>Provides a variety of medications and health products</p>
              </div>
            </div>
 

@@ -300,13 +300,7 @@ function WithNavbarAndSidebar({ children }) {
       <div className='Sidebar'>
       <Sidebar />
       </div>
-      <body> 
-      <HomeSection />
-      <AboutSection />
-      <ServicesSection />
-      <AppointmentSection />
-      <ContactSection />
-      </body>
+      
       <div className="pages">
         {children}
       </div>

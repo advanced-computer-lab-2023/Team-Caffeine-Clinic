@@ -2,14 +2,17 @@ import React from 'react';
 import HomeImage from '../assets/img/hero-bg.jpg'; // Adjust the path accordingly
 
 const HomeSection = () => {
+  const linkStyle = {
+    textDecoration: 'none',
+ };
   return (
     <>
       {/* Hero Section */}
       <section id="hero" className="d-flex align-items-center">
         <div className="container">
           <h1>Welcome to El7a2ne</h1>
-          <h2>Dedicated to providing excellent healthcare services to our community</h2>
-          <a href="#about" className="btn-get-started scrollto">Get Started</a>
+          <h2>Dedicated to providing excellent healthcare services</h2>
+          <a href="#about" style={linkStyle} className="btn-get-started scrollto">Get Started</a>
         </div>
       </section>
 
@@ -26,7 +29,7 @@ const HomeSection = () => {
                     At El7a2ne Clinic, we prioritize your health and well-being. Our state-of-the-art facilities and expert medical team ensure you receive the best possible care. We are committed to compassionate service and personalized treatment plans.
                   </p>
                   <div className="text-center">
-                    <a href="#" className="more-btn">Learn More <i className="bx bx-chevron-right"></i></a>
+                    <a href="#about" style={linkStyle} className="more-btn">Learn More <i className="bx bx-chevron-right"></i></a>
                   </div>
                 </div>
               </div>
