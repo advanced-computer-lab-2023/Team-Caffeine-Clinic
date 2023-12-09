@@ -720,11 +720,12 @@ const createAppointmentfam = async (req, res) => {
         });
 
         if (existingAppointment) {
+            console.log('Appointment with the same details already exists');
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
 
         const getTransaction = await Transaction.findOne({
-            appointmentDate:appointmentDate,
+            appointmentDate: appointmentDate,
             paymentOption: 'Appointment',
             doctor: doctor.username,
             patient: patient.username,
@@ -786,16 +787,13 @@ const getAppointments = async (req, res) => {
             // Check if the appointment has a transaction and the transaction is not refunded
             if (appointment.transactionId) {
                 const transaction = await Transaction.findById(appointment.transactionId);
-                console.log(transaction);
                 isMatched = isMatched && transaction && !transaction.Refunded;
-                //console.log(isMatched);
             }
 
             const doctor = await Doctor.findOne({ username: appointment.doctor })
+            const patient = await Patient.findOne({ username: appointment.patient })
 
-            const name = doctor.name
-
-            return isMatched ? { ...appointment.toObject(), name } : null;
+            return isMatched ? { ...appointment.toObject(), doctor, patient } : null;
         }));
 
         //console.log(filteredAppointments);
@@ -1728,9 +1726,7 @@ const getCartPrice = async (req, res) => {
 const requestFollowUp = async (req, res) => {
     const user = req.user
 
-    console.log('here');
     const { doctor, appointment, patient } = req.body;
-    console.log(doctor, appointment, patient);
 
     let username
     if (patient) {
@@ -1748,7 +1744,6 @@ const requestFollowUp = async (req, res) => {
 
     try {
         const request = new FollowUpRequest({ doctor: doctor, patient: username, appointment: appointment })
-        console.log('here2');
         await request.save()
 
         res.status(200).json({ "mssg": "Request Sent" })
@@ -1758,6 +1753,25 @@ const requestFollowUp = async (req, res) => {
     }
 }
 
+const reschedule = async (req, res) => {
+    const { date, appointment } = req.body
+    console.log(date, appointment);
+    try {
+        const updatedAppointment = await Appointment.findByIdAndUpdate(appointment, {
+            appointmentDate: date
+        })
+        if(updatedAppointment){
+            const doctor = await Doctor.findOne({username: updatedAppointment.doctor})
+            doctor.availableDates = doctor.availableDates.filter(item => item != date);
+            doctor.save();
+            return res.status(200).json(updatedAppointment)
+        }
+        return res.status(400).send({ "error": error });
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ "error": error });
+    }
+}
 
 module.exports = {
     getFamilyMembersHealthPackages,
@@ -1796,5 +1810,6 @@ module.exports = {
     deleteOrder,
     addAddresses,
     getCartPrice,
-    requestFollowUp
+    requestFollowUp,
+    reschedule
 }

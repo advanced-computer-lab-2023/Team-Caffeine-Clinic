@@ -148,7 +148,8 @@ const AppointmentDetail = ({ appointment }) => {
       <div className="details"><strong>Date: </strong>{appointment.appointmentDate}</div>
       <div className="details"><strong>Status: </strong>{appointment.status}</div>
 
-      <Popup closeOnDocumentClick={false} open={isOpen} trigger={<button>Add/Update Perscription</button>} modal nested contentStyle={contentStyle} lockScroll>
+      <button onClick={() => handleOpen()}>Add/Update Perscription</button>
+      <Popup closeOnDocumentClick={false} open={isOpen} modal nested contentStyle={contentStyle} lockScroll>
         <div className="wrapper">
           <div className="prescription_form">
             <table className="prescription" border="1">
@@ -241,21 +242,21 @@ const AppointmentDetail = ({ appointment }) => {
                           <div className="med" key={index}>
                             <ul>
                               <li><h4>Medicine:</h4>
-                              <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <b>Name:</b> <input
-                                  className="med_name"
-                                  placeholder="Enter medicine name"
-                                  value={medicine}
-                                  onChange={(e) => handleMedicineChange(index, e.target.value)}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <b>Name:</b> <input
+                                    className="med_name"
+                                    placeholder="Enter medicine name"
+                                    value={medicine}
+                                    onChange={(e) => handleMedicineChange(index, e.target.value)}
+                                  />
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <b>Dosage:</b> <input
-                                  className="med_name"
-                                  placeholder="Enter Dosage"
-                                  value={dosage[index]}
-                                  onChange={(e) => handleDosageChange(index, e.target.value)}
-                                /></div>
+                                  <b>Dosage:</b> <input
+                                    className="med_name"
+                                    placeholder="Enter Dosage"
+                                    value={dosage[index]}
+                                    onChange={(e) => handleDosageChange(index, e.target.value)}
+                                  /></div>
                                 <span
                                   className="delete-icon"
                                   onClick={() => removeMedicineSlot(index)}

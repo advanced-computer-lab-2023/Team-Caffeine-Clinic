@@ -30,7 +30,8 @@ const {
     orders,
     deleteOrder,
     getCartPrice,
-    requestFollowUp
+    requestFollowUp,
+    reschedule
 } = require('../controllers/PatientController')
 
 const {
@@ -80,7 +81,7 @@ router.post('/refundAppointment', refundAppointment)
 router.post('/addTransactionAppointment', addTransactionAppointment)
 router.post('/addTransactionAppointmentfam', addTransactionAppointmentfam)
 
-
+router.patch('/reschedule', reschedule)
 
 //add a patient to a doc 
 router.patch('/addPatientToDoctor', addPatientToDoctor)

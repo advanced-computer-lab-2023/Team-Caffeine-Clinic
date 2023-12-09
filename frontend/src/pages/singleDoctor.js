@@ -32,8 +32,8 @@ const SingleDoctor = () => {
   };
   const  paymentHandel = (theIndex) => {
     setpayment(payment)
-
   };
+  
   const fammemberhandel=(username,date,rate) => {
     setFam(username)
     setIsForSelf(true);
