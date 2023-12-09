@@ -1,22 +1,52 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import html2pdf from 'html2pdf.js';
 import logo from '../img/hospital.jpg';
 import Navbar from '../components/PatientNavbar';
+import { Button } from 'react-bootstrap';
 
 
 const SinglePerscriptionDetails = () => {
   const [perscription, setPerscription] = useState(null);
-  const [doctorName, setName] = useState('');
+  const [date, setDate] = useState('');
+  const [doctor, setDoctor] = useState('');
+  const [patient, setPatient] = useState('');
   const { id } = useParams();
+
+  const [tests, setTests] = useState(['']);
+  const [symptom, setSymptoms] = useState(['']);
+  const [advice, setAdvice] = useState("");
+
+  const [medicine, setMedicine] = useState(['']); // Initial state with an empty medicine
+  const [dosage, setDosage] = useState(['']); // Initial state with an empty medicine
 
   const { user } = useAuthContext()
 
   const handleDownloadPDF = () => {
-    const element = document.getElementById('pdf-content'); // Replace 'pdf-content' with the ID of the element you want to convert to PDF
+    const element = document.getElementById('pdf-content');
 
-    html2pdf(element);
+    const options = {
+      filename: 'your_custom_filename.pdf',
+      image: { type: 'jpeg', quality: 1.0 }, // Set image quality to 1.0 (highest)
+      html2canvas: { scale: 3 }, // Increase the scale for better resolution
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().from(element)
+      .set(options)
+      .toPdf()
+      .get('pdf')
+      .then((pdf) => downloadPdf(pdf, options));
+
+    const downloadPdf = (pdf, opt) => {
+      let link = document.createElement('a');
+      link.target = '_blank';
+      link.href = pdf.output('bloburl');
+      link.download = `${patient.name} Date ${date}.pdf`;
+      link.click();
+      link.remove();
+    }
   };
 
   useEffect(() => {
@@ -33,116 +63,130 @@ const SinglePerscriptionDetails = () => {
         return; // Handle the error appropriately
       }
 
-      const json = await response.json();
-      setPerscription(json);
+      const persc = await response.json();
+      setPerscription(persc);
+      console.log(persc);
+      setDoctor(persc.doctorID)
+      setPatient(persc.patientID)
+      setMedicine(persc.medicine)
+      setDosage(persc.dosage)
+      setSymptoms(persc.symptoms)
+      setTests(persc.tests)
+      setAdvice(persc.advice)
+
+      const d = new Date(persc.date_of_perscription);
+      const formattedDate = d.toLocaleDateString();
+
+      // Now you can use formattedDate where you need it
+      setDate(formattedDate);
+
     };
+    if (user) {
+      fetchPerscription();
+    }
+  }, [user, id]);
 
-    fetchPerscription();
-  }, [id]);
 
-  useEffect(() => {
-    const fetchName = async () => {
-      if (perscription && perscription.doctorID) { // Check if perscription is defined and has doctorID property
-        const url = `/api/perscription/doctor/${perscription.doctorID}`;
-
-        const response = await fetch(url, {
-          headers: {
-            'Authorization': `Bearer ${user.token}`
-          }
-        });
-        if (!response.ok) {
-          console.error('Error fetching doctor data');
-          return; // Handle the error appropriately
-        }
-
-        const json = await response.json();
-        setName(json);
-      }
-    };
-
-    fetchName();
-  }, [perscription]);
 
   return (
-    <div className="wrapper">
-      <div className="prescription_form">
-        <table className="prescription" border="1">
-          <tbody>
-            <tr height="15%">
-              <td colSpan="2">
-                <div className="header1">
-                  <div className="logo">
-                    <img src={logo} alt="Hospital Logo" />
-                  </div>
-                  <div className="credentials">
-                    <h4>Doctor Name</h4>
-                    <p>Chamber Name</p>
-                    <small>Address</small>
-                    <br />
-                    <small>Mb. 0XXXXXXXXX</small>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td width="40%">
-                <div className="disease_details">
-                  <div className="symptoms">
-                    <h4 className="d-header">Symptoms</h4>
-                    <ul className="symp" data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable="true">
-                      <li>Placeholder Symptom 1</li>
-                      <li>Placeholder Symptom 2</li>
-                    </ul>
-                    <div className="symp_action">
-                      <button className="btn btn-sm btn-success save">Save</button>
-                      <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
+    <div>
+      <Link to="/home" className='home-button'>Home</Link>
+      <div>
+        <div className="wrapper" id='pdf-content'>
+          <div className="prescription_form">
+            <table className="prescription" border="1">
+              <tbody>
+                <tr height="15%">
+                  <td colSpan="2">
+                    <div className="header1">
+                      <div className="logo">
+                        <img src={logo} alt="Hospital Logo" />
+                      </div>
+                      <div className="credentials">
+                        <h4>{doctor.name}</h4>
+                        <h6>{doctor.speciality}</h6>
+                        <h6>{doctor.email}</h6>
+                      </div>
                     </div>
-                  </div>
-                  <div className="tests">
-                    <h4 className="d-header">Tests</h4>
-                    <ul className="tst" data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable="true">
-                      <li>Placeholder Test 1</li>
-                      <li>Placeholder Test 2</li>
-                    </ul>
-                    <div className="test_action">
-                      <button className="btn btn-sm btn-success save">Save</button>
-                      <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
-                    </div>
-                  </div>
-                  <div className="advice">
-                    <h4 className="d-header">Advice</h4>
-                    <p className="adv_text" style={{ outline: '0' }} data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable="true">
-                      Placeholder advice content.
-                    </p>
-                    <div className="adv_action">
-                      <button className="btn btn-sm btn-success save">Save</button>
-                      <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td width="60%" valign="top">
-                <span style={{ fontSize: '3em' }}>R<sub>x</sub></span>
-                <hr />
-                <div className="medicine">
-                  <section className="med_list">
-                    <div className="med">&#9899; <input className="med_name" placeholder="Enter medicine name" /></div>
-                    {/* ... (similar content for more medicines) ... */}
-                  </section>
-                  <div id="add_med" data-toggle="tooltip" data-placement="right" title="Click anywhere on the blank space to add more.">
-                    Click to add...
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="button_group">
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40%">
+                    <div className="disease_details">
+                      <div className="symptoms">
+                        <h4 className="d-header">Symptoms</h4>
+                        <ul className="symp" data-toggle="tooltip" >
+                          {symptom.map((symptom, index) => (
+                            <div>
+                              <li key={index}>
+                                <p>{symptom}</p>
+                              </li>
+                            </div>
+                          ))}
+                        </ul>
 
-          {/* <button className="pdf_prescription btn btn-danger">PDF</button> */}
+                      </div>
+                      <div className="tests">
+                        <h4 className="d-header">Tests</h4>
+                        <ul className="tst" data-toggle="tooltip" data-placement="bottom" title="Click to edit.">
+                          {tests.map((test, index) => (
+                            <div key={index}>
+                              <li>
+                                <p>{test}</p>
+                              </li>
+                            </div>
+                          ))}
+                        </ul>
+
+                      </div>
+                      <div className="advice">
+                        <h4 className="d-header">Advice</h4>
+                        <p>{advice}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td width="60%" valign="top">
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span style={{ fontSize: '3em' }}>R<sub>x</sub></span>
+                      <div style={{ marginLeft: '20px', marginTop: '20px' }}>
+                        <b>Patient Name:</b> {patient.name}
+                        <br />
+                        <b>Date:</b> {date}
+                      </div>
+                    </div>
+
+                    <hr />
+                    <div className="medicine">
+                      <section className="med_list">
+                        {medicine.map((medicine, index) => (
+                          <div className="med" key={index}>
+                            <ul>
+                              <li><h4>Medicine:</h4>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  &nbsp;<b>Name:</b>
+                                  <p style={{ margin: '0px 10px' }}>{medicine}</p>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  &nbsp;<b>Dosage:</b>
+                                  <p style={{ margin: '0px 10px' }}>{dosage[index]}</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        ))}
+                      </section>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="snacking">Saving...</div>
+            <div id="snacked">Saved!</div>
+          </div>
         </div>
-        <div id="snacking">Saving...</div>
-        <div id="snacked">Saved!</div>
+        <div>
+          <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={handleDownloadPDF}>Download</Button>
+        </div>
       </div>
     </div>
   );

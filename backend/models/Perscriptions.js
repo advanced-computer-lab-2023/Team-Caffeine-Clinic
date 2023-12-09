@@ -16,7 +16,7 @@ const prescriptionSchema = new Schema({
 
     doctorID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'doctor',
+        ref: 'Doctor',
         required: true
     },
 
