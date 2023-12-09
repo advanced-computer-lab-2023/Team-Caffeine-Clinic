@@ -44,6 +44,7 @@ const PerscriptionDetails = ({ perscription }) => {
       <div className="details"><strong>Date: </strong>{perscription.date_of_perscription}</div>
       <div className="details"><strong>state: </strong>{perscription.state}</div>
       <div className="details">
+        {console.log(perscription.medicine)}
         <strong>Medicine: </strong>
         <ul>
           {perscription.medicine.map((medicine, index) => (

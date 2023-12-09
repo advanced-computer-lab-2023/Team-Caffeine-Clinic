@@ -8,18 +8,21 @@ const Patient = require('../models/Patient');
 const createPersc = async (req, res) => {
   const user = req.user
   const date = new Date();
-  const { appointment, patient, medicine, symptoms, tests, advice } = req.body
-
-  const temp = await Patient.findOne({ username: patient })
-  const patient_id = temp._id
+  const { appointment, patient, medicine, symptoms, tests, advice, dosage } = req.body
+  const patient_id = patient._id
   try {
-    const perscription = new Prescription({
-      appointment: appointment, patientID: patient_id, doctorID: user._id, date_of_perscription: date,
-      medicine: medicine, symptoms: symptoms, tests: tests, advice: advice
+    let perscription = await Prescription.findOneAndUpdate({ appointment: appointment }, {
+      medicine: medicine, symptoms: symptoms, tests: tests, advice: advice, dosage: dosage
     })
 
-    await perscription.save()
+    if (!perscription) {
+      perscription = new Prescription({
+        appointment: appointment, patientID: patient_id, doctorID: user._id, date_of_perscription: date,
+        medicine: medicine, symptoms: symptoms, tests: tests, advice: advice, dosage: dosage
+      })
 
+      await perscription.save()
+    }
     res.status(200).json(perscription)
   } catch (error) {
     console.log(error);
@@ -45,12 +48,11 @@ const getDoctorName = async (req, res) => {
 };
 
 const getPerscDetails = async (req, res) => {
-  const { appointment } = req.body
+  const { appointment } = req.query
   try {
-    const persc = await Prescription.findOne({appointment: appointment})
-    const medicines = persc.medicine
+    const perscription = await Prescription.findOne({ appointment: appointment })
 
-    res.status(200).json({medicine: medicines})
+    res.status(200).json(perscription)
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

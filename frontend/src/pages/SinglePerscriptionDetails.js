@@ -7,64 +7,64 @@ import Navbar from '../components/PatientNavbar';
 
 
 const SinglePerscriptionDetails = () => {
-    const [perscription, setPerscription] = useState(null);
-    const [doctorName, setName] = useState('');
-    const { id } = useParams();
+  const [perscription, setPerscription] = useState(null);
+  const [doctorName, setName] = useState('');
+  const { id } = useParams();
 
-    const { user } = useAuthContext()
+  const { user } = useAuthContext()
 
-    const handleDownloadPDF = () => {
-        const element = document.getElementById('pdf-content'); // Replace 'pdf-content' with the ID of the element you want to convert to PDF
-    
-        html2pdf(element);
-      };
+  const handleDownloadPDF = () => {
+    const element = document.getElementById('pdf-content'); // Replace 'pdf-content' with the ID of the element you want to convert to PDF
 
-    useEffect(() => {
-        const fetchPerscription = async () => {
-            let url = `/api/perscription/singlePersc/${id}`;
+    html2pdf(element);
+  };
 
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            });
-            if (!response.ok) {
-                console.error('Error fetching prescription data');
-                return; // Handle the error appropriately
-            }
+  useEffect(() => {
+    const fetchPerscription = async () => {
+      let url = `/api/perscription/singlePersc/${id}`;
 
-            const json = await response.json();
-            setPerscription(json);
-        };
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+      if (!response.ok) {
+        console.error('Error fetching prescription data');
+        return; // Handle the error appropriately
+      }
 
-        fetchPerscription();
-    }, [id]);
+      const json = await response.json();
+      setPerscription(json);
+    };
 
-    useEffect(() => {
-        const fetchName = async () => {
-            if (perscription && perscription.doctorID) { // Check if perscription is defined and has doctorID property
-                const url = `/api/perscription/doctor/${perscription.doctorID}`;
+    fetchPerscription();
+  }, [id]);
 
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${user.token}`
-                    }
-                });
-                if (!response.ok) {
-                    console.error('Error fetching doctor data');
-                    return; // Handle the error appropriately
-                }
+  useEffect(() => {
+    const fetchName = async () => {
+      if (perscription && perscription.doctorID) { // Check if perscription is defined and has doctorID property
+        const url = `/api/perscription/doctor/${perscription.doctorID}`;
 
-                const json = await response.json();
-                setName(json);
-            }
-        };
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
+        if (!response.ok) {
+          console.error('Error fetching doctor data');
+          return; // Handle the error appropriately
+        }
 
-        fetchName();
-    }, [perscription]);
+        const json = await response.json();
+        setName(json);
+      }
+    };
 
-    return (
-        <div className="wrapper">
+    fetchName();
+  }, [perscription]);
+
+  return (
+    <div className="wrapper">
       <div className="prescription_form">
         <table className="prescription" border="1">
           <tbody>
@@ -138,14 +138,14 @@ const SinglePerscriptionDetails = () => {
           </tbody>
         </table>
         <div className="button_group">
-          
+
           {/* <button className="pdf_prescription btn btn-danger">PDF</button> */}
         </div>
         <div id="snacking">Saving...</div>
         <div id="snacked">Saved!</div>
       </div>
     </div>
-    );
+  );
 }
 
 export default SinglePerscriptionDetails;
