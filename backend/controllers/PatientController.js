@@ -10,6 +10,8 @@ const HealthPackage = require('../models/healthPackageModel');
 const HealthPackagesTransaction = require('../models/HealthPackages_Transaction');
 const Medicine = require('../models/Medicine.js');
 
+const Notification = require('../models/Notification.js')
+
 const bcrypt = require('bcrypt');
 
 
@@ -592,10 +594,10 @@ const addPatientToDoctor = async (req, res, dr) => {
         }
         await doctor.save();
 
-        res.status(200).json(doctor);
+        return res.status(200).json(doctor);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 const addPatientToDoctorfam = async (req, res, dr, ph) => {
@@ -625,12 +627,23 @@ const addPatientToDoctorfam = async (req, res, dr, ph) => {
         }
         await doctor.save();
 
-        res.status(200).json(doctor);
+        return res.status(200).json(doctor);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+const createNotification = async (user, title, body) => {
+    try {
+        const notification = new Notification({ user: user, title: title, body: body })
+
+        await notification.save()
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const createAppointment = async (req, res) => {
     try {
         const pusername = req.user.username;
@@ -687,9 +700,136 @@ const createAppointment = async (req, res) => {
         // Use the addPatientToDoctor function to add the patient to the doctor's list
         await addPatientToDoctor(newreq, newres, dusername);
 
+        const patientName = patient.name;
+        const patientEmail = patient.email
+        const doctorName = doctor.name;
+        const doctorEmail = doctor.email
+        const clinicName = doctor.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+        createNotification(doctor._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+
+        return res.status(200).json(appointment)
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 const createAppointmentfam = async (req, res) => {
@@ -748,6 +888,135 @@ const createAppointmentfam = async (req, res) => {
         const newres = res
         // Use the addPatientToDoctor function to add the patient to the doctor's list
         await addPatientToDoctorfam(newreq, newres, dusername, pusername);
+
+
+        const patientName = patient.name;
+        const patientEmail = patient.email
+        const doctorName = doctor.name;
+        const doctorEmail = doctor.email
+        const clinicName = doctor.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+
+        createNotification(doctor._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+
+        res.status(200).json("Done")
 
     } catch (error) {
         console.error(error);
@@ -820,7 +1089,7 @@ const refundAppointment = async (req, res) => {
         else {
             patient = req.user.username;
         }
-
+        console.log(doc, patient);
         const user = req.user.username
 
         const transactionID = req.query.transactionID;
@@ -872,6 +1141,132 @@ const refundAppointment = async (req, res) => {
             patient: patient,
             appointmentDate: appointmentdate,
         });
+
+        const patientName = patient1.name;
+        const patientEmail = patient1.email
+        const doctorName = doctor1.name;
+        const doctorEmail = doctor1.email
+        const clinicName = doctor1.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Cancellation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Cancellation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Cancellation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentdate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Cancellation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Cancellation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Cancellation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentdate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient1._id, "Appointment Cancellation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentdate}
+          Location: ${clinicName}`)
+
+        createNotification(doctor1._id, "Appointment Cancellation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentdate}
+          Location: ${clinicName}`)
 
         // Optionally, you can update the appointment status or perform any other necessary actions
 
@@ -1094,13 +1489,13 @@ const getHealthPackage = async (req, res) => {
 
     const HealthPackageName = patient.health_package;
     console.log(HealthPackageName);
-    const HealthPackage = await HealthPackage.findOne({ name: HealthPackageName }).exec();
+    const healthPackage = await HealthPackage.findOne({ name: HealthPackageName }).exec();
 
-    if (!HealthPackage) {
+    if (!healthPackage) {
         return res.status(400).json({ error: 'No Package Found' })
     }
 
-    res.status(200).json({ transaction: transaction, HealthPackage: HealthPackage });
+    res.status(200).json({ transaction: transaction, HealthPackage: healthPackage });
 
     // try {
     //    // console.log(_id);
@@ -1754,22 +2149,170 @@ const requestFollowUp = async (req, res) => {
 }
 
 const reschedule = async (req, res) => {
+    let doctor
+    let patient
     const { date, appointment } = req.body
-    console.log(date, appointment);
     try {
         const updatedAppointment = await Appointment.findByIdAndUpdate(appointment, {
             appointmentDate: date
         })
-        if(updatedAppointment){
-            const doctor = await Doctor.findOne({username: updatedAppointment.doctor})
+        const appointmentDate = date;
+        const appointmentTime = date;
+
+        if (updatedAppointment) {
+            doctor = await Doctor.findOne({ username: updatedAppointment.doctor })
+            patient = await Patient.findOne({ username: updatedAppointment.patient })
             doctor.availableDates = doctor.availableDates.filter(item => item != date);
             doctor.save();
-            return res.status(200).json(updatedAppointment)
         }
-        return res.status(400).send({ "error": error });
+
+        const patientName = patient.name;
+        const patientEmail = patient.email
+        const doctorName = doctor.name;
+        const doctorEmail = doctor.email
+        const clinicName = doctor.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Rescheduling',
+            html: `
+              <!DOCTYPE html>
+              <html lang="en">
+          
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Appointment Confirmation</title>
+                <style>
+                  /* Your CSS styles here */
+                </style>
+              </head>
+          
+              <body>
+                <div class="container">
+                  <h1>Appointment Confirmation</h1>
+                  <p>Dear ${patientName},</p>
+                  <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate} at ${appointmentTime}.</p>
+              
+                  <div class="appointment-details">
+                    <p><strong>Doctor:</strong> ${doctorName}</p>
+                    <p><strong>Date:</strong> ${appointmentDate}</p>
+                    <p><strong>Time:</strong> ${appointmentTime}</p>
+                    <p><strong>Location:</strong> ${clinicName}</p>
+                  </div>
+              
+                  <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+              
+                  <p>Thank you for choosing our services. We look forward to seeing you!</p>
+              
+                  <p>Best regards,<br> ${clinicName}</p>
+                </div>
+              </body>
+              
+              </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Rescheduling',
+            html: `
+              <!DOCTYPE html>
+              <html lang="en">
+          
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Appointment Confirmation</title>
+                <style>
+                  /* Your CSS styles here */
+                </style>
+              </head>
+          
+              <body>
+                <div class="container">
+                  <h1>Appointment Confirmation</h1>
+                  <p>Dear ${patientName},</p>
+                  <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate} at ${appointmentTime}.</p>
+              
+                  <div class="appointment-details">
+                    <p><strong>Doctor:</strong> ${doctorName}</p>
+                    <p><strong>Date:</strong> ${appointmentDate}</p>
+                    <p><strong>Time:</strong> ${appointmentTime}</p>
+                    <p><strong>Location:</strong> ${clinicName}</p>
+                  </div>
+              
+                  <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+              
+                  <p>Thank you for choosing our services. We look forward to seeing you!</p>
+              
+                  <p>Best regards,<br> ${clinicName}</p>
+                </div>
+              </body>
+              
+              </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient._id, "Appointment Reschedule", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+        Doctor: ${doctorName}
+        Date: ${appointmentDate}
+        Location: ${clinicName}`)
+
+        createNotification(doctor._id, "Appointment Reschedule", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+        Doctor: ${doctorName}
+        Date: ${appointmentDate}
+        Location: ${clinicName}`)
+
+        if (updatedAppointment)
+            return res.status(200).json(updatedAppointment)
     } catch (error) {
         console.log(error);
         res.status(400).send({ "error": error });
+    }
+}
+
+const getNotification = async (req, res) => {
+    const user = req.user
+    try {
+        const notifications = await Notification.find({ user: user._id })
+
+        if (notifications.length != 0)
+            return res.status(200).json({ notifications: notifications })
+        else
+            return res.status(400).send("2araf")
+    } catch (error) {
+        return res.status(500).send({ "error": error });
     }
 }
 
@@ -1811,5 +2354,6 @@ module.exports = {
     addAddresses,
     getCartPrice,
     requestFollowUp,
-    reschedule
+    reschedule,
+    getNotification
 }

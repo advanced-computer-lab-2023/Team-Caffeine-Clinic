@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Notification from '../components/Notification';
 
 import { useAuthContext } from '../hooks/useAuthContext';
 
@@ -59,6 +60,7 @@ const DoctorInfo = () => {
           <p>Wallet: {doctor.wallet}</p>
         </div>
       )}
+      <div><Notification/></div>
     </div>
   );
 };

@@ -31,7 +31,8 @@ const {
     deleteOrder,
     getCartPrice,
     requestFollowUp,
-    reschedule
+    reschedule,
+    getNotification
 } = require('../controllers/PatientController')
 
 const {
@@ -62,6 +63,7 @@ router.post('/createAppointment', createAppointment)
 router.post('/createAppointmentfam', createAppointmentfam)
 router.post('/requestFollowUp', requestFollowUp)
 
+router.get('/getNotification', getNotification)
 
 router.post('/createHealthPackagesTransaction', createHealthPackagesTransaction)
 router.post('/addHealthPackageTransaction', addHealthPackageTransaction)

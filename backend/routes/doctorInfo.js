@@ -31,7 +31,8 @@ const {
     getFollowUpRequests,
     acceptFollowUPAppointment,
     rejectRequest,
-    refundAppointment
+    refundAppointment,
+    getNotification
 } = require('../controllers/doctorInfocontroller')
 
 const {
@@ -55,6 +56,8 @@ router.use(requireDoctorAuth)
 router.get('/', (req, res) => {
     res.json({ mssg: 'get doctor info' })
 })
+
+router.get('/getNotification', getNotification)
 
 router.get('/getPerscDetails', getPerscDetails)
 

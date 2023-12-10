@@ -3,6 +3,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import Button from 'react-bootstrap/esm/Button';
+import Results from '../components/Results'
 
 const AppointmentsComponent = () => {
     const [date, setDate] = useState('');
@@ -31,7 +32,6 @@ const AppointmentsComponent = () => {
                 body: JSON.stringify({ date, appointment }),
             })
             handleOpen()
-            fetchAppointments()
         } catch (error) {
             console.error('Error fetching appointments:', error);
         }
@@ -131,36 +131,9 @@ const AppointmentsComponent = () => {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px' }}>
                 {results &&
                     results.map((result, index) => (
-                        <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }} key={index}>
-                            <p>Doctor: {result.doctor.name}</p>
-                            <p>Date: {result.appointmentDate}</p>
-                            <p>Status: {result.status}</p>
-                            {result.status === 'completed' && <button onClick={() => handleFollowUpRequest(result.doctor, result._id)}>Follow-Up</button>}
-
-                            {result.status === 'upcoming' &&
-                            <div>
-                                <button onClick={() => handleOpen()}>Reschedule</button>
-                                <Popup open={isOpen}  modal nested contentStyle={contentStyle} lockScroll>
-                                    <strong>Available Dates: </strong>
-                                    {result.doctor.availableDates && Array.isArray(result.doctor.availableDates) ? (
-                                        <ul>
-                                            {result.doctor.availableDates.map((date, index) => (
-                                                <li key={index} style={{ marginBottom: '10px' }}>
-                                                    {date}{' '}
-                                                    <button onClick={() => handleReschedule(date, result._id)}>Reschedule</button>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        'No Dates available'
-                                    )}
-
-                                    <Button onClick={() => handleOpen()}>Close</Button>
-                                </Popup>
-                                </div>}
-                            {(result.status === 'upcoming' || result.status === 'rescheduled')
-                                && <button onClick={() => refundAppointment(result.appointmentDate, result.doctor, result.transactionId)}>Refund</button>}
-
+                        <div key={index}>
+                            <Results
+                            result={result} />
                         </div>
                     ))}
             </div>

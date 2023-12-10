@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
-
+import Notification from '../components/Notification';
 
 const Home = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -63,6 +63,8 @@ const Home = () => {
           <p><strong>Gender:</strong> {selectedPatient.gender}</p>
          
         </div>
+
+        <div><Notification/></div>
 
         <div className='box'>
           <h3>ff</h3>
