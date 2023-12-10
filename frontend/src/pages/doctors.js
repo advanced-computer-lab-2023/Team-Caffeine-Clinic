@@ -7,6 +7,8 @@ const Doctors = () => {
   const linkStyle = {
     textDecoration: 'none',
  };
+    const [dateFilter, setDateFilter] = useState('');
+    const [availableDates, setAvailableDates] = useState([]);
     const [doctors, setDoctors] = useState(null);
     const [nameFilter, setNameFilter] = useState('');
     const [specialityFilter, setSpecialityFilter] = useState('');
@@ -30,13 +32,20 @@ const Doctors = () => {
           }
         });
         const json = await response.json();
-
+        console.log("API Response:", json); // Add this line to log the response
+        
         if (response.ok) {
           setDoctors(json);
 
           // Extracting unique names and specialties
           const names = new Set(json.map(doctor => doctor.name));
           const specialities = new Set(json.map(doctor => doctor.speciality));
+
+          const dates = new Set();
+          json.forEach(doctor => {
+            doctor.availableDates?.forEach(date => dates.add(date));
+        });
+          setAvailableDates([...dates]);
 
           setDoctorNames([...names]);
           setSpecialities([...specialities]);
@@ -47,7 +56,7 @@ const Doctors = () => {
         fetchDoctors();
       }
 
-    }, [nameFilter, specialityFilter, user]);
+    }, [nameFilter, specialityFilter, dateFilter, user]); 
 
     return (
 
@@ -81,6 +90,18 @@ const Doctors = () => {
               <option key={index} value={speciality}>{speciality}</option>
             ))}
           </select>
+
+            {/* Date Filter */}
+          <select 
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    className="filter-input"
+                >
+                    <option value="">Select Date</option>
+                    {availableDates.map((date, index) => (
+                        <option key={index} value={date}>{date}</option>
+                    ))}
+            </select>
           
 </div>
 
