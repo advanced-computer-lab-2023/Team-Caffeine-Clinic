@@ -68,6 +68,8 @@ import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
+import SalesReport from './pages/SalesReport';
+import AlternativesPage from './pages/AlternativesPage';
 
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
@@ -228,6 +230,13 @@ function App() {
               path="/addMedicinePicture/:Name" 
               element={user&& user.type=="Pharmacist" && <AddMedicinePicture/> }
             />
+            <Route 
+              path="/SalesReport" 
+              element={<SalesReport/> }
+            />
+            <Route 
+            path="/alternatives" 
+            element={<AlternativesPage />} />
 
             {/*Ibra*/}
             <Route 

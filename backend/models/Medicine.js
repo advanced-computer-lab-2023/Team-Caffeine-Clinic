@@ -21,12 +21,21 @@ const MedicineSchema = new Schema({
         type: Number,
         required:true
       },
+    Reserved: {
+        type: Number,
+        default: 0
+    },
+    Returned: {
+      type: Number,
+      default: 0
+    },    
     activeIngredients: {
         type: String,
         required:true
       },
     Sales: {
         type: Number,
+        default:0
       },
     Picture: {
           type: String

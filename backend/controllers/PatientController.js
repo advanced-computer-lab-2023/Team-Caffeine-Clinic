@@ -19,9 +19,11 @@ const Perscriptions = require('../models/Perscriptions');
 const Doctor = require('../models/doctor');
 const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
+const Order = require('../models/Orders.js');
 
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin')
+const Orders = require('../models/Orders.js')
 
 
 const addHealthPackageTransactionfam = async (req, res) => {
@@ -1569,21 +1571,59 @@ const deliveryaddresses = async (req, res) => {
 
 const newOrder = async (req, res) => {
     var user = req.user;
+    var TotalPrice = 0;
     if (user.cart.length == 0) {
         res.status(400).json({ error: "Cart is empty" })
     }
     else {
-        var address = req.body.address;
-        const order = {
-            medicines: user.cart,
-            status: 'In delivery',
-            deliveryaddress: address
-        }
         try {
-
-            await Patient.findOneAndUpdate({ _id: user._id }, { '$push': { orders: order } }).catch(err => console.log(err));
-            const c1 = await Patient.findOne({ _id: user._id })
+            var medicines = [];
+            for (let i = 0; i < user.cart.length; i++) {
+                const Med = await Medicine.findOne({_id:user.cart[i].medicineid});
+                newQuantity = Med.Quantity - user.cart[i].amount;
+                newReserved = Med.Reserved + user.cart[i].amount;
+                newSales = Med.Sales + (Med.Price * user.cart[i].amount);
+                TotalPrice += Med.Price * user.cart[i].amount;
+                await Medicine.findOneAndUpdate({_id:user.cart[i].medicineid}, {Quantity:newQuantity, Reserved:newReserved,Sales:newSales});
+                console.log(i);
+                const medicine = {
+                    medicineid: user.cart[i].medicineid,
+                    amount: user.cart[i].amount,
+                    Name: Med.Name,
+                    stock: newQuantity,
+                    Reserved: newReserved,
+                    Sales: newSales,
+                    Returned: Med.Returned
+                };
+                console.log("before push")
+                medicines.push(medicine);
+                console.log("after push")
+            }
+            var address = req.body.address;
+            const orderId = new mongoose.Types.ObjectId();
+            const order = {
+                _id: orderId,
+                medicines: user.cart,
+                status: 'In delivery',
+                deliveryaddress: address,
+                TotalPrice:TotalPrice
+            }
+            const updatedPatient = await Patient.findOneAndUpdate(
+                { _id: user._id },
+                { $push: { orders: order } },
+                { new: true, select: '_id' }
+            ).catch(err => console.log(err));
+            const c1 = await Patient.findOne({ _id: user._id });
             await Patient.updateOne({ _id: user._id }, { cart: [] }).catch(err => console.log(err));
+            console.log(orderId);
+            await Orders.create({
+                _id:orderId,
+                patient : user.username,
+                medicines: medicines,
+                status: 'In delivery',
+                deliveryaddress: address,
+                TotalPrice:TotalPrice       
+            }).catch(err => console.log(err));
             res.status(200).json(c1);
         }
         catch (error) {
@@ -1641,7 +1681,7 @@ const deleteOrder = async (req, res) => {
 
     const orders = user.orders
     var medicines = null;
-
+    var ordermedicines = [];
     for (let i = 0; i < orders.length; i++) {
         if (orders[i]._id == id) {
             medicines = orders[i].medicines;
@@ -1652,6 +1692,21 @@ const deleteOrder = async (req, res) => {
     let price = user.wallet;
     for (let i = 0; i < medicines.length; i++) {
         var medicine = await Medicine.findOne({ _id: medicines[i].medicineid });
+        newQuantity = medicine.Quantity + medicines[i].amount;
+        newReserved = medicine.Reserved - medicines[i].amount;
+        newReturned = medicine.Returned + medicines[i].amount;
+        newSales = medicine.Sales - (medicines[i].amount * medicine.Price);
+        await Medicine.findOneAndUpdate({_id:medicines[i].medicineid}, {Quantity:newQuantity, Reserved:newReserved, Returned:newReturned, Sales:newSales});
+        const ordermedicine = {
+            medicineid: medicines[i].medicineid,
+            amount: medicines[i].amount,
+            Name: medicine.Name,
+            stock: newQuantity,
+            Reserved: newReserved,
+            sales:newSales,
+            Returned: newReturned
+        };
+        ordermedicines.push(ordermedicine);
         price += medicine.Price * medicines[i].amount
         console.log('ana hena', price);
     }
@@ -1660,6 +1715,12 @@ const deleteOrder = async (req, res) => {
         await Patient.findOneAndUpdate({ _id: user._id, "orders._id": id }, {
             '$set': {
                 'orders.$.status': 'Cancelled'
+            }
+        }).catch(err => console.log(err));
+        await Orders.findOneAndUpdate({ _id: id}, {
+            '$set': {
+                'status': 'Cancelled',
+                medicines: ordermedicines
             }
         }).catch(err => console.log(err));
         await Patient.findOneAndUpdate({ _id: user._id, "orders._id": id }, { wallet: price }).catch(err => console.log(err));

@@ -9,7 +9,8 @@ const {viewAvailableMedicine,
     addMedicine,
     editMedicine,
     viewDiscountMedicine,
-    addPicture
+    addPicture,
+    alternatives
 } = require("../controllers/MedicineController");
 
 const {requirePharmacistAuth} = require('../middleware/requrieAuth');
@@ -25,5 +26,7 @@ router.get("/search/:search",searchMedicine);
 router.get("/viewDistinct", viewDistinctMedicalUse);
 router.get("/filter/:filter",filterMedicine);
 router.put("/addPicture",requirePharmacistAuth ,addPicture);
+router.post("/alternatives",alternatives);
+
 
 module.exports = router;

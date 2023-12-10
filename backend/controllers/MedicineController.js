@@ -111,6 +111,24 @@ const filterMedicine = async (req, res) => {
    res.status(200).json(medicine);
    
 }
+const alternatives = async (req, res) => {
+  const _id = req.body._id;
+  const activeIngredients = req.body.activeIngredients;
+
+  try {
+    // Find all medicines with activeIngredients except the one with _id
+    const alternatives = await medicineModel.find({
+      _id: { $ne: _id },
+      activeIngredients: activeIngredients,
+    });
+
+    console.log(alternatives);
+    res.status(200).json(alternatives);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 module.exports = {
    viewAvailableMedicine,
@@ -120,6 +138,7 @@ module.exports = {
    addMedicine,
    editMedicine,
    viewDiscountMedicine,
-   addPicture
+   addPicture,
+   alternatives
 };
 //addMedicine,editMedicine, medicineHome
