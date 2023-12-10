@@ -9,6 +9,10 @@ function LoginForm() {
 
   const { login, error, isLoading } = useLogin();
 
+  const linkStyle = {
+    textDecoration: 'none',
+ };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -18,10 +22,18 @@ function LoginForm() {
     }
   };
   return (
+    <body>
+    <header id="header" className="fixed-top">
+      <div className="container d-flex align-items-center">
+        <h1 className="logo me-auto"><a href="" style={linkStyle}>El7a2ne</a></h1>
+      </div>
+    </header>
+
+
     <div className="login-page">
-      <header className="header">
+      {/* <header className="header">
         <img src={logo} alt="Logo" className="logo" />
-      </header>
+      </header> */}
       <div className="login-form-container">
         <form className='login-form' onSubmit={handleSubmit}>
           <input
@@ -55,6 +67,7 @@ function LoginForm() {
         </form>
       </div>
     </div>
+    </body>
   );
 }
 

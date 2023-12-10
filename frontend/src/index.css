@@ -1909,3 +1909,62 @@ section {
   100% { opacity: 1; }
 }
 
+/*login*/
+
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); */
+  background: linear-gradient(135deg, #fff 0%, rgb(102, 145, 204) 100%);
+}
+
+.login-form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  height: auto;
+  align-items: center;
+  margin-top: 50px;
+
+}
+
+.login-page {
+  position: relative;
+  height: auto;
+  width: auto;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.input-login {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #4b7bec;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #3867d6;
+}
+
+.login-button:disabled {
+  background-color: #a5b1c2;
+}
