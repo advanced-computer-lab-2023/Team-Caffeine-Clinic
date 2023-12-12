@@ -76,6 +76,8 @@ import ContactSection from './components/ContactSection';
 import AppointmentSection from './components/AppointmentSection';
 import ClinicPatientNavBar from './components/ClinicPatientNavBar';
 
+import DoctorHome from './pages/DoctorHome';
+
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -127,11 +129,11 @@ function App() {
 
             <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
               <Navigate to="/home"/> : (user.type === 'Pending') ? 
-              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
+              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/DoctorHome"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
              
-            <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
+              <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
 
-            <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><ProtectedRoute><DoctorInfo /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="EditDocEmail" element={<WithDoctorNavbar><ProtectedRoute><UpdateEmail /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="EditDocHos" element={<WithDoctorNavbar><ProtectedRoute><UpdateAffiliation /></ProtectedRoute></WithDoctorNavbar>} />
@@ -142,11 +144,12 @@ function App() {
               <Route path="seepatientdocs" element={<WithDoctorNavbar><ProtectedRoute><DoctorDocuments /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="Docaddpatientdocs" element={<WithDoctorNavbar><ProtectedRoute><AddDocuments /></ProtectedRoute></WithDoctorNavbar>} />
 
+              <Route path="DoctorHome" element={<WithDoctorNavbar><ProtectedRoute><DoctorHome /></ProtectedRoute></WithDoctorNavbar>} />
 
               <Route
               path="/doctor/DoctorChangePassword" 
               element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
-            />
+              />
 
               
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><ProtectedRoute><AddAvailableDateFunc /></ProtectedRoute></WithDoctorNavbar>} />

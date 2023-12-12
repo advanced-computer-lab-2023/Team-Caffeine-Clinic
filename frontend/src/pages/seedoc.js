@@ -35,6 +35,8 @@ const DoctorInfo = () => {
 
   return (
     <div>
+          <div>d</div><div>d</div><div>d</div><div>d</div>
+
       <h1>Doctor Information</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {doctor && (
