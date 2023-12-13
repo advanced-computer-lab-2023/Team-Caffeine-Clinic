@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DocAppDetails from "../components/DocAppDetails";
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-
+import AdminNavbar from "../components/AdminNavbar";
 const DoctorAppHome = () => {
   const [Appl, setAppls] = useState(null);
   const [loading, setLoading] = useState(true); // New state variable for loading indicator
@@ -34,11 +34,7 @@ const DoctorAppHome = () => {
 
   return (
     <>
-      <nav>
-        <Link className="home-button" to="/AdminHome">
-          Home
-        </Link>
-      </nav>
+<AdminNavbar />
       <h2 className="title-admin">Doctor Applications</h2>
       <div className="home">
         <div className="DoctorApplications">

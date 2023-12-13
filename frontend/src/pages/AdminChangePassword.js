@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Link } from 'react-router-dom';
+import AdminNavbar from '../components/AdminNavbar';
 
 const AdminChangePassword = () => {
   const [password, setPassword] = useState('');
@@ -37,11 +38,10 @@ const AdminChangePassword = () => {
   };
 
   return (
-<>
-    <nav>
-    <Link className="home-button" to="/AdminHome">Home</Link>
-  </nav>
-
+<div>
+<div>
+<AdminNavbar />
+</div>
     <div className="admin-change-password-page">
       <div className="admin-change-password-container">
         <form className="change-pass-form" onSubmit={handleSubmit}>
@@ -62,7 +62,8 @@ const AdminChangePassword = () => {
         </form>
       </div>
     </div>
-            </>
+    </div>
+
   );
 };
 

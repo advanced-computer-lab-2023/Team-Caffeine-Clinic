@@ -1917,7 +1917,7 @@ section {
   align-items: center;
   height: 100vh;
   /* background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); */
-  background: linear-gradient(135deg, #fff 0%, rgb(102, 145, 204) 100%);
+  background: linear-gradient(135deg, #fff 0%, rgb(238, 245, 255) 100%);
 }
 
 .login-form {

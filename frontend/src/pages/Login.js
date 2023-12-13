@@ -13,6 +13,10 @@ function LoginForm() {
     textDecoration: 'none',
  };
 
+ const headerStyle = {
+  background: 'transparent',
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -23,17 +27,12 @@ function LoginForm() {
   };
   return (
     <body>
-    <header id="header" className="fixed-top">
+    <header id="header" className="fixed-top" style={headerStyle}>
       <div className="container d-flex align-items-center">
         <h1 className="logo me-auto"><a href="" style={linkStyle}>El7a2ne</a></h1>
       </div>
     </header>
-
-
     <div className="login-page">
-      {/* <header className="header">
-        <img src={logo} alt="Logo" className="logo" />
-      </header> */}
       <div className="login-form-container">
         <form className='login-form' onSubmit={handleSubmit}>
           <input

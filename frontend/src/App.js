@@ -76,6 +76,7 @@ import ContactSection from './components/ContactSection';
 import AppointmentSection from './components/AppointmentSection';
 import ClinicPatientNavBar from './components/ClinicPatientNavBar';
 
+
 import DoctorHome from './pages/DoctorHome';
 
 // Stripe
@@ -347,8 +348,8 @@ function WithcontractNavbar({ children }) {
 
 function AdminNavbarAndSidebar({ children }) {
   return (
-    <div>
-      <AdminNavbar />{console.log(children)}
+    <div className='MainContent'>
+      <AdminNavbar />
       <div className="pages">
         {children}
       </div>

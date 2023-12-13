@@ -2,7 +2,7 @@ import {useEffect,useState} from "react";
 import DoctorDetails from "../components/AdminDoctorDetails"
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-
+import AdminNavbar from "../components/AdminNavbar";
 
 const ViewDoctorHome =  () => {
     const [Doctors , setDoctors] = useState(null);
@@ -29,9 +29,7 @@ const ViewDoctorHome =  () => {
 
     return (
         <>
-        <nav>
-        <Link className="home-button" to="/AdminHome">Home</Link>
-      </nav>
+<AdminNavbar />
       <h2 className="title-admin">Doctors</h2>  
         <div className="home">
             <div className="doctors">

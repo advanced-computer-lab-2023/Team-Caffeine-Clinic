@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import HealthPackdetails from "../components/HealthPackDetails"
 import HealthPackForm from "../components/HealthPackForm";
 import { useAuthContext } from '../hooks/useAuthContext';
+import AdminNavbar from "../components/AdminNavbar";
 
 const HPHome =  () => {
     const [HP , setHP] = useState(null);
@@ -28,10 +29,7 @@ const HPHome =  () => {
 
     return (
         <>
-        <nav>
-        <Link className="home-button" to="/AdminHome">Home</Link>
-       
-      </nav>
+<AdminNavbar />
       <h2 className="title-admin">Health Packages</h2>  
         <div className="home">
             <div className="admins">

@@ -44,12 +44,6 @@ const DoctorHome = () => {
   return (
     <section id="services" className="services" style={doctorSection}>
     <div className="container">
-
-      {/* <div className="section-title">
-        <h2>Services</h2>
-        <p>We offer a comprehensive range of medical services and treatments.</p>
-      </div> */}
-
       <div className="row">
         {/* Service Box 1 */}
         <div className="col-lg-4 col-md-6 d-flex align-items-stretch">
