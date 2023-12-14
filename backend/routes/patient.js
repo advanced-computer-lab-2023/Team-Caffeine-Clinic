@@ -31,7 +31,8 @@ const {
     newOrder,
     orders,
     deleteOrder,
-    getCartPrice
+    getCartPrice,
+    viewWallet
 } = require('../controllers/PatientController')
 
 const {
@@ -109,6 +110,7 @@ router.get('/getFamilyMembersHealthPackages',getFamilyMembersHealthPackages)
 
 // Wallet
 router.get('/getWallet', getWallet)
+router.get("/wallet",viewWallet);
 
 // Pay With Wallet
 router.post('/payWithWallet', payWithWallet)

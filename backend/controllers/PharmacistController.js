@@ -164,10 +164,16 @@ const pharmacistchangepassword = async (req, res) => {
     }
   };
 
+  const viewWallet=async (req,res)=>{
+   const  user = req.user;
+    res.status(200).json(user.wallet);
+}
+
 module.exports = {
      changePassP,
      setPassP,
      forgotPassP,
       verifyOTPP,
-      pharmacistchangepassword
+      pharmacistchangepassword,
+      viewWallet
 }

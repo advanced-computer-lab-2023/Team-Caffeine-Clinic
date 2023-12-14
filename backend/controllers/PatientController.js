@@ -1762,6 +1762,10 @@ const getCartPrice = async (req, res) => {
         res.status(400).send({ "error": error });
     }
 }
+const viewWallet=async (req,res)=>{
+    const user = req.user;
+    res.status(200).json(user.wallet);
+}
 
 
 
@@ -1801,5 +1805,6 @@ module.exports = {
     orders,
     deleteOrder,
     addAddresses,
-    getCartPrice
+    getCartPrice,
+    viewWallet
 }

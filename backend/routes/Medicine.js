@@ -22,7 +22,8 @@ const{
 }=require('../controllers/ChatController')
 
 const{
-pharmacistchangepassword
+pharmacistchangepassword,
+viewWallet
 }=require('../controllers/PharmacistController')
 
 const {requirePharmacistAuth} = require('../middleware/requrieAuth');
@@ -55,6 +56,7 @@ router.post("/changePharmaPass", requirePharmacistAuth,pharmacistchangepassword)
 
 router.put("/archiveMed/:Name", requirePharmacistAuth,ArchiveMedicine);
 
+router.get("/wallet", requirePharmacistAuth,viewWallet);
 
 
 
