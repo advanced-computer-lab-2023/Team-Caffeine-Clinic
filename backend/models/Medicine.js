@@ -34,7 +34,11 @@ const MedicineSchema = new Schema({
       },
     Picture: {
           type: String
-      }
+      },
+    Archive:{
+      type:Boolean,
+      default:false
+    }
   }, { timestamps: true });
 
 MedicineSchema.index({'Name': 'text'});

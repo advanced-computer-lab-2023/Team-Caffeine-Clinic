@@ -9,7 +9,8 @@ const {viewAvailableMedicine,
     addMedicine,
     editMedicine,
     viewDiscountMedicine,
-    addPicture
+    addPicture,
+    ArchiveMedicine
 } = require("../controllers/MedicineController");
 
 const{
@@ -51,6 +52,9 @@ router.get("/chatPharma/getMessages/:chatId", requirePharmacistAuth,allMessages)
 router.post("/chatPharma/sendMessage", requirePharmacistAuth,sendMessage);
 
 router.post("/changePharmaPass", requirePharmacistAuth,pharmacistchangepassword);
+
+router.put("/archiveMed/:Name", requirePharmacistAuth,ArchiveMedicine);
+
 
 
 

@@ -1,5 +1,5 @@
 import { useAuthContext } from '../hooks/useAuthContext'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMedicinesContext } from "../hooks/useMedicinesContext"
 
 const MedicineDetails = ({ medicine }) => {
@@ -8,9 +8,53 @@ const MedicineDetails = ({ medicine }) => {
   const [BadMessage,ViewBad]=useState(null);
   const[Amount,SetAmount]=useState(medicine.Amount);
   const[Visible,SetVisible]=useState(true);
-  const {medicines, dispatch} = useMedicinesContext()
+  const[Archive,SetArchive]=useState("");
+  const {medicines, dispatch} = useMedicinesContext();
 
 
+  let ArchiveMed = async (e) => {
+    e.preventDefault()
+    const response = await fetch(`/api/medicine/archiveMed/${medicine.Name}`,{
+          method:'PUT',
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+    })
+    const data = await response.json();
+
+    if(data){
+      console.log(data.Archive)
+    if(!data.Archive){
+      SetArchive('Unarchive')
+    }
+    else{
+      SetArchive('Archive')
+    }
+  }
+
+    if (response.status==200) {
+      ViewBad("")
+      if(Archive=='Archive')
+       ViewGood("Archived")
+    else
+       ViewGood("Unarchived")
+    }
+    if (response.status==400) {
+      ViewGood("")
+      ViewBad("Could not Archive")
+    }      
+  }
+
+
+  useEffect(() => {
+    if(medicine.Archive){
+      SetArchive('Unarchive')
+    }
+    else{
+      SetArchive('Archive')
+    }
+
+},ArchiveMed);
 
   let handleSubmit = async (e) => {
       e.preventDefault()
@@ -57,9 +101,11 @@ const MedicineDetails = ({ medicine }) => {
     })
 
     if (response.status==200) {
+      ViewBad("")
       ViewGood("Added")
     }
     if (response.status==400) {
+      ViewGood("")
       ViewBad("Could not Add")
     }      
   }
@@ -85,6 +131,7 @@ const MedicineDetails = ({ medicine }) => {
       ViewBad("Max Medicine Quantity Reached")
       ViewGood("");
     } 
+
   }
 
 
@@ -116,27 +163,44 @@ const MedicineDetails = ({ medicine }) => {
 
   return (
     <div>
-      {Visible && 
+      {Visible && ((user.type=="Patient" && !medicine.Archive && medicine.Name)||
+            (user.type!="Patient" && medicine.Name)) &&
+
         <form style={{marginBottom:"-20px"}} className="create" onSubmit={handleSubmit}>
+
           <div className="workout-details">
-            {medicine.Picture && 
+           
+            { medicine.Picture && 
             <img src={medicine.Picture} alt="Medicine" width='120' height='120' />}
-            <h4>{medicine.Name}</h4>
-            <p><strong>Price : </strong>{medicine.Price}</p>
+
+            <h4>{(user.type=="Patient"  && medicine.Name)||
+            (user.type!="Patient" && medicine.Name)}</h4>
+
+            {(user.type=="Patient"  && medicine.Name)||
+            (user.type!="Patient" && medicine.Name) && <p><strong>Price : </strong>{medicine.Price}</p>}
+
             {user&& user.type=="Patient" &&
             <p><strong>Discounted Price : </strong>{medicine.discountedPrice}</p>}
-            <p><strong>Description : </strong>{medicine.Description}</p>
-            {user&& user.type=="Patient" && medicine.amount &&
+
+            {<p><strong>Description : </strong>{medicine.Description}</p>}
+
+            {user&& user.type=="Patient" && !medicine.Archive  && medicine.amount &&
             <p><strong>Amount : </strong>{medicine.amount}</p>}
+
             {user&& user.type=="Pharmacist" &&  <p><strong>Quantity : </strong>{medicine.Quantity}</p> &&
             <p><strong>Sales : </strong>{medicine.Sales}</p> }
-            {user && user.type=="Patient" && medicine.Amount &&
+
+            {user && user.type=="Patient"  && medicine.Amount &&
             <button style={{marginTop:"10px"}} onClick={handleSubmit}>Delete From cart</button>} <br></br> 
+
             { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}   
+
             { Visible && user && user.type=="Patient" && medicine.Amount &&
             <button onClick={IncAmount} style={{marginRight:"20px",marginLeft:"20px"}} >+</button>} 
+
              {Visible && user && user.type=="Patient" && medicine.Amount &&
              <button onClick={DecAmount}>-</button>} <br></br>    
+             
           </div>
         </form>
       }
@@ -144,11 +208,16 @@ const MedicineDetails = ({ medicine }) => {
       <button onClick={EditResults}> Edit</button>} 
       <samp>   </samp>
       {user && user.type=="Pharmacist" &&
+      <button onClick={ArchiveMed} >{Archive} </button>} 
+      <samp>   </samp>
+      {user && user.type=="Pharmacist" &&
       <button onClick={addPhoto}> Add Picture</button>}
-      {user && user.type=="Patient" && !medicine.Amount && !medicine.amount &&
+
+      {user && user.type=="Patient" && !medicine.Archive && !medicine.Amount && !medicine.amount &&
       <button onClick={addToCart}> Add To Cart</button>} <br></br>
-      {user && user.type=="Patient" && <div style={{color:"green"}}>{GoodMessage}</div>}
-      {user && user.type=="Patient" && <div style={{color:"red"}}>{BadMessage}</div>}       
+
+      {user  && <div style={{color:"green"}}>{GoodMessage}</div>}
+      {user  && <div style={{color:"red"}}>{BadMessage}</div>}       
     </div>
   )
 }

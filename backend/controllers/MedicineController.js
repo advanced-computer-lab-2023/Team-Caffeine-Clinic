@@ -111,6 +111,23 @@ const filterMedicine = async (req, res) => {
    res.status(200).json(medicine);
    
 }
+const ArchiveMedicine = async (req, res) => {
+  const MedName = req.params.Name;
+  let medicine = await medicineModel.findOne({ Name: MedName }); // Use let instead of const
+
+  try {
+    if (medicine.Archive) {
+      medicine = await medicineModel.findOneAndUpdate({ Name: MedName }, { Archive: false });
+    } else {
+      medicine = await medicineModel.findOneAndUpdate({ Name: MedName }, { Archive: true });
+    }
+    res.status(200).json(medicine);
+  } catch (error) {
+    res.status(400).json({ error: "Error Occurred" });
+  }
+};
+
+
 
 module.exports = {
    viewAvailableMedicine,
@@ -120,6 +137,7 @@ module.exports = {
    addMedicine,
    editMedicine,
    viewDiscountMedicine,
-   addPicture
+   addPicture,
+   ArchiveMedicine
 };
 //addMedicine,editMedicine, medicineHome
