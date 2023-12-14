@@ -39,6 +39,7 @@ const Navbar = () => {
       {user && user.type ==='Patient' && (<div><Link to="/cart"><button> Cart</button></Link>
       {' '}<Link to="/Addresses"><button> Addresses</button></Link>
       {' '}<Link to="/Orders"><button> Orders</button></Link></div>)}
+      {user && user.type=='Pharmacist'&& <Link to="/pharmaChangePassword"><button>ChangePass</button></Link>}
       {user && user.type !=='Admin'&& <Link to="/Chat"><button> Chat</button></Link>}
       <Link to="/"><button onClick={handleClick}>Sign Out</button></Link>
       </div>

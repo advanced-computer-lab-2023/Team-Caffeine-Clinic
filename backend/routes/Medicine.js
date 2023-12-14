@@ -20,6 +20,10 @@ const{
     viewDoctors
 }=require('../controllers/ChatController')
 
+const{
+pharmacistchangepassword
+}=require('../controllers/PharmacistController')
+
 const {requirePharmacistAuth} = require('../middleware/requrieAuth');
 
 
@@ -45,6 +49,9 @@ router.get("/chatPharma/getDoctors", requirePharmacistAuth,viewDoctors);
 router.get("/chatPharma/getMessages/:chatId", requirePharmacistAuth,allMessages);
 
 router.post("/chatPharma/sendMessage", requirePharmacistAuth,sendMessage);
+
+router.post("/changePharmaPass", requirePharmacistAuth,pharmacistchangepassword);
+
 
 
 module.exports = router;

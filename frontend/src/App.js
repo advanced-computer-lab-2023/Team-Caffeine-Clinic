@@ -69,6 +69,7 @@ import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
 import ChatPage from './pages/ChatPage'
+import PharmaChangePassword from './pages/PharmaChangePassword'
 
 
 // Stripe
@@ -249,6 +250,11 @@ function App() {
             <Route
             path='/Chat'
             element={user&& user.type!="Admin" && <ChatPage />  }
+            />
+
+            <Route
+            path='/pharmaChangePassword'
+            element={user&& user.type=="Pharmacist" && <PharmaChangePassword />  }
             />
 
             {/*Admin*/}

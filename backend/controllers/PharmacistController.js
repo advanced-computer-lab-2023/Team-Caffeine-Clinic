@@ -4,6 +4,8 @@ const Medicine = require('../models/Medicine.js');
 const Pharmacist = require('../models/Pharmacist.js');
 const nodemailer = require('nodemailer');
 const OTP = require('../models/OTP');
+const bcrypt = require('bcrypt');
+
 
 
 const changePassP = async(req, res) => {
@@ -121,9 +123,51 @@ const setPassP = async(req, res) => {
 }
 }
 
+const pharmacistchangepassword = async (req, res) => {
+    const { newPassword } = req.body; // The new password is expected to be sent in the body of the request
+    const pharmaId = req.user._id; // Get the doctor's ID from the user object in the request
+  
+    if (!mongoose.Types.ObjectId.isValid(pharmaId)) {
+      return res.status(404).json({ error: 'Invalid doctor ID' });
+    }
+  
+    // Regular expression to check for at least one capital letter and one number
+    const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
+  
+  
+      if (!passwordRequirements.test(newPassword)) {
+          return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
+      }
+  
+  
+    try {
+      const salt = await bcrypt.genSalt(10); // Generate a salt
+      const hash = await bcrypt.hash(newPassword, salt); // Hash the new password with the salt
+  
+      // Find the doctor by ID
+      const pharmacist = await Pharmacist.findById(pharmaId);
+      
+      if (!pharmacist) {
+        return res.status(404).json({ error: 'Pharmacist not found' });
+      }
+      
+      // Set the new password to the hashed password
+      pharmacist.password = hash;
+  
+      // Save the doctor with the new hashed password
+      await pharmacist.save();
+  
+      // Respond with a success message
+      res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
 module.exports = {
      changePassP,
      setPassP,
      forgotPassP,
-      verifyOTPP
+      verifyOTPP,
+      pharmacistchangepassword
 }
