@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import Select from 'react-select';
 
 import logo from '../img/hospital.jpg';
 
@@ -17,6 +18,28 @@ const AppointmentDetail = ({ appointment }) => {
 
   const [medicine, setMedicine] = useState(['']); // Initial state with an empty medicine
   const [dosage, setDosage] = useState(['']); // Initial state with an empty medicine
+
+  const [medicineNames, setMedicineNames] = useState([]);
+
+  useEffect(() => {
+    const fetchMedicineNames = async () => {
+      try {
+        const response = await fetch('/api/medicine/viewAvailableMedicine'); // Assuming you have an API endpoint to get all medicine names
+        if (!response.ok) {
+          console.error('Error fetching medicine names');
+          return;
+        }
+
+        const medicineData = await response.json();
+        const names = medicineData.map(medicine => medicine.Name);
+        setMedicineNames(names);
+      } catch (error) {
+        console.error('Error fetching medicine names:', error);
+      }
+    };
+
+    fetchMedicineNames();
+  }, []);
 
   const handleTestChange = (index, value) => {
     const updatedTests = [...tests];
@@ -243,11 +266,18 @@ const AppointmentDetail = ({ appointment }) => {
                             <ul>
                               <li><h4>Medicine:</h4>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                  <b>Name:</b> <input
-                                    className="med_name"
-                                    placeholder="Enter medicine name"
-                                    value={medicine}
-                                    onChange={(e) => handleMedicineChange(index, e.target.value)}
+                                  <b>Name:</b>
+                                  <Select
+                                    className='select_medicine'
+                                    options={medicineNames.map(name => ({ label: name, value: name }))}
+                                    value={{ label: medicine[index], value: medicine[index] }}
+                                    onChange={(selectedOption) => handleMedicineChange(index, selectedOption.value)}
+                                    styles={{
+                                      control: (provided) => ({
+                                        ...provided,
+                                        width: '200px', // Adjust the height as needed
+                                      }),
+                                    }}
                                   />
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>

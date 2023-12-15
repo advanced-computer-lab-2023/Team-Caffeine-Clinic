@@ -68,6 +68,7 @@ import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
+import VideoCall from './pages/VideoCall';
 
 import FollowUpRequests from './pages/FollowUpRequests';
 
@@ -285,6 +286,8 @@ function App() {
 
               <Route path='PatientCall' element={<PatientComponent />} />
               <Route path='DoctorCall' element={<DoctorComponent />} />
+
+              <Route path='videoCall' element={<VideoCall />} />
 
 
             </Routes>

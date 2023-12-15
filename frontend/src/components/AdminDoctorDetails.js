@@ -6,7 +6,7 @@ const DoctorDetails = ({ doctor }) => {
 
 
     const handleClick = async () => {
-        const response = await fetch('/api/Admin/deleteDoctor/' + doctor._id, {
+        const response = await fetch('http://localhost:4000/api/Admin/deleteDoctor/' + doctor._id, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${user.token}`

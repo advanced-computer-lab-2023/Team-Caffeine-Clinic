@@ -6,7 +6,7 @@ mongoose.set('strictQuery', false);
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
-// const http = require('http');
+const http = require('http');
 // const socketIO = require('socket.io');
 
 const passport = require('passport')
@@ -46,7 +46,31 @@ const pharmacistRoute = require('./routes/pharmacist')
 
 
 
+
 var app = express();
+const server = http.createServer(app)
+const io = require("socket.io")(server, {
+	cors: {
+		origin: "http://localhost:3000",
+		methods: [ "GET", "POST" ]
+	}
+})
+
+io.on("connection", (socket) => {
+	socket.emit("me", socket.id)
+
+	socket.on("disconnect", () => {
+		socket.broadcast.emit("callEnded")
+	})
+
+	socket.on("callUser", (data) => {
+		io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
+	})
+
+	socket.on("answerCall", (data) => {
+		io.to(data.to).emit("callAccepted", data.signal)
+	})
+})
 // const server = http.createServer(app);
 // const io = socketIO(server);
 
@@ -147,7 +171,7 @@ app.get('/', (req, res) => {
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         //listen for requests
-        app.listen(process.env.PORT, () => {
+        server.listen(process.env.PORT, () => {
             console.log('Connencted to DB & Listening on port', process.env.PORT)
         })
     })

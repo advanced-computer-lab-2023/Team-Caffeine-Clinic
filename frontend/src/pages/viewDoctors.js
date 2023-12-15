@@ -11,7 +11,7 @@ const ViewDoctorHome =  () => {
 
     useEffect(() => {
         const fetchDoctors = async () => {
-            const response = await fetch('api/doctors/getDoctors', {
+            const response = await fetch('http://192.168.1.12:4000/api/doctors/getDoctors', {
                 headers: {
                   'Authorization': `Bearer ${user.token}`
                 }
