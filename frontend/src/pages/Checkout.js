@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useState } from 'react'
 
-import PaymentForm from '../components/PaymentHandler';
+import PaymentForm from '../components/PaymentHandlerPharmacy';
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";

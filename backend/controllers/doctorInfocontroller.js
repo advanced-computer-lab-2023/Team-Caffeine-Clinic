@@ -514,22 +514,20 @@ const add_available_slots = async (req, res) => {
     const currentDate = new Date();
 
     const timeSlot = req.query.timeSlot;
-    const [year, month1, month, time,sec] = timeSlot.split("\\");
-    const [day, hour, min1] = sec.split(":");
-    const paddedYear = year[1]+year[2]+year[3]+year[4];
-    let min = 0;
-    if(min1[1]!='"'){
-     min = min1[0]+min1[1];}
-    else {
-     min = min1[0];
-    }
-    const appointmentDate = new Date(paddedYear, month-1, day, hour, min);
-    if(appointmentDate<currentDate){
-        return res.status(400).json({ message: "This date has already passed Enter a new one " });
+    
+    // Adjusted splitting logic
+    const [datePart, timePart] = timeSlot.split("\\");
+    const [year, month, day] = datePart.split("-").map(part => parseInt(part, 10));
+    const [hour, min] = timePart.split(":").map(part => parseInt(part, 10));
+    
+    const appointmentDate = new Date(year, month - 1, day, hour, min);
+
+    if(appointmentDate < currentDate){
+        return res.status(400).json({ message: "This date has already passed. Enter a new one." });
     }
 
     try {
-        // Find the doctor by ID
+        // Find the doctor by username
         const doctor = await Doctor.findOne({ username: doctorusername });
 
         if (!doctor) {
@@ -538,20 +536,20 @@ const add_available_slots = async (req, res) => {
 
         // Add the new time slot to the available time slots array
         if(!doctor.availableDates.includes(timeSlot)){
-        doctor.availableDates.push(timeSlot);
-        
-        // Save the updated doctor information
-        await doctor.save();
+            doctor.availableDates.push(timeSlot);
+            
+            // Save the updated doctor information
+            await doctor.save();
 
-        res.status(200).json({ message: "Time slot added successfully", doctor: doctor });}
-        else {
-            return res.status(400).json({ message: "this available Date is there already " });
-
+            res.status(200).json({ message: "Time slot added successfully", doctor: doctor });
+        } else {
+            return res.status(400).json({ message: "This available date is already there." });
         }
     } catch (err) {
         res.status(500).json({ message: "Error adding time slot", error: err.message });
     }
 };
+
 const getCompletedAppointmentsForDoctor = async (req, res) => {
     const doctorId = req.user.username; // Assuming you are passing the doctor's ID as a parameter
     try {

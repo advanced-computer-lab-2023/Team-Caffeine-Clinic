@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
 // Pages
 import Home from './pages/Home';
-import OldHome from './pages/OldHome';
+import MyInformation from './pages/MyInformation';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ForgotPass from './pages/ForgotPass';
@@ -71,6 +71,8 @@ import DocumentUpload from './pages/PatientAddDocs';
 import ChatPage from './pages/ChatPage'
 import PharmaChangePassword from './pages/PharmaChangePassword'
 
+import SalesReport from './pages/SalesReport';
+import AlternativesPage from './pages/AlternativesPage';
 
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
@@ -157,7 +159,7 @@ function App() {
                 <Route path='PatientHealthRecord' element={<WithNavbarAndSidebar><ProtectedRoute><PatientHealthRecords /></ProtectedRoute></WithNavbarAndSidebar>} />
                             
                 <Route path='home' element={<WithNavbarAndSidebar><ProtectedRoute><Home /></ProtectedRoute></WithNavbarAndSidebar>} />
-                <Route path='OldHome' element={<WithNavbarAndSidebar><ProtectedRoute><OldHome /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='myInformation' element={<WithNavbarAndSidebar><ProtectedRoute><MyInformation /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='doctors' element={<WithNavbarAndSidebar><ProtectedRoute><Doctors /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='doctor/getSingleDoctor/:username' element={<ProtectedRoute><SingleDoctor /></ProtectedRoute>} />
                 <Route path='familyMembers' element={<WithNavbarAndSidebar><ProtectedRoute><FamilyMembers /></ProtectedRoute></WithNavbarAndSidebar>} />
@@ -231,6 +233,13 @@ function App() {
               path="/addMedicinePicture/:Name" 
               element={user&& user.type=="Pharmacist" && <AddMedicinePicture/> }
             />
+            <Route 
+              path="/SalesReport" 
+              element={<SalesReport/> }
+            />
+            <Route 
+            path="/alternatives" 
+            element={<AlternativesPage />} />
 
             {/*Ibra*/}
             <Route 
@@ -302,8 +311,11 @@ function App() {
 function WithNavbarAndSidebar({ children }) {
   return (
     <div className='MainContent'>
+      <div className='Sidebar'>
       <Sidebar />
-      <Link to="/home" className='home-button'>Home</Link>
+
+      {/* <Link to="/home" className='home-button'>Home</Link> */}
+      </div>
       {/* <Navbar /> */}
       <div className="pages">
         {children}

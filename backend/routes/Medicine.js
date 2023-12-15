@@ -10,7 +10,8 @@ const {viewAvailableMedicine,
     editMedicine,
     viewDiscountMedicine,
     addPicture,
-    ArchiveMedicine
+    ArchiveMedicine,
+    alternatives
 } = require("../controllers/MedicineController");
 
 const{
@@ -46,6 +47,8 @@ router.get("/search/:search",searchMedicine);
 router.get("/viewDistinct", viewDistinctMedicalUse);
 router.get("/filter/:filter",filterMedicine);
 router.put("/addPicture",requirePharmacistAuth ,addPicture);
+router.post("/alternatives",alternatives);
+
 
 router.post("/chatPharma/accessChats",requirePharmacistAuth ,accessChat);
 

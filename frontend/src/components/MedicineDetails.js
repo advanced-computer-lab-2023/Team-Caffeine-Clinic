@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useMedicinesContext } from "../hooks/useMedicinesContext"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const MedicineDetails = ({ medicine }) => {
   const {user} = useAuthContext()
@@ -12,7 +13,8 @@ const MedicineDetails = ({ medicine }) => {
   const[Visible,SetVisible]=useState(true);
   const[Archive,SetArchive]=useState("");
   const {medicines, dispatch} = useMedicinesContext();
-
+  const[alts,Setalts]=useState('');
+  const navigate = useNavigate();
 
   let ArchiveMed = async (e) => {
     e.preventDefault()
@@ -161,6 +163,37 @@ const MedicineDetails = ({ medicine }) => {
     } 
   }
 
+  let Alternatives = async (e) => {
+    e.preventDefault()
+    let _id = medicine._id;
+    let activeIngredients = medicine.activeIngredients;
+      const response = await fetch(`/api/medicine/alternatives`,{
+            method:'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({ _id,activeIngredients }),
+      })
+      const alternatives = await response.json();
+      if (alternatives.length == 0) {
+        Setalts("No Alternatives")
+      }
+      else{
+        navigate(
+          '/alternatives',  
+          {
+            state: {
+              alternatives
+            }
+          } 
+        );
+        Setalts('')
+      } 
+    }
+  
+
+
 
 
   return (
@@ -186,10 +219,9 @@ const MedicineDetails = ({ medicine }) => {
 
             {user&& user.type=="Patient" &&
             <p><strong>Discounted Price : </strong>{medicine.discountedPrice}</p>}
-
-            {<p><strong>Description : </strong>{medicine.Description}</p>}
-
-            {user&& user.type=="Patient" && !medicine.Archive  && medicine.amount &&
+            <p><strong>Description : </strong>{medicine.Description}</p>
+            {user && medicine.Quantity === 0 && <p style={{ color: 'red' }}><strong>Out Of Stock</strong></p>}
+            {user&& user.type=="Patient" && medicine.amount &&
             <p><strong>Amount : </strong>{medicine.amount}</p>}
 
             {user&& user.type=="Pharmacist" &&  <p><strong>Quantity : </strong>{medicine.Quantity}</p> &&
@@ -222,7 +254,12 @@ const MedicineDetails = ({ medicine }) => {
       <button onClick={addToCart}> Add To Cart</button>} <br></br>
 
       {user  && <div style={{color:"green"}}>{GoodMessage}</div>}
-      {user  && <div style={{color:"red"}}>{BadMessage}</div>}       
+      {user  && <div style={{color:"red"}}>{BadMessage}</div>}    
+    
+      {user && user.type=="Patient" && medicine.Quantity === 0 &&
+      <button onClick={Alternatives}>View Alternatives</button>} <br></br>
+
+      {user && user.type=="Patient" && <div style={{color:"red"}}>{alts}</div>}     
     </div>
   )
 }

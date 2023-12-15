@@ -53,7 +53,11 @@ const Home = () => {
 
   return (
     <div className='home'>
+      <div>
     <h1>Patient Report</h1>
+    </div>
+
+    <div>
     {selectedPatient && (
       <div className='all-info'>
         <div className='box'>
@@ -64,7 +68,7 @@ const Home = () => {
          
         </div>
 
-        <div className='box'>
+        {/* <div className='box'>
           <h3>ff</h3>
           <p><strong>Username:</strong> {selectedPatient.username}</p>
           <p>Name: {selectedPatient.name}</p>
@@ -125,9 +129,11 @@ const Home = () => {
           <p>Emergency Contact Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
           <p>Relation to the Patient: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
           <p>Wallet: {selectedPatient.wallet}</p>
-        </div>
+        </div> */}
       </div>
     )}
+          </div>
+
   </div>
   );
 };

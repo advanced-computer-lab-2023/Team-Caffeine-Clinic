@@ -112,6 +112,9 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // let submitButton = document.getElementById('payButton');
+    // submitButton.disabled = true; // Disable the button to prevent multiple submissions
+
     const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: elements.getElement(CardElement),
@@ -149,6 +152,8 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
           onPaymentResult()
         }
       }
+      // submitButton.disabled = false; // Re-enable the submit button after processing
+
 
       console.log('payment confirmed');
     }
@@ -170,7 +175,7 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
           <div className="payment-form-container">
             <form className="payment-form" onSubmit={handleSubmit}>
               <CardElement />
-              <button type="submit" className="pay-button">Pay</button>
+              <button id='payButton' type="submit" className="pay-button">Pay</button>
             </form>
           </div>
         )}

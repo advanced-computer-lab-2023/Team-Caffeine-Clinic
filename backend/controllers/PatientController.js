@@ -19,6 +19,11 @@ const Notification = require('../models/Notification.js')
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin');
 const Pharmacist = require('../models/Pharmacist.js');
+const Order = require('../models/Orders.js');
+
+const Transaction = require('../models/transaction');
+const Admin = require('../models/admin')
+const Orders = require('../models/Orders.js')
 
 
 const addHealthPackageTransactionfam = async (req, res) => {
@@ -1598,44 +1603,6 @@ const newOrder = async (req, res) => {
             for (let i = 0; i < user.cart.length; i++) {
                 const Med = await Medicine.findOne({_id:user.cart[i].medicineid});
                 newQuantity = Med.Quantity - user.cart[i].amount;
-        
-                //Out Of Stock Email Part Start
-                if(newQuantity==0){
-
-                    try {
-                        if (pharmacistList.length > 0) {
-                            const transporter = nodemailer.createTransport({
-                                service: 'hotmail',
-                                auth: {
-                                    user: 'acluser123@hotmail.com',
-                                    pass: 'AMRgames1@',
-                                },
-                            });
-                
-                            for (let i = 0; i < pharmacistList.length; i++) {
-                                const email = pharmacistList[i].email;
-                
-                                const mailOptions = {
-                                    from: 'acluser123@hotmail.com',
-                                    to: email,
-                                    subject: 'Medicine Out of Stock',
-                                    text: `${Med.Name} is Out of Stock`,
-                                };
-                
-                                const info = await transporter.sendMail(mailOptions);
-                                console.log('Email sent:', info.response);
-
-                                createNotification(pharmacistList[i]._id, "Medicine Out Of Stock", `${Med.Name} is Out of Stock`)
-                            }
-                        } else {
-                            console.log('No pharmacists found.');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                    }
-
-                }
-                //Out Of Stock Email Part End
                 newReserved = Med.Reserved + user.cart[i].amount;
                 newSales = Med.Sales + (Med.Price * user.cart[i].amount);
                 TotalPrice += Med.Price * user.cart[i].amount;
@@ -1679,7 +1646,6 @@ const newOrder = async (req, res) => {
                 deliveryaddress: address,
                 TotalPrice:TotalPrice       
             }).catch(err => console.log(err));
-            
             res.status(200).json(c1);
         }
         catch (error) {
@@ -1738,7 +1704,7 @@ const deleteOrder = async (req, res) => {
 
     const orders = user.orders
     var medicines = null;
-
+    var ordermedicines = [];
     for (let i = 0; i < orders.length; i++) {
         if (orders[i]._id == id) {
             medicines = orders[i].medicines;
@@ -1749,6 +1715,21 @@ const deleteOrder = async (req, res) => {
     let price = user.wallet;
     for (let i = 0; i < medicines.length; i++) {
         var medicine = await Medicine.findOne({ _id: medicines[i].medicineid });
+        newQuantity = medicine.Quantity + medicines[i].amount;
+        newReserved = medicine.Reserved - medicines[i].amount;
+        newReturned = medicine.Returned + medicines[i].amount;
+        newSales = medicine.Sales - (medicines[i].amount * medicine.Price);
+        await Medicine.findOneAndUpdate({_id:medicines[i].medicineid}, {Quantity:newQuantity, Reserved:newReserved, Returned:newReturned, Sales:newSales});
+        const ordermedicine = {
+            medicineid: medicines[i].medicineid,
+            amount: medicines[i].amount,
+            Name: medicine.Name,
+            stock: newQuantity,
+            Reserved: newReserved,
+            sales:newSales,
+            Returned: newReturned
+        };
+        ordermedicines.push(ordermedicine);
         price += medicine.Price * medicines[i].amount
         console.log('ana hena', price);
         var newQuantity = medicines[i].amount
@@ -1759,6 +1740,12 @@ const deleteOrder = async (req, res) => {
         await Patient.findOneAndUpdate({ _id: user._id, "orders._id": id }, {
             '$set': {
                 'orders.$.status': 'Cancelled'
+            }
+        }).catch(err => console.log(err));
+        await Orders.findOneAndUpdate({ _id: id}, {
+            '$set': {
+                'status': 'Cancelled',
+                medicines: ordermedicines
             }
         }).catch(err => console.log(err));
         await Patient.findOneAndUpdate({ _id: user._id, "orders._id": id }, { wallet: price }).catch(err => console.log(err));
