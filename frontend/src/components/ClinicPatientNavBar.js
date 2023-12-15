@@ -59,7 +59,8 @@ const NavBarPatient = () => {
               <ul>
                 <li className="dropdown"><Link to="" style={linkStyle}><span>My Profile</span> <i className="bi bi-chevron-right"></i></Link>
                   <ul>
-                  <li><Link to="/" style={linkStyle}>Profile</Link></li>
+                  <li><Link to="/viewPatientsDetails" style={linkStyle}>Profile</Link></li>
+                  <li><Link to="/PatientAddDocs" style={linkStyle}>Documents</Link></li>
                   <li><Link to="/patient/PatientChangePassword" style={linkStyle}>Change Password</Link></li>
                   </ul>
                 </li>
@@ -67,6 +68,7 @@ const NavBarPatient = () => {
                 <li><Link to="/Perscriptions" style={linkStyle}>My Prescriptions</Link></li>
                 <li><Link to="/HealthPackages" style={linkStyle}>My Health Packages</Link></li>
                 <li><Link to="/familyMembers" style={linkStyle}>My Family Members</Link></li>
+                <li><Link to="/Filterbyavedates" style={linkStyle}>Filter by Availability Date</Link></li>
                 <li><Link to="/" style={linkStyle} onClick={handleClick}>Logout</Link></li>
               </ul>
             </li>

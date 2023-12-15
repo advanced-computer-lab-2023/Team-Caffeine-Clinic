@@ -300,11 +300,11 @@ function App() {
 function WithNavbarAndSidebar({ children }) {
   return (
     <div className='MainContent'>
-      <ClinicPatientNavBar />
-      <div className='Sidebar'>
+      {/* <div className='Sidebar'>
       <Sidebar />
-      </div>
-      
+      </div> */}
+
+      <ClinicPatientNavBar />      
       <div className="pages">
         {children}
       </div>

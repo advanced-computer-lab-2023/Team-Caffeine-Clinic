@@ -24,8 +24,9 @@ const Doctors = () => {
         const params = new URLSearchParams();
         if (nameFilter) params.append('name', nameFilter);
         if (specialityFilter) params.append('speciality', specialityFilter);
+        if (dateFilter) params.append('date', dateFilter);
         if (params.toString()) url += `?${params.toString()}`;
-
+        
         const response = await fetch(url, {
           headers: {
             'Authorization': `Bearer ${user.user.token}`
@@ -37,18 +38,17 @@ const Doctors = () => {
         if (response.ok) {
           setDoctors(json);
 
-          // Extracting unique names and specialties
-          const names = new Set(json.map(doctor => doctor.name));
-          const specialities = new Set(json.map(doctor => doctor.speciality));
-
-          const dates = new Set();
-          json.forEach(doctor => {
-            doctor.availableDates?.forEach(date => dates.add(date));
+          // Extract unique names, specialities, and dates
+        const names = new Set(json.map(doctor => doctor.name));
+        const specialities = new Set(json.map(doctor => doctor.speciality));
+        const dates = new Set();
+        json.forEach(doctor => {
+          doctor.availableDates?.forEach(date => dates.add(date));
         });
-          setAvailableDates([...dates]);
 
-          setDoctorNames([...names]);
-          setSpecialities([...specialities]);
+        setAvailableDates([...dates]);
+        setDoctorNames([...names]);
+        setSpecialities([...specialities]);
         }
       };
       
@@ -92,16 +92,12 @@ const Doctors = () => {
           </select>
 
             {/* Date Filter */}
-          <select 
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    className="filter-input"
-                >
-                    <option value="">Select Date</option>
-                    {availableDates.map((date, index) => (
-                        <option key={index} value={date}>{date}</option>
-                    ))}
-            </select>
+            <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="filter-input">
+          <option value="">Select Date</option>
+          {availableDates.map((date, index) => (
+            <option key={index} value={date}>{date}</option>
+          ))}
+        </select>
           
 </div>
 
@@ -119,6 +115,7 @@ const Doctors = () => {
                 <h4>Dr. {doctor.name}</h4>
                 <span>{doctor.speciality}</span>
                 <p>Fees: {doctor.rateAfterDiscount} EGP</p>
+                <p>Available Dates: {doctor.availableDates ? doctor.availableDates.join(', ') : 'Not available'}</p>
               </div>
             </div>
           </div>

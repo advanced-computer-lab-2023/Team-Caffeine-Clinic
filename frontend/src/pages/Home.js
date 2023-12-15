@@ -57,10 +57,6 @@ const Home = () => {
 
   return (
     <div className='home'>
-      <div>
-    <h1>Patient Report</h1>
-    </div>
-
     <div>
     {selectedPatient && (
       <div>
