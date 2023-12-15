@@ -1751,6 +1751,8 @@ const deleteOrder = async (req, res) => {
         var medicine = await Medicine.findOne({ _id: medicines[i].medicineid });
         price += medicine.Price * medicines[i].amount
         console.log('ana hena', price);
+        var newQuantity = medicines[i].amount
+        var medicine = await Medicine.findOneAndUpdate({ _id: medicines[i].medicineid },{Quantity:newQuantity});
     }
 
     try {
