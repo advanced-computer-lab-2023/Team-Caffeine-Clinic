@@ -15,14 +15,9 @@ const Doctor = require('../models/doctor');
 const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
 const Notification = require('../models/Notification.js')
-
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin');
 const Pharmacist = require('../models/Pharmacist.js');
-const Order = require('../models/Orders.js');
-
-const Transaction = require('../models/transaction');
-const Admin = require('../models/admin')
 const Orders = require('../models/Orders.js')
 
 
