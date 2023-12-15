@@ -1051,8 +1051,8 @@ header .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #5da88a;
 }
+
 header a {
   color: #333;
   text-decoration: none;
@@ -1269,3 +1269,4 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+

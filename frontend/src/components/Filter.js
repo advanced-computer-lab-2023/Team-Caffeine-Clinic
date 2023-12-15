@@ -1,53 +1,46 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../PharmacyCSS/style.css';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const Filter = () => {
-
-  const [Medicines, setMedicines] = useState(null)
+  const [Medicines, setMedicines] = useState(null);
+  const [Use, setUse] = useState('');
 
   useEffect(() => {
     const fetchMedicines = async () => {
-      const response = await fetch('/api/medicine/viewDistinct')
-      const json = await response.json()
+      const response = await fetch('/api/medicine/viewDistinct');
+      const json = await response.json();
 
       if (response.ok) {
-        setMedicines(json)
+        setMedicines(json);
       }
-    }
+    };
 
-    fetchMedicines()
-  }, [])
+    fetchMedicines();
+  }, []);
 
-
-  const [Use, setUse] = useState("")
-
-  let handleSubmit = async (e) => {
-
-    e.preventDefault()
-
-    if(Use!==""){
-    window.open(`/filter/${Use}`,"_self");
-      setUse("Filter Results")
-    }
-
-
-  }
+  const handleSubmit = (selectedUse) => {
+    // Add your logic here to handle the selected medical use
+    window.open(`/filter/${selectedUse}`, '_self');
+  };
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
-    {/* Displaying the value of med */}
-    <strong>{"Filter Medicines"}</strong>
-    <br />
+    <>
+      <li className="has-children" style={{marginLeft:"0px"}}>
+        <a href="#">Medical Use Filter </a>
+        <FontAwesomeIcon icon={faChevronDown} style={{color:"black"}} />
+        <ul className="dropdown">
+          {Medicines &&
+            Medicines.map((Medicine) => (
+              <li key={Medicine} onClick={() => { setUse(Medicine); handleSubmit(Medicine); }}>
+                <a>{Medicine}</a>
+              </li>
+            ))}
+        </ul>
+      </li>
+    </>
+  );
+};
 
-    <select onChange={(e) =>  setUse(e.target.value)}> 
-      <option value="">-- Select a medical use -- </option>
-            {/* Mapping through each med object in our meds array
-          and returning an option element with the appropriate attributes / values.
-         */}
-      {Medicines && Medicines.map((Medicine) => <option value={Medicine}>{Medicine}</option>)}
-    </select>
-    <button style={{height:37 , marginLeft:10,marginTop:5 , background:'darkgrey'}} >Filter</button>
-    </form>
-  )
-}
-
-export default Filter
+export default Filter;
