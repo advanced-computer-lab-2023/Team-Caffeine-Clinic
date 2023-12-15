@@ -38,6 +38,10 @@ const MedicineSchema = new Schema({
     Archive:{
       type:Boolean,
       default:false
+    },
+    NeedPerscription:{
+      type:Boolean,
+      default:false
     }
   }, { timestamps: true });
 

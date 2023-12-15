@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 const HealthPackage = require('../models/healthPackageModel');
 const HealthPackagesTransaction = require('../models/HealthPackages_Transaction');
 const Medicine = require('../models/Medicine.js');
-
 const bcrypt = require('bcrypt');
 
 
@@ -15,6 +14,7 @@ const Perscriptions = require('../models/Perscriptions');
 const Doctor = require('../models/doctor');
 const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
+const Notification = require('../models/Notification.js')
 
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin');
@@ -1477,13 +1477,31 @@ const addToCart = async (req, res) => {
     const MedName = req.params.Name;
     const medicine = await Medicine.findOne({ Name: MedName });
     var user = req.user;
-    console.log(user);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    var CanAdd=true;
     var cart = {
         medicineid: medicine._id,
         amount: 1
     };
     const quantity = medicine.Quantity;
 
+    if(quantity<=0){
+        res.status(400).json({ error: "Maximum Amount Reached" });
+    }
+    else{
+    if(medicine.NeedPerscription){
+       PatientPerscription = await Perscriptions.findOne({patientID:user._id,date_of_perscription:{
+        $gte: oneMonthAgo, // prescriptions on or after one month ago
+        $lt: new Date(),   // prescriptions before the current date and time
+      },
+      medicine:medicine.Name});
+      console.log(PatientPerscription);
+      if(!PatientPerscription){
+        CanAdd=false;
+      }
+    }
+    if(CanAdd){
     const patient = await Patient.findOne({ _id: user._id, "cart.medicineid": medicine._id });
     try {
         if (patient) {
@@ -1500,6 +1518,7 @@ const addToCart = async (req, res) => {
                 res.status(400).json({ error: "Maximum Amount Reached" });
             }
             else {
+
                 Patient.findOneAndUpdate({ _id: user._id, "cart.medicineid": medicine._id }, {
                     '$set': {
                         'cart.$.amount': amount
@@ -1515,8 +1534,11 @@ const addToCart = async (req, res) => {
     } catch (error) {
         res.status(400).send('Could not Add')
     }
-
-
+}
+else{
+    res.status(400).json({ error: "This Medicine needs a Prescription" });
+}
+    }
 }
 
 const deleteFromCart = async (req, res) => {
@@ -1602,6 +1624,8 @@ const newOrder = async (req, res) => {
                 
                                 const info = await transporter.sendMail(mailOptions);
                                 console.log('Email sent:', info.response);
+
+                                createNotification(pharmacistList[i]._id, "Medicine Out Of Stock", `${Med.Name} is Out of Stock`)
                             }
                         } else {
                             console.log('No pharmacists found.');
@@ -1767,6 +1791,30 @@ const viewWallet=async (req,res)=>{
     res.status(200).json(user.wallet);
 }
 
+const getNotification = async (req, res) => {
+    const user = req.user
+    try {
+        const notifications = await Notification.find({ user: user._id })
+
+        if (notifications.length != 0)
+            return res.status(200).json({ notifications: notifications })
+        else
+            return res.status(400).send('Not Found')
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({ "error": error });
+    }
+}
+
+const createNotification = async (user, title, body) => {
+    try {
+        const notification = new Notification({ user: user, title: title, body: body })
+
+        await notification.save()
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 module.exports = {
@@ -1806,5 +1854,6 @@ module.exports = {
     deleteOrder,
     addAddresses,
     getCartPrice,
-    viewWallet
+    viewWallet,
+    getNotification
 }

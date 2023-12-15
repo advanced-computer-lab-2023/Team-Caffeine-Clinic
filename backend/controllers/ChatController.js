@@ -186,7 +186,7 @@ const accessChat = async (req, res) => {
         const isPatient = await Patient.findById(req.user._id).catch(err => console.log(err));;
         const isPharmacist = await Pharmacist.findById(req.user._id).catch(err => console.log(err));;
         const isDoctor = await Doctor.findById(req.user._id).catch(err => console.log(err));;
-
+        var chats=[];
         if (isPatient) {
             try {
                 Chat.find({patient:req.user._id})
@@ -208,7 +208,13 @@ const accessChat = async (req, res) => {
                         path: "latestMessage.sender",
                         select: "username",
                       });
-                    res.status(200).send(results);
+                      for(let i=0;i<results.length;i++){
+                        if(results[i].doctor==null){
+                            chats.push(results[i]);
+                        }
+                      }
+                      console.log("eaaasy");
+                    res.status(200).send(chats);
                   });
               } catch (error) {
                 res.status(400);
@@ -272,6 +278,104 @@ const accessChat = async (req, res) => {
             }
       }
   };
+
+  const fetchChatsDoc = async (req, res) => {
+
+    const isPatient = await Patient.findById(req.user._id).catch(err => console.log(err));;
+    const isPharmacist = await Pharmacist.findById(req.user._id).catch(err => console.log(err));;
+    const isDoctor = await Doctor.findById(req.user._id).catch(err => console.log(err));;
+    var chats=[];
+    if (isPatient) {
+        try {
+            Chat.find({patient:req.user._id})
+              .populate("patient")
+              .populate("pharmacist")
+              .populate("doctor")
+              .populate("latestMessage")
+              .sort({ updatedAt: -1 })
+              .then(async (results) => {
+                results = await Patient.populate(results, {
+                  path: "latestMessage.sender",
+                  select: "username",
+                });
+                results = await Doctor.populate(results, {
+                    path: "latestMessage.sender",
+                    select: "username",
+                  });
+                  results = await Pharmacist.populate(results, {
+                    path: "latestMessage.sender",
+                    select: "username",
+                  });
+                  for(let i=0;i<results.length;i++){
+                    if(results[i].pharmacist==null){
+                        chats.push(results[i]);
+                    }
+                  }
+                  console.log("eaaasy");
+                res.status(200).send(chats);
+              });
+          } catch (error) {
+            res.status(400);
+            throw new Error(error.message);
+          }
+    }
+    if(isPharmacist){
+      try {
+          Chat.find({pharmacist:req.user._id})
+            .populate("patient")
+            .populate("pharmacist")
+            .populate("doctor")
+            .populate("latestMessage")
+            .sort({ updatedAt: -1 })
+            .then(async (results) => {
+              results = await Patient.populate(results, {
+                path: "latestMessage.sender",
+                select: "username",
+              });
+              results = await Doctor.populate(results, {
+                  path: "latestMessage.sender",
+                  select: "username",
+                });
+                results = await Pharmacist.populate(results, {
+                  path: "latestMessage.sender",
+                  select: "username",
+                });
+              res.status(200).send(results);
+            });
+        } catch (error) {
+          res.status(400);
+          throw new Error(error.message);
+        }
+  }
+  if(isDoctor){
+    try {
+        Chat.find({doctor:req.user._id})
+          .populate("patient")
+          .populate("pharmacist")
+          .populate("doctor")
+          .populate("latestMessage")
+          .sort({ updatedAt: -1 })
+          .then(async (results) => {
+            results = await Patient.populate(results, {
+              path: "latestMessage.sender",
+              select: "username",
+            });
+            results = await Doctor.populate(results, {
+                path: "latestMessage.sender",
+                select: "username",
+              });
+              results = await Pharmacist.populate(results, {
+                path: "latestMessage.sender",
+                select: "username",
+              });
+            res.status(200).send(results);
+          });
+      } catch (error) {
+        res.status(400);
+        throw new Error(error.message);
+      }
+  }
+  }
 
   const allMessages = async (req, res) => {
     try {
@@ -352,9 +456,7 @@ const accessChat = async (req, res) => {
       await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
   
       res.json(message);
-    // } catch (error) {
-    //   res.status(400).json({error:error.message});
-    // }
+
   };
 
 
@@ -441,5 +543,6 @@ const accessChat = async (req, res) => {
     viewPharmacists,
     sendMessage,
     viewDoctors,
-    viewPatientDoctors
+    viewPatientDoctors,
+    fetchChatsDoc
   }

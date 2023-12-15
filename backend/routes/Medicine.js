@@ -26,6 +26,11 @@ pharmacistchangepassword,
 viewWallet
 }=require('../controllers/PharmacistController')
 
+const{
+    getNotification
+    }=require('../controllers/PatientController')
+
+
 const {requirePharmacistAuth} = require('../middleware/requrieAuth');
 
 
@@ -58,6 +63,8 @@ router.put("/archiveMed/:Name", requirePharmacistAuth,ArchiveMedicine);
 
 router.get("/wallet", requirePharmacistAuth,viewWallet);
 
+router.get("/getNotification", requirePharmacistAuth,getNotification);
 
+getNotification
 
 module.exports = router;

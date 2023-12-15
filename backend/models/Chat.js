@@ -4,11 +4,11 @@ const chatModel = mongoose.Schema(
   {
     chatName: { type: String, trim: true },
     patient:  {type: mongoose.Schema.Types.ObjectId,
-    ref: "Patient"},
+    ref: "Patient",default:null},
     pharmacist:  {type: mongoose.Schema.Types.ObjectId,
-        ref: "Pharmacist"},
+        ref: "Pharmacist",default:null},
     doctor:  {type: mongoose.Schema.Types.ObjectId,
-    ref: "Doctor"},    
+    ref: "Doctor",default:null},    
     latestMessage: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",

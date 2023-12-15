@@ -6,6 +6,7 @@ import { useAuthContext } from '../hooks/useAuthContext'
 // components
 import MedicineDetails from "../components/MedicineDetails"
 import MedicineForm from "../components/MedicineForm"
+import Notification from '../components/Notification';
 
 const Home = () => {
   const {  medicines, dispatch } = useMedicinesContext()
@@ -27,6 +28,7 @@ const Home = () => {
   return (
     <><header>
       <Navbar />
+      {user&&user.type=="Pharmacist"&&<><Notification></Notification></>}
     </header><div className="home-pharmacy">
         <div className="workouts">
           {medicines && medicines.map(medicine => (

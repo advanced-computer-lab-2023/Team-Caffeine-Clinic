@@ -1,6 +1,8 @@
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useEffect, useState } from 'react'
 import { useMedicinesContext } from "../hooks/useMedicinesContext"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 const MedicineDetails = ({ medicine }) => {
   const {user} = useAuthContext()
@@ -169,15 +171,18 @@ const MedicineDetails = ({ medicine }) => {
         <form style={{marginBottom:"-20px"}} className="create" onSubmit={handleSubmit}>
 
           <div className="workout-details">
+
+          {medicine.NeedPerscription && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x" />
+           <b> Requires Doctor Perscription</b></>}
+           <br></br>
+           <br></br>
            
             { medicine.Picture && 
             <img src={medicine.Picture} alt="Medicine" width='120' height='120' />}
 
-            <h4>{(user.type=="Patient"  && medicine.Name)||
-            (user.type!="Patient" && medicine.Name)}</h4>
+            <h4> {medicine.Name}</h4>
 
-            {(user.type=="Patient"  && medicine.Name)||
-            (user.type!="Patient" && medicine.Name) && <p><strong>Price : </strong>{medicine.Price}</p>}
+            <p><strong>Price : </strong>{medicine.Price}</p>
 
             {user&& user.type=="Patient" &&
             <p><strong>Discounted Price : </strong>{medicine.discountedPrice}</p>}

@@ -54,7 +54,8 @@ const{
     viewPharmacists,
     sendMessage,
     viewDoctors,
-    viewPatientDoctors
+    viewPatientDoctors,
+    fetchChatsDoc
 }=require('../controllers/ChatController')
 
 const {
@@ -143,5 +144,5 @@ router.get("/chat/getMessages/:chatId", allMessages);
 router.get("/chat/viewPharmacists", viewPharmacists);
 router.post("/chat/sendMessage", sendMessage);
 router.get("/chat/getDoctors", viewPatientDoctors);
-
+router.get("/chat/allDocChats", fetchChatsDoc);
 module.exports = router
