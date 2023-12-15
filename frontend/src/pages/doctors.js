@@ -7,6 +7,10 @@ const Doctors = () => {
   const linkStyle = {
     textDecoration: 'none',
  };
+
+ const margin = {
+  marginTop: '100px',
+}
     const [dateFilter, setDateFilter] = useState('');
     const [availableDates, setAvailableDates] = useState([]);
     const [doctors, setDoctors] = useState(null);
@@ -67,7 +71,7 @@ const Doctors = () => {
         //     <DoctorDetails key={doctor.username} doctor={doctor} />
         //   ))}
         // </div>
-<div>
+<div style={margin}>
 <div className="filters">
           <select 
             value={nameFilter}

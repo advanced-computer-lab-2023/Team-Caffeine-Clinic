@@ -39,7 +39,7 @@ const DoctorNavbar =()=>{
                 <li><Link to="/EditDocEmail" style={linkStyle}> Edit Email </Link></li>
                 <li><Link to="/EditDocHos" style={linkStyle}> Edit hospital </Link></li>
                 {/* <li><Link to="/ViewPatients" style={linkStyle}> View My patients </Link></li> */}
-                <li><Link to="/UpcomingAppointments" style={linkStyle}> View My Upcoming Appointments </Link></li>
+                {/* <li><Link to="/UpcomingAppointments" style={linkStyle}> View My Upcoming Appointments </Link></li> */}
                 <li><Link to="/SearchPatient" style={linkStyle} >Search a Patient</Link></li>
                 {/* <li><Link to="/DocAppointments" style={linkStyle}>Appointments</Link></li>       */}
                 {/* <li><Link to="/AddAvailableDate" style={linkStyle}>Add My Available Time Slots</Link></li> */}

@@ -8,6 +8,10 @@ const AppointmentDoc = () => {
     const [status, setStatus] = useState('');
     const { user } = useAuthContext();
 
+    const margin = {
+        marginTop: '100px',
+    }
+
     useEffect(() => {
         const fetchAppointments = async () => {
             try {
@@ -37,7 +41,7 @@ const AppointmentDoc = () => {
     }, [date, status, user]);
 
     return (
-        <div className="doctors">
+        <div className="doctors" style={margin}>
             {/* Filter section */}
             <div className="filters">
                 <input
