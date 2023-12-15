@@ -15,6 +15,10 @@ const {
     Medicines
 } = require('../controllers/OrdersController')
 
+const{requireAuth} = require('../middleware/requrieAuth');
+
+router.use(requireAuth);
+
 router.post('/Report', Report)
 router.post('/ReportMedicines', ReportMedicines)
 router.post('/ReportByDate', ReportByDate)

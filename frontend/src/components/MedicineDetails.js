@@ -250,7 +250,7 @@ const MedicineDetails = ({ medicine }) => {
       {user && user.type=="Pharmacist" &&
       <button onClick={addPhoto}> Add Picture</button>}
 
-      {user && user.type=="Patient" && !medicine.Archive && !medicine.Amount && !medicine.amount &&
+      {user && user.type=="Patient" && !medicine.Archive && !medicine.Amount && !medicine.Quantity==0  &&
       <button onClick={addToCart}> Add To Cart</button>} <br></br>
 
       {user  && <div style={{color:"green"}}>{GoodMessage}</div>}

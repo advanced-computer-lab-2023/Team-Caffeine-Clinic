@@ -228,7 +228,7 @@ const SalesReport = () => {
     };
 
     useEffect(() => {
-        if (selectedDate) {
+        if (selectedDate  ) {
             fetchData(selectedDate);
             setSelectedDay('');
             setSelectedMedicine('');
