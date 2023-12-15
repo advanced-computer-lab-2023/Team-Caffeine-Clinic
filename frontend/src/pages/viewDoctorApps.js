@@ -3,10 +3,16 @@ import DocAppDetails from "../components/DocAppDetails";
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import AdminNavbar from "../components/AdminNavbar";
+
 const DoctorAppHome = () => {
   const [Appl, setAppls] = useState(null);
   const [loading, setLoading] = useState(true); // New state variable for loading indicator
   const { user } = useAuthContext();
+
+  const margin = {
+    marginTop: '130px',
+  }
+
 
   useEffect(() => {
     const fetchAppls = async () => {
@@ -33,20 +39,19 @@ const DoctorAppHome = () => {
   }, [user]);
 
   return (
-    <>
-<AdminNavbar />
-      <h2 className="title-admin">Doctor Applications</h2>
-      <div className="home">
-        <div className="DoctorApplications">
+    <div className='doctorPage' style={margin}>
+    <AdminNavbar />
+      <div class="section-title">
+          <h2>Doctors Applications</h2>
+        </div> 
           {loading && <p>Loading...</p>}
           {Appl &&
             !loading &&
             Appl.map((Appl) => (
               <DocAppDetails Appl={Appl} key={Appl._id} />
             ))}
-        </div>
-      </div>
-    </>
+
+    </div>
   );
 };
 

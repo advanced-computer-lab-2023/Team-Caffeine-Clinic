@@ -7,6 +7,9 @@ import AdminNavbar from "../components/AdminNavbar";
 const ViewDoctorHome =  () => {
     const [Doctors , setDoctors] = useState(null);
     const {user} = useAuthContext()
+    const margin = {
+        marginTop: '130px',
+      }
 
 
     useEffect(() => {
@@ -28,20 +31,15 @@ const ViewDoctorHome =  () => {
     }, [user])
 
     return (
-        <>
-<AdminNavbar />
-      <h2 className="title-admin">Doctors</h2>  
-        <div className="home">
-            <div className="doctors">
-                {/* {Doctors && Doctors.map((doctor) => (
-                    <p key={doctor.name}>{doctor.speciality}</p>
-                ))} */}
-                  {Doctors && Doctors.map(doctor => (
-          <DoctorDetails doctor={doctor} key={doctor._id} />
-                  ))}
-            </div>
+    <div className='doctorPage' style={margin}>
+        <AdminNavbar />
+        <div class="section-title">
+          <h2>Doctors</h2>
+        </div> 
+         {Doctors && Doctors.map(doctor => (
+        <DoctorDetails doctor={doctor} key={doctor._id} />          
+        ))}
         </div>
-        </>
     )
  }
 

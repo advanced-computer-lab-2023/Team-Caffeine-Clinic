@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAuthContext } from '../hooks/useAuthContext'
+import DoctorImage from '../assets/img/doctors/doctor.jpg';
 
 const PharmAppDetails = ({ Appl }) => {
     const [Response,setResponse]=useState('');
@@ -83,8 +84,15 @@ const PharmAppDetails = ({ Appl }) => {
       }
   
       return (
-        <div className="Admin-details">
-          <h4></h4>
+      <div id="doctors" className="doctors">
+      <div className="container">
+        <div className="row">
+        <div className="col-lg">
+        <div className="member d-flex align-items-start">
+        <div className="pic">
+          <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+        </div>
+        <div className="member-info"> 
           <p><strong>Username: </strong>{Appl.username}</p>
           <p><strong>Name: </strong>{Appl.name}</p>
           <p><strong>Email: </strong>{Appl.email}</p>
@@ -96,11 +104,17 @@ const PharmAppDetails = ({ Appl }) => {
           <strong> Degree </strong> <text onClick={viewDegree} style={{cursor:"pointer",color:" blue" }}  >View here </text> <p></p>
           <strong> Working Licenses </strong> <text onClick={viewLicense} style={{cursor:"pointer",color:" blue"}}  >View here </text> <p></p>
           <p>{Appl.createdAt}</p>
-          <button className="accept-button" style={{marginRight:"20px"}} onClick={handleClick}>Approve</button>
-          <button className="reject-button" onClick={handleClick2}>Reject</button>
+          <button className="button-40" onClick={handleClick}>Accept</button>
+          <button className="button-41" onClick={handleClick2}>Reject</button>
           <label>{Response}</label>
+          </div>
         </div>
-      )
+        </div>
+        </div>
+        </div>
+    <br />
+    </div>  
+)
     }
     
     export default PharmAppDetails
