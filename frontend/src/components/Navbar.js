@@ -1,15 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faChevronDown,faTimes,faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faChevronDown,faTimes,faShoppingCart,faBell } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { useLogout } from '../hooks/useLogout'
 import { useAuthContext } from '../hooks/useAuthContext'
-
+import '../PharmacyCSS/css/style.css'
+import Notification from './Notification';
 import Filter from './Filter'
+
 const Navbar = () => {
   const { logout } = useLogout()
   const {user} = useAuthContext()
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const handleClick = () => {
       logout()
@@ -29,7 +32,12 @@ const Navbar = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
+  const handleToggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
   return (
+    <>
     <header>
   <div className="site-navbar py-2">
 
@@ -77,34 +85,38 @@ const Navbar = () => {
                     <li>{user && user.type=='Patient' && <Link to="/Addresses">My Addresses</Link>}</li>
                   </ul>
                 </li>
-                <Filter />
               </ul>
             </nav>
           </div>
           <div className="icons">
-            <a href="#" className="icons-btn d-inline-block js-search-open" onClick={handleSearchToggle}>
+            <a href="#" className="icons-btn d-inline-block js-search-open" onClick={handleSearchToggle} style={{marginLeft:"300px"}}>
               <FontAwesomeIcon icon={faSearch} />
             </a>
             {user && user.type ==='Patient' && <Link to="/cart"  className="icons-btn d-inline-block bag"> 
               <FontAwesomeIcon icon={faShoppingCart}/>
             </Link>
             }
-            <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none">
-              <span className="icon-menu"></span>
-            </a>
+            {user && user.type === 'Pharmacist' && (
+              <FontAwesomeIcon
+                style={{ marginLeft: '50px', cursor: 'pointer' }}
+                icon={faBell}
+                onClick={handleToggleNotifications}
+              />
+            )}
           </div>
-        </div>
-        <div className="main-nav d-none d-lg-block">
-            <nav className="site-navigation text-right text-md-center" role="navigation">
+          <nav className="site-navigation text-right text-md-center" role="navigation">
               <ul className="site-menu js-clone-nav d-none d-lg-block">
                 <li><Link to="/" onClick={handleClick}>Sign Out</Link></li>
                 </ul>
                 </nav>
-                </div>
+        </div>
       </div>
     </div> 
       {error && <div className="error">{error}</div>}
     </header>
+    
+    {user && user.type === "Pharmacist" && showNotifications && <Notification></Notification>}
+    </>
   )
 }
 

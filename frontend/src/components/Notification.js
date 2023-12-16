@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useEffect, useState } from 'react'
+import Toast from 'react-toast-component';
 
 const Notification = () => {
     const [notifications, setNotifications] = useState(null)
     const user = useAuthContext()
+    const [isOpen, setToast] = useState(true);
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -46,18 +48,20 @@ const Notification = () => {
     }, [user])
 
     return (
-        <div>
-            <div className='box'>
-                <h3>Notifications</h3>
-                {notifications && notifications.map((notification, index) => (
-                    <div key={index}>
-                        <p><strong>Title:</strong> {notification.title}</p>
-                        <p>{notification.body}</p>
-                    </div>
-                ))
-                }
-            </div>
-        </div>
+    <div className="App" style={{z:{index: "9999"}}}>
+      {notifications &&  notifications.map((notification, index) => (
+    <Toast
+        isOpen={isOpen}
+      hasAutoDismiss={false}
+      hasCloseBtn
+      closeCallback={() => setToast(false)}
+      description={notification.body}
+      title={notification.title}
+      duration={5000}
+      classNames={['info']} 
+    />
+    ))}
+  </div>
     )
 }
 

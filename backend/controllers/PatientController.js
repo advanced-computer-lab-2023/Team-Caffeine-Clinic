@@ -1,13 +1,10 @@
 const { default: mongoose } = require('mongoose')
 const jwt = require('jsonwebtoken')
-
 const nodemailer = require('nodemailer');
 const HealthPackage = require('../models/healthPackageModel');
 const HealthPackagesTransaction = require('../models/HealthPackages_Transaction');
 const Medicine = require('../models/Medicine.js');
 const bcrypt = require('bcrypt');
-
-
 // Import Models
 const Patient = require('../models/Patient');
 const Perscriptions = require('../models/Perscriptions');
@@ -1598,6 +1595,44 @@ const newOrder = async (req, res) => {
             for (let i = 0; i < user.cart.length; i++) {
                 const Med = await Medicine.findOne({_id:user.cart[i].medicineid});
                 newQuantity = Med.Quantity - user.cart[i].amount;
+                //Out Of Stock Email Part Start
+                if(newQuantity==0){
+
+                    try {
+                        if (pharmacistList.length > 0) {
+                            const transporter = nodemailer.createTransport({
+                                service: 'hotmail',
+                                auth: {
+                                    user: 'acluser123@hotmail.com',
+                                    pass: 'AMRgames1@',
+                                },
+                            });
+                
+                            for (let i = 0; i < pharmacistList.length; i++) {
+                                const email = pharmacistList[i].email;
+
+                            createNotification(pharmacistList[i]._id, "Medicine Out Of Stock", `${Med.Name} is Out of Stock`)
+
+                                const mailOptions = {
+                                    from: 'acluser123@hotmail.com',
+                                    to: email,
+                                    subject: 'Medicine Out of Stock',
+                                    text: `${Med.Name} is Out of Stock`,
+                                };
+                
+                                const info = await transporter.sendMail(mailOptions);
+                                console.log('Email sent:', info.response);
+
+                            }
+                        } else {
+                            console.log('No pharmacists found.');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+
+                }
+                //Out Of Stock Email Part End
                 newReserved = Med.Reserved + user.cart[i].amount;
                 newSales = Med.Sales + (Med.Price * user.cart[i].amount);
                 TotalPrice += Med.Price * user.cart[i].amount;

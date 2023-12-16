@@ -3,11 +3,10 @@ import { useMedicinesContext } from "../hooks/useMedicinesContext";
 import Navbar from '../components/Navbar';
 import { useAuthContext } from '../hooks/useAuthContext';
 import PharmacyHeroSection from "../components/PharmacyHeroSection";
-
-// components
+import '../PharmacyCSS/css/style.css'
+import Filter from "../components/Filter";
 import MedicineDetails from "../components/MedicineDetails";
 import MedicineForm from "../components/MedicineForm";
-import Notification from '../components/Notification';
 
 const Home = () => {
   const { medicines, dispatch } = useMedicinesContext();
@@ -28,20 +27,20 @@ const Home = () => {
 
   return (
     <div>
-      <header>
         <Navbar />
-        {user && user.type === "Pharmacist" && <Notification></Notification>}
-      </header>
       <PharmacyHeroSection />
 
-    <div className="site-section">
+    <div className="site-section" id="shop">
       <div className="container">
+        <Filter></Filter>
       <div className="row">
           <div className="title-section text-center col-12">
             <h2 className="text-uppercase">Medicines</h2>
           </div>
-        </div>       
+        </div>   
+
         <div className="row">
+
        {medicines &&
           medicines.map((medicine) => (
             ((user.type === "Patient" && !medicine.Archive && medicine.Name) ||
@@ -52,10 +51,12 @@ const Home = () => {
             )
           ))}
 
-        </div>
+        </div >
+        <div id="Add" style={{marginTop:"110px"}}>
         {user && user.type === "Pharmacist" &&
           <MedicineForm />
         }
+        </div>
       </div>
     </div>
     </div>

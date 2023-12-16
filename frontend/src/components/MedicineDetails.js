@@ -1,9 +1,11 @@
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useEffect, useState } from 'react'
 import { useMedicinesContext } from "../hooks/useMedicinesContext"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faArchive , faImage } from '@fortawesome/free-solid-svg-icons';
 
 const MedicineDetails = ({ medicine }) => {
   const {user} = useAuthContext()
@@ -198,69 +200,77 @@ const MedicineDetails = ({ medicine }) => {
 
   return (
     <div>
-      {Visible && 
-
+      {Visible &&
         <form style={{marginBottom:"-20px"}} className="create" onSubmit={handleSubmit}>
 
-          <div className="workout-details">
+          <div className="workout-details" style={{ position: 'relative' , padding:"20px"}}>
+            
+          <div style={{ minWidth: '120px', minHeight: '120px' }}>
+            {medicine.Picture && (
+              <img src={medicine.Picture} alt="Medicine" width="120" height="120" />
+            )}
+          </div>
+            
+            {user && user.type === "Pharmacist" && (
+              <FontAwesomeIcon
+                icon={faEdit}
+                onClick={EditResults}
+                style={{ cursor: 'pointer', position: 'absolute', top: 10, right: 10 ,scale:'1.3'}}
+              />
+            )}
 
-          {medicine.NeedPerscription && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x" />
-           <b> Requires Doctor Perscription</b></>}
-           <br></br>
-           <br></br>
-           
-            { medicine.Picture && 
-            <img src={medicine.Picture} alt="Medicine" width='120' height='120' />}
+            <h4>{medicine.Name}</h4>
 
-            <h4> {medicine.Name}</h4>
 
-            {!medicine.didiscountedPrice &&<p><strong>{medicine.Price} EGP </strong></p>}
-            {medicine.discountedPrice &&<p><del>{medicine.Price} EGP</del></p>}
-
-            {user&& user.type=="Patient" &&
-            <p><strong>{medicine.discountedPrice} </strong></p>}
+            {!medicine.discountedPrice &&user.type=="Patient"&&<p><strong>{medicine.Price}.0 EGP </strong></p>}
+            {user&& user.type!="Patient" &&<p><strong>{medicine.Price}.0  EGP</strong></p>}
+            {user&& user.type=="Patient"&&medicine.discountedPrice &&<p><del>{medicine.Price}.0</del><strong>-{medicine.discountedPrice}.0 EGP</strong></p>}
 
             <p><strong> </strong>{medicine.Description}</p>
 
-            {user && medicine.Quantity === 0 && <p style={{ color: 'red' }}><strong>Out Of Stock</strong></p>}
+            {user && user.type=="Patient" && medicine.Quantity === 0 && <p style={{ color: 'red' , marginBottom:"-25px" }}><strong>Out Of Stock</strong></p>}
+
             {user&& user.type=="Patient" && medicine.amount &&
             <p><strong>Amount : </strong>{medicine.amount}</p>}
 
             {user&& user.type=="Pharmacist" &&  <p><strong>Quantity : </strong>{medicine.Quantity}</p> &&
             <p><strong>Sales : </strong>{medicine.Sales}</p> }
-
+{/* 
             {user && user.type=="Patient"  && medicine.Amount &&
-            <button style={{marginTop:"10px"}} onClick={handleSubmit}>Delete From cart</button>} <br></br> 
+            <button style={{marginTop:"10px"}} onClick={handleSubmit}>Delete From cart</button>} <br></br>  */}
 
-            { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}   
+            {/* { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}    */}
 
-            { Visible && user && user.type=="Patient" && medicine.Amount &&
+            {/* { Visible && user && user.type=="Patient" && medicine.Amount &&
             <button onClick={IncAmount} style={{marginRight:"20px",marginLeft:"20px"}} >+</button>} 
 
              {Visible && user && user.type=="Patient" && medicine.Amount &&
-             <button onClick={DecAmount}>-</button>} <br></br>    
+             <button onClick={DecAmount}>-</button>} <br></br>     */}
+             <br></br>
+            {medicine.NeedPerscription && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
+            <b> Requires Doctor Perscription</b></>}
+            <br></br>
+            <br></br>
+            {user && user.type=="Patient"  && !medicine.Amount && !medicine.Quantity==0  &&
+           <button onClick={addToCart} style={{marginTop:"-10px"}}> Add To Cart</button>}
+           {user && user.type=="Patient" && medicine.Quantity === 0 &&
+          <button onClick={Alternatives} style={{marginTop:"-90px"}}>Alternatives</button>} <br></br>
              
           </div>
         </form>
-      }
-      
+}
+      <samp>   </samp>
+      <br></br>
       {user && user.type=="Pharmacist" &&
-      <button onClick={EditResults}> Edit</button>} 
+      <button onClick={ArchiveMed} > <FontAwesomeIcon
+      icon={faArchive}></FontAwesomeIcon> {Archive} </button>} 
       <samp>   </samp>
       {user && user.type=="Pharmacist" &&
-      <button onClick={ArchiveMed} >{Archive} </button>} 
-      <samp>   </samp>
-      {user && user.type=="Pharmacist" &&
-      <button onClick={addPhoto}> Add Picture</button>}
-
-      {user && user.type=="Patient" && !medicine.Archive && !medicine.Amount && !medicine.Quantity==0  &&
-      <button onClick={addToCart}> Add To Cart</button>} <br></br>
+      <button onClick={addPhoto} style={{padding:"10px 13px 10px 13px"}}> <FontAwesomeIcon
+      icon={faImage}></FontAwesomeIcon> Add Picture</button>}
 
       {user  && <div style={{color:"green"}}>{GoodMessage}</div>}
       {user  && <div style={{color:"red"}}>{BadMessage}</div>}    
-    
-      {user && user.type=="Patient" && medicine.Quantity === 0 &&
-      <button onClick={Alternatives}>View Alternatives</button>} <br></br>
 
       {user && user.type=="Patient" && <div style={{color:"red"}}>{alts}</div>}   
     </div>

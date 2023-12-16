@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import backgroundImage from '../PharmacyCSS/images/hero_1.jpg'
 import '../PharmacyCSS/css/style.css'
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const PharmacyHeroSection = () => {
+  const {user} =useAuthContext();
 
    return (
     <div>
@@ -16,7 +18,8 @@ const PharmacyHeroSection = () => {
               <h2 className="sub-title">Effective Medicine, New Medicine Everyday</h2>
               <h1>Welcome To Pharma</h1>
               <p>
-                <a href="#" className="btn btn-primary px-5 py-3">Shop Now</a>
+                <a href="#shop" className="btn btn-primary px-5 py-3">Browse Medicines</a> <samp></samp>
+               { user.type=="Pharmacist" && <a href="#Add" className="btn btn-primary px-5 py-3">Add new Medicine</a>}
               </p>
             </div>
           </div>
