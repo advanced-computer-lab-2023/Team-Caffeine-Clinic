@@ -4,6 +4,7 @@ import { useMedicinesContext } from "../hooks/useMedicinesContext"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import '../PharmacyCSS/style.css'; 
 
 const MedicineDetails = ({ medicine }) => {
   const {user} = useAuthContext()
@@ -198,8 +199,7 @@ const MedicineDetails = ({ medicine }) => {
 
   return (
     <div>
-      {Visible && ((user.type=="Patient" && !medicine.Archive && medicine.Name)||
-            (user.type!="Patient" && medicine.Name)) &&
+      {Visible && 
 
         <form style={{marginBottom:"-20px"}} className="create" onSubmit={handleSubmit}>
 
@@ -215,11 +215,14 @@ const MedicineDetails = ({ medicine }) => {
 
             <h4> {medicine.Name}</h4>
 
-            <p><strong>Price : </strong>{medicine.Price}</p>
+            {!medicine.didiscountedPrice &&<p><strong>{medicine.Price} EGP </strong></p>}
+            {medicine.discountedPrice &&<p><del>{medicine.Price} EGP</del></p>}
 
             {user&& user.type=="Patient" &&
-            <p><strong>Discounted Price : </strong>{medicine.discountedPrice}</p>}
-            <p><strong>Description : </strong>{medicine.Description}</p>
+            <p><strong>{medicine.discountedPrice} </strong></p>}
+
+            <p><strong> </strong>{medicine.Description}</p>
+
             {user && medicine.Quantity === 0 && <p style={{ color: 'red' }}><strong>Out Of Stock</strong></p>}
             {user&& user.type=="Patient" && medicine.amount &&
             <p><strong>Amount : </strong>{medicine.amount}</p>}
@@ -241,6 +244,7 @@ const MedicineDetails = ({ medicine }) => {
           </div>
         </form>
       }
+      
       {user && user.type=="Pharmacist" &&
       <button onClick={EditResults}> Edit</button>} 
       <samp>   </samp>
@@ -259,7 +263,7 @@ const MedicineDetails = ({ medicine }) => {
       {user && user.type=="Patient" && medicine.Quantity === 0 &&
       <button onClick={Alternatives}>View Alternatives</button>} <br></br>
 
-      {user && user.type=="Patient" && <div style={{color:"red"}}>{alts}</div>}     
+      {user && user.type=="Patient" && <div style={{color:"red"}}>{alts}</div>}   
     </div>
   )
 }

@@ -1,4 +1,18 @@
 /* Base */
+  @font-face {
+    font-family: 'MedicineName';
+    src: url('../fonts/Raleway-VariableFont_wght.ttf') format('truetype'); 
+  }
+  @font-face {
+    font-family: 'MedicineDetails';
+    src: url('../fonts/Exo2-VariableFont_wght.ttf') format('truetype'); 
+  }
+  @font-face {
+    font-family: 'Title';
+    src: url('../fonts/FjallaOne-Regular.ttf') format('truetype'); 
+  }
+
+
 body {
   line-height: 1.7;
   color: #8c92a0;
@@ -1132,3 +1146,94 @@ a {
     opacity: 1;
     visibility: visible;
   }
+
+/* Styles for the workout details container */
+.workout-details {
+  background: white;
+  border-radius: 10px; /* Adjusted border-radius for rounder edges */
+  margin: 20px auto;
+  padding: 20px;
+  position: relative;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Adjusted box-shadow for more depth */
+  font-family: 'Arial', sans-serif; /* Use a suitable font-family */
+}
+
+/* Styles for the workout details container */
+.workout-details {
+  background: white;
+  border-radius: 10px;
+  margin: 20px auto;
+  padding: 20px;
+  position: relative;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Heading styles for workout details */
+.workout-details h4 {
+  margin: 20px 0 15px 0;
+  font-size: 1.4em;
+  color: teal; 
+  font-weight: bold;
+  font-family: 'MedicineName', sans-serif; 
+  text-transform: uppercase;
+  letter-spacing: 1px; 
+  padding-bottom: 5px; 
+}
+
+/* Body text styles for workout details */
+.workout-details p {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: lighter;
+  font-family: 'MedicineDetails', sans-serif; /* Change to your preferred font */
+  color: #000;
+  line-height: 1.6;
+}
+
+
+/* Close button styles (assuming it's a close button) */
+.workout-details span {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: #f1f1f1;
+  padding: 10px; /* Increase padding for better touch/click area */
+  border-radius: 50%;
+  color: #333;
+  font-size: 1.5em; /* Increase font size for better visibility */
+}
+
+button {
+  background: teal;
+  border: 0;
+  color: #fff;
+  padding: 10px 15px;
+  font-family: "Poppins", sans-serif;
+  border-radius: 6px !important; /* Use !important to ensure this rule takes precedence */
+  cursor: pointer;
+  font-size: 14px;
+  width: 130px;
+  transition: background 0.3s ease;
+}
+
+/* Hover state for the button */
+button:hover {
+  background: darkcyan; /* Change the hover color to a slightly darker shade of teal */
+}
+.center-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.med-title {
+  text-align: center;
+  margin: 40px 0;
+  font-size: 2em;
+  color: #333;
+  font-weight: bold;
+  font-family: "Title", sans-serif;
+  letter-spacing: 1px;
+}
