@@ -93,7 +93,7 @@ const Navbar = () => {
               <FontAwesomeIcon icon={faSearch} />
             </a>
             {user && user.type ==='Patient' && <Link to="/cart"  className="icons-btn d-inline-block bag"> 
-              <FontAwesomeIcon icon={faShoppingCart}/>
+              <FontAwesomeIcon icon={faShoppingCart} style={{ marginLeft: '50px'}}/>
             </Link>
             }
             {user && user.type === 'Pharmacist' && (
@@ -115,7 +115,7 @@ const Navbar = () => {
       {error && <div className="error">{error}</div>}
     </header>
     
-    {user && user.type === "Pharmacist" && showNotifications && <Notification></Notification>}
+    {user && user.type === "Pharmacist"  && <Notification></Notification>}
     </>
   )
 }

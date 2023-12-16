@@ -5,7 +5,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { faArchive , faImage } from '@fortawesome/free-solid-svg-icons';
+import { faArchive , faImage, faCartShopping  } from '@fortawesome/free-solid-svg-icons';
 
 const MedicineDetails = ({ medicine }) => {
   const {user} = useAuthContext()
@@ -14,7 +14,6 @@ const MedicineDetails = ({ medicine }) => {
   const[Amount,SetAmount]=useState(medicine.Amount);
   const[Visible,SetVisible]=useState(true);
   const[Archive,SetArchive]=useState("");
-  const {medicines, dispatch} = useMedicinesContext();
   const[alts,Setalts]=useState('');
   const navigate = useNavigate();
 
@@ -203,7 +202,7 @@ const MedicineDetails = ({ medicine }) => {
       {Visible &&
         <form style={{marginBottom:"-20px"}} className="create" onSubmit={handleSubmit}>
 
-          <div className="workout-details" style={{ position: 'relative' , padding:"20px"}}>
+          <div className="workout-details" style={{ position: 'relative' , padding:"40px"}}>
             
           <div style={{ minWidth: '120px', minHeight: '120px' }}>
             {medicine.Picture && (
@@ -228,8 +227,6 @@ const MedicineDetails = ({ medicine }) => {
 
             <p><strong> </strong>{medicine.Description}</p>
 
-            {user && user.type=="Patient" && medicine.Quantity === 0 && <p style={{ color: 'red' , marginBottom:"-25px" }}><strong>Out Of Stock</strong></p>}
-
             {user&& user.type=="Patient" && medicine.amount &&
             <p><strong>Amount : </strong>{medicine.amount}</p>}
 
@@ -246,25 +243,27 @@ const MedicineDetails = ({ medicine }) => {
 
              {Visible && user && user.type=="Patient" && medicine.Amount &&
              <button onClick={DecAmount}>-</button>} <br></br>     */}
-             <br></br>
-            {medicine.NeedPerscription && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
-            <b> Requires Doctor Perscription</b></>}
-            <br></br>
-            <br></br>
+
             {user && user.type=="Patient"  && !medicine.Amount && !medicine.Quantity==0  &&
-           <button onClick={addToCart} style={{marginTop:"-10px"}}> Add To Cart</button>}
-           {user && user.type=="Patient" && medicine.Quantity === 0 &&
-          <button onClick={Alternatives} style={{marginTop:"-90px"}}>Alternatives</button>} <br></br>
-             
+           <button style={{padding:"12px",marginTop:"10px"}} onClick={addToCart} ><FontAwesomeIcon
+           icon={faCartShopping}></FontAwesomeIcon> Add To Cart</button>}
+
+           {user && user.type=="Patient" && medicine.Quantity === 0 && 
+          <button className='Alt' style={{padding:"12px",marginTop:"10px"}} onClick={Alternatives} >Alternatives</button>} 
+
+           {user && user.type=="Patient" && medicine.Quantity === 0 && <><br></br><br></br><p style={{ color: 'red' }}><strong>Out Of Stock</strong></p></>}
+
+                   <samp>   </samp>
+
+        {medicine.NeedPerscription && user.type==="Patient" && <><br></br><br></br><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
+            <b> Requires Doctor Perscription</b></>}
           </div>
         </form>
-}
-      <samp>   </samp>
-      <br></br>
+} 
       {user && user.type=="Pharmacist" &&
-      <button onClick={ArchiveMed} > <FontAwesomeIcon
-      icon={faArchive}></FontAwesomeIcon> {Archive} </button>} 
-      <samp>   </samp>
+      <button style={{padding:"10px 13px 10px 13px"}} onClick={ArchiveMed} > <FontAwesomeIcon
+      icon={faArchive}></FontAwesomeIcon> {Archive} </button>}
+        <samp> </samp>
       {user && user.type=="Pharmacist" &&
       <button onClick={addPhoto} style={{padding:"10px 13px 10px 13px"}}> <FontAwesomeIcon
       icon={faImage}></FontAwesomeIcon> Add Picture</button>}

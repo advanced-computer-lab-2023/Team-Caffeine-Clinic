@@ -1188,17 +1188,17 @@ line-height: 1.6;
 
 
 /* Close button styles (assuming it's a close button) */
-.workout-details span {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-  background: #f1f1f1;
-  padding: 10px; /* Increase padding for better touch/click area */
-  border-radius: 50%;
-  color: #333;
-  font-size: 1.5em; /* Increase font size for better visibility */
-  }
+  .workout-details span {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    background: #f1f1f1;
+    padding: 10px; /* Increase padding for better touch/click area */
+    border-radius: 50%;
+    color: #333;
+    font-size: 1.5em; /* Increase font size for better visibility */
+    }
 
 button {
 background:#3498db ;
@@ -1328,3 +1328,21 @@ letter-spacing: 1px;
   margin-bottom: 4px;
 }
 
+.Alt{
+  background:darkred ;
+  border: 0;
+  color: #fff;
+  padding: 10px 15px;
+  font-family: "Poppins", sans-serif;
+  border-radius: 6px !important; /* Use !important to ensure this rule takes precedence */
+  cursor: pointer;
+  font-size: 14px;
+  width: 130px;
+  transition: background 0.3s ease;
+  }
+  
+  /* Hover state for the button */
+  .Alt :hover {
+  background: white;
+  color: black;
+  }
