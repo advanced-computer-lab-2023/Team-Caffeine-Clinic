@@ -110,12 +110,20 @@ const SignUp = () => {
         window.open("/","_self")
     }
     return(
-        <header>
-            <h1>Apply As A Pharmacist</h1>
-            <br />
-            <br /><br />
-            <div className="signUp">
-                <form className="createPatient" onSubmit={register}>
+            <body>
+                 <header id="header">
+        <div className="container d-flex align-items-center">
+          <h1 className="logo me-auto">
+            <a href="/" style={{ textDecoration: 'none' }}>
+              El7a2ne
+            </a>
+          </h1>
+          
+        </div>
+       </header>
+               <div className="login-page">
+                <div className='login-form-container'>
+                <form className="login-form" onSubmit={register}>
                 Username: 
                 <label className="label">
                     <input
@@ -166,13 +174,15 @@ const SignUp = () => {
                 </label>
                 <hr />
                 <label>
-                    Affiliation (Hospistal Name): 
+                    Affiliation: 
                     <input 
                     value={affiliation}
                     onChange={e => setAffiliation(e.target.value)}
                     type="text" />
                 </label>
                 <br />
+                <hr />
+
                 <label>
                     Education: 
                     <input 
@@ -219,12 +229,11 @@ const SignUp = () => {
                 </Button>
                 <br></br>
                 <br></br>
-                <Button variant="dark" onClick={loginpage}>
-                    Login instead
-                </Button>
+                
                 </form>
             </div>
-        </header>
+            </div>
+            </body>
     )
 }
 
