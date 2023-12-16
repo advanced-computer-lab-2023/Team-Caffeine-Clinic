@@ -1395,3 +1395,47 @@ letter-spacing: 1px;
     margin-top: 5px;
     font-size: 14px;
   }
+
+  .info body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+  }
+  
+  .info {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .info h1, h2 {
+    color: #333;
+  }
+  
+  .info strong {
+    font-weight: bold;
+  }
+  
+  .detail {
+    margin-bottom: 20px;
+  }
+  
+  .info p {
+    color: #555;
+    margin: 0;
+  }
+  
+  .info ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .info img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  

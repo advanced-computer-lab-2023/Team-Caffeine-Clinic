@@ -146,7 +146,14 @@ const alternatives = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
+const userInfo = async (req, res) => {
+  try{
+  res.status(200).json(req.user);
+}
+  catch{
+    res.status(400).json({ error: 'Internal Server Error' });
+  }
+}
 module.exports = {
    viewAvailableMedicine,
    viewDistinctMedicalUse,
@@ -157,6 +164,7 @@ module.exports = {
    viewDiscountMedicine,
    addPicture,
    ArchiveMedicine,
-   alternatives
+   alternatives,
+   userInfo
 };
 //addMedicine,editMedicine, medicineHome
