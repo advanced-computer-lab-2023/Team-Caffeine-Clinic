@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useMedicinesContext } from "../hooks/useMedicinesContext";
 import Navbar from '../components/Navbar';
 import { useAuthContext } from '../hooks/useAuthContext';
-import '../PharmacyCSS/style.css'; 
+import PharmacyHeroSection from "../components/PharmacyHeroSection";
 
 // components
 import MedicineDetails from "../components/MedicineDetails";
@@ -27,14 +27,21 @@ const Home = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <div>
       <header>
         <Navbar />
         {user && user.type === "Pharmacist" && <Notification></Notification>}
       </header>
+      <PharmacyHeroSection />
+
+    <div className="site-section">
       <div className="container">
-        <h2 className="text-uppercase med-title">Medicines</h2>
-       <div className="row">
+      <div className="row">
+          <div className="title-section text-center col-12">
+            <h2 className="text-uppercase">Medicines</h2>
+          </div>
+        </div>       
+        <div className="row">
        {medicines &&
           medicines.map((medicine) => (
             ((user.type === "Patient" && !medicine.Archive && medicine.Name) ||
@@ -50,7 +57,8 @@ const Home = () => {
           <MedicineForm />
         }
       </div>
-    </>
+    </div>
+    </div>
   );
 }
 

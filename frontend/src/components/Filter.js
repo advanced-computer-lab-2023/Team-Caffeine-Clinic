@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '../PharmacyCSS/style.css';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const Filter = () => {
@@ -27,7 +26,7 @@ const Filter = () => {
 
   return (
     <>
-      <li className="has-children" style={{marginLeft:"0px"}}>
+      <li className="has-children">
         <a href="#">Medical Use Filter </a>
         <FontAwesomeIcon icon={faChevronDown} style={{color:"black"}} />
         <ul className="dropdown">

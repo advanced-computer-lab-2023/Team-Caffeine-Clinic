@@ -1,4 +1,3 @@
-import '../PharmacyCSS/style.css'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faChevronDown,faTimes,faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom'
@@ -15,6 +14,9 @@ const Navbar = () => {
   const handleClick = () => {
       logout()
     }
+    const linkStyle = {
+      textDecoration: 'none',
+   };
   const [Name, setName] = useState('')
   const [error, setError] = useState(null)
   const handleSubmit = async (e) => {
@@ -54,12 +56,12 @@ const Navbar = () => {
         <div className="d-flex align-items-center justify-content-between">
           <div className="logo">
             <div className="site-logo">
-            <Link to="/Medicines">
-              <a className="js-logo-clone">Pharmacy</a>
+            <Link to="/Medicines"  style={linkStyle}>
+              <a  style={linkStyle} className="js-logo-clone">Pharmacy</a>
             </Link>
             </div>
           </div>
-          <div className="main-nav d-none d-lg-block" style={{marginLeft:"100px"}}>
+          <div className="main-nav d-none d-lg-block">
             <nav className="site-navigation text-right text-md-center" role="navigation">
               <ul className="site-menu js-clone-nav d-none d-lg-block">
                 
@@ -79,12 +81,12 @@ const Navbar = () => {
               </ul>
             </nav>
           </div>
-          <div className="icons" style={{marginLeft:"250px"}} >
+          <div className="icons">
             <a href="#" className="icons-btn d-inline-block js-search-open" onClick={handleSearchToggle}>
               <FontAwesomeIcon icon={faSearch} />
             </a>
             {user && user.type ==='Patient' && <Link to="/cart"  className="icons-btn d-inline-block bag"> 
-              <FontAwesomeIcon icon={faShoppingCart} style={{marginLeft:"40px"}} />
+              <FontAwesomeIcon icon={faShoppingCart}/>
             </Link>
             }
             <a href="#" className="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none">
