@@ -33,6 +33,7 @@ const prescriptionSchema = new Schema({
 
     medicine: [{
         type: String,
+        ref: 'Medicine',
         default: ""
     }],
 

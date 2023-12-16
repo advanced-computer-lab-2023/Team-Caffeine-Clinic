@@ -1905,11 +1905,11 @@ const decAmount = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-    console.log("hi")
+    //console.log("hi")
     const MedName = req.params.Name;
     const medicine = await Medicine.findOne({ Name: MedName });
     var user = req.user;
-    console.log(user);
+    //console.log(user);
     var cart = {
         medicineid: medicine._id,
         amount: 1
@@ -2316,6 +2316,41 @@ const getNotification = async (req, res) => {
     }
 }
 
+const payForPerscription = async (req, res) => {
+    const user = req.user
+    const { persc } = req.body
+    try {
+        const prescription = await Perscriptions.findById(persc);
+        const medicines = prescription.medicine
+        for (let i = 0; i < medicines.length; i++) {
+            const medicine = await Medicine.findOne({ Name: medicines[i] })
+
+            if (medicine.Quantity === 0) {
+                return res.status(400).send('No Stock');
+            }
+        }
+
+        await Patient.findByIdAndUpdate(
+            { _id: user._id },
+            { $set: { cart: [] } }
+        );
+        
+        for (let i = 0; i < medicines.length; i++) {
+            const medicine = await Medicine.findOne({ Name: medicines[i] });
+            //console.log(user);
+            var cart = {
+                medicineid: medicine._id,
+                amount: 1
+            };
+
+            Patient.findOneAndUpdate({ _id: user._id }, { '$push': { cart: cart } }).catch(err => console.log(err));
+        }
+        res.status(200).send('GO AHEAD AND PAY')
+    } catch (error) {
+        return res.status(500).send({ "error": error });
+    }
+}
+
 module.exports = {
     getFamilyMembersHealthPackages,
     signUp,
@@ -2355,5 +2390,6 @@ module.exports = {
     getCartPrice,
     requestFollowUp,
     reschedule,
-    getNotification
+    getNotification,
+    payForPerscription
 }

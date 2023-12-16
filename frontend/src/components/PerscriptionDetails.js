@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 import { useEffect, useState } from 'react'
@@ -9,6 +9,10 @@ import { useAuthContext } from '../hooks/useAuthContext';
 const PerscriptionDetails = ({ perscription }) => {
   const [doctorName, setName] = useState('');
   const [patientname, setPatientname] = useState('')
+  const [error, setError] = useState('')
+  const [GoodMessage,ViewGood]=useState(null);
+  const [BadMessage,ViewBad]=useState(null);
+  const navigate = useNavigate();
 
   const { user } = useAuthContext()
 
@@ -37,6 +41,29 @@ const PerscriptionDetails = ({ perscription }) => {
     }
   }, [perscription.doctorID, user]); // Include id as a dependency to re-fetch the data when the id changes
 
+  const handlePayment = async () => {
+    const response = await fetch('/api/patient/payForPerscription', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${user.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ persc: perscription._id }),
+    })
+
+    if (response.status === 200) {
+      navigate('/cart')
+    }
+
+    if (response.status === 400){
+      window.alert('Not enough in Stock')
+    }
+
+    if (response.status === 500) {
+      const errorJson = await response.json(); // Corrected here
+      setError(errorJson); // Assuming errorJson is the error message
+    }
+  }
 
   return (
     <div className="perscription-details">
@@ -55,11 +82,17 @@ const PerscriptionDetails = ({ perscription }) => {
 
 
 
-      <Link to={`/SinglePerscriptions/${perscription._id}`}>
-        <Button className="perscButton" variant='info '>
-          Select
-        </Button>
-      </Link>
+      <div>
+        <Link to={`/SinglePerscriptions/${perscription._id}`}>
+          <Button className="perscButton" variant='info '>
+            Select
+          </Button>
+        </Link>
+        {(perscription.state === 'unfilled') && <Button onClick={() => handlePayment()} style={{ marginTop: '-55px' }} className="perscButton" variant='info '>
+          Pay
+        </Button>}
+      </div>
+
     </div>
   )
 }

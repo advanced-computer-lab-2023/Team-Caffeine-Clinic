@@ -32,7 +32,8 @@ const {
     getCartPrice,
     requestFollowUp,
     reschedule,
-    getNotification
+    getNotification,
+    payForPerscription
 } = require('../controllers/PatientController')
 
 const {
@@ -62,6 +63,8 @@ router.use(requireAuth)
 router.post('/createAppointment', createAppointment)
 router.post('/createAppointmentfam', createAppointmentfam)
 router.post('/requestFollowUp', requestFollowUp)
+
+router.post('/payForPerscription', payForPerscription)
 
 router.get('/getNotification', getNotification)
 
