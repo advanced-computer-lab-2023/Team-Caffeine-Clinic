@@ -37,17 +37,63 @@ const AppointmentDoc = () => {
     }, [date, status, user]);
 
     return (
-        <div className="doctors">
-            {/* Filter section */}
-            <div className="filters">
+        // <div className="doctors">
+        //     {/* Filter section */}
+        //     <div className="filters">
+        //         <input
+        //             type="text"
+        //             placeholder="Filter by Date"
+        //             value={date}
+        //             onChange={(e) => setDate(e.target.value)}
+        //             className="filter-input"
+        //         />
+        //         <select value={status} onChange={(e) => setStatus(e.target.value)} className="filter-input">
+        //             <option value="">--Select Status--</option>
+        //             <option value="upcoming">Upcoming</option>
+        //             <option value="completed">Completed</option>
+        //             <option value="cancelled">Cancelled</option>
+        //             <option value="rescheduled">Rescheduled</option>
+        //             <option value="FollowUp">FollowUp</option>
+        //         </select>
+        //     </div>
+
+        //     {/* Appointments list */}
+        //     <div className="appointments">
+        //         {appointments &&
+        //             appointments.map((appointment) => (
+        //                 <AppointmentDetail key={appointment._id} appointment={appointment} />
+        //             ))}
+        //     </div>
+        // </div>
+        <div>
+  <section className="breadcrumbs">
+    <div className="container">
+      <div className="d-flex justify-content-between align-items-center">
+        <h2>View All Upcoming Appointments</h2>
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li>All Upcoming Appointments</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+  
+  <section className="inner-page">
+    <div className="container">
+    <section id="faq" className="faq section-bg">
+  <div className="container">
+    <div className="section-title">
+      <h2>All Upcoming Appointments</h2>
+    </div>
+             <div className="filters">
                 <input
                     type="text"
                     placeholder="Filter by Date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="filter-input"
+                    className="form-control"
                 />
-                <select value={status} onChange={(e) => setStatus(e.target.value)} className="filter-input">
+                <select value={status} onChange={(e) => setStatus(e.target.value)} className="form-select">
                     <option value="">--Select Status--</option>
                     <option value="upcoming">Upcoming</option>
                     <option value="completed">Completed</option>
@@ -55,16 +101,18 @@ const AppointmentDoc = () => {
                     <option value="rescheduled">Rescheduled</option>
                     <option value="FollowUp">FollowUp</option>
                 </select>
+                <br />
             </div>
 
-            {/* Appointments list */}
-            <div className="appointments">
-                {appointments &&
-                    appointments.map((appointment) => (
-                        <AppointmentDetail key={appointment._id} appointment={appointment} />
-                    ))}
-            </div>
+    <div className="faq-list">
+    {appointments && appointments.map((appointment) => (
+     <AppointmentDetail key={appointment._id} appointment={appointment} />
+            ))}
         </div>
+  </div></section>
+    </div>
+  </section>
+</div>
     );
 };
 

@@ -68,7 +68,8 @@ import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
-
+import Addpresc from './pages/Addprescription';
+import DoctorHome from './pages/DoctorHome';
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -182,6 +183,9 @@ function App() {
               <Route path="/viewHealthPacks" element={<ProtectedRoute><HPHome/></ProtectedRoute>} />
               <Route path="/editHP/:id" element={<ProtectedRoute><EditHealthPackage/></ProtectedRoute>} />
               <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome/></ProtectedRoute>} />
+              <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome/></ProtectedRoute>} />
+              <Route path="/AddPrescription/:PatientName" element={<ProtectedRoute><Addpresc/></ProtectedRoute>} />
+              <Route path="/DoctorHome" element={<ProtectedRoute><DoctorHome/></ProtectedRoute>} />
                                                 
               <Route 
               path="/admin/AdminChangePassword" 
