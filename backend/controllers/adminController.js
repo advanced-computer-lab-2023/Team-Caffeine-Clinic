@@ -51,7 +51,7 @@ const createAdmin = async (req, res) => {
     if (!passwordRequirements.test(Password)) {
         return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
     }else
-    if((Password).length<6){
+    if((password).length<6){
       return res.status(400).json({ error: 'Password length must be at least 6' });
     }
 
