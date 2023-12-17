@@ -32,7 +32,7 @@ const AdminHome = () => {
   return (
     <div className='doctorPage' style={margin}>
 <AdminNavbar />
-    <div class="section-title">
+    <div className="section-title">
           <h2>Admins</h2>
         </div> 
           {admins &&

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useAuthContext } from "../hooks/useAuthContext";
 import DoctorDetails from '../components/DoctorDetails';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import DoctorImage from '../assets/img/doctors/doctor.jpg';
+import { DockRounded } from '@mui/icons-material';
 
 const Doctors = () => {
   const linkStyle = {
@@ -48,7 +50,10 @@ const Doctors = () => {
         const dates = new Set();
         json.forEach(doctor => {
           doctor.availableDates?.forEach(date => dates.add(date));
+          console.log("hena - doctor.availableDates:"+ doctor.availableDates +"for name:" + doctor.name);
+
         });
+        console.log(json)
 
         setAvailableDates([...dates]);
         setDoctorNames([...names]);
@@ -59,6 +64,7 @@ const Doctors = () => {
       if (user) {
         fetchDoctors();
       }
+
 
     }, [nameFilter, specialityFilter, dateFilter, user]); 
 
@@ -80,10 +86,13 @@ const Doctors = () => {
         </div>
         <div className="member-info">
           <h4>Dr. {doctor.name}</h4>
-          <span>{doctor.speciality}</span>
+          <span>Speciality: {doctor.speciality}</span>
           <p>Fees: {doctor.rateAfterDiscount.toFixed(2)} EGP</p> 
           <p>Available Dates: {doctor.availableDates ? doctor.availableDates.join(', ') : 'Not available'}</p>
+          <br />
+          <div><Link className='button-43' to={`/doctor/getSingleDoctor/${doctor.username}`}>Book</Link></div>
         </div>
+        
       </div>
     ))}
   </div>
@@ -125,7 +134,7 @@ const Doctors = () => {
             onChange={(e) => setDateFilter(e.target.value)}
             className="filter-input"
           >
-            <option value="">Select Date</option>
+            <option value="">Select Availablity Date</option>
             {availableDates.map((date, index) => (
               <option key={index} value={date}>{date}</option>
             ))}

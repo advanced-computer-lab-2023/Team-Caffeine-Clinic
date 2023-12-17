@@ -11,7 +11,9 @@ const DocumentUpload = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuthContext();
 
-
+  const margin = {
+    marginTop: '130px',
+  }
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
@@ -177,45 +179,79 @@ const DocumentUpload = () => {
   };
 
   return (
-    <div>
+    <div style={margin}>
+      
       <div>
-      <h2>Your Documents</h2>
-      {loading && <div>Loading...</div>}
+      <div className="section-title">
+          <h2>Your Documents</h2>
+      </div> 
+      <div id="doctors" className="doctors">
+      {loading && <div className="text-center">Loading...</div>}
       {documents.map((document, index) => (
-        <div key={index}>
+        <div className="container">
+                <div className="row">
+                <div className="col-lg">
+            <div className="member d-flex align-items-start">
+        <div className="member-info"> 
           <p>{document.description}</p>
-          <button onClick={() => viewDocument(document.content)}>View Document</button>
-          <button onClick={() => deleteDocument(document.description)}>Delete Document</button>
+          <button className='button-40' onClick={() => viewDocument(document.content)}>View Document</button>
+          <button className='button-41' onClick={() => deleteDocument(document.description)}>Delete Document</button>
+        </div>
+        </div>
+        </div>
+        </div>
+        <br />
         </div>
       ))}
+    </div>  
     </div>
 
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+
+    <section id="appointment" class="appointment section-bg">
+    <div class="container">
+    <div class="section-title">
+    <h2>Add a New Document</h2>
+   </div> 
+   <form className="create php-email-form" onSubmit={handleSubmit}> 
+   <div class="row">
+       <div className="col-md-4 form-group">          
+       <label>Username:</label>
+        <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
         </div>
         {document.map((_, index) => (
-          <div key={index}>
+          <div class="row">
+          <div className="col-md-4 form-group" key={index}>
             <label>Description:</label>
-            <input type="text" value={descriptions[index]} onChange={(e) => handleDescriptionChange(e, index)} />
+            <input type="text" className="form-control" value={descriptions[index]} onChange={(e) => handleDescriptionChange(e, index)} />
+            </div>
+            <div className="col-md-4 form-group mt-3 mt-md-0">
             <label>Document:</label>
-            <input type="file" onChange={(e) => handleFileChange(e, index)} accept=".pdf" />
-            <button type="button" onClick={() => handleCancel(index)}>
-              Cancel
-            </button>
-          </div>
+            <input type="file" className="form-control" onChange={(e) => handleFileChange(e, index)} accept=".pdf" />
+            </div>
+            <div className="col-md-4 form-group mt-3 mt-md-4">
+            <div className="text-center"><button className='button-41' onClick={() => handleCancel(index)}>
+              Cancel document
+            </button></div>
+            </div>
+            </div>
         ))}
-        <button type="button" onClick={addFileField}>
-          Add Document
-        </button>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Submit'}
-        </button>
+          <br />
+           <div className="text-center"><button type="submit" onClick={addFileField}>
+          Add a Document
+        </button></div>
+
+        <br />
+        <br />
+
+        <div className="text-center"><button type="submit" disabled={loading}>
+          {loading ? 'loading...' : 'Upload'}
+        </button></div>
       </form>
-      <div>{successMessage && <p>{successMessage}</p>}</div>
-    </div>
+      {/* <div>{successMessage && <p>{successMessage}</p>}</div> */}
+      <br />
+      </div>
+    </section>
     </div>
   );
 };

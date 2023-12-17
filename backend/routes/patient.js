@@ -29,7 +29,8 @@ const {
     newOrder,
     orders,
     deleteOrder,
-    getCartPrice
+    getCartPrice,
+    estimateRate
 } = require('../controllers/PatientController')
 
 const {

@@ -20,7 +20,9 @@ const HealthPackages = () => {
   const [amount, setAmount] = useState(null)
   const [discount, setDiscount] = useState(0)
   const [isPopupOpen, setPopupOpen] = useState(false);
-
+  const margin = {
+    marginTop: '100px',
+  }
 
 
   const [error, setError] = useState(null);
@@ -165,7 +167,7 @@ const HealthPackages = () => {
   };
 
   return (
-    <div className="health-packages">
+    <div className="health-packages" style={margin}>
       <div>
         {showFamilyMembers && (
           <>
