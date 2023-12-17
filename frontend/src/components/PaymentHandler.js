@@ -176,7 +176,7 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
           <div className="payment-form-container">
             <form className="payment-form" onSubmit={handleSubmit}>
               <CardElement />
-              <button id='payButton' type="submit" className="pay-button">Pay</button>
+              <button id='payButton' type="submit" className="button-44 pay-button">Pay</button>
             </form>
           </div>
         )}

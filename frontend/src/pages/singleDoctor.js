@@ -229,18 +229,37 @@ const SingleDoctor = () => {
 
             </div>
           ) : (
-            <div className="family-member-details">
-              <strong>Family Members:</strong>
+            <div className="family-member-details text-center">
+              <br />
+              <div className="section-title">
+              <h2>Family Members</h2>
+              </div>
               <ul>
                 {Array.isArray(familyMembers)&&familyMembers.map((familyMember, index) => (
-                  <li key={index}>
+                <div id="doctors" className="doctors">
+                  <div className="container text-center">
+                              <div className="row text-center">
+                              <div className="col-lg-3 text-center">
+                          <div className="member d-flex align-items-center">
+                              <div className="member-info"> 
+                  <div className='text-center' key={index}>
                     {familyMember.name}{' '}
-                    <button onClick={() => {
+                    <br />
+                    <br />
+                    <button className='button-43' onClick={() => {
                      fammemberhandel(familyMember.username  );
                     }}>
                       Book
                     </button>
-                  </li>
+                  </div>
+
+                  </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <br />
+        </div>
                 ))}
               </ul>
             </div>
