@@ -41,7 +41,7 @@ const Notification = () => {
                         },
                     })
                 }
-                if (response.status === 404 || response.status === 500) {
+                if (response.status === 400 || response.status === 500) {
                     response = await fetch('/api/medicine/getNotification', {
                         method: 'GET',
                         headers: {
