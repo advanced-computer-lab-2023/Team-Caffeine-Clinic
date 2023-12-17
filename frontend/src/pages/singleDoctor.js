@@ -175,6 +175,7 @@ const SingleDoctor = () => {
 
   return (
     <div style={margin}>
+        <ClinicPatientNavBar />
       {isButtonsVisible && (
         <div>
           <br />
@@ -187,11 +188,11 @@ const SingleDoctor = () => {
       )}
       {isForSelf !== null && (
         <>
-          <ClinicPatientNavBar />
           {isForSelf ? (
             <div className="single-doctor-details">
               <div className="details">
-                <strong>Available Dates: </strong>
+                <strong>Available Dates </strong>
+                <h4>Dr. {doctor.name}</h4>
                 {doctor.availableDates && Array.isArray(doctor.availableDates) ? (
                   <ul>
                     {doctor.availableDates.map((date, index) => (

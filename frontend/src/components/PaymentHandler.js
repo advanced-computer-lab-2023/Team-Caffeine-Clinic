@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { Margin } from '@mui/icons-material';
 
 const PaymentForm = ({ username, amount, onPaymentResult }) => {
   const stripe = useStripe();
@@ -160,13 +161,13 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
   };
 
   return (
-    <div className="popup-container">
+    <div className="text-center popup-container">
       <div className="popup-content">
         {loadingWallet && <div>Loading wallet...</div>}
         {!loadingWallet && !showCardElement && (
           <>
-            <button onClick={handleWallet} className="pay-button">Pay with Wallet</button>
-            <button onClick={handleCreditCard} className="pay-button">Pay with Credit Card</button>
+            <button onClick={handleWallet} className="button-43 pay-button">Pay with Wallet</button>
+            <button onClick={handleCreditCard} className="button-43 pay-button">Pay with Credit Card</button>
             {error && <div className="error-message">{error}</div>}
           </>
         )}
@@ -179,9 +180,8 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
             </form>
           </div>
         )}
-
         <Link to='/doctors'>
-          <button>Cancel</button>
+          <button className='button-41'>Cancel</button>
         </Link>
       </div>
     </div>
