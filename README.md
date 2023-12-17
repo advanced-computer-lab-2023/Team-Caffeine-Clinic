@@ -63,7 +63,5 @@ In addition to the core MERN technologies, this project also utilizes:
 
 6. **Drug Interaction Checker**: Tool to check for potential drug interactions.
 
----
-
 Each feature is designed to enhance user experience and streamline the healthcare process, aligning with our project's aim to revolutionize healthcare interactions through technology.
 
