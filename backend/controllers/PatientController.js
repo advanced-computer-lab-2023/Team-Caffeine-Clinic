@@ -15,7 +15,7 @@ const Perscriptions = require('../models/Perscriptions');
 const Doctor = require('../models/doctor');
 const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
-const Notification = require('../models/Notification.js')
+
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin');
 const Pharmacist = require('../models/Pharmacist.js');
@@ -2249,30 +2249,30 @@ const viewWallet=async (req,res)=>{
     res.status(200).json(user.wallet);
 }
 
-const getNotification = async (req, res) => {
-    const user = req.user
-    try {
-        const notifications = await Notification.find({ user: user._id })
+// const getNotification = async (req, res) => {
+//     const user = req.user
+//     try {
+//         const notifications = await Notification.find({ user: user._id })
 
-        if (notifications.length != 0)
-            return res.status(200).json({ notifications: notifications })
-        else
-            return res.status(400).send('Not Found')
-    } catch (error) {
-        console.log(error);
-        return res.status(400).send({ "error": error });
-    }
-}
+//         if (notifications.length != 0)
+//             return res.status(200).json({ notifications: notifications })
+//         else
+//             return res.status(400).send('Not Found')
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).send({ "error": error });
+//     }
+// }
 
-const createNotification = async (user, title, body) => {
-    try {
-        const notification = new Notification({ user: user, title: title, body: body })
+// const createNotification = async (user, title, body) => {
+//     try {
+//         const notification = new Notification({ user: user, title: title, body: body })
 
-        await notification.save()
-    } catch (error) {
-        console.log(error);
-    }
-}
+//         await notification.save()
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 const requestFollowUp = async (req, res) => {
     const user = req.user
