@@ -10,7 +10,9 @@ const SignUp = () => {
     const current = new Date().toISOString().split("T")[0]
 
     const [message, setMessage] = useState('')
-
+    const margin = {
+        marginTop: '70px',
+      }
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -109,63 +111,73 @@ const SignUp = () => {
 
 
     return(
-        <div className='add_family_member'>
-        <header>
-            <h1>Add Family Member</h1>
-
+        <div style={margin}>
+            <section id="appointment" className="appointment section-bg">
+                <div className="container">
+            <div className="section-title">
+          <h2>Add Family Member</h2>
+            </div> 
             
-            <br />
-            <div className="message">
-                <h6>{message}</h6>
-            </div>
-            <br /><br />
-            <div className="signUp">
-                <form className="createPatient" onSubmit={register}>
-                <div className="form-section">
-                Username: 
-                <label className="label">
-                    <input
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                    type="value" 
-                    />
-                </label>
-                <hr />
-                <label>
-                    Password: 
+                <form className="create php-email-form" onSubmit={register}>
+                <div className="row">
+                <div className="col-md-4 form-group">
+                <label>Name:</label>
                     <input 
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    type="text" />
-                </label>
-                <hr />
-                <label>
-                    Name: 
-                    <input 
+                    className="form-control"
                     value={name}
                     onChange={e => setName(e.target.value)}
                     type="text" />
-                </label>
-                <hr />
+                </div>
+                <div className="col-md-4 form-group mt-3 mt-md-0">
+                <label>Username: </label>
+                    <input
+                    value={username}
+                    className="form-control"
+                    onChange={e => setUsername(e.target.value)}
+                    type="value" 
+                    />
+                </div>
+                <div className="col-md-4 form-group mt-3 mt-md-0">
                 <label>
-                    Email: 
+                    Password: </label>
+                    <input 
+                    className="form-control"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    type="text" />
+                </div>
+                </div>
+
+                <div class="row">
+                <div className="col-md-4 form-group">
+                <label>Email:</label>
                     <input 
                     value={email}
+                    className="form-control"
                     onChange={e => setEmail(e.target.value)}
                     type="email" />
-                </label>
-                <hr />
-                <label>
-                    Date of Birth: 
+                </div>
+                <div className="col-md-4 form-group mt-3 mt-md-0">
+                <label>Date of Birth:</label>
                     <input type='date'
                         placeholder='Enter BirthDate'
+                        className="form-control"
                         value={dob} onChange={e => setDob(e.target.value)}
                         name='birthdate'
                         max={current}
                         />
-                </label>
-                <hr />
-                <p>
+                </div>
+                <div className="col-md-4 form-group mt-3 mt-md-0">
+                <label>Mobile Number:</label>
+                    <input 
+                    value={mobileNumber}
+                    className="form-control"
+                    onChange={e => setMobile(e.target.value)}
+                    type="text" />
+                </div>
+          </div>
+          <div class="row">
+          <div className="col-md-4 form-group" >
             Choose Gender:
             <label>
               <input type="radio" name="gender" value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
@@ -175,63 +187,61 @@ const SignUp = () => {
               <input type="radio" name="gender" value="female" checked={gender === 'female'} onChange={(e) => setGender(e.target.value)} />
               Female
             </label>
-          </p>
-                    <hr />
-                <label>
-                    Mobile Number: 
-                    <input 
-                    value={mobileNumber}
-                    onChange={e => setMobile(e.target.value)}
-                    type="text" />
-                </label>
+          </div>
+          </div>
                 <hr />
-
-                </div>
-             <div className="form-section">
-               <strong> Emergency Contact</strong>
-                <br /> <br />
+                <h4> Emergency Contact</h4>
+                <div class="row">
+                 <div className="col-md-4 form-group">
                 <label>
-                    Full Name: 
+                    Full Name: </label>
                     <input 
+                    className="form-control"
                     value={EName}
                     onChange={e => setEname(e.target.value)}
                     type="text" />
-                </label>
-                <br />
+                
+                </div>
+                <div className="col-md-4 form-group mt-3 mt-md-0">
                 <label>
-                    Mobile Number: 
+                    Mobile Number:</label> 
                     <input 
                     value={EMobile}
+                    className="form-control"
                     onChange={e => setEMobile(e.target.value)}
                     type="text" />
-                </label>
-                <br />
+                </div>
+                <div className="col-md-4 form-group mt-3 mt-md-0">
                 <label>
-                    Relation to the Patient: 
+                    Relation to the Patient: </label>
                     <input 
                     value={ERelation}
+                    className="form-control"
                     onChange={e => setERelation(e.target.value)}
                     type="text" />
-                </label>
-                <br/>
-                
+                </div>
+                </div>
+                <div class="row">
+                <div className="col-md-4 form-group">
                 <label>
-                    Health Record: (emergency contact)
+                    Health Record: (emergency contact)</label>
                     <input 
                     value={healthRecords}
+                    className="form-control"
                     onChange={(e) => setHealthRecords(e.target.value)}
                     type="text" />
-                </label>
-                <br /><br />
+                
                 </div>
+                </div>
+                <br />
 
-                <div className="button-container">
-  <button onClick={(e) => handleButtonClick(e)}>Add Family Member</button>
+                <div className="text-center">
+  <button type="submit" onClick={(e) => handleButtonClick(e)}>Add Family Member</button>
 </div>
 
                 </form>
             </div>
-        </header>
+            </section>
         </div>
     )
 }

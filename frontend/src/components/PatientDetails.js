@@ -1,4 +1,6 @@
 import { useAuthContext } from '../hooks/useAuthContext';
+import DoctorImage from '../assets/img/doctors/doctor.jpg';
+
 
 const PatientDetails = ({ patient }) => {
   const {user} = useAuthContext()
@@ -15,8 +17,15 @@ const PatientDetails = ({ patient }) => {
   }
   
       return (
-        <div className="Admin-details">
-          <h4></h4>
+        <div id="doctors" className="doctors">
+        <div className="container">
+        <div className="row">
+        <div className="col-lg">
+       <div className="member d-flex align-items-start">
+        <div className="pic">
+          <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+        </div>
+        <div className="member-info"> 
           <p><strong>Username: </strong>{patient.username}</p>
           <p><strong>Email: </strong>{patient.email}</p>
           <p><strong>Password: </strong>{patient.password}</p>
@@ -29,10 +38,16 @@ const PatientDetails = ({ patient }) => {
           <p><strong>Emergency Contact Mobile Number: </strong>{patient.emergency_contact.mobile_number}</p>
           <p><strong>Emergency Contact Relation: </strong>{patient.emergency_contact.relation_to_the_patient}</p>
           <p><strong>Health Records: </strong>{patient.health_records}</p>
-          <p>{patient.createdAt}</p>
-          <span onClick={handleClick}>Delete</span>
+          <p><strong>Creation Date: </strong>{patient.createdAt}</p>
+          <button onClick={handleClick} className="delete-btn">Delete</button>
+          </div>
         </div>
-      )
+        </div>
+        </div>
+        </div>
+    <br />
+    </div>      
+    )
     }
     
     export default PatientDetails

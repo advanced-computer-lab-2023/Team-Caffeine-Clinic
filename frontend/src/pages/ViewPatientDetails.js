@@ -14,6 +14,9 @@ const HealthPackages = () => {
 
   const user = useAuthContext()
 
+  const margin = {
+    marginTop: '100px',
+  }
   useEffect(() => {
 
     const fetchPatient = async () => {
@@ -156,109 +159,119 @@ useEffect(() => {
 
 
   return (
-
-    <div>
+<div style={margin}>
 
 <div className='myInformation'>
     {selectedPatient && (
       <div>
-        <h3>Information</h3>
-        <p><strong>Username:</strong> {selectedPatient.username}</p>
-        <p>Name: {selectedPatient.name}</p>
-        <p>Email: {selectedPatient.email}</p>
-        <p>Date of Birth: {selectedPatient.dob}</p>
-        <p>Gender: {selectedPatient.gender}</p>
-        <p>Mobile Number: {selectedPatient.mobile_number}</p>
-        <p>Health Package: {selectedPatient.health_package}</p>
-        <p>Health Records:</p>
-        <ul>
-          {selectedPatient.health_records.map((record, index) => (
-            <li key={index}>{record}</li>
-          ))}
-        </ul>
-        <p>Emergency Contact: {selectedPatient.emergency_contact.full_name}</p>
-        <p>Emergency Contact Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
-        <p>Relation to the Patient: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
-        <p>Wallet: {selectedPatient.wallet}</p>
+        <br />
+      <div className="section-title">
+        <h2>Profile</h2>
+      </div> 
+      <div id="doctors" className="doctors">
+      <div className="container">
+      <div className="row">
+      <div className="col-lg">
+      <div className="member d-flex align-items-start">
+      <div className="member-info"> 
+      <h2>My Information</h2>
+      <hr />
+        <div><strong>Name: </strong>{selectedPatient.name}</div>
+        <div><strong>Username:</strong> {selectedPatient.username}</div>
+        <div><strong>Email: </strong>{selectedPatient.email}</div>
+        <div><strong>Date of Birth: </strong>{selectedPatient.dob}</div>
+        <div><strong>Gender: </strong>{selectedPatient.gender}</div>
+        <div><strong>Mobile Number: </strong>{selectedPatient.mobile_number}</div>
+        <div><strong>Wallet: </strong>{selectedPatient.wallet} EGP</div>
+        {selectedPatient && (
+        <div>
+          <div><strong>Health Package: </strong>{selectedPatient.health_package}</div>
+          <div><strong>Health Records: </strong></div>
+          <ul>
+            {selectedPatient.health_records.map((record, index) => (
+              <li key={index}>{record}</li>
+            ))}
+          </ul>          
+        </div>
+      )}
+
+        <br />
+        <br />
+        <h2>My Health Package Details</h2>
+        <hr />
+        <div className="health-packages">
+
+      {error && <p className="error-message">{error}</p>}
+      {HealthPackage ===  null? (
+        <div>You are not subscribed to any health packages</div>
+      ) : (
+        <div>
+            {(HealthPackage && transaction) ?
+            <div>
+            <div key={transaction.healthPackage}>
+              <div><strong>Health Package: </strong>{transaction.healthPackage}</div>
+              <div><strong>Status: </strong>{transaction.state}</div>
+              {(transaction.state === 'cancelled') ?
+              <div><strong>End Date: </strong>{transaction.cancel_renewal_time}</div> : <div>Renewal Date: {transaction.cancel_renewal_time}</div>}
+              <div><strong>Doctor Session Discount: </strong>{HealthPackage.discounts.doctorSession * 100}%</div>
+              <div><strong>Medicine Discount: </strong>{HealthPackage.discounts.pharmacyMedicine * 100}%</div>
+              <div><strong>Family Health Package Discount: </strong>{HealthPackage.discounts.familySubscription * 100}%</div>
+            </div>
+              {(transaction.state === 'subscribed') ? 
+              <button className='button-41' onClick={() => unsubscribe()}>Unsubscribe</button> : <div></div>}
+            </div> 
+            : <div> ....Loading </div>}
+        </div>
+
+      )}
+      <br />
+        <br />
+        <h2>Family Members Health Packages</h2>
+        <hr />
+              <div>
+                {FamilyHealthPackage && (FamilyHealthPackage.map((member) => (
+                  <div key={member.id}>
+                    <div>
+                    <div><strong>Name: </strong> {member.name} </div> 
+                    {(member.state !== 'unsubscribed') ?
+                    <div>
+                    <div><strong>Health Package:</strong> {member._doc.healthPackage}</div>
+                    <div><strong>Status:</strong> {member._doc.state}</div>
+                    {(member._doc.state === 'cancelled') ?
+                      <div><strong>End Date:</strong> {member._doc.cancel_renewal_time}</div> : <div><strong>Renewal Date:</strong> {member._doc.cancel_renewal_time}</div>}
+                      {(member._doc.state === 'subscribed') ?
+                      <div><button className='button-41' onClick={() => unsubscribeFamilyMember(member.username)}>Cancel Subscription</button></div> : <div></div>} </div> : <div><strong>Status: </strong>{member.state}</div> }
+                    </div>
+                    <br />
+                  </div>
+                )))}
+              </div>
+
+
+            </div>
+
+
+        <br />
+        <br />
+        <h2>Emergency Contact</h2>
+        <hr />
+        <div><strong>Name: </strong>{selectedPatient.emergency_contact.full_name}</div>
+        <div><strong>Mobile Number: </strong>{selectedPatient.emergency_contact.mobile_number}</div>
+        <div><strong>Relation: </strong>{selectedPatient.emergency_contact.relation_to_the_patient}</div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+      </div>
       </div>
     )}
   </div>
+  <br />
+  <br />
 
-<div className='home'>
-      <h2 className='welcome-message'>Welcome to Home Page</h2>
-      {selectedPatient && (
-        <div>
-          <h3>Selected Patient Details</h3>
-          
-          <p>Health Package: {selectedPatient.health_package}</p>
-          <p>Health Records:</p>
-<ul>
-  {selectedPatient.health_records.map((record, index) => (
-    <li key={index}>{record}</li>
-  ))}
-</ul>          <p>Emergency Contact: {selectedPatient.emergency_contact.full_name}</p>
-          <p>Emergency Contact Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
-          <p>Relation to the Patient: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
-          <p>Wallet: {selectedPatient.wallet}</p>
-        </div>
-      )}
-    </div>
+  <br />
 
-    <div className="health-packages">
-      <h1>My Health Packages</h1>
-
-      {error && <p className="error-message">{error}</p>}
-
-      {HealthPackage ===  null? (
-        <p>You are not subscribed to any health packages</p>
-      ) : (
-        <ul>
-          {/* {HealthPackages.map((hp) => ( */}
-            <>
-            {(HealthPackage && transaction) ?
-            <div className='Admin-details'>
-            <li key={transaction.healthPackage}>
-              <div className='name'>{transaction.healthPackage}</div>
-              <div>Status: {transaction.state}</div>
-              {(transaction.state === 'cancelled') ?
-              <div>End Date: {transaction.cancel_renewal_time}</div> : <div>Renewal Date: {transaction.cancel_renewal_time}</div>}
-              <div>Doctor Session Discount: {HealthPackage.discounts.doctorSession * 100}%</div>
-              <div>Medicine Discount: {HealthPackage.discounts.pharmacyMedicine * 100}%</div>
-              <div>Family Health Package Discount: {HealthPackage.discounts.familySubscription * 100}%</div>
-            </li>
-              {(transaction.state === 'subscribed') ? 
-              <span className='span1' onClick={() => unsubscribe()}>Unsubscribe</span> : <div></div>}
-            </div> 
-            : <div> ....Loading </div>}
-              </>
-          {/* ))} */}
-        </ul>
-
-
-
-      )}
-
-<h2>Family Members Health Package</h2>
-      <ul>
-        {FamilyHealthPackage && (FamilyHealthPackage.map((member) => (
-          <li key={member.id}>
-            <div className='Admin-details'>
-            <div className='name'> {member.name} </div> 
-            {(member.state !== 'unsubscribed') ?
-            <div>
-            <strong>Health Package:</strong> {member._doc.healthPackage}
-            <div><strong>Status:</strong> {member._doc.state}</div>
-            {(member._doc.state === 'cancelled') ?
-              <div><strong>End Date:</strong> {member._doc.cancel_renewal_time}</div> : <div><strong>Renewal Date:</strong> {member._doc.cancel_renewal_time}</div>}
-              {(member._doc.state === 'subscribed') ?
-              <div><span onClick={() => unsubscribeFamilyMember(member.username)}>Cancel Subscription</span></div> : <div></div>} </div> : <div>Status: {member.state}</div> }
-            </div>
-          </li>
-        )))}
-      </ul>
-
-
-    </div>
     </div>
     
 

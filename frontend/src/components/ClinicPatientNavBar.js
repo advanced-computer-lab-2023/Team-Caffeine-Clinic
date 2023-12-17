@@ -55,6 +55,7 @@ const NavBarPatient = () => {
             {/* <li><a className="nav-link scrollto" href="#services">Services</a></li> */}
             {/* <li><a className="nav-link scrollto" href="#departments">Departments</a></li> */}
             <li><Link className="nav-link scrollto" to="/doctors">Doctors</Link></li>
+            <li><Link to="/HealthPackages" style={linkStyle}>Health Packages</Link></li>
             <li className="dropdown"><a href="#" style={linkStyle}><span>Patient's name</span> <i className="bi bi-chevron-down"></i></a>
               <ul>
                 <li className="dropdown"><Link to="" style={linkStyle}><span>My Profile</span> <i className="bi bi-chevron-right"></i></Link>
@@ -66,7 +67,7 @@ const NavBarPatient = () => {
                 </li>
                 <li><Link to="/PatientfilterAppointments" style={linkStyle}>My Appointments</Link></li>
                 <li><Link to="/Perscriptions" style={linkStyle}>My Prescriptions</Link></li>
-                <li><Link to="/HealthPackages" style={linkStyle}>My Health Packages</Link></li>
+                {/* <li><Link to="/HealthPackages" style={linkStyle}>My Health Packages</Link></li> */}
                 <li><Link to="/familyMembers" style={linkStyle}>My Family Members</Link></li>
                 <li><Link to="/Filterbyavedates" style={linkStyle}>Filter by Availability Date</Link></li>
                 <li><Link to="/" style={linkStyle} onClick={handleClick}>Logout</Link></li>

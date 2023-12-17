@@ -22,9 +22,16 @@ let handleSubmit = async (e) => {
 }
 
     return (
-      <div className="Admin-details">
+<div id="doctors" className="doctors">
+<div className="container">
+        <div className="row">
+        <div className="col-lg">
+    <div className="member d-flex align-items-start">
+        <div className="member-info"> 
         <h4>{hp.id}</h4>
-        <p><strong>name: </strong>{hp.name}</p>
+        <div class="box-title">
+          <h2>{hp.name}</h2>
+        </div> 
         <p><strong>Description: </strong>{hp.description}</p>
         <p><strong>Services Included: </strong>{hp.servicesIncluded}</p>
         <p><strong>Base Price: </strong>{hp.basePrice}</p>
@@ -33,12 +40,16 @@ let handleSubmit = async (e) => {
         <p><strong>Pharmacy Medicine Discount: </strong>{hp.discounts.familySubscription}</p>
         {/* <p><strong>Discounts: </strong>{hp.discounts}</p> */}
         <p>{hp.createdAt}</p>
-        <span className="span1 "onClick={handleClick}>Delete</span>
-        <br />
-        <span className="span2" onClick={handleSubmit}>Edit</span>
+        <button className="button-40" onClick={handleSubmit}>Edit</button>
+        <button className="button-41"onClick={handleClick}>Delete</button>
         {/* <span onClick={handleClick}>Update</span> */}
-      </div>
-
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    <br />
+    </div>    
     )
   }
   

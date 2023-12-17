@@ -8,6 +8,9 @@ import AdminNavbar from "../components/AdminNavbar";
 const AdminHome = () => {
   const [admins, setAdmins] = useState(null);
   const {user} = useAuthContext()
+  const margin = {
+    marginTop: '130px',
+  }
 
   useEffect(() => {
     const fetchAdmins = async () => {
@@ -27,19 +30,18 @@ const AdminHome = () => {
   }, [user]);
 
   return (
-    <>
+    <div className='doctorPage' style={margin}>
 <AdminNavbar />
-      <h2 className="title-admin">Admins</h2>
-      <div className="home">
-        <div className="admins">
+    <div className="section-title">
+          <h2>Admins</h2>
+        </div> 
           {admins &&
             admins.map((admin) => (
               <AdminDetails admin={admin} key={admin._id} />
             ))}
-        </div>
+
         <AdminForm />
       </div>
-    </>
   );
 };
 

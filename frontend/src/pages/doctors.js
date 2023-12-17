@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useAuthContext } from "../hooks/useAuthContext";
 import DoctorDetails from '../components/DoctorDetails';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import DoctorImage from '../assets/img/doctors/doctor.jpg';
+import { DockRounded } from '@mui/icons-material';
 
 const Doctors = () => {
   const linkStyle = {
@@ -48,7 +50,10 @@ const Doctors = () => {
         const dates = new Set();
         json.forEach(doctor => {
           doctor.availableDates?.forEach(date => dates.add(date));
+          console.log("hena - doctor.availableDates:"+ doctor.availableDates +"for name:" + doctor.name);
+
         });
+        console.log(json)
 
         setAvailableDates([...dates]);
         setDoctorNames([...names]);
@@ -60,19 +65,45 @@ const Doctors = () => {
         fetchDoctors();
       }
 
+
     }, [nameFilter, specialityFilter, dateFilter, user]); 
 
     return (
-
-
-
         // <div className='doctors'>
         //   {doctors && doctors.map((doctor) => (
         //     <DoctorDetails key={doctor.username} doctor={doctor} />
         //   ))}
         // </div>
-<div style={margin}>
-<div className="filters">
+<div className='doctorPage' style={margin}>
+<div id="doctors" className="doctors">
+      <div className="container">
+        <div className="row">
+        <div className="col-lg-8">
+    {doctors && doctors.map((doctor) => (
+      <div className="member mt-4 d-flex align-items-start">
+        <div className="pic">
+          <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+        </div>
+        <div className="member-info">
+          <h4>Dr. {doctor.name}</h4>
+          <span>Speciality: {doctor.speciality}</span>
+          <p>Fees: {doctor.rateAfterDiscount ? doctor.rateAfterDiscount.toFixed(2) : '0.00'} EGP</p>
+          <br />
+          <div><Link className='button-43' to={`/doctor/getSingleDoctor/${doctor.username}`}>Book</Link></div>
+        </div>
+        
+      </div>
+    ))}
+  </div>
+
+{/* Filters - occupies 4 columns */}
+<div className="col-lg-4  mt-4">
+
+        <div className="filter-section">
+        <div className="bx bx-filter filter-title" >
+          Filters
+         </div>
+          <div>
           <select 
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
@@ -83,7 +114,8 @@ const Doctors = () => {
               <option key={index} value={name}>Dr. {name}</option>
             ))}
           </select>
-
+          </div>
+          <div>
           <select 
             value={specialityFilter}
             onChange={(e) => setSpecialityFilter(e.target.value)}
@@ -94,42 +126,31 @@ const Doctors = () => {
               <option key={index} value={speciality}>{speciality}</option>
             ))}
           </select>
-
-            {/* Date Filter */}
-            <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="filter-input">
-          <option value="">Select Date</option>
-          {availableDates.map((date, index) => (
-            <option key={index} value={date}>{date}</option>
-          ))}
-        </select>
-          
-</div>
-
-{doctors && doctors.map((doctor) => (
-<body>
-<div id="doctors" className="doctors">
-      <div className="container">
-  
-        <div className="row">
-          
-          <div className="col-lg-6 mt-4">
-            <div className="member d-flex align-items-start">
-              <div className="pic"><img src={DoctorImage} className="img-fluid" alt="Doctor" /></div>
-              <div className="member-info">
-                <h4>Dr. {doctor.name}</h4>
-                <span>{doctor.speciality}</span>
-                <p>Fees: {doctor.rateAfterDiscount} EGP</p>
-                <p>Available Dates: {doctor.availableDates ? doctor.availableDates.join(', ') : 'Not available'}</p>
-              </div>
-            </div>
+          </div>
+          <div>
+          <select 
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="filter-input"
+          >
+            <option value="">Select Availablity Date</option>
+            {availableDates.map((date, index) => (
+              <option key={index} value={date}>{date}</option>
+            ))}
+          </select>
           </div>
         </div>
       </div>
+
+        </div>
+      </div>
     </div>
-</body>
-))}
+
+
+
 </div>
     )
 }
 
 export default Doctors;
+
