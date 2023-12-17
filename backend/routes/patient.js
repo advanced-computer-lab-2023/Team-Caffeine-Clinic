@@ -61,6 +61,7 @@ const{
 const {
     requireAuth,
 } = require('../middleware/requrieAuth')
+const { userInfo } = require('../controllers/MedicineController')
 
 
 // const {payWithWallet} = require('../controllers/paymentController')
@@ -145,4 +146,5 @@ router.get("/chat/viewPharmacists", viewPharmacists);
 router.post("/chat/sendMessage", sendMessage);
 router.get("/chat/getDoctors", viewPatientDoctors);
 router.get("/chat/allDocChats", fetchChatsDoc);
+router.get("/getUserInfo",userInfo);
 module.exports = router

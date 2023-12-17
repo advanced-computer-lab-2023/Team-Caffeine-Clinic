@@ -11,7 +11,8 @@ const {viewAvailableMedicine,
     viewDiscountMedicine,
     addPicture,
     ArchiveMedicine,
-    alternatives
+    alternatives,
+    userInfo
 } = require("../controllers/MedicineController");
 
 const{
@@ -67,6 +68,8 @@ router.put("/archiveMed/:Name", requirePharmacistAuth,ArchiveMedicine);
 router.get("/wallet", requirePharmacistAuth,viewWallet);
 
 router.get("/getNotification", requirePharmacistAuth,getNotification);
+
+router.get("/getUserInfo", requirePharmacistAuth,userInfo);
 
 getNotification
 

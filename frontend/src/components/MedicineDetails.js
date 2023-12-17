@@ -217,9 +217,9 @@ const MedicineDetails = ({ medicine }) => {
                 style={{ cursor: 'pointer', position: 'absolute', top: 10, right: 10 ,scale:'1.3'}}
               />
             )}
-
+               {medicine.NeedPerscription && user.type==="Patient" && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
+            <b> Requires Doctor Perscription</b></>}
             <h4>{medicine.Name}</h4>
-
 
             {!medicine.discountedPrice &&user.type=="Patient"&&<p><strong>{medicine.Price}.0 EGP </strong></p>}
             {user&& user.type!="Patient" &&<p><strong>{medicine.Price}.0  EGP</strong></p>}
@@ -243,21 +243,18 @@ const MedicineDetails = ({ medicine }) => {
 
              {Visible && user && user.type=="Patient" && medicine.Amount &&
              <button onClick={DecAmount}>-</button>} <br></br>     */}
+            {user && user.type=="Patient"  && !medicine.Amount && !medicine.Quantity==0
+             && !medicine.NeedPerscription && <br></br>}
 
             {user && user.type=="Patient"  && !medicine.Amount && !medicine.amount && !medicine.Quantity==0  &&
            <button style={{padding:"12px",marginTop:"10px"}} onClick={addToCart} ><FontAwesomeIcon
            icon={faCartShopping}></FontAwesomeIcon> Add To Cart</button>}
-           {console.log(medicine.Amount)}
+
+            {user && user.type=="Patient" && medicine.Quantity === 0 && <><p style={{ color: 'red' }}><strong>Out Of Stock</strong></p></>}
 
            {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount &&
           <button className='Alt' style={{padding:"12px",marginTop:"10px"}} onClick={Alternatives} >Alternatives</button>} 
 
-           {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount && <><br></br><br></br><p style={{ color: 'red' }}><strong>Out Of Stock</strong></p></>}
-
-                   <samp>   </samp>
-
-        {medicine.NeedPerscription && user.type==="Patient" && <><br></br><br></br><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
-            <b> Requires Doctor Perscription</b></>}
           </div>
         </form>
 } 

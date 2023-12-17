@@ -15,6 +15,8 @@ const {
     Medicines
 } = require('../controllers/OrdersController')
 
+
+
 router.post('/Report', Report)
 router.post('/ReportMedicines', ReportMedicines)
 router.post('/ReportByDate', ReportByDate)
