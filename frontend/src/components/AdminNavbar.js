@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom"
-import "../index.css"
 import { useLogout } from '../hooks/useLogout'
 import React, { useState, useEffect } from 'react';
 
