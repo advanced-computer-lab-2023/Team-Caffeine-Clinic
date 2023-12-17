@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const HealthPackages_TransactionSchema = new Schema ({
     transactionId: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'transaction',
+        ref: 'Transaction',
         default:""
     },
 
