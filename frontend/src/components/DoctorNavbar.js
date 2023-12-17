@@ -19,7 +19,7 @@ const DoctorNavbar =()=>{
     return(
 
 
-
+<div>
 
                 <Link className="doctor-buttons" to="/doctor/DoctorChangePassword"><h3>Change Password</h3></Link>
                 
@@ -32,12 +32,6 @@ const DoctorNavbar =()=>{
                 <Link className="doctor-buttons" to="/Docaddpatientdocs"><h3>Add to my Patietnts DOCS</h3></Link>
                 <Link className="doctor-buttons" to="/ClinicChats"><h3>Doctor Chats</h3></Link>
 
-
-
-        //     </div>
-        // </nav>
-       // <>
-<>
       <div id="topbar" className="d-flex align-items-center fixed-top">
   <div className="container d-flex justify-content-between">
     <div className="contact-info d-flex align-items-center">
@@ -101,7 +95,7 @@ const DoctorNavbar =()=>{
  <Link className="appointment-btn scrollto" to="/" onClick={handleClick}>Log Out</Link>  </div>
 </header>
 
-</>
+</div>
     )
 }
 

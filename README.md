@@ -116,7 +116,8 @@ npm start
 The application should now be running on `localhost` at the specified port
 
 ## API Refrences 
-###All API Routes:
+
+### All API Routes:
 - app.use('/api', forgotPass)
 - app.use('/api', stripe)
 - app.use('/api/patient', patientRoute)
@@ -133,3 +134,127 @@ The application should now be running on `localhost` at the specified port
 - app.use('/api/doctorInfo', doctorInfoRoutes);
 - app.use('/api/healthpackage', healthPackageRoutes);
 - app.use('/api', Appointment)
+
+## How to Use
+
+The El7a2ni System is intuitively designed for ease of use. Below is a guide to navigate and utilize the key features of our Virtual Clinic and Pharmacy System.
+
+### For Patients
+
+#### Creating an Account
+- Navigate to the Sign-Up page.
+- Fill in the required details such as name, email, and password.
+- Submit the form to create your account.
+
+#### Booking an Appointment
+- Log in to your account.
+- Go to the ‘Book Appointment’ section.
+- Select a doctor and choose a convenient date and time.
+- Confirm your appointment.
+
+#### Consulting with a Doctor
+- Access your dashboard to view upcoming appointments.
+- Access a one-to-one chat with the doctor after consultation.
+- Discuss your health concerns with the doctor.
+
+#### Accessing Prescriptions and Medical Records
+- After the consultation, view your prescriptions in the ‘My Prescriptions’ section.
+- Access your medical history and records under ‘My Profile’.
+
+### For Doctors
+
+#### Setting Up Your Profile
+- Complete your profile with your qualifications, specialties, and availability.
+
+#### Managing Appointments
+- View and manage upcoming appointments in the ‘Appointments’ section.
+- Use the system to send reminders or reschedule appointments.
+
+#### Conducting Online Consultations
+- Access the virtual consultation room through your dashboard.
+- Consult with patients via video or audio call.
+
+#### Prescribing Medication
+- After a consultation, use the system to write and send prescriptions directly to patients and the linked pharmacy.
+
+### For Pharmacists
+
+#### Managing Medication Inventory
+- Keep track of medication stocks and update inventory details regularly.
+
+#### Processing Prescriptions
+- Receive prescriptions sent from the clinic.
+- Prepare and dispense medications as per the prescription.
+
+#### Delivering Medications
+- Coordinate with delivery services to send medications to patients’ addresses.
+- Track and update the delivery status in the system.
+
+## Contribute
+
+We warmly welcome contributions to the El7a2ni System! If you're interested in helping to improve the project, here's how you can contribute:
+
+### Reporting Bugs and Requesting Features
+
+- **Check if the Issue Exists**: Before creating a new issue, please check if it is already reported or requested.
+- **Create an Issue**: If you find a bug or have a feature request, please create a new issue, providing as much detail as possible.
+
+# Contributing to the El7a2ni System
+
+We warmly welcome contributions to the El7a2ni System! If you're interested in helping to improve the project, here's how you can contribute:
+
+## Reporting Bugs and Requesting Features
+
+- **Check if the Issue Exists**: Before creating a new issue, please check if it is already reported or requested.
+- **Create an Issue**: If you find a bug or have a feature request, please create a new issue, providing as much detail as possible.
+
+## Contributing Code
+
+1. **Fork the Repository**: Start by forking the repository on GitHub.
+2. **Clone Your Fork**: Clone your fork to your local machine.
+
+    ```bash
+    git clone <Your-Fork-URL>
+    ```
+
+3. **Create a New Branch**: Always create a new branch for your changes.
+
+    ```bash
+    git checkout -b <branch-name>
+    ```
+
+4. **Make Your Changes**: Implement your changes, additions, or bug fixes.
+5. **Commit Your Changes**: Make sure your commits are small and focused; they should explain why the change is needed.
+
+    ```bash
+    git commit -m "Add a concise and descriptive commit message"
+    ```
+
+6. **Push to Your Fork**: Push your changes to your fork on GitHub.
+
+    ```bash
+    git push origin <branch-name>
+    ```
+
+7. **Create a Pull Request**: Go to the original project repository and create a pull request from your branch. Please provide a clear description of the changes and reference any related issues.
+
+## Code Style and Conventions
+
+- Adhere to the coding style and conventions established in the project. [Include specific guidelines or link to a document if available.]
+
+## Stay Updated
+
+- Keep your fork updated with the master branch to avoid merge conflicts:
+
+    ```bash
+    git pull upstream master
+    ```
+
+## Community Guidelines
+
+- Respect the code of conduct and engage respectfully with the community. [Link to Code of Conduct if available.]
+
+Your contributions are greatly appreciated and will help make the El7a2ni System even better!
+
+
+
