@@ -483,13 +483,19 @@ const estimateRate = async (req, res) => {
 
         const name = req.query.name;
         const speciality = req.query.speciality;
+        const date = req.query.date;
 
         let filter = {};
 
         if (name) filter.name = new RegExp(name, 'i'); // Case-insensitive regex search
         if (speciality) filter.speciality = new RegExp(speciality, 'i');
+        
+
+        
+
         console.log('Before Doctor');
         const doctors = await Doctor.find(filter);
+        
         console.log('After Doctor');
         const patientHealthPackage = patient.health_package;
 
@@ -505,7 +511,8 @@ const estimateRate = async (req, res) => {
                     affiliation: doctor.affiliation,
                     education: doctor.education,
                     originalRate: doctor.rate,
-                    rateAfterDiscount: doctor.rate
+                    rateAfterDiscount: doctor.rate,
+                    availableDates:doctor.availableDates
                 }
             });
             return res.status(200).json(doctormap); // Return here
@@ -523,6 +530,8 @@ const estimateRate = async (req, res) => {
                 education: doctor.education,
                 originalRate: doctor.rate,
                 rateAfterDiscount: rateAfterDiscount,
+                availableDates:doctor.availableDates
+
             };
         });
 
