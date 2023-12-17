@@ -84,9 +84,6 @@ const DoctorNavbar =()=>{
         <li className="dropdown"><a><span>Patients</span> <i className="bi bi-chevron-down" /></a>
           <ul>
             <li><Link to="/ViewPatients"> View My patients </Link></li>
-            <li><Link to="/SearchPatient">Search a Patient </Link>
-            </li>
-            <li><Link to="/getAllHealthRecords">Patient Health records</Link></li>
              <li className="dropdown"><a><span>Patient Documents</span> <i class="bi bi-chevron-right"></i></a>
               <ul>
                 <li><Link to="/seepatientdocs">View Patietnts DOCS</Link></li>
@@ -104,8 +101,6 @@ const DoctorNavbar =()=>{
             <li><Link to="/doctor/DoctorChangePassword">Change Password</Link></li>
           </ul>
         </li>
-
-        <li><a className="nav-link scrollto" href="#contact">Contact</a></li>
       </ul>
       <i className="bi bi-list mobile-nav-toggle" />
     </nav>{/* .navbar */}

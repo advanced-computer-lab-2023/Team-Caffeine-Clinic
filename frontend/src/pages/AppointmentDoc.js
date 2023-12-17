@@ -9,10 +9,18 @@ const AppointmentDoc = () => {
     const { user } = useAuthContext();
 
     useEffect(() => {
+        const selectedDate = new Date(date);
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth() + 1; // Adding 1 because getMonth() returns 0-indexed months
+    const day = selectedDate.getDate();
+    const hours = selectedDate.getHours();
+    const minutes = selectedDate.getMinutes();
+
+    const formattedDate = `${year}\\${month}\\${day}:${hours}:${minutes}`;
         const fetchAppointments = async () => {
             try {
                 const response = await fetch(
-                    `api/doctorInfo/appointments?date=${date}&status=${status}`,
+                    `api/doctorInfo/appointments?date=${formattedDate}&status=${status}`,
                     {
                         headers: {
                             'Content-Type': 'application/json',
@@ -87,7 +95,7 @@ const AppointmentDoc = () => {
     </div>
              <div className="filters">
                 <input
-                    type="text"
+                    type="datetime-local"
                     placeholder="Filter by Date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}

@@ -121,7 +121,7 @@ const MyPatients = () => {
             {filteredPatients.map((patientUsername) => (
               <ul key={patientUsername}>
                 <li data-aos="fade-up">
-                  <i className="bx bx-help-circle icon-help" /> <a data-bs-toggle="collapse"
+                <i class='bx bx-user icon-help' ></i> <a data-bs-toggle="collapse"
                     className="collapse"
                     data-bs-target={`#faq-list-${patientUsername}`}
                     onClick={() => fetchPatientDetails(patientUsername)}><strong>Patient: </strong>{patientUsername}<i className="bx bx-chevron-down icon-show" /><i className="bx bx-chevron-up icon-close" /></a>
