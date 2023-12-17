@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
-
+import AboutSection from '../components/AboutSection';
+import HomeSection from '../components/HomeSection';
+import ServicesSection from '../components/ServicesSection';
+import ContactSection from '../components/ContactSection';
+import AppointmentSection from '../components/AppointmentSection';
 
 const Home = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -53,18 +57,27 @@ const Home = () => {
 
   return (
     <div className='home'>
-    <h1>Patient Report</h1>
+    <div>
     {selectedPatient && (
-      <div className='all-info'>
-        <div className='box'>
+      <div>
+
+
+      <body> 
+      <HomeSection />
+      <AboutSection />
+      <ServicesSection />
+      {/* <AppointmentSection /> */}
+      <ContactSection />
+      </body>
+
+        {/* <div className='box'>
           <h2 className='name'>{selectedPatient.name}</h2>
           <p><strong>Patient Username:</strong> {selectedPatient.username}</p>
           <p><strong>Age:</strong> {selectedPatient.dob ? calculateAge(selectedPatient.dob) : 'Unknown'}</p>
           <p><strong>Gender:</strong> {selectedPatient.gender}</p>
          
-        </div>
-
-        <div className='box'>
+        </div> */}
+        {/* <div className='box'>
           <h3>ff</h3>
           <p><strong>Username:</strong> {selectedPatient.username}</p>
           <p>Name: {selectedPatient.name}</p>
@@ -125,9 +138,11 @@ const Home = () => {
           <p>Emergency Contact Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
           <p>Relation to the Patient: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
           <p>Wallet: {selectedPatient.wallet}</p>
-        </div>
+        </div> */}
       </div>
     )}
+          </div>
+
   </div>
   );
 };

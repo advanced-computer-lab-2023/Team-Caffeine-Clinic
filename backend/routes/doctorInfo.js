@@ -27,15 +27,22 @@ const {
     createfollowUPAppointment,
     changeToFollowUp,
     getDocumentsForLoggedInDoctorPatients,
-    saveDocumentsForPatient
-    
-    
+    saveDocumentsForPatient,
+    getFollowUpRequests,
+    acceptFollowUPAppointment,
+    rejectRequest,
+    refundAppointment,
+    getNotification
 } = require('../controllers/doctorInfocontroller')
 
 const {
     
     filterDoctorsByAvailability
 } = require('../controllers/PatientController')
+
+const {
+    createPersc, getDoctorName, getPerscDetails
+} = require('../controllers/PerscriptionsController')
 
 const {requireDoctorAuth} = require('../middleware/requrieAuth')
 
@@ -49,6 +56,14 @@ router.use(requireDoctorAuth)
 router.get('/', (req, res) => {
     res.json({ mssg: 'get doctor info' })
 })
+
+router.get('/getNotification', getNotification)
+
+router.get('/getPerscDetails', getPerscDetails)
+
+router.post('/addPerscription', createPersc)
+
+router.get('/getFollowUpRequests', getFollowUpRequests)
 
 // //get a single patient
 router.get('/getDoctorByusername', getDoctorByusername)
@@ -79,7 +94,9 @@ router.get('/searchmyPatients', searchmyPatients)
 router.post('/createDoctor', createDoctor)
 router.get('/getCompletedAppointmentsForDoctor', getCompletedAppointmentsForDoctor)
 router.post('/createfollowUPAppointment', createfollowUPAppointment)
-
+router.post('/acceptFollowUPAppointment', acceptFollowUPAppointment)
+router.post('/rejectRequest', rejectRequest)
+router.post('/refundAppointment', refundAppointment)
 
 //update doctor info 
 router.patch('/updateDoctor', updateDoctorProfile)

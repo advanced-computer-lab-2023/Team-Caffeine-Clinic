@@ -10,6 +10,8 @@ const HealthPackage = require('../models/healthPackageModel');
 const HealthPackagesTransaction = require('../models/HealthPackages_Transaction');
 const Medicine = require('../models/Medicine.js');
 
+const Notification = require('../models/Notification.js')
+
 const bcrypt = require('bcrypt');
 
 
@@ -22,6 +24,8 @@ const OTP = require('../models/OTP');
 
 const Transaction = require('../models/transaction');
 const Admin = require('../models/admin')
+
+const FollowUpRequest = require('../models/followUpRequest')
 
 
 const addHealthPackageTransactionfam = async (req, res) => {
@@ -483,13 +487,19 @@ const estimateRate = async (req, res) => {
 
         const name = req.query.name;
         const speciality = req.query.speciality;
+        const date = req.query.date;
 
         let filter = {};
 
         if (name) filter.name = new RegExp(name, 'i'); // Case-insensitive regex search
         if (speciality) filter.speciality = new RegExp(speciality, 'i');
+        
+
+        
+
         console.log('Before Doctor');
         const doctors = await Doctor.find(filter);
+        
         console.log('After Doctor');
         const patientHealthPackage = patient.health_package;
 
@@ -505,7 +515,8 @@ const estimateRate = async (req, res) => {
                     affiliation: doctor.affiliation,
                     education: doctor.education,
                     originalRate: doctor.rate,
-                    rateAfterDiscount: doctor.rate
+                    rateAfterDiscount: doctor.rate,
+                    availableDates:doctor.availableDates
                 }
             });
             return res.status(200).json(doctormap); // Return here
@@ -523,6 +534,8 @@ const estimateRate = async (req, res) => {
                 education: doctor.education,
                 originalRate: doctor.rate,
                 rateAfterDiscount: rateAfterDiscount,
+                availableDates:doctor.availableDates
+
             };
         });
 
@@ -549,10 +562,8 @@ const filterDoctorsByAvailability = async (req, res) => {
 const getSinglePerscription = async (req, res) => {
     const _id = req.params.perscID
 
-    console.log(_id);
-
     try {
-        const perscription = await Perscriptions.findById(_id)
+        const perscription = await Perscriptions.findById(_id).populate('doctorID').populate('patientID')
         res.status(200).json(perscription)
     } catch (error) {
         res.status(400).send(error);
@@ -592,10 +603,10 @@ const addPatientToDoctor = async (req, res, dr) => {
         }
         await doctor.save();
 
-        res.status(200).json(doctor);
+        return res.status(200).json(doctor);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 const addPatientToDoctorfam = async (req, res, dr, ph) => {
@@ -625,12 +636,23 @@ const addPatientToDoctorfam = async (req, res, dr, ph) => {
         }
         await doctor.save();
 
-        res.status(200).json(doctor);
+        return res.status(200).json(doctor);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+const createNotification = async (user, title, body) => {
+    try {
+        const notification = new Notification({ user: user, title: title, body: body })
+
+        await notification.save()
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const createAppointment = async (req, res) => {
     try {
         const pusername = req.user.username;
@@ -687,9 +709,136 @@ const createAppointment = async (req, res) => {
         // Use the addPatientToDoctor function to add the patient to the doctor's list
         await addPatientToDoctor(newreq, newres, dusername);
 
+        const patientName = patient.name;
+        const patientEmail = patient.email
+        const doctorName = doctor.name;
+        const doctorEmail = doctor.email
+        const clinicName = doctor.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+        createNotification(doctor._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+
+        return res.status(200).json(appointment)
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 const createAppointmentfam = async (req, res) => {
@@ -720,14 +869,16 @@ const createAppointmentfam = async (req, res) => {
         });
 
         if (existingAppointment) {
+            console.log('Appointment with the same details already exists');
             return res.status(400).json({ message: 'Appointment with the same details already exists' });
         }
 
         const getTransaction = await Transaction.findOne({
-            //appointmentDate:appointmentDate,
+            appointmentDate: appointmentDate,
             paymentOption: 'Appointment',
             doctor: doctor.username,
-            patient: patient.username
+            patient: patient.username,
+            Refunded: false
         });
 
         const transactionID = getTransaction._id;
@@ -747,6 +898,135 @@ const createAppointmentfam = async (req, res) => {
         // Use the addPatientToDoctor function to add the patient to the doctor's list
         await addPatientToDoctorfam(newreq, newres, dusername, pusername);
 
+
+        const patientName = patient.name;
+        const patientEmail = patient.email
+        const doctorName = doctor.name;
+        const doctorEmail = doctor.email
+        const clinicName = doctor.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Confirmation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Confirmation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Confirmation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentDate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+
+        createNotification(doctor._id, "Appointment Confirmation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentDate}
+          Location: ${clinicName}`)
+
+        res.status(200).json("Done")
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -754,14 +1034,23 @@ const createAppointmentfam = async (req, res) => {
 };
 const getAppointments = async (req, res) => {
     try {
-        const patientUsername = req.user.username;
+        const patient = req.query.patient
+        let patientUsername
+        if (patient) {
+            patientUsername = patient
+            console.log('ana hena');
+        }
+        else {
+            patientUsername = req.user.username;
+            console.log(patientUsername);
+        }
         const date = req.query.date;
         const status = req.query.status;
 
         let filter = { patient: patientUsername };
 
         const appointments = await Appointment.find(filter);
-
+        console.log(appointments);
         const filteredAppointments = await Promise.all(appointments.map(async appointment => {
             let isMatched = true;
 
@@ -779,23 +1068,39 @@ const getAppointments = async (req, res) => {
                 isMatched = isMatched && transaction && !transaction.Refunded;
             }
 
-            return isMatched ? appointment : null;
+            const doctor = await Doctor.findOne({ username: appointment.doctor })
+            const patient = await Patient.findOne({ username: appointment.patient })
+
+            return isMatched ? { ...appointment.toObject(), doctor, patient } : null;
         }));
+
+        //console.log(filteredAppointments);
 
         // Remove null values from the array (appointments without matching transactions)
         const finalAppointments = filteredAppointments.filter(appointment => appointment !== null);
-
-        res.json(finalAppointments);
+        console.log(finalAppointments);
+        res.status(200).json(finalAppointments);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while fetching appointments.' });
     }
 };
+
 const refundAppointment = async (req, res) => {
     try {
         const appointmentdate = req.query.appointmentdate;
         const doc = req.query.doc;
-        const patient = req.user.username;
+        const username = req.query.username;
+        let patient
+        if (username) {
+            patient = username
+        }
+        else {
+            patient = req.user.username;
+        }
+        console.log(doc, patient);
+        const user = req.user.username
+
         const transactionID = req.query.transactionID;
         console.log(appointmentdate);
 
@@ -807,7 +1112,7 @@ const refundAppointment = async (req, res) => {
         });
         console.log(appointment);
 
-        const patient1 = await Patient.findOne({ username: patient });
+        const patient1 = await Patient.findOne({ username: user });
         const doctor1 = await Doctor.findOne({ username: doc });
 
         // Check if the appointment exists
@@ -840,6 +1145,137 @@ const refundAppointment = async (req, res) => {
         await doctor1.save();
         await patient1.save();
         await transaction.save();
+        await Appointment.deleteOne({
+            doctor: doc,
+            patient: patient,
+            appointmentDate: appointmentdate,
+        });
+
+        const patientName = patient1.name;
+        const patientEmail = patient1.email
+        const doctorName = doctor1.name;
+        const doctorEmail = doctor1.email
+        const clinicName = doctor1.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Cancellation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Cancellation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Cancellation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentdate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Cancellation',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+        
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Appointment Cancellation</title>
+              <style>
+                /* Your CSS styles here */
+              </style>
+            </head>
+        
+            <body>
+              <div class="container">
+                <h1>Appointment Cancellation</h1>
+                <p>Dear ${patientName},</p>
+                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.</p>
+            
+                <div class="appointment-details">
+                  <p><strong>Doctor:</strong> ${doctorName}</p>
+                  <p><strong>Date:</strong> ${appointmentdate}</p>
+                  <p><strong>Location:</strong> ${clinicName}</p>
+                </div>
+            
+                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+            
+                <p>Thank you for choosing our services. We look forward to seeing you!</p>
+            
+                <p>Best regards,<br> ${clinicName}</p>
+              </div>
+            </body>
+            
+            </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient1._id, "Appointment Cancellation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentdate}
+          Location: ${clinicName}`)
+
+        createNotification(doctor1._id, "Appointment Cancellation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.
+          Doctor: ${doctorName}
+          Date: ${appointmentdate}
+          Location: ${clinicName}`)
 
         // Optionally, you can update the appointment status or perform any other necessary actions
 
@@ -1062,13 +1498,13 @@ const getHealthPackage = async (req, res) => {
 
     const HealthPackageName = patient.health_package;
     console.log(HealthPackageName);
-    const HealthPackage = await HealthPackage.findOne({ name: HealthPackageName }).exec();
+    const healthPackage = await HealthPackage.findOne({ name: HealthPackageName }).exec();
 
-    if (!HealthPackage) {
+    if (!healthPackage) {
         return res.status(400).json({ error: 'No Package Found' })
     }
 
-    res.status(200).json({ transaction: transaction, HealthPackage: HealthPackage });
+    res.status(200).json({ transaction: transaction, HealthPackage: healthPackage });
 
     // try {
     //    // console.log(_id);
@@ -1119,6 +1555,7 @@ const addTransactionAppointmentfam = async (req, res) => {
             paymentOption: "Appointment",
             doctor: doctorUsername,
             patient: patientUsername,
+            Refunded: false
         });
 
         // Save the transaction to the database
@@ -1477,11 +1914,11 @@ const decAmount = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-    console.log("hi")
+    //console.log("hi")
     const MedName = req.params.Name;
     const medicine = await Medicine.findOne({ Name: MedName });
     var user = req.user;
-    console.log(user);
+    //console.log(user);
     var cart = {
         medicineid: medicine._id,
         amount: 1
@@ -1690,6 +2127,285 @@ const getCartPrice = async (req, res) => {
     }
 }
 
+const requestFollowUp = async (req, res) => {
+    const user = req.user
+
+    const { doctor, appointment, patient } = req.body;
+
+    let username
+    if (patient) {
+        username = patient
+    }
+    else {
+        username = user.username
+    }
+
+    const exist = await FollowUpRequest.findOne({ appointment: appointment })
+
+    if (exist) {
+        return res.status(500).send('Exists')
+    }
+
+    try {
+        const request = new FollowUpRequest({ doctor: doctor, patient: username, appointment: appointment })
+        await request.save()
+
+        res.status(200).json({ "mssg": "Request Sent" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ "error": error });
+    }
+}
+
+const reschedule = async (req, res) => {
+    let doctor
+    let patient
+    const { date, appointment } = req.body
+    try {
+        const updatedAppointment = await Appointment.findByIdAndUpdate(appointment, {
+            appointmentDate: date,
+            status: 'rescheduled'
+        })
+        const appointmentDate = date;
+        const appointmentTime = date;
+
+        if (updatedAppointment) {
+            doctor = await Doctor.findOne({ username: updatedAppointment.doctor })
+            patient = await Patient.findOne({ username: updatedAppointment.patient })
+            doctor.availableDates = doctor.availableDates.filter(item => item != date);
+            doctor.save();
+        }
+
+        const patientName = patient.name;
+        const patientEmail = patient.email
+        const doctorName = doctor.name;
+        const doctorEmail = doctor.email
+        const clinicName = doctor.affiliation;
+
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'acluser123@hotmail.com',
+                pass: 'AMRgames1@',
+            },
+        });
+
+        const mailOptions = {
+            from: 'acluser123@hotmail.com',
+            to: patientEmail, // Replace with the recipient's email address
+            subject: 'Appointment Rescheduling',
+            html: `
+              <!DOCTYPE html>
+              <html lang="en">
+          
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Appointment Confirmation</title>
+                <style>
+                  /* Your CSS styles here */
+                </style>
+              </head>
+          
+              <body>
+                <div class="container">
+                  <h1>Appointment Confirmation</h1>
+                  <p>Dear ${patientName},</p>
+                  <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate} at ${appointmentTime}.</p>
+              
+                  <div class="appointment-details">
+                    <p><strong>Doctor:</strong> ${doctorName}</p>
+                    <p><strong>Date:</strong> ${appointmentDate}</p>
+                    <p><strong>Time:</strong> ${appointmentTime}</p>
+                    <p><strong>Location:</strong> ${clinicName}</p>
+                  </div>
+              
+                  <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+              
+                  <p>Thank you for choosing our services. We look forward to seeing you!</p>
+              
+                  <p>Best regards,<br> ${clinicName}</p>
+                </div>
+              </body>
+              
+              </html>
+            `,
+        };
+
+        const mailOptionsDoc = {
+            from: 'acluser123@hotmail.com',
+            to: doctorEmail, // Replace with the recipient's email address
+            subject: 'Appointment Rescheduling',
+            html: `
+              <!DOCTYPE html>
+              <html lang="en">
+          
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Appointment Confirmation</title>
+                <style>
+                  /* Your CSS styles here */
+                </style>
+              </head>
+          
+              <body>
+                <div class="container">
+                  <h1>Appointment Confirmation</h1>
+                  <p>Dear ${patientName},</p>
+                  <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate} at ${appointmentTime}.</p>
+              
+                  <div class="appointment-details">
+                    <p><strong>Doctor:</strong> ${doctorName}</p>
+                    <p><strong>Date:</strong> ${appointmentDate}</p>
+                    <p><strong>Time:</strong> ${appointmentTime}</p>
+                    <p><strong>Location:</strong> ${clinicName}</p>
+                  </div>
+              
+                  <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
+              
+                  <p>Thank you for choosing our services. We look forward to seeing you!</p>
+              
+                  <p>Best regards,<br> ${clinicName}</p>
+                </div>
+              </body>
+              
+              </html>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await delay(5000);
+
+        transporter.sendMail(mailOptionsDoc, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        createNotification(patient._id, "Appointment Reschedule", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+        Doctor: ${doctorName}
+        Date: ${appointmentDate}
+        Location: ${clinicName}`)
+
+        createNotification(doctor._id, "Appointment Reschedule", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentDate}.
+        Doctor: ${doctorName}
+        Date: ${appointmentDate}
+        Location: ${clinicName}`)
+
+        if (updatedAppointment)
+            return res.status(200).json(updatedAppointment)
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ "error": error });
+    }
+}
+
+const getNotification = async (req, res) => {
+    const user = req.user
+    try {
+        const notifications = await Notification.find({ user: user._id })
+
+        if (notifications.length != 0)
+            return res.status(200).json({ notifications: notifications })
+        else
+            return res.status(400).send("2araf")
+    } catch (error) {
+        return res.status(500).send({ "error": error });
+    }
+}
+
+const payForPerscription = async (req, res) => {
+    const user = req.user
+    const { persc } = req.body
+    try {
+        const prescription = await Perscriptions.findById(persc);
+        const medicines = prescription.medicine
+        for (let i = 0; i < medicines.length; i++) {
+            const medicine = await Medicine.findOne({ Name: medicines[i] })
+
+            if (medicine.Quantity === 0) {
+                return res.status(400).send('No Stock');
+            }
+        }
+
+        await Patient.findByIdAndUpdate(
+            { _id: user._id },
+            { $set: { cart: [] } }
+        );
+
+        for (let i = 0; i < medicines.length; i++) {
+            const medicine = await Medicine.findOne({ Name: medicines[i] });
+            //console.log(user);
+            var cart = {
+                medicineid: medicine._id,
+                amount: 1
+            };
+
+            Patient.findOneAndUpdate({ _id: user._id }, { '$push': { cart: cart } }).catch(err => console.log(err));
+        }
+        res.status(200).send('GO AHEAD AND PAY')
+    } catch (error) {
+        return res.status(500).send({ "error": error });
+    }
+}
+
+const checkOnAppointments = async (req, res) => {
+    console.log('woah');
+
+    try {
+        const upcoming = await Appointment.find({ status: 'upcoming' })
+        const FollowUp = await Appointment.find({ status: 'FollowUp' })
+        const rescheduled = await Appointment.find({ status: 'rescheduled' })
+
+        const current = new Date();
+
+        for (let i = 0; i < upcoming.length; i++) {
+            const date = upcoming[i].appointmentDate
+
+            // Replace backslashes with hyphens
+            // Split the formatted date string
+            // let [datePart, timePart, hourPart, minutePart] = date.split(':');
+            // datePart = datePart.substring(1)
+            // console.log(datePart, timePart, hourPart, minutePart);
+
+            // minutePart = minutePart.substring(0, minutes.length - 2)
+            // console.log(minutePart);
+            // const [yearPart, monthPart, dayPart] = datePart.split('\\');
+
+            // // Create a new Date object
+            // const normalDate = new Date(yearPart, monthPart - 1, dayPart, hourPart, minutePart);
+
+            // console.log(normalDate);
+        }
+
+        for (let i = 0; i < FollowUp.length; i++) {
+            const date = FollowUp[i].appointmentDate
+
+        }
+
+        for (let i = 0; i < rescheduled.length; i++) {
+            const date = rescheduled[i].appointmentDate
+
+        }
+        return res.status(200).json({ mssg: 'Checking on Dates Done' })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ "error": error });
+    }
+}
 
 module.exports = {
     getFamilyMembersHealthPackages,
@@ -1727,5 +2443,10 @@ module.exports = {
     orders,
     deleteOrder,
     addAddresses,
-    getCartPrice
+    getCartPrice,
+    requestFollowUp,
+    reschedule,
+    getNotification,
+    payForPerscription,
+    checkOnAppointments
 }

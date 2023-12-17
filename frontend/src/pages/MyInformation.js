@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
 
-const OldHome = () => {
+const MyInformation = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const user = useAuthContext()
 
@@ -29,7 +29,7 @@ const OldHome = () => {
   }, []);
 
   return (
-    <div className='home'>
+    <div className='myInformation'>
     {selectedPatient && (
       <div>
         <h3>Information</h3>
@@ -56,4 +56,4 @@ const OldHome = () => {
   );
 };
 
-export default OldHome;
+export default MyInformation;

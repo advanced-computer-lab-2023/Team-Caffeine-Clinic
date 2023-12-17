@@ -6,6 +6,8 @@ mongoose.set('strictQuery', false);
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
+const http = require('http');
+// const socketIO = require('socket.io');
 
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -39,12 +41,88 @@ const Admin = require('./models/admin');
 const MedicineRoute = require('./routes/Medicine')
 const pharmacistRoute = require('./routes/pharmacist')
 
+const Room = require('./models/Room')
+
 // const./models/admin= require('cors');
 
 
 
 
+
 var app = express();
+const server = http.createServer(app)
+const io = require("socket.io")(server, {
+	cors: {
+		origin: "http://localhost:3000",
+		methods: [ "GET", "POST" ]
+	}
+})
+
+// Socket.io connection handling
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+
+  socket.on('join-room', async (roomId, userId) => {
+    console.log(roomId);
+    socket.join(roomId);
+    socket.to(roomId).broadcast.emit('user-connected', userId);
+
+    // Update MongoDB with the new user
+    const room = await Room.findOne({ roomId });
+    if (room) {
+      room.users.push({ userId });
+      await room.save();
+    } else {
+      const newRoom = new Room({
+        roomId,
+        users: [{ userId }],
+      });
+      await newRoom.save();
+    }
+
+    socket.on('disconnect', async () => {
+      console.log('User disconnected:', userId);
+      socket.to(roomId).broadcast.emit('user-disconnected', userId);
+
+      // Remove the user from MongoDB when they disconnect
+      const room = await Room.findOne({ roomId });
+      if (room) {
+        room.users = room.users.filter((user) => user.userId !== userId);
+        await room.save();
+      }
+    });
+  });
+});
+// const server = http.createServer(app);
+// const io = socketIO(server);
+
+// io.on('connection', (socket) => {
+//   console.log('User connected');
+
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+
+//   // Handle WebRTC signaling events
+//   socket.on('offer', (data) => {
+//     socket.to(data.to).emit('offer', data);
+//   });
+
+//   socket.on('answer', (data) => {
+//     socket.to(data.to).emit('answer', data);
+//   });
+
+//   socket.on('ice-candidate', (data) => {
+//     socket.to(data.to).emit('ice-candidate', data.candidate);
+//   });
+// });
+
+// server.listen(3001, () => {
+//   console.log('Server running on port 3001');
+// });
+
+
+
 app.use(express.json({ limit: "200mb" }));
 app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 
@@ -115,7 +193,7 @@ app.get('/', (req, res) => {
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         //listen for requests
-        app.listen(process.env.PORT, () => {
+        server.listen(process.env.PORT, () => {
             console.log('Connencted to DB & Listening on port', process.env.PORT)
         })
     })

@@ -11,6 +11,10 @@ const Perscription = () => {
 
     const user = useAuthContext()
 
+    const margin = {
+        marginLeft: '100px',
+    }
+
     useEffect(() => {
         const fetchPerscription = async () => {
             try {
@@ -45,7 +49,7 @@ const Perscription = () => {
     }, [dateFilter, doctorFilter, stateFilter, user]);
 
     return (
-        <div className="doctors">
+        <div className="doctors" style={margin}>
             {/* Filter section */}
             <div className="filters">
                 <input

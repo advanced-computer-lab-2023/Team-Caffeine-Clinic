@@ -1,4 +1,6 @@
 import { useAuthContext } from '../hooks/useAuthContext'
+import DoctorImage from '../assets/img/doctors/doctor.jpg';
+
 const PharmacistDetails = ({ pharmacist }) => {
   const {user} = useAuthContext()
   const handleClick = async () => {
@@ -45,8 +47,15 @@ const PharmacistDetails = ({ pharmacist }) => {
 
 
       return (
-      <div className="Admin-details">
-          <h4></h4>
+        <div id="doctors" className="doctors">
+        <div className="container">
+                <div className="row">
+                <div className="col-lg">
+          <div className="member d-flex align-items-start">
+              <div className="pic">
+            <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+          </div>
+          <div className="member-info"> 
           <p><strong>Username: </strong>{pharmacist.username}</p>
           <p><strong>Email: </strong>{pharmacist.email}</p>
           <p><strong>Name: </strong>{pharmacist.name}</p>
@@ -58,8 +67,16 @@ const PharmacistDetails = ({ pharmacist }) => {
           <strong> Degree: </strong> <text onClick={viewDegree} style={{cursor:"pointer",color:" blue" }}  >View here </text> <p></p>
           <strong> Working Licenses: </strong> <text onClick={viewLicense} style={{cursor:"pointer",color:" blue"}}  >View here </text> <p></p>
           <p>{pharmacist.createdAt}</p>
-          <button onClick={handleClick}>Delete</button>
+          <button onClick={handleClick} className="delete-btn">Delete</button>
       </div>
+      </div>
+        </div>
+        </div>
+        </div>
+        <br />
+
+        </div>
+
       )
 }
 

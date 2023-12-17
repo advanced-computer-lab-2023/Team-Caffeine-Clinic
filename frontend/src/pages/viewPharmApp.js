@@ -6,7 +6,9 @@ import { useAuthContext } from '../hooks/useAuthContext'
 const PharmacistAppHome =  () => {
     const [Appl , setAppls] = useState(null);
     const {user} = useAuthContext()
-    
+    const margin = {
+        marginTop: '130px',
+      }
 
     useEffect(() => {
         const fetchAppls = async () => {
@@ -27,19 +29,15 @@ const PharmacistAppHome =  () => {
     }, [])
 
     return (
-        <>
-      <h2>Pharmacist Applications</h2>  
-        <div className="home">
-            <div className="DoctorApplications">
-                {/* {Appl && Appl.map((Appl) => (
-                    <p key={Appl.name}>{Appl.speciality}{Appl.rate}{Appl.affiliation}{Appl.education}{Appl.availableDates}</p>
-                ))} */}
-                 {Appl && Appl.map(Appl => (
+        <div className='doctorPage' style={margin}>
+
+        <div class="section-title">
+          <h2>Pharmacist Applications</h2>
+        </div> 
+           {Appl && Appl.map(Appl => (
           <PharmAppDetails Appl={Appl} key={Appl._id} />
                 ))}
-            </div>
         </div>
-        </>
     )
  }
 

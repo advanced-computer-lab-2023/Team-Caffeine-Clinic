@@ -20,8 +20,6 @@ router.get('/', viewFilterPerscriptions)
 
 router.get('/singlePersc/:perscID', getSinglePerscription)
 
-router.post('/create', createPersc)
-
 router.get('/doctor/:id', getDoctorName)
 
 module.exports = router

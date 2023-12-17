@@ -8,6 +8,10 @@ const AppointmentDoc = () => {
     const [status, setStatus] = useState('');
     const { user } = useAuthContext();
 
+    const margin = {
+        marginTop: '100px',
+    }
+
     useEffect(() => {
     const selectedDate = new Date(date);
     const year = selectedDate.getFullYear();

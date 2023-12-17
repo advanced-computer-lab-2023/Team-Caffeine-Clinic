@@ -3,10 +3,14 @@ import { Link } from "react-router-dom";
 import AdminForm from "../components/AdminForm";
 import AdminDetails from "../components/AdminDetails";
 import { useAuthContext } from '../hooks/useAuthContext';
+import AdminNavbar from "../components/AdminNavbar";
 
 const AdminHome = () => {
   const [admins, setAdmins] = useState(null);
   const {user} = useAuthContext()
+  const margin = {
+    marginTop: '130px',
+  }
 
   useEffect(() => {
     const fetchAdmins = async () => {
@@ -26,21 +30,18 @@ const AdminHome = () => {
   }, [user]);
 
   return (
-    <>
-      <nav>
-        <Link className="home-button" to="/AdminHome">Home</Link>
-      </nav>
-      <h2 className="title-admin">Admins</h2>
-      <div className="home">
-        <div className="admins">
+    <div className='doctorPage' style={margin}>
+<AdminNavbar />
+    <div className="section-title">
+          <h2>Admins</h2>
+        </div> 
           {admins &&
             admins.map((admin) => (
               <AdminDetails admin={admin} key={admin._id} />
             ))}
-        </div>
+
         <AdminForm />
       </div>
-    </>
   );
 };
 

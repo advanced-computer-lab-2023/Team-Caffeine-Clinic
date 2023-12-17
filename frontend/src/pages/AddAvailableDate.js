@@ -6,15 +6,23 @@ const AddAvailableDateFunc = () => {
   const { user } = useAuthContext()
   const [timeSlot, setTimeSlot] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleDateChange = (event) => {
     const selectedDate = new Date(event.target.value);
+    
+    if (selectedDate <= new Date()) {
+      setErrorMessage('Please select a future date and time.');
+      return;
+    }
+    setErrorMessage('');
     const year = selectedDate.getFullYear();
     const month = selectedDate.getMonth() + 1; // Adding 1 because getMonth() returns 0-indexed months
     const day = selectedDate.getDate();
     const hours = selectedDate.getHours();
     const minutes = selectedDate.getMinutes();
 
+    
     const formattedDate = `${year}\\${month}\\${day}:${hours}:${minutes}`;
     const toady = new Date();
     if(toady>selectedDate){

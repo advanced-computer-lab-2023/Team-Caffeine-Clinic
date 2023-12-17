@@ -2,11 +2,14 @@ import {useEffect,useState} from "react";
 import PatientDetails from "../components/PatientDetails";
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-
+import AdminNavbar from "../components/AdminNavbar";
 
 const ViewPatientHome =  () => {
     const [Patients , setPatients] = useState(null);
     const {user} = useAuthContext()
+    const margin = {
+      marginTop: '130px',
+    }
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -27,19 +30,15 @@ const ViewPatientHome =  () => {
     }, [user])
 
     return (
-        <>
-        <nav>
-        <Link className="home-button" to="/AdminHome">Home</Link>
-      </nav>
-      <h2 className="title-admin">Patients</h2>  
-        <div className="home">
-            <div className="patients">
-                  {Patients && Patients.map(patient => (
+      <div className='doctorPage' style={margin}>
+      <AdminNavbar />
+      <div class="section-title">
+          <h2>Patients</h2>
+        </div> 
+        {Patients && Patients.map(patient => (
           <PatientDetails patient={patient} key={patient._id} />
-                  ))}
-            </div>
+          ))}
         </div>
-        </>
     )
  }
 

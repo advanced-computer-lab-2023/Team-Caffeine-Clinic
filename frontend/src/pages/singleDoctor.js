@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../components/PatientNavbar';
+import ClinicPatientNavBar from '../components/ClinicPatientNavBar';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 import PaymentForm from '../components/PaymentHandler';
@@ -25,7 +25,9 @@ const SingleDoctor = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isButtonsVisible, setButtonsVisible] = useState(true);
 
-
+  const margin = {
+    marginTop: '100px',
+  }
   const openPopup = (theIndex) => {
     setPopupOpen(true);
     setIndex(theIndex)
@@ -172,52 +174,92 @@ const SingleDoctor = () => {
   }
 
   return (
-    <>
+<div className='doctorPage' style={margin}>
+          <ClinicPatientNavBar />
       {isButtonsVisible && (
-        <div className="toggle-buttons">
-          <button onClick={() => handleButtonClick(true)}>For Myself</button>
-          <button onClick={() => handleButtonClick(false)}>For Family Member</button>
+        <div>
+          <br />
+          <br />
+          <div className='text-center'><button className='button-43' onClick={() => handleButtonClick(true)}>For Myself</button></div>
+          <br />
+          <br />
+          <div className='text-center'><button className='button-43' onClick={() => handleButtonClick(false)}>For A Family Member</button></div>
         </div>
       )}
       {isForSelf !== null && (
         <>
-          <Navbar />
           {isForSelf ? (
             <div className="single-doctor-details">
-              <div className="details">
-                <strong>Available Dates: </strong>
+              <br />
+              <div className="section-title">
+                <h2>Available Dates </h2>
+                <h4>Dr. {doctor.name}</h4>
+                </div>
                 {doctor.availableDates && Array.isArray(doctor.availableDates) ? (
-                  <ul>
+                  <div>
                     {doctor.availableDates.map((date, index) => (
-                      <li key={index}>
+                      <div id="doctors" className="doctors">
+                      <div className="container">
+                              <div className="row">
+                              <div className="col-lg-4">
+                          <div className="member d-flex align-items-start">
+                              <div className="member-info"> 
+                      <div key={index}>
                         {date}{' '}
-                        <button onClick={() => {
+                        <button className='button-43' onClick={() => {
                           openPopup(doctor.availableDates[index]);
                           paymentHandel(doctor.rateAfterDiscount);
                         }}>
-                          Pay
+                          Book
                         </button>
-                      </li>
+                      </div>
+                      
+                              </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    <br />
+    </div> 
                     ))}
-                  </ul>
+                  </div>
                 ) : (
                   'No Dates available'
                 )}
-              </div>
+
             </div>
           ) : (
-            <div className="family-member-details">
-              <strong>Family Members:</strong>
+            <div className="family-member-details text-center">
+              <br />
+              <div className="section-title">
+              <h2>Family Members</h2>
+              </div>
               <ul>
                 {Array.isArray(familyMembers)&&familyMembers.map((familyMember, index) => (
-                  <li key={index}>
+                <div id="doctors" className="doctors">
+                  <div className="container text-center">
+                              <div className="row text-center">
+                              <div className="col-lg-3 text-center">
+                          <div className="member d-flex align-items-center">
+                              <div className="member-info"> 
+                  <div className='text-center' key={index}>
                     {familyMember.name}{' '}
-                    <button onClick={() => {
+                    <br />
+                    <br />
+                    <button className='button-43' onClick={() => {
                      fammemberhandel(familyMember.username  );
                     }}>
                       Book
                     </button>
-                  </li>
+                  </div>
+
+                  </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <br />
+        </div>
                 ))}
               </ul>
             </div>
@@ -233,7 +275,7 @@ const SingleDoctor = () => {
           )}
         </>
       )}
-    </>
+    </div>
   );
 };
 

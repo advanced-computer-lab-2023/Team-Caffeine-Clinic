@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
+import DoctorImage from '../assets/img/doctors/doctor.jpg';
 
 const DocAppDetails = ({ Appl }) => {
   const { user } = useAuthContext();
@@ -102,8 +103,15 @@ if (data) {
   };
 
   return (
-    <div className="Admin-details">
-      <h4></h4>
+<div id="doctors" className="doctors">
+<div className="container">
+        <div className="row">
+        <div className="col-lg">
+    <div className="member d-flex align-items-start">
+        <div className="pic">
+          <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+        </div>
+        <div className="member-info"> 
       <p><strong>Username: </strong>{Appl.username}</p>
       <p><strong>Password: </strong>{Appl.password}</p>
       <p><strong>Name: </strong>{Appl.name}</p>
@@ -139,14 +147,20 @@ if (data) {
           />
         </>
       )}
-      <span className="accept-button" onClick={handleAccept}>
-        {showFields ? 'Send' : 'Send Employment Contract'}
-      </span>
-      <span className="reject-button" onClick={handleReject}>Reject</span>
+      <button className="button-40" onClick={handleAccept}>
+        {showFields ? 'Send' : 'Accept'}
+      </button>
+      <button className="button-41" onClick={handleReject}>Reject</button>
+
 
       {error && <p style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
-    </div>
-    
+      </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    <br />
+    </div>    
   );
 
 };

@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
 
@@ -10,7 +12,7 @@ function DoctorList() {
   const fetchDoctorsByAvailability = async () => {
     try {
       //console.log(user)
-      const response = await fetch(`http://localhost:4000/api/patient/filterDoctorsByAvailability?date=${dateTime}`, {
+      const response = await fetch(`/api/patient/filterDoctorsByAvailability?date=${dateTime}`, {
         headers: {
           'Authorization': `Bearer ${user.user.token}`
         }
