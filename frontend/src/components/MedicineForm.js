@@ -15,8 +15,8 @@ const MedicineForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    const medicine = {Name, Price, Description,activeIngredients,Quantity}
+    const activeIngredientsArray = activeIngredients.split(',');
+    const medicine = {Name, Price, Description,activeIngredientsArray,Quantity}
     
     const response = await fetch('/api/medicine/addMedicine', {
       method: 'POST',
@@ -80,7 +80,8 @@ const MedicineForm = () => {
         onChange={(e) => setDescription(e.target.value)}
         value={Description} />
       <br></br>
-      <label>Active Ingredients:</label>
+      <label>Active Ingredients
+        (format:"MainIngredient,Ing2,Ing3,..."):</label>
       <input
         type="text"
         required={true}

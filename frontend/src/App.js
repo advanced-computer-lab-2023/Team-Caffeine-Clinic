@@ -235,7 +235,7 @@ function App() {
             />
             <Route 
               path="/SalesReport" 
-              element={<SalesReport/> }
+              element={user&& user.type!="Patient" && <SalesReport/> }
             />
             <Route 
             path="/alternatives" 

@@ -136,7 +136,7 @@ const alternatives = async (req, res) => {
     // Find all medicines with activeIngredients except the one with _id
     const alternatives = await medicineModel.find({
       _id: { $ne: _id },
-      activeIngredients: activeIngredients,
+      'activeIngredients.0': activeIngredients[0],
     });
 
     console.log(alternatives);
