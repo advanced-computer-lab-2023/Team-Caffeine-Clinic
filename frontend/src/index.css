@@ -1945,6 +1945,7 @@ section {
   height: auto;
   align-items: center;
   margin-top: 50px;
+  
 
 }
 
@@ -1964,7 +1965,7 @@ section {
   box-sizing: border-box;
 }
 
-.login-button {
+.login-button,.signup-options {
   width: 100%;
   padding: 15px;
   margin-bottom: 10px;
@@ -1977,13 +1978,40 @@ section {
   transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
+.login-button:hover,.signup-options {
   background-color: #3867d6;
 }
 
-.login-button:disabled {
+.login-button:disabled,.signup-options:disabled {
   background-color: #a5b1c2;
 }
+
+.signup-options {
+  position: relative;
+  display: inline-block;
+}
+.login-button option:hover{
+
+  background-color: #6a88cc;
+
+}
+
+
+.floating-label {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  display: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.signup-options:hover .floating-label {
+  display: block;
+}
+
 
 .filter-section {
   background-color: #f8f9fa; /* Light grey background */
@@ -2495,3 +2523,4 @@ span.date {
   position: relative; /* Or 'absolute' depending on layout */
   z-index: 1; /* Adjust if needed */
 }
+
