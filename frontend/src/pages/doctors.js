@@ -90,10 +90,12 @@ const Doctors = () => {
         <div className="member-info">
           <h4>Dr. {doctor.name}</h4>
           <span>Speciality: {doctor.speciality}</span>
+
           <p>Fees: {doctor.rateAfterDiscount ? doctor.rateAfterDiscount.toFixed(2) : 'Not available'} EGP</p>
           
           {console.log("Available Dates:", doctor.availableDates)}
 <p>Available Dates: {doctor.availableDates ? doctor.availableDates.join(', ') : 'Not available'}</p>
+
           <br />
           <div><Link className='button-43' to={`/doctor/getSingleDoctor/${doctor.username}`}>Book</Link></div>
         </div>

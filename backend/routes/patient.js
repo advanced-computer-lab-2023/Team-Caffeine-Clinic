@@ -30,7 +30,11 @@ const {
     orders,
     deleteOrder,
     getCartPrice,
-    estimateRate
+    requestFollowUp,
+    reschedule,
+    getNotification,
+    payForPerscription,
+    checkOnAppointments
 } = require('../controllers/PatientController')
 
 const {
@@ -53,13 +57,18 @@ const {
 // const {payWithWallet} = require('../controllers/paymentController')
 
 router.post('/checkOnHealthPackageTransaction', checkOnHealthPackageTransaction)
+router.post('/checkOnAppointments', checkOnAppointments)
 
 
 router.use(requireAuth)
 //add appointment  
 router.post('/createAppointment', createAppointment)
 router.post('/createAppointmentfam', createAppointmentfam)
+router.post('/requestFollowUp', requestFollowUp)
 
+router.post('/payForPerscription', payForPerscription)
+
+router.get('/getNotification', getNotification)
 
 router.post('/createHealthPackagesTransaction', createHealthPackagesTransaction)
 router.post('/addHealthPackageTransaction', addHealthPackageTransaction)
@@ -79,7 +88,7 @@ router.post('/refundAppointment', refundAppointment)
 router.post('/addTransactionAppointment', addTransactionAppointment)
 router.post('/addTransactionAppointmentfam', addTransactionAppointmentfam)
 
-
+router.patch('/reschedule', reschedule)
 
 //add a patient to a doc 
 router.patch('/addPatientToDoctor', addPatientToDoctor)
