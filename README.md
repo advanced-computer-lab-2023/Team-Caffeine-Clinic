@@ -5,7 +5,7 @@
 El7a2ny is born from the belief that healthcare interactions can be simplified and improved through innovative technology. Our motivation is to create a virtual clinic and pharmacy solution that seamlessly connects clinics, doctors, pharmacists, and patients. By automating processes, enhancing accessibility, and fostering efficient communication, El7a2ny aims to revolutionize the healthcare experience. Our dedication stems from the desire to make a positive impact on the lives of individuals seeking medical care, and we are driven to create a solution that sets a new standard in healthcare technology.
 
 ## Build Status
-
+- No Video Calls between Patient and Doctor
 ## Code Style
 
 ## Tech/Framework Used
@@ -33,6 +33,21 @@ In addition to the core MERN technologies, this project also utilizes:
 - **[List any additional libraries or tools used, such as Axios for HTTP requests, or specific React libraries like Material-UI for UI components].**
 - 
 ## Screenshots
+### User Home
+
+![User Home](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_ec44b698.jpg)
+
+### Doctors
+
+![Doctors](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_a7c0595a.jpg)
+
+### User Profile
+
+![User Profile](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_ad4a901f.jpg)
+
+### Add Docs/Health Records
+
+![Add Docs/Health Records](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_d2d8d164.jpg)
 
 ## Features
 
@@ -88,13 +103,15 @@ git clone <URL to the GitHub repository>
 ### Installing Dependencies
 
 1. navigate to backend and install backend dependencies:
+```bash
 cd backend
 npm install
-
+```
 3. navigate to frontend and install client dependencies:
+```bash
 cd frontend
 npm install
-
+```
 
 ### Setting Up Environment Variables
 
@@ -256,5 +273,9 @@ We warmly welcome contributions to the El7a2ni System! If you're interested in h
 
 Your contributions are greatly appreciated and will help make the El7a2ni System even better!
 
+
+
+## License
+- Apache 2.0 license
 
 
