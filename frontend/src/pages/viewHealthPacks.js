@@ -37,8 +37,9 @@ const HPHome =  () => {
           <h2>Health Packages</h2>
         </div> 
         {HP && HP.map(hp => (
+          hp && (
           <HealthPackdetails hp={hp} key={hp._id} />
-                  ))}
+                  )))}
             <HealthPackForm />
         </div>
     )

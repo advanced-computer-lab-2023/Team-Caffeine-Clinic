@@ -48,10 +48,13 @@ const Doctors = () => {
         const names = new Set(json.map(doctor => doctor.name));
         const specialities = new Set(json.map(doctor => doctor.speciality));
         const dates = new Set();
+        let i=0;
         json.forEach(doctor => {
-          doctor.availableDates?.forEach(date => dates.add(date));
-          console.log("hena - doctor.availableDates:"+ doctor.availableDates +"for name:" + doctor.name);
-
+          let list = doctor.availableDates
+          if(list.length>0){
+          for(let i =0 ; i < list.length ; i++){
+            dates.add(list[i])
+          }}
         });
         console.log(json)
 
@@ -87,7 +90,12 @@ const Doctors = () => {
         <div className="member-info">
           <h4>Dr. {doctor.name}</h4>
           <span>Speciality: {doctor.speciality}</span>
-          <p>Fees: {doctor.rateAfterDiscount ? doctor.rateAfterDiscount.toFixed(2) : '0.00'} EGP</p>
+
+          <p>Fees: {doctor.rateAfterDiscount ? doctor.rateAfterDiscount.toFixed(2) : 'Not available'} EGP</p>
+          
+          {console.log("Available Dates:", doctor.availableDates)}
+<p>Available Dates: {doctor.availableDates ? doctor.availableDates.join(', ') : 'Not available'}</p>
+
           <br />
           <div><Link className='button-43' to={`/doctor/getSingleDoctor/${doctor.username}`}>Book</Link></div>
         </div>
