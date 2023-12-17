@@ -2154,7 +2154,8 @@ const reschedule = async (req, res) => {
     const { date, appointment } = req.body
     try {
         const updatedAppointment = await Appointment.findByIdAndUpdate(appointment, {
-            appointmentDate: date
+            appointmentDate: date,
+            status: 'rescheduled'
         })
         const appointmentDate = date;
         const appointmentTime = date;
@@ -2334,7 +2335,7 @@ const payForPerscription = async (req, res) => {
             { _id: user._id },
             { $set: { cart: [] } }
         );
-        
+
         for (let i = 0; i < medicines.length; i++) {
             const medicine = await Medicine.findOne({ Name: medicines[i] });
             //console.log(user);
@@ -2347,6 +2348,52 @@ const payForPerscription = async (req, res) => {
         }
         res.status(200).send('GO AHEAD AND PAY')
     } catch (error) {
+        return res.status(500).send({ "error": error });
+    }
+}
+
+const checkOnAppointments = async (req, res) => {
+    console.log('woah');
+
+    try {
+        const upcoming = await Appointment.find({ status: 'upcoming' })
+        const FollowUp = await Appointment.find({ status: 'FollowUp' })
+        const rescheduled = await Appointment.find({ status: 'rescheduled' })
+
+        const current = new Date();
+
+        for (let i = 0; i < upcoming.length; i++) {
+            const date = upcoming[i].appointmentDate
+
+            // Replace backslashes with hyphens
+            // Split the formatted date string
+            // let [datePart, timePart, hourPart, minutePart] = date.split(':');
+            // datePart = datePart.substring(1)
+            // console.log(datePart, timePart, hourPart, minutePart);
+
+            // minutePart = minutePart.substring(0, minutes.length - 2)
+            // console.log(minutePart);
+            // const [yearPart, monthPart, dayPart] = datePart.split('\\');
+
+            // // Create a new Date object
+            // const normalDate = new Date(yearPart, monthPart - 1, dayPart, hourPart, minutePart);
+
+            // console.log(normalDate);
+        }
+
+        for (let i = 0; i < FollowUp.length; i++) {
+            const date = FollowUp[i].appointmentDate
+
+        }
+
+        for (let i = 0; i < rescheduled.length; i++) {
+            const date = rescheduled[i].appointmentDate
+
+        }
+        return res.status(200).json({ mssg: 'Checking on Dates Done' })
+
+    } catch (error) {
+        console.log(error);
         return res.status(500).send({ "error": error });
     }
 }
@@ -2391,5 +2438,6 @@ module.exports = {
     requestFollowUp,
     reschedule,
     getNotification,
-    payForPerscription
+    payForPerscription,
+    checkOnAppointments
 }

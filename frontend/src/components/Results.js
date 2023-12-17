@@ -119,7 +119,7 @@ const Results = ({ result }) => {
             <p>Date: {result.appointmentDate}</p>
             <p>Status: {result.status}</p>
             <button onClick={() => OpenNewWindowButton(result.doctor)}>Call Doctor</button>
-            {result.status === 'completed' && <button onClick={() => handleFollowUpRequest(result.doctor, result._id)}>Follow-Up</button>}
+            {(result.status === 'completed' || result.status === 'rescheduled') && <button onClick={() => handleFollowUpRequest(result.doctor, result._id)}>Follow-Up</button>}
 
             {result.status === 'upcoming' &&
                 <div>

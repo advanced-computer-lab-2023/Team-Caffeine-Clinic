@@ -33,7 +33,8 @@ const {
     requestFollowUp,
     reschedule,
     getNotification,
-    payForPerscription
+    payForPerscription,
+    checkOnAppointments
 } = require('../controllers/PatientController')
 
 const {
@@ -56,6 +57,7 @@ const {
 // const {payWithWallet} = require('../controllers/paymentController')
 
 router.post('/checkOnHealthPackageTransaction', checkOnHealthPackageTransaction)
+router.post('/checkOnAppointments', checkOnAppointments)
 
 
 router.use(requireAuth)

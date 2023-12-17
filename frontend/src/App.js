@@ -68,7 +68,6 @@ import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
-import VideoCall from './pages/VideoCall';
 
 import FollowUpRequests from './pages/FollowUpRequests';
 
@@ -88,8 +87,6 @@ import { useAuthContext } from './hooks/useAuthContext';
 
 import Peer from "simple-peer"
 import io from "socket.io-client"
-import Room from './pages/Room';
-import Meeting from './pages/JaasMeeting';
 
 
 const socket = io.connect('http://192.168.1.12:4000')
@@ -119,7 +116,11 @@ function App() {
           method: 'POST'
         })
 
-        if (!response) {
+        const response1 = await fetch('/api/patient/checkOnAppointments', {
+          method: 'POST'
+        })
+
+        if (!response || !response1) {
           throw Error('Problem in API')
         }
 
@@ -302,8 +303,6 @@ function App() {
               <Route path='PatientCall' element={<PatientComponent />} />
               <Route path='DoctorCall' element={<DoctorComponent />} />
 
-              <Route path='videoCall' element={<VideoCall />} />
-              <Route path='room/:id' element={<Room />} />
               {/* <Route path='meeting' element={<Meeting />} /> */}
 
 
