@@ -192,7 +192,7 @@ const HealthPackages = () => {
                   <div>description: {hp.description}</div>
                   <div>Services Included: {hp.servicesIncluded}</div>
                   <div>basePrice: {hp.basePrice}</div>
-                  <div>Doctor Session Discount: {hp.discounts?.doctorSession * 100}%</div>
+                  <div>Doctor Session Discount: {hp.discounts.doctorSession * 100}%</div>
                   <div>Medicine Discount: {hp.discounts?.pharmacyMedicine * 100}%</div>
                   <div>Family Member Discount: {hp.discounts?.familySubscription * 100}%</div>
                 </li>
