@@ -75,6 +75,7 @@ import FollowUpRequests from './pages/FollowUpRequests';
 import DoctorComponent from './components/DoctorComponent';
 import PatientComponent from './components/PatientComponent';
 
+
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -85,7 +86,13 @@ import AdminNavbar from './components/AdminNavbar';
 // Context
 import { useAuthContext } from './hooks/useAuthContext';
 
+import Peer from "simple-peer"
+import io from "socket.io-client"
+import Room from './pages/Room';
+import Meeting from './pages/JaasMeeting';
 
+
+const socket = io.connect('http://192.168.1.12:4000')
 
 const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
 
@@ -94,8 +101,16 @@ function App() {
   const [doctor, setDoctor] = useState(null)
   const [patient, setPatient] = useState(null)
   const [admin, setAdmin] = useState(null)
+  const [me, setMe] = useState("")
+
 
   useEffect(() => {
+
+  //   socket.on("me", (id) => {
+  //     console.log(id);
+  //     setMe(id)
+  // })
+
     // Set up a timer to call removeExpiredTransactions every, for example, 1 hour
     const timerId = setInterval(() => {
       const checkOnHealthPackageTransaction = async () => {
@@ -288,6 +303,8 @@ function App() {
               <Route path='DoctorCall' element={<DoctorComponent />} />
 
               <Route path='videoCall' element={<VideoCall />} />
+              <Route path='room/:id' element={<Room />} />
+              {/* <Route path='meeting' element={<Meeting />} /> */}
 
 
             </Routes>

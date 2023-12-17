@@ -41,6 +41,8 @@ const Admin = require('./models/admin');
 const MedicineRoute = require('./routes/Medicine')
 const pharmacistRoute = require('./routes/pharmacist')
 
+const Room = require('./models/Room')
+
 // const./models/admin= require('cors');
 
 
@@ -56,21 +58,41 @@ const io = require("socket.io")(server, {
 	}
 })
 
-io.on("connection", (socket) => {
-	socket.emit("me", socket.id)
+// Socket.io connection handling
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
 
-	socket.on("disconnect", () => {
-		socket.broadcast.emit("callEnded")
-	})
+  socket.on('join-room', async (roomId, userId) => {
+    console.log(roomId);
+    socket.join(roomId);
+    socket.to(roomId).broadcast.emit('user-connected', userId);
 
-	socket.on("callUser", (data) => {
-		io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
-	})
+    // Update MongoDB with the new user
+    const room = await Room.findOne({ roomId });
+    if (room) {
+      room.users.push({ userId });
+      await room.save();
+    } else {
+      const newRoom = new Room({
+        roomId,
+        users: [{ userId }],
+      });
+      await newRoom.save();
+    }
 
-	socket.on("answerCall", (data) => {
-		io.to(data.to).emit("callAccepted", data.signal)
-	})
-})
+    socket.on('disconnect', async () => {
+      console.log('User disconnected:', userId);
+      socket.to(roomId).broadcast.emit('user-disconnected', userId);
+
+      // Remove the user from MongoDB when they disconnect
+      const room = await Room.findOne({ roomId });
+      if (room) {
+        room.users = room.users.filter((user) => user.userId !== userId);
+        await room.save();
+      }
+    });
+  });
+});
 // const server = http.createServer(app);
 // const io = socketIO(server);
 

@@ -8,6 +8,7 @@ const Results = ({ result }) => {
     const { user } = useAuthContext();
     const [isOpen, setOpen] = useState(false);
     const [error, setError] = useState('');
+    const [room, setRoom] = useState(null);
 
     const handleOpen = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -71,15 +72,58 @@ const Results = ({ result }) => {
         }
     };
 
+    const OpenNewWindowButton = async (doctor) => {
+        try {
+            const response = await fetch('/api/makeRoom', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ doctor }),
+            })
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.room);
+                setRoom(data.room)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+
+
+        const handleButtonClick = () => {
+            // Replace 'https://example.com' with the desired URL
+            if (room) {
+                const url = `http://localhost:3000/room/${room}`;
+
+                // Open a new window with the specified URL
+                const width = 600;
+                const height = 400;
+                const left = window.innerWidth / 2 - width / 2;
+                const top = window.innerHeight / 2 - height / 2;
+                const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
+                window.open(url, '_blank', features);
+            }
+            else {
+                window.alert('No Room')
+            }
+        };
+        handleButtonClick();
+    }
     return (
         <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
             <p>Doctor: {result.doctor.name}</p>
             <p>Date: {result.appointmentDate}</p>
             <p>Status: {result.status}</p>
+            <button onClick={() => OpenNewWindowButton(result.doctor)}>Call Doctor</button>
             {result.status === 'completed' && <button onClick={() => handleFollowUpRequest(result.doctor, result._id)}>Follow-Up</button>}
 
             {result.status === 'upcoming' &&
                 <div>
+
                     <button onClick={() => handleOpen(true)}>Reschedule</button>
                     <Popup open={isOpen} modal nested contentStyle={contentStyle} lockScroll>
                         <strong>Available Dates: </strong>
