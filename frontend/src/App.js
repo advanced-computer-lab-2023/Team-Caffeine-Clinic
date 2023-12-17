@@ -71,9 +71,24 @@ import DocumentUpload from './pages/PatientAddDocs';
 import ChatPage from './pages/ChatPage'
 import PharmaChangePassword from './pages/PharmaChangePassword'
 
+
 import SalesReport from './pages/SalesReport';
 import AlternativesPage from './pages/AlternativesPage';
 import ClinicChatPage from '../src/pages/ClinicChatPage';
+
+import Addpresc from './pages/Addprescription';
+import DoctorHome from './pages/DoctorHome';
+
+
+import AboutSection from './components/AboutSection';
+import HomeSection from './components/HomeSection';
+import ServicesSection from './components/ServicesSection';
+import ContactSection from './components/ContactSection';
+import AppointmentSection from './components/AppointmentSection';
+import ClinicPatientNavBar from './components/ClinicPatientNavBar';
+
+
+
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -125,27 +140,28 @@ function App() {
 
             <Route path="" element={!user ? <Login /> : (user.type === 'Patient') ? 
               <Navigate to="/home"/> : (user.type === 'Pending') ? 
-              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/seedoc"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
+              <Navigate to="/employmentContract"/>: (user.type === 'Doctor') ? <Navigate to="/DoctorHome"/> : (user.type === 'Pharmacist') ? <Navigate to="/Medicines"/> : <Navigate to="/AdminHome"/>} />
              
-            <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
+              <Route path="employmentContract" element={<WithcontractNavbar><ProtectedRoute><App1 /></ProtectedRoute></WithcontractNavbar>} />
 
-            <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="EditDocRate" element={<WithDoctorNavbar><ProtectedRoute><EditMyDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seedoc" element={<WithDoctorNavbar><ProtectedRoute><DoctorInfo /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="EditDocEmail" element={<WithDoctorNavbar><ProtectedRoute><UpdateEmail /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="EditDocHos" element={<WithDoctorNavbar><ProtectedRoute><UpdateAffiliation /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="ViewPatients" element={<WithDoctorNavbar><ProtectedRoute><MyPatients /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><ProtectedRoute><PatientsWithUpcomingAppointments /></ProtectedRoute></WithDoctorNavbar>} />
-              <Route path="SearchPatient" element={<WithDoctorNavbar><ProtectedRoute><SelectPatient /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="SearchPatient" element={<><ProtectedRoute><SelectPatient /></ProtectedRoute></>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><ProtectedRoute><AppointmentDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seepatientdocs" element={<WithDoctorNavbar><ProtectedRoute><DoctorDocuments /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="Docaddpatientdocs" element={<WithDoctorNavbar><ProtectedRoute><AddDocuments /></ProtectedRoute></WithDoctorNavbar>} />
 
+              <Route path="DoctorHome" element={<WithDoctorNavbar><ProtectedRoute><DoctorHome /></ProtectedRoute></WithDoctorNavbar>} />
 
 
               <Route
               path="/doctor/DoctorChangePassword" 
               element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
-            />
+              />
 
               
               <Route path="AddAvailableDate" element={<WithDoctorNavbar><ProtectedRoute><AddAvailableDateFunc /></ProtectedRoute></WithDoctorNavbar>} />
@@ -188,6 +204,9 @@ function App() {
               <Route path="/viewHealthPacks" element={<ProtectedRoute><HPHome/></ProtectedRoute>} />
               <Route path="/editHP/:id" element={<ProtectedRoute><EditHealthPackage/></ProtectedRoute>} />
               <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome/></ProtectedRoute>} />
+              <Route path="/viewPatientsAdmin" element={<ProtectedRoute><ViewPatientHome/></ProtectedRoute>} />
+              <Route path="/AddPrescription/:PatientName" element={<ProtectedRoute><Addpresc/></ProtectedRoute>} />
+              <Route path="/DoctorHome" element={<ProtectedRoute><DoctorHome/></ProtectedRoute>} />
                                                 
               <Route 
               path="/admin/AdminChangePassword" 
@@ -316,12 +335,11 @@ function App() {
 function WithNavbarAndSidebar({ children }) {
   return (
     <div className='MainContent'>
-      <div className='Sidebar'>
+      {/* <div className='Sidebar'>
       <Sidebar />
+      </div> */}
 
-      {/* <Link to="/home" className='home-button'>Home</Link> */}
-      </div>
-      {/* <Navbar /> */}
+      <ClinicPatientNavBar />      
       <div className="pages">
         {children}
       </div>
@@ -366,8 +384,8 @@ function WithcontractNavbar({ children }) {
 
 function AdminNavbarAndSidebar({ children }) {
   return (
-    <div>
-      <AdminNavbar />{console.log(children)}
+    <div className='MainContent'>
+      <AdminNavbar />
       <div className="pages">
         {children}
       </div>

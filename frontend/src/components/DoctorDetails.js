@@ -10,7 +10,7 @@ const DoctorDetails = ({ doctor }) => {
         </Link>
       </div>
       <div className="details"><strong>speciality: </strong>{doctor.speciality}</div>
-      <div className="details"><strong>session price: </strong>${doctor.rateAfterDiscount}</div>
+      <div className="details"><strong>session price: </strong>$d</div>
       <div className="details"><strong>affiliation: </strong>{doctor.affiliation}</div>
       <div className="details"><strong>education: </strong>{doctor.education}</div>
       <div className="details"><strong>rate: </strong>{doctor.originalRate}</div>

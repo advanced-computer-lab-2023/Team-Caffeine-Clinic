@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import DoctorImage from '../assets/img/doctors/doctor.jpg';
 
 
 const AppointmentsComponent = () => {
+    const [allAppointments, setAllAppointments] = useState([]); // New state to hold all appointments
     const [date, setDate] = useState('');
     const [status, setStatus] = useState('');
     const { user } = useAuthContext();
     const [results, setResults] = useState([]);
     const [error, setError] = useState('');
-
+    const margin = {
+        marginTop: '100px',
+      }
     useEffect(() => {
         fetchAppointments();
     }, [date, status]);
@@ -17,6 +21,8 @@ const AppointmentsComponent = () => {
     const handleDateChange = (event) => {
         setDate(event.target.value);
     };
+
+
 
     const handleStatusChange = (event) => {
         setStatus(event.target.value);
@@ -39,7 +45,7 @@ const AppointmentsComponent = () => {
 
     const fetchAppointments = async () => {
         try {
-            const response = await fetch(`/api/patient/getAppointments?date=${date}&status=${status}`, {
+            const response = await fetch(`/api/patient/getAppointments`, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
@@ -49,11 +55,25 @@ const AppointmentsComponent = () => {
                 setResults(null);
             } else {
                 const data = await response.json();
-                setResults(data);
+                setAllAppointments(data); // Set all appointments
+                filterAppointments(data); // Filter appointments based on date and status
             }
         } catch (error) {
             console.error('Error fetching appointments:', error);
         }
+    };
+
+    const filterAppointments = (appointments) => {
+        const filtered = appointments.filter(appointment => 
+            (!date || appointment.appointmentDate === date) &&
+            (!status || appointment.status === status)
+        );
+        setResults(filtered);
+    };
+
+    const getUniqueDates = () => {
+        const dates = allAppointments.map(appointment => appointment.appointmentDate);
+        return [...new Set(dates)]; // Removes duplicates
     };
 
     const refundAppointment = async (appointmentdate, doc, transactionID) => {
@@ -76,60 +96,75 @@ const AppointmentsComponent = () => {
         }
     };
     return (
-        <div className="appointments-page">
-            <div>
-                            
-            <Link to="/doctors" className='book-button'>Book an appointment</Link>
-
+<div className='doctorPage' style={margin}>
+    <br />
+        <div className="section-title">
+          <h2>Appointments</h2>
+        </div> 
+            <div id="doctors" className="doctors">
+            <div className='text-center'>
+            <Link to="/doctors" className='button-43'>Book a new appointment</Link>
             </div>
-
-
-            <div className="filter-container">
-                <div>
-                   <h2> <strong>Filter Results</strong></h2>
-                </div>
-                <div className="input-group">
-                    <label htmlFor="date">Enter Date:</label>
-                    <input type="date" id="date" value={date} onChange={handleDateChange} />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="status">Select Status:</label>
-                    <select id="status" value={status} onChange={handleStatusChange}>
-                        <option value="">None</option>
-              <option value="upcoming">Upcoming</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-              <option value="rescheduled">Rescheduled</option>
-              <option value="FollowUp">FollowUp</option>
-              </select>
-                </div>
-            </div>
-
-            <h1>
-                Appointments:
-            </h1>
-      
-            <div className="results-container">
-                <div className="appointment-results">
+            <div className="container">
+                <div className="row">
+                <div className="col-lg-8">
                     {results && results.map((result, index) => (
-                        <div className="appointment-item" key={index}>
-                            <div>
-                            <p className='status'> <strong>{result.status}</strong></p>
-                            <p id='doctor-name'>Dr. {result.doctor}</p>
+                        <div className="member mt-4 d-flex align-items-start" key={index}>
+                            <div className="pic">
+                            <img src={DoctorImage} className="img-fluid" alt="Doctor" />
                             </div>
-
+                            <div className="member-info">
+                            <h4 id='doctor-name'>Dr. {result.doctor}</h4>
+                            <p className='status'> <strong>{result.status}</strong></p>
                             <div>
-                            
-                            <button className="refund-button" onClick={() => refundAppointment(result.appointmentDate, result.doctor, result.transactionId)}>
+                            <p>Date: {result.appointmentDate}</p>
+                            {/* <p>Date: {formatDateForDisplay(result.appointmentDate)}</p> */}
+                            </div>
+                            <br />
+                            <br />
+                            <button className="button-41" type='submit' onClick={() => refundAppointment(result.appointmentDate, result.doctor, result.transactionId)}>
                                 Refund
                             </button>
-                            <p>{formatDateForDisplay(result.appointmentDate)}</p>
                             </div>
                         </div>
                     ))}
                 </div>
-                {error && <p className="error-message">{error}</p>}
+
+                {/* {error && <p className="error-message">{error}</p>} */}
+
+            {/* Filters - occupies 4 columns */}
+            <div className="col-lg-4  mt-4">
+
+            <div className="filter-section">
+            <div className="bx bx-filter filter-title" >
+            Filters
             </div>
+            <div>
+                        <label htmlFor="date">Select Date:</label>
+                        <select className="filter-input" id="date" value={date} onChange={handleDateChange}>
+                            <option value="">None</option>
+                            {getUniqueDates().map((uniqueDate, index) => (
+                                <option key={index} value={uniqueDate}>{uniqueDate}</option>
+                            ))}
+                        </select>
+                    </div>
+                <div>
+                    <label htmlFor="status">Select Status:</label>
+                    <select className="filter-input" id="status" value={status} onChange={handleStatusChange}>
+                        <option value="">None</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="rescheduled">Rescheduled</option>
+                        <option value="FollowUp">FollowUp</option>
+              </select>
+                </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            </div>
+            <br />
         </div>
     );
 };

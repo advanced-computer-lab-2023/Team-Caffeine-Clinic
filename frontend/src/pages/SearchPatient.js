@@ -9,6 +9,10 @@ const SelectPatient = () => {
 
   const {user} = useAuthContext()
 
+  const margin = {
+    marginTop: '100px',
+}
+
 
   const fetchPatientData = async () => {
     try {
@@ -42,7 +46,7 @@ const SelectPatient = () => {
   };
 
   return (
-    <div>
+    <div style={margin}>
       <div>
         <label htmlFor="patientUsername">Patient Username:</label>
         <input

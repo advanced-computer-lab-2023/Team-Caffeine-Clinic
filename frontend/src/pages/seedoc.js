@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { useAuthContext } from '../hooks/useAuthContext';
+import DoctorNavbar from '../components/DoctorNavbar.js';
 
 const DoctorInfo = () => {
 
@@ -34,7 +35,9 @@ const DoctorInfo = () => {
   }, []); // Empty dependency array to trigger only on initial render
 
   return (
-    <div>
+    <>
+      <DoctorNavbar />
+    {/* <div>
       <h1>Doctor Information</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {doctor && (
@@ -53,13 +56,25 @@ const DoctorInfo = () => {
               {doctor.availableDates &&
                 doctor.availableDates.map((date, index) => (
                   <li key={index}>{date}</li>
-                ))}
+                  ))}
             </ul>
           </p>
           <p>Wallet: {doctor.wallet}</p>
         </div>
       )}
-    </div>
+    </div> */}
+ {error && <p style={{ color: 'red' }}>{error}</p>}
+      {doctor && (
+<section id="hero" className="d-flex align-items-center">
+  <div className="container">
+    <h1>Welcome {doctor.username}</h1>
+    <h2>Glad to have you back!</h2>
+    <a href="#about" className="btn-get-started scrollto">Get Started</a>
+  </div>
+</section>
+ )}
+
+      </>
   );
 };
 
