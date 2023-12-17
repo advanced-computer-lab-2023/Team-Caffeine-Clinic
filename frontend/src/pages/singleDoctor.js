@@ -174,8 +174,8 @@ const SingleDoctor = () => {
   }
 
   return (
-    <div style={margin}>
-        <ClinicPatientNavBar />
+<div className='doctorPage' style={margin}>
+          <ClinicPatientNavBar />
       {isButtonsVisible && (
         <div>
           <br />
@@ -190,27 +190,43 @@ const SingleDoctor = () => {
         <>
           {isForSelf ? (
             <div className="single-doctor-details">
-              <div className="details">
-                <strong>Available Dates </strong>
+              <br />
+              <div className="section-title">
+                <h2>Available Dates </h2>
                 <h4>Dr. {doctor.name}</h4>
+                </div>
                 {doctor.availableDates && Array.isArray(doctor.availableDates) ? (
-                  <ul>
+                  <div>
                     {doctor.availableDates.map((date, index) => (
-                      <li key={index}>
+                      <div id="doctors" className="doctors">
+                      <div className="container">
+                              <div className="row">
+                              <div className="col-lg-4">
+                          <div className="member d-flex align-items-start">
+                              <div className="member-info"> 
+                      <div key={index}>
                         {date}{' '}
-                        <button onClick={() => {
+                        <button className='button-43' onClick={() => {
                           openPopup(doctor.availableDates[index]);
                           paymentHandel(doctor.rateAfterDiscount);
                         }}>
-                          Pay
+                          Book
                         </button>
-                      </li>
+                      </div>
+                      
+                              </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    <br />
+    </div> 
                     ))}
-                  </ul>
+                  </div>
                 ) : (
                   'No Dates available'
                 )}
-              </div>
+
             </div>
           ) : (
             <div className="family-member-details">

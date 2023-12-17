@@ -161,7 +161,7 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
   };
 
   return (
-    <div className="text-center popup-container">
+    <div className="text-center popup-container ">
       <div className="popup-content">
         {loadingWallet && <div>Loading wallet...</div>}
         {!loadingWallet && !showCardElement && (
@@ -184,6 +184,10 @@ const PaymentForm = ({ username, amount, onPaymentResult }) => {
           <button className='button-41'>Cancel</button>
         </Link>
       </div>
+      <br />
+      <br />
+      <br />
+
     </div>
   );
 };
