@@ -35,19 +35,19 @@ In addition to the core MERN technologies, this project also utilizes:
 ## Screenshots
 ### User Home
 
-![User Home](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_ec44b698.jpg)
+(screenshots/WhatsApp Image 2023-12-17 at 05.51.46_ec44b698.jpg)
 
 ### Doctors
 
-![Doctors](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_a7c0595a.jpg)
+(screenshots/WhatsApp Image 2023-12-17 at 05.51.46_a7c0595a.jpg)
 
 ### User Profile
 
-![User Profile](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_ad4a901f.jpg)
+(screenshots/WhatsApp Image 2023-12-17 at 05.51.46_ad4a901f.jpg)
 
 ### Add Docs/Health Records
 
-![Add Docs/Health Records](screenshots/WhatsApp Image 2023-12-17 at 05.51.46_d2d8d164.jpg)
+(screenshots/WhatsApp Image 2023-12-17 at 05.51.46_d2d8d164.jpg)
 
 ## Features
 
