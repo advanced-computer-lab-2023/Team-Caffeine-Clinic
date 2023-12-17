@@ -1085,29 +1085,37 @@ const refundAppointment = async (req, res) => {
     try {
         const appointmentdate = req.query.appointmentdate;
         const doc = req.query.doc;
-        const username = req.query.username;
-        let patient
-        if (username) {
-            patient = username
-        }
-        else {
-            patient = req.user.username;
-        }
-        console.log(doc, patient);
-        const user = req.user.username
-
+        const patient = req.user.username;
         const transactionID = req.query.transactionID;
-        console.log(appointmentdate);
+        const date = new Date();
+        const parts = appointmentdate.split("\\");
+        if (parts.length !== 5){
+            return res.status(404).json({ error: 'found.' });
 
+        }
+        const [year, month1, month, time, sec] = parts;
+        const [day, hour, min1] = sec.split(":");
+        const paddedYear = year[1] + year[2] + year[3] + year[4];
+        let min = 0;
+        if (min1[1] !== '"') {
+            min = min1[0] + min1[1];
+        } else {
+            min = min1[0];
+        }
+        const appointmentDate = new Date(paddedYear, month - 1, day, hour, min);
+       if(appointmentDate<date){
+        return res.status(404).json({ error: 'Can"t' });
+
+       }
         // Find the appointment by ID
         const appointment = await Appointment.findOne({
             doctor: doc,
             patient: patient,
             appointmentDate: appointmentdate,
         });
-        console.log(appointment);
+        
 
-        const patient1 = await Patient.findOne({ username: user });
+        const patient1 = await Patient.findOne({ username: patient });
         const doctor1 = await Doctor.findOne({ username: doc });
 
         // Check if the appointment exists
@@ -1140,137 +1148,6 @@ const refundAppointment = async (req, res) => {
         await doctor1.save();
         await patient1.save();
         await transaction.save();
-        await Appointment.deleteOne({
-            doctor: doc,
-            patient: patient,
-            appointmentDate: appointmentdate,
-        });
-
-        const patientName = patient1.name;
-        const patientEmail = patient1.email
-        const doctorName = doctor1.name;
-        const doctorEmail = doctor1.email
-        const clinicName = doctor1.affiliation;
-
-        const transporter = nodemailer.createTransport({
-            service: 'hotmail',
-            auth: {
-                user: 'acluser123@hotmail.com',
-                pass: 'AMRgames1@',
-            },
-        });
-
-        const mailOptions = {
-            from: 'acluser123@hotmail.com',
-            to: patientEmail, // Replace with the recipient's email address
-            subject: 'Appointment Cancellation',
-            html: `
-            <!DOCTYPE html>
-            <html lang="en">
-        
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Appointment Cancellation</title>
-              <style>
-                /* Your CSS styles here */
-              </style>
-            </head>
-        
-            <body>
-              <div class="container">
-                <h1>Appointment Cancellation</h1>
-                <p>Dear ${patientName},</p>
-                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.</p>
-            
-                <div class="appointment-details">
-                  <p><strong>Doctor:</strong> ${doctorName}</p>
-                  <p><strong>Date:</strong> ${appointmentdate}</p>
-                  <p><strong>Location:</strong> ${clinicName}</p>
-                </div>
-            
-                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
-            
-                <p>Thank you for choosing our services. We look forward to seeing you!</p>
-            
-                <p>Best regards,<br> ${clinicName}</p>
-              </div>
-            </body>
-            
-            </html>
-            `,
-        };
-
-        const mailOptionsDoc = {
-            from: 'acluser123@hotmail.com',
-            to: doctorEmail, // Replace with the recipient's email address
-            subject: 'Appointment Cancellation',
-            html: `
-            <!DOCTYPE html>
-            <html lang="en">
-        
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Appointment Cancellation</title>
-              <style>
-                /* Your CSS styles here */
-              </style>
-            </head>
-        
-            <body>
-              <div class="container">
-                <h1>Appointment Cancellation</h1>
-                <p>Dear ${patientName},</p>
-                <p>We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.</p>
-            
-                <div class="appointment-details">
-                  <p><strong>Doctor:</strong> ${doctorName}</p>
-                  <p><strong>Date:</strong> ${appointmentdate}</p>
-                  <p><strong>Location:</strong> ${clinicName}</p>
-                </div>
-            
-                <p>Please make sure to arrive on time for your appointment. If you have any questions or need to reschedule, feel free to contact us.</p>
-            
-                <p>Thank you for choosing our services. We look forward to seeing you!</p>
-            
-                <p>Best regards,<br> ${clinicName}</p>
-              </div>
-            </body>
-            
-            </html>
-            `,
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-
-        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-        await delay(5000);
-
-        transporter.sendMail(mailOptionsDoc, (error, info) => {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-
-        createNotification(patient1._id, "Appointment Cancellation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.
-          Doctor: ${doctorName}
-          Date: ${appointmentdate}
-          Location: ${clinicName}`)
-
-        createNotification(doctor1._id, "Appointment Cancellation", `We are pleased to confirm your appointment with Dr. ${doctorName} on ${appointmentdate}.
-          Doctor: ${doctorName}
-          Date: ${appointmentdate}
-          Location: ${clinicName}`)
 
         // Optionally, you can update the appointment status or perform any other necessary actions
 

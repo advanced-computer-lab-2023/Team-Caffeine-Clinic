@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { Diversity1 } from '@mui/icons-material';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import DoctorImage from '../assets/img/doctors/doctor.jpg';
 
@@ -122,10 +123,17 @@ const AppointmentsComponent = () => {
                             </div>
                             <br />
                             <br />
-                            <button className="button-41" type='submit' onClick={() => refundAppointment(result.appointmentDate, result.doctor, result.transactionId)}>
-                                Refund
-                            </button>
-                            </div>
+                            {!error ? (
+  <button
+    className="button-41"
+    type="submit"
+    onClick={() => refundAppointment(result.appointmentDate, result.doctor, result.transactionId)}
+  >
+    Refund
+  </button>
+) : (
+  <p>You can't refund.</p>
+)}                            </div>
                         </div>
                     ))}
                 </div>

@@ -197,12 +197,12 @@ const DocumentUpload = () => {
   <div className="container">
     <div className="section-title">
       <h2>Add To Your Patient Documents</h2>
-      <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+      {/* <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> */}
     </div>
     <form onSubmit={handleSubmit} method="post" role="form" className="php-email-form">
         <div className="col-md-4 form-group mt-3">
-          <select name="department" id="department" className="form-select">
-            <option value>Select Department</option>
+          <select name="department" id="department" className="form-select" value={selectedPatient} onChange={(e) => setSelectedPatient(e.target.value)}>
+            <option value>Select Patient</option>
             {patients.map((patient, index) => (
                <option key={index} value={patient}>
                  {patient}
@@ -210,14 +210,36 @@ const DocumentUpload = () => {
              ))}
           </select>
         </div>
-        
-        
-        
-      <div className="text-center"><button type="submit">Make an Appointment</button></div>
+        {selectedPatient && (
+          <>
+            {documents.map((_, index) => (
+              <div key={index}>
+                <label>Description:</label>
+                <input
+                  type="text"
+                  value={descriptions[index]}
+                  onChange={(e) => handleDescriptionChange(e, index)}
+                />
+                <label>Document:</label>
+                <input type="file" onChange={(e) => handleFileChange(e, index)} accept=".pdf" />
+                <button type="button" onClick={() => handleCancel(index)}>
+                  Cancel
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={addFileField}>
+              Add Document
+            </button>
+          </>
+        )}   
+        <button type="submit" disabled={loading}>
+           {loading ? 'Saving...' : 'Submit'}
+            </button>     
+      {/* <div className="text-center"><button type="submit">Make an Appointment</button></div> */}
     </form>
+    <div>{successMessage && <p>{successMessage}</p>}</div>
   </div>
 </section>
-
 </div>
 </section>
 </>
