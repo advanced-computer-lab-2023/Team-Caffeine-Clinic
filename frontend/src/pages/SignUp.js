@@ -32,6 +32,10 @@ const SignUp = () => {
     setIsValid(isValidPassword);
   };
 
+  const margin = {
+    marginTop: '140px',
+  }
+
   const register = async (e) => {
     e.preventDefault();
 
@@ -83,7 +87,7 @@ const SignUp = () => {
   };
 
   return (
-    <body>
+    <body >
       <header id="header">
         <div className="container d-flex align-items-center">
           <h1 className="logo me-auto">
@@ -95,12 +99,13 @@ const SignUp = () => {
         </div>
       </header>
 
-      <div className="login-page">
+      <div style={margin} className="login-page">
         <div className="login-form-container">
           <form className="login-form" onSubmit={register}>
             <label className="label">
               Username
               <input
+              className='form-control'
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 type="value"
@@ -115,7 +120,7 @@ const SignUp = () => {
               id="password"
               value={password}
               onChange={handlePasswordChange}
-              className={isValid ? 'valid input-login' : 'invalid input-login'}
+              className={isValid ? 'valid input-login form-control' : 'invalid input-login form-control'}
             />
             {!isValid && (
               <div className="error">
@@ -125,12 +130,12 @@ const SignUp = () => {
             <hr />
             <label>
               Name:
-              <input value={name} onChange={(e) => setName(e.target.value)} type="text" />
+              <input className='form-control' value={name} onChange={(e) => setName(e.target.value)} type="text" />
             </label>
             <hr />
             <label>
               Email:
-              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
+              <input className='form-control' value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
             </label>
             <hr />
             <label>
@@ -138,6 +143,7 @@ const SignUp = () => {
               <input
                 type="date"
                 placeholder="Enter BirthDate"
+                className='form-control'
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
                 name="birthdate"
@@ -179,17 +185,17 @@ const SignUp = () => {
               <br /> <br />
               <label>
                 Full Name:
-                <input value={EName} onChange={(e) => setEname(e.target.value)} type="text" />
+                <input className='form-control' value={EName} onChange={(e) => setEname(e.target.value)} type="text" />
               </label>
               <br />
               <label>
                 Mobile Number:
-                <input value={EMobile} onChange={(e) => setEMobile(e.target.value)} type="text" />
+                <input className='form-control' value={EMobile} onChange={(e) => setEMobile(e.target.value)} type="text" />
               </label>
               <br />
               <label>
                 Relation to the Patient:
-                <select value={ERelation} onChange={(e) => setERelation(e.target.value)}>
+                <select className='form-control' value={ERelation} onChange={(e) => setERelation(e.target.value)}>
                   <option value="">Select Relation</option>
                   <option value="Father">Father</option>
                   <option value="Mother">Mother</option>
@@ -204,6 +210,7 @@ const SignUp = () => {
               <label>
                 Health Record:
                 <input
+                className='form-control'
                   value={healthRecords}
                   onChange={(e) => setHealthRecords(e.target.value)}
                   type="text"
