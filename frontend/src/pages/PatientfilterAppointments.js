@@ -115,7 +115,7 @@ const AppointmentsComponent = () => {
                             <img src={DoctorImage} className="img-fluid" alt="Doctor" />
                             </div>
                             <div className="member-info">
-                            <h4 id='doctor-name'>Dr. {result.doctor}</h4>
+                            <h4 id='doctor-name'>Dr. {result.doctor.name}</h4>
                             <p className='status'> <strong>{result.status}</strong></p>
                             <div>
                             <p>Date: {result.appointmentDate}</p>
