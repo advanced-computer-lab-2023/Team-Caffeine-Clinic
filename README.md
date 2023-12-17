@@ -115,5 +115,21 @@ npm start
 
 The application should now be running on `localhost` at the specified port
 
-
-
+## API Refrences 
+###All API Routes:
+- app.use('/api', forgotPass)
+- app.use('/api', stripe)
+- app.use('/api/patient', patientRoute)
+- app.use('/api', login)
+- app.use('/api', signUp)
+- app.get('/getSession', getSession)
+- app.use('/api/medicine', MedicineRoute)
+- app.use('/api/pharmacists', pharmacistRoute);
+- app.use('/api/perscription', Perscriptions)
+- app.use('/api/Admin',adminsRoute)
+- app.use('/api/emplymentContract', emplymentContract)
+- app.use('/api/familyMembers', familyMembersRoute);
+- app.use('/api/doctors', doctorsRoute);
+- app.use('/api/doctorInfo', doctorInfoRoutes);
+- app.use('/api/healthpackage', healthPackageRoutes);
+- app.use('/api', Appointment)
