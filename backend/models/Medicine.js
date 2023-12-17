@@ -30,8 +30,8 @@ const MedicineSchema = new Schema({
       default: 0
     },    
     activeIngredients: {
-        type: String,
-        required:true
+      type: [String],
+      required: true,
       },
     Sales: {
         type: Number,

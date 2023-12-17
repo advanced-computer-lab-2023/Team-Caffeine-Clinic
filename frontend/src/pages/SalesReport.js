@@ -3,6 +3,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, Button, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import Navbar from '../components/Navbar';
 
 const SalesReport = () => {
     const [reportData, setReportData] = useState([]);
@@ -15,12 +16,16 @@ const SalesReport = () => {
     const [selectedDay, setSelectedDay] = useState('');
     const [selectedMedicine, setSelectedMedicine] = useState('');
     const { user } = useAuthContext();
+    const [isOpen, setOpen] = useState(false);
+    const [isOpen1, setOpen1] = useState(false);
+
+
     let totalSalesSum = 0;
     let totalMedsSales = 0;
 
-    const handleDateChange = async (event) => {
-        setSelectedDay(event.target.value);
-        if(event.target.value === ''){
+    const handleDateChange = async (date) => {
+        setSelectedDay(date);
+        if(date === ''){
             if(selectedMedicine === ''){
                 fetchData(selectedDate);
             }
@@ -58,7 +63,6 @@ const SalesReport = () => {
             }
         }
         else{
-            let date = event.target.value;
             if(selectedMedicine === ''){
                 try {
                     const response = await fetch('/api/orders/ReportByDate', {
@@ -121,9 +125,9 @@ const SalesReport = () => {
         }
     };
 
-    const handleMedicineChange = async (event) => {
-        setSelectedMedicine(event.target.value);
-        if(event.target.value === ''){
+    const handleMedicineChange = async (medicine) => {
+        setSelectedMedicine(medicine);
+        if(medicine === ''){
             setMedAndDate(false);
             if(selectedDay === ''){
                 fetchData(selectedDate);
@@ -162,7 +166,7 @@ const SalesReport = () => {
             if(selectedDay === ''){
                 setMedAndDate(true);
                 try {
-                    const medicineid = event.target.value;
+                    const medicineid = medicine;
                     console.log(medicineid)
                     const month = new Date(selectedDate.getFullYear(), selectedDate.getMonth()+1, 1).toISOString().slice(0, 7);
                     console.log(month)
@@ -195,7 +199,7 @@ const SalesReport = () => {
             else{
                 setMedAndDate(true);
                 try {
-                    const medicineid = event.target.value;
+                    const medicineid = medicine;
                     const date = selectedDay
                     const response = await fetch('/api/orders/ReportByDateAndMedicine', {
                         method: 'POST',
@@ -304,217 +308,274 @@ const SalesReport = () => {
         totalMedsSales += medicine.totalSales;
     });
 
+    const [cartItems, setCartItems] = useState([
+        { id: 1, name: 'Ibuprofen', price: 55.00, quantity: 1 },
+        { id: 2, name: 'Bioderma', price: 49.00, quantity: 1 },
+    ]);
+
     return (
-        <div>
-        {user && (
-            <Typography variant="h2" gutterBottom>
-                Sales Report for - {selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit' })}
-            </Typography>
-        )}
-       <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="h4" gutterBottom>
-                Please Choose a month : 
-            </Typography>
-            <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                dateFormat="yyyy-MM"
-                showMonthYearPicker
-            />
-            <FormControl style={{ margin: '16px' }}>
-                <InputLabel id="month-select-label">Select Date</InputLabel>
-                <Select
-                labelId="month-select-label"
-                id="month-select"
-                value={selectedDay}
-                label="Select Date"
-                onChange={handleDateChange}
-                >
-                    <MenuItem value={''}>{''}</MenuItem>
-                    {user && Dates && Dates.map((Date) => (
-                        <MenuItem value={Date}>{Date}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl> 
-            <FormControl style={{ margin: '16px' }}>
-                <InputLabel id="month-select-label">Select Medicine</InputLabel>
-                <Select
-                labelId="month-select-label"
-                id="month-select"
-                value={selectedMedicine}
-                label="Select Medicine"
-                onChange={handleMedicineChange}
-                >
-                    <MenuItem value={''}>{''}</MenuItem>
-                    {user && Medicines && Medicines.map((Medicine) => (
-                        <MenuItem value={Medicine.medicineid}>{Medicine.medicinename}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-        
-        </div>
-        {user && MedAndDate === false && reportData && reportData.length > 0 && (
-            <React.Fragment>
-                <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                    <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Order</TableCell>
-                        <TableCell>Medicine Name</TableCell>
-                        <TableCell>Amount Ordered</TableCell>
-                        <TableCell>Stock left</TableCell>
-                        <TableCell>TotalPrice</TableCell>
-                        {/* Add additional columns as needed */}
-                    </TableRow>
-                    </TableHead>
-                    {reportData.map((dateData, index) => (
-                    <TableBody key={index}>
-                        {dateData.orders.map((order, orderIndex) => (
-                        <React.Fragment key={orderIndex}>
-                            {orderIndex === 0 && (
-                            <TableRow>
-                                <TableCell rowSpan={order.medicines.reduce((sum, medicine) => sum + medicine.amount, 0)}>
-                                {dateData.date}
-                                </TableCell>
-                            </TableRow>
-                            )}
-                            {order.medicines.map((medicine, medicineIndex) => (
-                            <TableRow key={medicineIndex}>
-                                {medicineIndex === 0 && (
-                                <TableCell rowSpan={order.medicines.length}>{order._id}</TableCell>
-                                )}
-                                <TableCell>{medicine.Name}</TableCell>
-                                <TableCell>{medicine.amount}</TableCell>
-                                <TableCell>{medicine.stock}</TableCell>
-                                {medicineIndex === 0 && (
-                                <TableCell rowSpan={order.medicines.length}>{order.TotalPrice}</TableCell>
-                                )}
-                            </TableRow>
+        <>
+            <Navbar />
+            <div style={{background:"#fafafa"}}>
+                
+                <div style={{ display: 'flex'}}>
+                <div className="col-lg-4" style={{marginLeft:"150px", marginTop:"20px"}}>
+                    <h4> Please Choose a month :</h4>
+                    <br></br>
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => setSelectedDate(date)}
+                        dateFormat="yyyy-MM"
+                        showMonthYearPicker />
+                </div>
+
+                <div className="col-lg-4" style={{marginTop:"20px"}}>
+                    <h3 className="mb-3 h6 text-uppercase text-black d-block">Filter by Date</h3>
+                        <button
+                            onClick={() => setOpen(!isOpen)}
+                            type="button"
+                            className="btn btn-secondary btn-md dropdown-toggle px-4"
+                            id="dropdownMenuReference"
+                            data-toggle="dropdown"
+                        >
+                            Filter
+                        </button>
+                        <div className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="dropdownMenuReference">
+                            {/* Add an empty option */}
+                            <a
+                                key={''}
+                                className="dropdown-item"
+                                href="#"
+                                onClick={() => {
+                                    handleDateChange('');
+                                    setOpen(false);
+                                }}
+                            >
+                                {"None"}
+                            </a>
+
+                            {user && Dates && Dates.map((date) => (
+                                <a
+                                    key={date}
+                                    className="dropdown-item"
+                                    href="#"
+                                    onClick={() => {
+                                        handleDateChange(date);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    {date}
+                                </a>
                             ))}
-                        </React.Fragment>
-                        ))}
-                        <TableFooter>
-                        <TableRow>
-                            <TableCell colSpan={6} align="right">Total Sales For The Day:</TableCell>
-                            <TableCell>{dateData.totalSales}</TableCell>
-                        </TableRow>
-                        </TableFooter>
-                    </TableBody>
-                    ))}
-                    <TableFooter>
-                    <TableRow>
-                        <TableCell colSpan={6} align="right">Total Sales For The Month:</TableCell>
-                        <TableCell>{totalSalesSum}</TableCell>
-                    </TableRow>
-                    </TableFooter>
-                </Table>
-                </TableContainer>
-            </React.Fragment>
-        )}
-        {user && MedAndDate === true && reportDataMix && reportDataMix.length > 0 && (
-            <React.Fragment>
-                <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                    <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Order</TableCell>
-                        <TableCell>Medicine Name</TableCell>
-                        <TableCell>Medicine Price</TableCell>
-                        <TableCell>Amount Ordered</TableCell>
-                        <TableCell>Stock left</TableCell>
-                        <TableCell>Reserved</TableCell>
-                        <TableCell>Returned</TableCell>
-                        <TableCell>TotalPrice</TableCell>
-                        {/* Add additional columns as needed */}
-                    </TableRow>
-                    </TableHead>
-                    {reportDataMix.map((dateData, index) => (
-                    <TableBody key={index}>
-                        <React.Fragment key={index}>
-                            {dateData.details.map((medicine, medicineIndex) => (
-                            <TableRow key={medicineIndex}>
-                                {medicineIndex === 0 && (
-                                    <TableCell rowSpan={dateData.details.length}>
-                                        {dateData.date}
-                                    </TableCell>
-                                )}
-                                <TableCell >{medicine._id}</TableCell>
-                                <TableCell>{medicine.medicineName}</TableCell>
-                                <TableCell>{medicine.price}</TableCell>
-                                <TableCell>{medicine.amount}</TableCell>
-                                <TableCell>{medicine.inStock}</TableCell>
-                                <TableCell>{medicine.Reserved}</TableCell>
-                                <TableCell>{medicine.Returned}</TableCell>
-                                <TableCell >{medicine.TotalPrice}</TableCell>
-                            </TableRow>
+                        </div>
+                    </div>
+
+                    <div className="col-lg-4" style={{marginTop:"20px"}}>
+                        <h3 className="mb-3 h6 text-uppercase text-black d-block">Filter by Medicines</h3>
+                        <button
+                            onClick={() => setOpen1(!isOpen1)}
+                            type="button"
+                            className="btn btn-secondary btn-md dropdown-toggle px-4"
+                            id="dropdownMenuReference"
+                            data-toggle="dropdown"
+                        >
+                            Filter
+                        </button>
+                        <div className={`dropdown-menu ${isOpen1 ? 'show' : ''}`} aria-labelledby="dropdownMenuReference">
+                            {/* Add an empty option */}
+                            <a
+                                key={''}
+                                className="dropdown-item"
+                                href="#"
+                                onClick={() => {
+                                    handleDateChange('');
+                                    setOpen(false);
+                                }}
+                            >
+                                {"None"}
+                            </a>
+                            
+                            {user && Medicines && Medicines.map((Medicine) => (
+                                <a
+                                    key={Medicine.medicineid}
+                                    className="dropdown-item"
+                                    href="#"
+                                    onClick={() => {
+                                        handleMedicineChange(Medicine.medicineid);
+                                        setOpen1(false);
+                                    }}
+                                >
+                                    {Medicine.medicinename}
+                                </a>
                             ))}
-                        </React.Fragment>
-                        <TableFooter>
-                        <TableRow>
-                            <TableCell colSpan={6} align="right">Total Sales For The Day:</TableCell>
-                            <TableCell>{dateData.totalSales}</TableCell>
-                        </TableRow>
-                        </TableFooter>
-                    </TableBody>
-                    ))}
-                    <TableFooter>
-                    <TableRow>
-                        <TableCell colSpan={6} align="right">Total Sales For The Month:</TableCell>
-                        <TableCell>{totalSalesSum}</TableCell>
-                    </TableRow>
-                    </TableFooter>
-                </Table>
-                </TableContainer>
-            </React.Fragment>
-        )}
-        {!user && (
-            <Typography variant="body1">No data available</Typography>
-        )}
-        {user && reportDataMed && reportDataMed.length > 0 && 
-        <Typography variant="h2" gutterBottom>
-            Medicines Sales Report for - {selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit' })}
-        </Typography>}
-        {/* Rendering dataMed table */}
-        {user && reportDataMed && reportDataMed.length > 0 &&
-        <TableContainer component={Paper}>
-        <Table>
-            <TableHead>
-            <TableRow>
-                <TableCell>Medicine ID</TableCell>
-                <TableCell>Medicine Name</TableCell>
-                <TableCell>Medicine Price</TableCell>
-                <TableCell>Amount Sold</TableCell>
-                <TableCell>Total Sales</TableCell>
-                <TableCell>In Stock</TableCell>
-                <TableCell>Reserved</TableCell>
-                <TableCell>Returned</TableCell>
-            </TableRow>
-            </TableHead>
-            <TableBody>
-            {reportDataMed.map((medicine, medicineIndex) => (
-                <TableRow key={medicineIndex}>
-                <TableCell>{medicine._id}</TableCell>
-                <TableCell>{medicine.medicineName}</TableCell>
-                <TableCell>{medicine.medicinePrice}</TableCell>
-                <TableCell>{medicine.totalAmount}</TableCell>
-                <TableCell>{medicine.totalSales}</TableCell>
-                <TableCell>{medicine.inStock}</TableCell>
-                <TableCell>{medicine.Reserved}</TableCell>
-                <TableCell>{medicine.Returned}</TableCell>
-                </TableRow>
-            ))}
-            </TableBody>
-            <TableFooter>
-            <TableRow>
-                <TableCell colSpan={6} align="right">Total Sales For The Month:</TableCell>
-                <TableCell>{totalMedsSales}</TableCell>
-            </TableRow>
-            </TableFooter>
-        </Table>
-        </TableContainer>}
-        </div>
+                        </div>
+                    </div>
+                </div>
+                <br></br>
+                {user && (
+                    <h2> Sales Report for - {selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit' })}: </h2>
+                )}
+
+                {user && MedAndDate === false && reportData && reportData.length > 0 && (
+                    <div className="site-section">
+                        <div className="container">
+                            <div className="row mb-5">
+                            <form className="col-md-12" method="post">
+                                <div className="site-blocks-table">
+                                <table className="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                        <th className="product-thumbnail" >Date</th>
+                                        <th className="product-name">Order</th>
+                                        <th className="product-price">Medicine Name</th>
+                                        <th className="product-quantity">Amount Ordered</th>
+                                        <th className="product-total">left in Stock</th>
+                                        <th className="product-remove">Order Sum</th>
+                                        <th className="product-remove">Sales for the day</th>
+                                        {selectedDay == '' && <th className="product-remove">Sales for the month</th>}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {reportData.map((dateData, index) => (
+                                        <React.Fragment key={index}>
+                                            {dateData.orders.map((order, orderIndex) => (
+                                            <React.Fragment key={orderIndex}>
+                                                {order.medicines.map((medicine, medicineIndex) => (
+                                                <tr key={medicineIndex}>
+                                                    {medicineIndex === 0 && orderIndex === 0 && <td rowSpan={dateData.orders.reduce((sum, o) => sum + o.medicines.length, 0)}>{dateData.date}</td>}
+                                                    {medicineIndex === 0 && <td rowSpan={order.medicines.length}>{order._id}</td>}
+                                                    <td>{medicine.Name}</td>
+                                                    <td>{medicine.amount}</td>
+                                                    <td>{medicine.stock}</td>
+                                                    {medicineIndex === 0 && <td rowSpan={order.medicines.length}>{order.TotalPrice}</td>}
+                                                    {medicineIndex === 0 && orderIndex === 0 && <td rowSpan={dateData.orders.reduce((sum, o) => sum + o.medicines.length, 0)}>{dateData.totalSales}</td>}
+                                                    {medicineIndex === 0 && orderIndex === 0 && index === 0 && selectedDay == '' && (
+                                                        <td rowSpan={reportData.reduce((sum, d) => sum + d.orders.reduce((oSum, o) => oSum + o.medicines.length, 0), 0)}>
+                                                            {totalSalesSum}
+                                                        </td>
+                                                    )}
+                                                </tr>
+                                                ))}
+                                            </React.Fragment>
+                                            ))}
+                                        </React.Fragment>
+                                    ))}
+                                </tbody>
+                                </table>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {user && MedAndDate === true && reportDataMix && reportDataMix.length > 0 && (
+                    <div className="site-section">
+                        <div className="container">
+                            <div className="row mb-5">
+                            <form className="col-md-12" method="post">
+                                <div className="site-blocks-table">
+                                <table className="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                        <th className="product-thumbnail" >Date</th>
+                                        <th className="product-name">Order</th>
+                                        <th className="product-thumbnail" >Image</th>
+                                        <th className="product-price">Medicine Name</th>
+                                        <th className="product-quantity">Medicine Price</th>
+                                        <th className="product-quantity">Amount Ordered</th>
+                                        <th className="product-total">left in Stock</th>
+                                        <th className="product-quantity">Reserved</th>
+                                        <th className="product-quantity">Returned</th>
+                                        <th className="product-total">Total Price</th>
+                                        <th className="product-remove">Sales for the day</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {reportDataMix.map((dateData, index) => (
+                                        <React.Fragment key={index}>
+                                            {dateData.details.map((medicine, medicineIndex) => (
+                                            <React.Fragment key={medicineIndex}>
+                                                <tr key={medicineIndex}>
+                                                    {medicineIndex === 0 && <td rowSpan={dateData.details.length}>{dateData.date}</td>}
+                                                    <td>{medicine._id}</td>
+                                                    <td><img src={medicine.medicineImage} alt="Medicine" width="120" height="120" /></td>
+                                                    <td>{medicine.medicineName}</td>
+                                                    <td>{medicine.price}</td>
+                                                    <td>{medicine.amount}</td>
+                                                    <td>{medicine.inStock}</td>
+                                                    <td>{medicine.Reserved}</td>
+                                                    <td>{medicine.Returned}</td>
+                                                    <td>{medicine.totalPrice}</td>
+                                                    {medicineIndex === 0 &&<td rowSpan={dateData.details.length}>{dateData.totalSales}</td>}
+                                                </tr>
+                                            </React.Fragment>
+                                            ))}
+                                        </React.Fragment>
+                                    ))}
+                                </tbody>
+                                </table>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {!user && (
+                    <Typography variant="body1">No data available</Typography>
+                )}
+                {user && reportDataMed && reportDataMed.length > 0 &&
+                    <h2>
+                        Medicines Sales Report for - {selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit' })}:
+                    </h2>
+                }
+                {user && reportDataMed && reportDataMed.length > 0 && 
+                    <div className="site-section">
+                        <div className="container">
+                            <div className="row mb-5">
+                            <form className="col-md-12" method="post">
+                                <div className="site-blocks-table">
+                                <table className="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                        <th class="product-thumbnail">Image</th>
+                                        <th className="product-thumbnail" >Medicine ID</th>
+                                        <th className="product-price">Medicine Name</th>
+                                        <th className="product-quantity">Medicine Price</th>
+                                        <th className="product-quantity">Amount Sold</th>
+                                        <th className="product-quantity">Total Sales</th>
+                                        <th className="product-total">left in Stock</th>
+                                        <th className="product-quantity">Reserved</th>
+                                        <th className="product-quantity">Returned</th>
+                                        {selectedDay == '' && <th className="product-remove">Sales for the month</th>}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {reportDataMed.map((medicine, medicineIndex) => (
+                                            <React.Fragment key={medicineIndex}>
+                                                <tr key={medicineIndex}>
+                                                    <td><img src={medicine.medicineImage} alt="Medicine" width="120" height="120" /></td>
+                                                    <td>{medicine._id}</td>
+                                                    <td>{medicine.medicineName}</td>
+                                                    <td>{medicine.medicinePrice}</td>
+                                                    <td>{medicine.totalAmount}</td>
+                                                    <td>{medicine.totalSales}</td>
+                                                    <td>{medicine.inStock}</td>
+                                                    <td>{medicine.Reserved}</td>
+                                                    <td>{medicine.Returned}</td>
+                                                    {medicineIndex === 0 && selectedDay == '' && <td rowSpan={reportDataMed.length}>{totalMedsSales}</td>}
+                                                </tr>
+                                            </React.Fragment>
+                                    ))}
+                                </tbody>
+                                </table>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </>
     );
 };
 

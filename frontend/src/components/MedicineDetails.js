@@ -232,6 +232,9 @@ const MedicineDetails = ({ medicine }) => {
 
             {user&& user.type=="Pharmacist" &&  <p><strong>Quantity : </strong>{medicine.Quantity}</p> &&
             <p><strong>Sales : </strong>{medicine.Sales}</p> }
+            {/* 
+            {user && user.type=="Patient"  && medicine.Amount &&
+            <button style={{marginTop:"10px"}} onClick={handleSubmit}>Delete From cart</button>} <br></br>  */}
 
              { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}
 
@@ -252,7 +255,7 @@ const MedicineDetails = ({ medicine }) => {
 
             {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount &&  <><p style={{ color: 'red' }}><strong>Out Of Stock</strong></p></>}
 
-           {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount && 
+           {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount &&
           <button className='Alt' style={{padding:"12px",marginTop:"10px"}} onClick={Alternatives} >Alternatives</button>} 
 
 

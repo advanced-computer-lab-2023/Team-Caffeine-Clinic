@@ -83,6 +83,7 @@ const Navbar = () => {
                     <li>{user && user.type=='Pharmacist'&& <Link to="/pharmaChangePassword">Change Password</Link>}</li>
                     <li>{user && user.type=='Patient' && <Link to="/Orders"> My Orders</Link>}</li>
                     <li>{user  && <Link to="/Addresses">Personal Information</Link>}</li>
+                    <li>{user && user.type!='Patient' && <Link to="/SalesReport">Sales Report</Link>}</li>
                   </ul>
                 </li>
               </ul>
