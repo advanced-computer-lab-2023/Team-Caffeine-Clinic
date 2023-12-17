@@ -14,7 +14,8 @@ const {
     loginAdminfunc,
     loginDocfunc,
     logout,
-    loginfunc
+    loginfunc,
+    loginPharmacist
 } = require('../controllers/GuestController')
 
 router.post('/loginAsPatient', loginPatient)
@@ -24,5 +25,8 @@ router.post('/loginAsDoctor', loginDoctor)
 router.post('/loginAsAdmin', loginAdmin)
 
 router.post('/logout', logout)
+
+router.post('/loginAsPharmacist', loginPharmacist)
+
 
 module.exports = router

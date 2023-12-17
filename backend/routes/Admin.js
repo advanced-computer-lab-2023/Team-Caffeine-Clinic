@@ -1,6 +1,7 @@
 const express = require('express');
 const Admin = require('../models/admin');
-const {createAdmin,
+const {
+    createAdmin,
     getAdmins,
     getAdmin,
     deleteAdmin,
@@ -16,9 +17,16 @@ const {createAdmin,
     deleteDocApp,
     createHealthPackage,
     createPlatPackage,
-    adminchangepassword} = require('../controllers/adminController');
+    adminchangepassword,
+    //pharmacy
+    viewPharmacistApplication,
+    deletePharmApp,
+    deletePharmacist,
+    createPharmacist
+} = require('../controllers/adminController');
 
-    const {requireAdminAuth} = require('../middleware/requrieAuth')
+const {requireAdminAuth} = require('../middleware/requrieAuth');
+const { userInfo } = require('../controllers/MedicineController');
 
 
 
@@ -51,7 +59,11 @@ router.post('/healthPackage/goldpackage', createGoldPackage);
 router.post('/healthPackage/platinumpackage', createPlatPackage);
 router.patch('/updateHealthPackage/:id', updateHealthPack); 
 
-
-
+//Pharmacist
+router.delete('/deletePharmApp/:id',deletePharmApp);
+router.post('/acceptApp',createPharmacist)
+router.get('/viewPharmacistApplication', viewPharmacistApplication);
+router.delete('/deletePharmacist/:id', deletePharmacist);
+router.get("/getUserInfo",userInfo);
 
 module.exports = router;

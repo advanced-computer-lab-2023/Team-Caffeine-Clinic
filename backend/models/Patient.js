@@ -1,9 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const passportLocalMongoose = require('passport-local-mongoose')
-
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const patientSchema = new Schema({
     username: {
@@ -11,81 +9,66 @@ const patientSchema = new Schema({
         required: true,
         unique: true
     },
-
     password: {
         type: String,
         required: true
     },
-
     name: {
         type: String,
         required: true
     },
-
     email: {
         type: String,
         required: true,
         unique: true
     },
-
     dob: {
         type: Date,
         required: true
     },
-
     gender: {
         type: String,
         required: true,
-        enum: ['male', 'female'] 
+        enum: ['male', 'female']
     },
-
     mobile_number: {
         type: String,
         required: true,
         unique: true
     },
-
-    health_package: { 
-        type: String, 
+    health_package: {
+        type: String,
         default: 'Unsubscribed'
     },
-
     health_records: [
         {
-            type:String,
-            default:[]
+            type: String,
+            default: []
         }
     ],
-    
     emergency_contact: {
-        
-        full_name:{
+        full_name: {
             type: String,
-           required: true
+            required: true
         },
-
         mobile_number: {
             type: String,
-           required: true
+            required: true
         },
-
         relation_to_the_patient: {
             type: String,
             required: true,
             enum: ['Wife', 'Husband', 'Child', "Father", "Mother", "Sibling"]
         }
     },
-
     family_members: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Patient'
     }],
-
     relation: [{
         type: String,
         enum: ["Wife", "Husband", "Daughter", "Father", "Mother", "Sibling", "Son"]
     }],
-
     wallet: {
         type: Number,
         default: 0
@@ -94,42 +77,83 @@ const patientSchema = new Schema({
         {
             description: {
                 type: String,
-                unique:true
-                
+                unique: true
             },
             content: {
                 type: String,
             },
         }
     ],
+    cart: {
+        type: [{
+            medicineid: {
+                type: mongoose.Types.ObjectId,
+                ref: 'Medicine'
+            },
+            amount: {
+                type: Number,
+                default: 1
+            }
+        }],
+        default: []
+    },
+    deliveryaddresses: {
+        type: [String],
+        default: []
+    },
+    orders: {
+        type: [{
+            medicines: {
+                type: [{
+                    medicineid: {
+                        type: mongoose.Types.ObjectId,
+                        ref: 'Medicine'
+                    },
+                    amount: {
+                        type: Number
+                    }
+                }],
+                required: true
+            },
+            status: {
+                type: String,
+                enum: ['In delivery', 'Pending', 'Cancelled', 'Delivered'],
+                default: 'Pending'
+            },
+            deliveryaddress: {
+                type: String
+            },
+            TotalPrice: {
+                type: Number,
+                default: 0
+            }
+        }],
+        default: []
+    }
+}, { timestamps: true });
 
-}, {timestamps: true})
 
 //patientSchema.plugin(passportLocalMongoose)
 
 // static signUp 
 patientSchema.statics.signUp = async function(patient) {
-    const username = patient.username
-    //console.log(username);
-    const password = patient.password
+    const { username, password, name, email, dob, gender, mobile_number, health_package, emergency_contact } = patient;
     console.log(patient);
+    const usernameExists = await this.findOne({ username });
+    const emailExists = await this.findOne({ email });
 
-
-    const exists = await this.findOne({ username: username })
-
-    if(exists) {
-        throw Error('Username already in use')
+    if (usernameExists || emailExists) {
+        throw Error('Username or email already in use');
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(password, salt)
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
 
-    const user = await this.create({username: patient.username, password: hash, name: patient.name, 
-        email: patient.email, dob: patient.dob, gender: patient.gender, 
-        mobile_number: patient.mobile_number, health_package: patient.health_package, emergency_contact: patient.emergency_contact})
+    const newUser = { username, password: hash, name, email, dob, gender, mobile_number, health_package, emergency_contact };
+    console.log(newUser);
+    return await this.create(newUser);
+};
 
-    return user
-}
 
 patientSchema.statics.login = async function(username, password) {
     console.log(username, password);
@@ -153,16 +177,17 @@ patientSchema.statics.login = async function(username, password) {
 }
 
 patientSchema.statics.setPassword = async function(email, newPassword) {
-    console.log(email, newPassword)
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
 
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(newPassword, salt)
+    const updatedUser = await this.findOneAndUpdate({ email }, { password: hash }, { new: true });
 
-    const user = await this.findOneAndUpdate({email: email}, {password: hash})
-
-    if(!user){
-        throw Error('User Not Found')
+    if (!updatedUser) {
+        throw Error('User Not Found');
     }
-}
+
+    return updatedUser;
+};
+
 
 module.exports = mongoose.model('Patient', patientSchema)

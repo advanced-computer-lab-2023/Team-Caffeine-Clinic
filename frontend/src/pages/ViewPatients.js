@@ -1,21 +1,16 @@
-// MyPatients.js
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 import { useAuthContext } from '../hooks/useAuthContext';
-
 
 const MyPatients = () => {
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const {user} = useAuthContext()
+  const { user } = useAuthContext();
 
-  
   const fetchPatientDetails = async (patientUsername) => {
-    
     try {
       const response = await fetch(`/api/doctorInfo/selectpatient?name=${patientUsername}`, {
         headers: {
@@ -35,26 +30,14 @@ const MyPatients = () => {
     }
   };
 
-  const clearSelectedPatient = () => {
-    setSelectedPatient(null);
-  };
-
   useEffect(() => {
-    // Fetch the list of patients when the component mounts
     const fetchDoctorPatients = async () => {
       try {
-  //       const storedUsername = localStorage.getItem('username');
-
-  // if (!storedUsername) {
-  //   setError('No username found in session.');
-    
-  //   return;
-  // }
         const response = await fetch(`/api/doctorInfo/myPatients/`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
-        }); // You should replace with your actual API endpoint
+        });
 
         if (!response.ok) {
           throw new Error('Failed to fetch patients');
@@ -67,58 +50,92 @@ const MyPatients = () => {
         setError('Failed to fetch patients');
       }
     };
-    if(user){
+
+    if (user) {
       fetchDoctorPatients();
     }
   }, [user]);
 
-  const displayPatientDetails = () => {
+  const displayPatientDetails = (patientUsername) => {
     if (selectedPatient) {
       return (
         <div>
-          <h2>Selected Patient</h2>
-          <p>Username: {selectedPatient.username}</p>
           <p>Name: {selectedPatient.name}</p>
           <p>Email: {selectedPatient.email}</p>
           <p>Date of birth: {selectedPatient.dob}</p>
           <p>Gender: {selectedPatient.gender}</p>
           <p>Mobile Number: {selectedPatient.mobile_number}</p>
-  
+
           {selectedPatient.emergency_contact && (
-          <div>
-            <h2>Emergency Contact</h2>
-            <p>Name: {selectedPatient.emergency_contact.full_name}</p>
-            <p>Mobile Number: {selectedPatient.emergency_contact.mobile_number}</p>
-            <p>Relation: {selectedPatient.emergency_contact.relation_to_the_patient}</p>
-          </div>
-        )}
-  
-          <button onClick={clearSelectedPatient}>Close</button>
+            <div>
+              <p><strong>Emergency Contact:</strong></p>
+              <p><strong>Name:</strong> {selectedPatient.emergency_contact.full_name}</p>
+              <p><strong>Mobile Number: </strong>{selectedPatient.emergency_contact.mobile_number}</p>
+              <p><strong>Relation: </strong>{selectedPatient.emergency_contact.relation_to_the_patient}</p>
+            </div>
+          )}
+
+          <br />
         </div>
       );
     } else {
       return null;
     }
   };
-  
+
+  const filteredPatients = patients.filter(patientUsername =>
+    patientUsername.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
-      <h1>My Patients</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <ul>
-        {patients.length > 0 ? (
-          patients.map((patientUsername, index) => (
-            <li key={index}>
-              {patientUsername}
-              <button onClick={() => fetchPatientDetails(patientUsername)}>Select Patient</button>
-            </li>
-          ))
-        ) : (
-          <p>No patients found for this doctor.</p>
-        )}
-      </ul>
-      {displayPatientDetails()}
+      <section className="breadcrumbs">
+        <div className="container">
+          <div className="d-flex justify-content-between align-items-center">
+            <h2>View My patients</h2>
+            <ol>
+              <li><Link to="../DoctorHome">Home</Link></li>
+              <li>View My Patients</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="faq section-bg">
+        <div className="container">
+          <div className="section-title">
+            <h2>All Patients</h2>
+            <p>Click on a patient to view their information</p>
+          </div>
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Search by username"
+              className='form-control'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <br />
+          </div>
+          <div className="faq-list">
+            {filteredPatients.map((patientUsername) => (
+              <ul key={patientUsername}>
+                <li data-aos="fade-up">
+                <i class='bx bx-user icon-help' ></i> <a data-bs-toggle="collapse"
+                    className="collapse"
+                    data-bs-target={`#faq-list-${patientUsername}`}
+                    onClick={() => fetchPatientDetails(patientUsername)}><strong>Patient: </strong>{patientUsername}<i className="bx bx-chevron-down icon-show" /><i className="bx bx-chevron-up icon-close" /></a>
+                  <div id={`faq-list-${patientUsername}`} className="collapse show" data-bs-parent=".faq-list">
+                    <p>
+                      {selectedPatient && displayPatientDetails(patientUsername)}
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

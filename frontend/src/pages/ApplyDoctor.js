@@ -139,15 +139,22 @@ const SignUp = () => {
         })
       }
     return(
-        <header>
-            <h1>Sign Up</h1>
-            <br />
-            <div className="message">
-                <h6>{message}</h6>
-            </div>
-            <br /><br />
-            <div className="signUp">
-                <form className="createPatient" onSubmit={register}>
+        <body>
+            <header id="header">
+        <div className="container d-flex align-items-center">
+          <h1 className="logo me-auto">
+            <a href="/" style={{ textDecoration: 'none' }}>
+              El7a2ne
+            </a>
+          </h1>
+          
+        </div>
+       </header>
+
+
+            <div className="login-page">
+              <div className='login-form-container'>
+                <form className="login-form" onSubmit={register}>
                 Username: 
                 <label className="label">
                     <input
@@ -252,12 +259,12 @@ const SignUp = () => {
                         {loading ? 'Applying...' : 'Apply'}
                     </Button>
 
-                <Link className='login-button' to="/">
-                login instead
-            </Link>
+                
                 </form>
+                </div>
             </div>
-        </header>
+            </body>
+
     )
 }
 

@@ -3,7 +3,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate, Link } from "react-router-dom"
 import { useLogout } from '../hooks/useLogout'
 
-import "../index.css"
+//import "../index.css"
 import { Button } from 'react-bootstrap';
 
 
@@ -45,6 +45,7 @@ const App1 = () => {
       // handle success if needed
       if(response){
         window.alert('Welcome Doctor')
+        user.type = "Doctor"
         navigate('/seedoc')
       }
 

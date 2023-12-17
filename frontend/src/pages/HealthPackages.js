@@ -13,15 +13,16 @@ const HealthPackages = () => {
   const [healthPackages, setHealthPackages] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [showFamilyMembers, setShowFamilyMembers] = useState(true);
-  const [showHealthPackages, setShowHealthPackages] = useState(true); // Change to true
-  const [fampay, setfampay] = useState(false); // Change to true
-  const [famusername, setfamusername] = useState(''); // Change to true
+  const [showHealthPackages, setShowHealthPackages] = useState(true);
+  const [fampay, setfampay] = useState(false);
+  const [famusername, setfamusername] = useState('');
   const [Hpackage, setPackage] = useState(null)
   const [amount, setAmount] = useState(null)
   const [discount, setDiscount] = useState(0)
   const [isPopupOpen, setPopupOpen] = useState(false);
-
-
+  const margin = {
+    marginTop: '100px',
+  }
 
   const [error, setError] = useState(null);
 
@@ -102,45 +103,34 @@ const HealthPackages = () => {
     }
   };
 
-  const subscribe = async (hpname,value,patientusername) => {
-    if(!fampay){
-    try {
-     
-      const response2 = await fetch(`/api/patient/addHealthPackageTransaction?value=${value}&healthPackageName=${hpname}`, {
-        method: 'POST',
-        headers: {
-        
-          Authorization: `Bearer ${user.user.token}`,
-        },
-      });
-      if(!response2.ok){
-        throw new Error('Network response was not ok');
-
-      }
-      
-      window.location.reload();
-    } catch (error) {
-      console.error('Error creating appointment:', error);
-    }}else{
+  const subscribe = async (hpname, value, patientusername) => {
+    if (!fampay) {
       try {
-        console.log(value)
-        console.log(hpname)
-        console.log(patientusername)
-
-        const response2 = await fetch(`/api/patient/addHealthPackageTransactionfam?value=${value}&patientId=${patientusername}&healthPackageName=${hpname}`, {
+        const response2 = await fetch(`/api/patient/addHealthPackageTransaction?value=${value}&healthPackageName=${hpname}`, {
           method: 'POST',
           headers: {
-            
             Authorization: `Bearer ${user.user.token}`,
           },
         });
-        if(!response2.ok){
+        if (!response2.ok) {
           throw new Error('Network response was not ok');
-  
         }
-       
         window.location.reload();
-  
+      } catch (error) {
+        console.error('Error Subscribing:', error);
+      }
+    } else {
+      try {
+        const response2 = await fetch(`/api/patient/addHealthPackageTransactionfam?value=${value}&patientId=${patientusername}&healthPackageName=${hpname}`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${user.user.token}`,
+          },
+        });
+        if (!response2.ok) {
+          throw new Error('Network response was not ok');
+        }
+        window.location.reload();
       } catch (error) {
         console.error('Error creating appointment:', error);
       }
@@ -161,11 +151,10 @@ const HealthPackages = () => {
     setShowHealthPackages(false);
     setfampay(true);
     setfamusername(name);
-    
   };
 
   return (
-    <div className="health-packages">
+    <div className="health-packages" style={margin}>
       <div>
         {showFamilyMembers && (
           <>
@@ -196,27 +185,29 @@ const HealthPackages = () => {
       ) : (
         <ul>
           {healthPackages.map((hp) => (
-            <div className='Admin-details' key={hp.name}>
-              <li>
-                <div className='name'>{hp.name}</div>
-                <div>description: {hp.description}</div>
-                <div>Services Included: {hp.servicesIncluded}</div>
-                <div>basePrice: {hp.basePrice}</div>
-                <div>Doctor Session Discount: {hp.discounts.doctorSession * 100}%</div>
-                <div>Medicine Discount: {hp.discounts.pharmacyMedicine * 100}%</div>
-                <div>Family Member Discount: {hp.discounts.familySubscription * 100}%</div>
-              </li>
-              <span className='span' onClick={() => openPopup(hp.name, hp.basePrice)}>Subscribe</span>
+            hp && (
+              <div className='Admin-details' key={hp.name}>
+                <li>
+                  <div className='name'>{hp.name}</div>
+                  <div>description: {hp.description}</div>
+                  <div>Services Included: {hp.servicesIncluded}</div>
+                  <div>basePrice: {hp.basePrice}</div>
+                  <div>Doctor Session Discount: {hp.discounts?.doctorSession * 100}%</div>
+                  <div>Medicine Discount: {hp.discounts?.pharmacyMedicine * 100}%</div>
+                  <div>Family Member Discount: {hp.discounts?.familySubscription * 100}%</div>
+                </li>
+                <span className='span' onClick={() => openPopup(hp.name, hp.basePrice)}>Subscribe</span>
 
-              {isPopupOpen && (
-              <Elements stripe={stripePromise}>
-              <PaymentForm
-                amount={amount - (amount * discount)}
-                onPaymentResult={() =>fampay? subscribe(Hpackage, (amount - (amount * discount)), famusername):subscribe(Hpackage,amount)}
-              />
-            </Elements>
-              )}
-            </div>
+                {isPopupOpen && (
+                  <Elements stripe={stripePromise}>
+                    <PaymentForm
+                      amount={amount - (amount * discount)}
+                      onPaymentResult={() => fampay ? subscribe(Hpackage, (amount - (amount * discount)), famusername) : subscribe(Hpackage, amount)}
+                    />
+                  </Elements>
+                )}
+              </div>
+            )
           ))}
         </ul>
       )}

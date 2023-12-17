@@ -5,7 +5,9 @@ const HealthRecordsPage = () => {
     const [healthRecords, setHealthRecords] = useState([]);
     
     const { user } = useAuthContext();
-
+    const doctorSection = {
+        marginTop: '60px',
+      };
     useEffect(() => {
         async function fetchHealthRecords() {
             try {
@@ -34,7 +36,7 @@ const HealthRecordsPage = () => {
     }, [user]);
 
     return (
-        <div>
+        <div style={doctorSection}>
             <h1>Health Records</h1>
             <ol>
                 {healthRecords && healthRecords.map((record, index) => (
