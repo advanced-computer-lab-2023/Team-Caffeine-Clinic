@@ -131,7 +131,7 @@ function App() {
               <Route path="EditDocHos" element={<WithDoctorNavbar><ProtectedRoute><UpdateAffiliation /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="ViewPatients" element={<WithDoctorNavbar><ProtectedRoute><MyPatients /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="UpcomingAppointments" element={<WithDoctorNavbar><ProtectedRoute><PatientsWithUpcomingAppointments /></ProtectedRoute></WithDoctorNavbar>} />
-              <Route path="SearchPatient" element={<WithDoctorNavbar><ProtectedRoute><SelectPatient /></ProtectedRoute></WithDoctorNavbar>} />
+              <Route path="SearchPatient" element={<><ProtectedRoute><SelectPatient /></ProtectedRoute></>} />
               <Route path="DocAppointments" element={<WithDoctorNavbar><ProtectedRoute><AppointmentDoc /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="seepatientdocs" element={<WithDoctorNavbar><ProtectedRoute><DoctorDocuments /></ProtectedRoute></WithDoctorNavbar>} />
               <Route path="Docaddpatientdocs" element={<WithDoctorNavbar><ProtectedRoute><AddDocuments /></ProtectedRoute></WithDoctorNavbar>} />
