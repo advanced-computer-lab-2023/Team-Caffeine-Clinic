@@ -111,7 +111,49 @@ const filterMedicine = async (req, res) => {
    res.status(200).json(medicine);
    
 }
+const ArchiveMedicine = async (req, res) => {
+  const MedName = req.params.Name;
+  let medicine = await medicineModel.findOne({ Name: MedName }); // Use let instead of const
 
+  try {
+    if (medicine.Archive) {
+      medicine = await medicineModel.findOneAndUpdate({ Name: MedName }, { Archive: false });
+    } else {
+      medicine = await medicineModel.findOneAndUpdate({ Name: MedName }, { Archive: true });
+    }
+    res.status(200).json(medicine);
+  } catch (error) {
+    res.status(400).json({ error: "Error Occurred" });
+  }
+};
+
+
+const alternatives = async (req, res) => {
+  const _id = req.body._id;
+  const activeIngredients = req.body.activeIngredients;
+
+  try {
+    // Find all medicines with activeIngredients except the one with _id
+    const alternatives = await medicineModel.find({
+      _id: { $ne: _id },
+      'activeIngredients.0': activeIngredients[0],
+    });
+
+    console.log(alternatives);
+    res.status(200).json(alternatives);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+const userInfo = async (req, res) => {
+  try{
+  res.status(200).json(req.user);
+}
+  catch{
+    res.status(400).json({ error: 'Internal Server Error' });
+  }
+}
 module.exports = {
    viewAvailableMedicine,
    viewDistinctMedicalUse,
@@ -120,6 +162,9 @@ module.exports = {
    addMedicine,
    editMedicine,
    viewDiscountMedicine,
-   addPicture
+   addPicture,
+   ArchiveMedicine,
+   alternatives,
+   userInfo
 };
 //addMedicine,editMedicine, medicineHome

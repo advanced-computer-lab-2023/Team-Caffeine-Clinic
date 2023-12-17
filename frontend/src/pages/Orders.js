@@ -35,14 +35,20 @@ const Orders = () => {
   return (
     <><header>
       <Navbar />
-    </header><div className="home">
-        <div className="workouts">
-          {orders && orders.map(order => (
-            <OrderDetails key={order._id} order={order} />
-          ))}
-
-        </div>
-      </div></>
+    </header>
+    <div className="site-section" >
+      <div className="container" >
+        {orders && orders.map((order,index) => (
+          <div key={order._id} className="order-container">
+            
+          <h4>Order{index+1}:</h4>
+            <OrderDetails order={order} />
+            <hr className="order-divider" />
+          </div>
+        ))}
+      </div>
+    </div>
+    </>
   )
 }
 

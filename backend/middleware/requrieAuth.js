@@ -44,6 +44,7 @@ const requireDoctorAuth = async(req, res, next) => {
         const {_id} = jwt.verify(token, process.env.SECRET)
     
         req.user = await Doctor.findById(_id)
+        req.type = 'Doctor'
         next()
 
     } catch (error) {
@@ -68,6 +69,7 @@ const requireAdminAuth = async(req, res, next) => {
         const {_id} = jwt.verify(token, process.env.SECRET)
     
         req.user = await Admin.findById(_id)
+        req.type = 'Admin'
         next()
 
     } catch (error) {
@@ -92,6 +94,8 @@ const requirePharmacistAuth = async(req, res, next) => {
         const {_id} = jwt.verify(token, process.env.SECRET)
     
         req.user = await Pharmacist.findById(_id)
+        req.type = 'Pharmacist'
+        console.log(req.user);
         next()
 
     } catch (error) {

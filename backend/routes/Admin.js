@@ -25,7 +25,8 @@ const {
     createPharmacist
 } = require('../controllers/adminController');
 
-const {requireAdminAuth} = require('../middleware/requrieAuth')
+const {requireAdminAuth} = require('../middleware/requrieAuth');
+const { userInfo } = require('../controllers/MedicineController');
 
 
 
@@ -63,6 +64,6 @@ router.delete('/deletePharmApp/:id',deletePharmApp);
 router.post('/acceptApp',createPharmacist)
 router.get('/viewPharmacistApplication', viewPharmacistApplication);
 router.delete('/deletePharmacist/:id', deletePharmacist);
-
+router.get("/getUserInfo",userInfo);
 
 module.exports = router;

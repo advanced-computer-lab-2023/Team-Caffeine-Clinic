@@ -1,53 +1,61 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import '../PharmacyCSS/css/style.css';
 
 const Filter = () => {
-
-  const [Medicines, setMedicines] = useState(null)
+  const [Medicines, setMedicines] = useState(null);
+  const [Use, setUse] = useState('');
+  const [isOpen, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchMedicines = async () => {
-      const response = await fetch('/api/medicine/viewDistinct')
-      const json = await response.json()
+      const response = await fetch('/api/medicine/viewDistinct');
+      const json = await response.json();
 
       if (response.ok) {
-        setMedicines(json)
+        setMedicines(json);
       }
-    }
+    };
 
-    fetchMedicines()
-  }, [])
+    fetchMedicines();
+  }, []);
 
-
-  const [Use, setUse] = useState("")
-
-  let handleSubmit = async (e) => {
-
-    e.preventDefault()
-
-    if(Use!==""){
-    window.open(`/filter/${Use}`,"_self");
-      setUse("Filter Results")
-    }
-
-
-  }
+  const handleSubmit = (selectedUse) => {
+    // Add your logic here to handle the selected medical use
+    window.open(`/filter/${selectedUse}`, '_self');
+  };
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
-    {/* Displaying the value of med */}
-    <strong>{"Filter Medicines"}</strong>
-    <br />
+    <div className={`col-lg-6 ${isOpen ? 'show' : ''}`}>
+      <h3 className="mb-3 h6 text-uppercase text-black d-block">Filter by Medical Use</h3>
+      <button
+        onClick={() => setOpen(!isOpen)}
+        type="button"
+        className="btn btn-secondary btn-md dropdown-toggle px-4"
+        id="dropdownMenuReference"
+        data-toggle="dropdown"
+      >
+         Filter
+      </button>
+      <div className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="dropdownMenuReference">
+        {Medicines &&
+          Medicines.map((Medicine) => (
+            <a
+              key={Medicine}
+              className="dropdown-item"
+              href="#"
+              onClick={() => {
+                setUse(Medicine);
+                handleSubmit(Medicine);
+              }}
+            >
+              {Medicine}
+            </a>
+          ))}
+      </div>
+    </div>
+  );
+};
 
-    <select onChange={(e) =>  setUse(e.target.value)}> 
-      <option value="">-- Select a medical use -- </option>
-            {/* Mapping through each med object in our meds array
-          and returning an option element with the appropriate attributes / values.
-         */}
-      {Medicines && Medicines.map((Medicine) => <option value={Medicine}>{Medicine}</option>)}
-    </select>
-    <button style={{height:37 , marginLeft:10,marginTop:5 , background:'darkgrey'}} >Filter</button>
-    </form>
-  )
-}
-
-export default Filter
+export default Filter;

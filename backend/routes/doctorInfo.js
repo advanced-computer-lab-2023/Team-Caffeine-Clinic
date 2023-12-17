@@ -35,6 +35,14 @@ const {
     getNotification
 } = require('../controllers/doctorInfocontroller')
 
+const{
+    accessChat,
+    fetchChats,
+    allMessages,
+    viewPharmacists,
+    sendMessage,
+}=require('../controllers/ChatController')
+
 const {
     
     filterDoctorsByAvailability
@@ -122,6 +130,13 @@ router.get('/appointments', getAppointments)
 
 // Route to handle doctor password change
 router.post('/doctorchangepassword', doctorchangepassword);
+
+
+router.post("/chatDoc/accessChats", accessChat);
+router.get("/chatDoc/allChats", fetchChats);
+router.get("/chatDoc/getMessages/:chatId", allMessages);
+router.get("/chatDoc/viewPharmacists", viewPharmacists);
+router.post("/chatDoc/sendMessage", sendMessage);
 
 
 module.exports = router

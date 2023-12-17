@@ -40,6 +40,7 @@ const Admin = require('./models/admin');
 
 const MedicineRoute = require('./routes/Medicine')
 const pharmacistRoute = require('./routes/pharmacist')
+const OrdersRoute = require('./routes/Orders')
 
 const Room = require('./models/Room')
 
@@ -180,7 +181,8 @@ app.use('/api/familyMembers', familyMembersRoute);
 app.use('/api/doctors', doctorsRoute);
 app.use('/api/doctorInfo', doctorInfoRoutes);
 app.use('/api/healthpackage', healthPackageRoutes);
-app.use('/api', Appointment)
+app.use('/api', Appointment);
+app.use('/api/orders',OrdersRoute);
 
 
 

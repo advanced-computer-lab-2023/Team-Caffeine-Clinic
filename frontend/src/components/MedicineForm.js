@@ -15,8 +15,8 @@ const MedicineForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    const medicine = {Name, Price, Description,activeIngredients,Quantity}
+    const activeIngredientsArray = activeIngredients.split(',');
+    const medicine = {Name, Price, Description,activeIngredientsArray,Quantity}
     
     const response = await fetch('/api/medicine/addMedicine', {
       method: 'POST',
@@ -47,52 +47,50 @@ const MedicineForm = () => {
   }
 
   return (
-    <form className="create" onSubmit={handleSubmit}> 
-      <h3>Add a New Medicine</h3>
-
+    <>
+    <div className="title-section text-center col-12">
+    <h2 >Add a New Medicine</h2>
+   </div>
+    <form className="Add_Med" onSubmit={handleSubmit}>
       <label>Medicine Name:</label>
-      <input 
+      <input
         type="text"
-        required = {true} 
-        onChange={(e) => setName(e.target.value)} 
-        value={Name}
-      />
-
+        required={true}
+        onChange={(e) => setName(e.target.value)}
+        value={Name} />
+      <br></br>
       <label>Price:</label>
-      <input 
-        type="number" 
-        required = {true} 
-        onChange={(e) => setPrice(e.target.value)} 
-        value={Price}
-      />
-
+      <input
+        type="number"
+        required={true}
+        onChange={(e) => setPrice(e.target.value)}
+        value={Price} />
+      <br></br>
       <label>Quantity:</label>
-      <input 
-        type="number" 
-        required = {true} 
-        onChange={(e) => setQuantity(e.target.value)} 
-        value={Quantity}
-      />
-
+      <input
+        type="number"
+        required={true}
+        onChange={(e) => setQuantity(e.target.value)}
+        value={Quantity} />
+      <br></br>
       <label>Description:</label>
-      <input 
-        type="text" 
-        required = {true}  
-        onChange={(e) => setDescription(e.target.value)} 
-        value={Description} 
-      />
-      
-      <label>Active Ingredients:</label>
-      <input 
-        type="text" 
-        required = {true}    
-        onChange={(e) => setactiveIngredients(e.target.value)} 
-        value={activeIngredients} 
-      />
-
+      <input
+        type="text"
+        required={true}
+        onChange={(e) => setDescription(e.target.value)}
+        value={Description} />
+      <br></br>
+      <label>Active Ingredients
+        (format:"MainIngredient,Ing2,Ing3,..."):</label>
+      <input
+        type="text"
+        required={true}
+        onChange={(e) => setactiveIngredients(e.target.value)}
+        value={activeIngredients} />
+      <br></br>
       <button>Add Medicine</button>
       {error && <div className="error">{error}</div>}
-    </form>
+    </form></>
   )
 }
 

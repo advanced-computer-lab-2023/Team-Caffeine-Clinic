@@ -46,10 +46,10 @@ const EditResults = () => {
   return (
     <><header>
       <Navbar />
-    </header><form className="create" onSubmit={handleSubmit}>
-        <h3>edit Medicine</h3>
-
-
+      <div className="title-section text-center col-12">
+    <h2 >Edit Medicine</h2>
+   </div>
+    </header><form className="Add_Med" onSubmit={handleSubmit}>
 
         <label>Price:</label>
         <input

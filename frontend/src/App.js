@@ -68,6 +68,13 @@ import AddFamilyMember from './pages/AddnotfoundedFamilyMember';
 import PaymentHandler from './components/PaymentHandler';
 import ProtectedRoute from './components/ProtectedRoute';
 import DocumentUpload from './pages/PatientAddDocs';
+import ChatPage from './pages/ChatPage'
+import PharmaChangePassword from './pages/PharmaChangePassword'
+
+
+import SalesReport from './pages/SalesReport';
+import AlternativesPage from './pages/AlternativesPage';
+import ClinicChatPage from '../src/pages/ClinicChatPage';
 
 import Addpresc from './pages/Addprescription';
 import DoctorHome from './pages/DoctorHome';
@@ -79,6 +86,7 @@ import ServicesSection from './components/ServicesSection';
 import ContactSection from './components/ContactSection';
 import AppointmentSection from './components/AppointmentSection';
 import ClinicPatientNavBar from './components/ClinicPatientNavBar';
+
 
 
 // Stripe
@@ -149,6 +157,7 @@ function App() {
 
               <Route path="DoctorHome" element={<WithDoctorNavbar><ProtectedRoute><DoctorHome /></ProtectedRoute></WithDoctorNavbar>} />
 
+
               <Route
               path="/doctor/DoctorChangePassword" 
               element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
@@ -204,6 +213,10 @@ function App() {
               element={<ProtectedRoute><AdminChangePassword /></ProtectedRoute>} 
               />
 
+              <Route 
+              path="/ClinicChats" 
+              element={<ClinicChatPage/>} 
+              />
 
               <Route
               path="/viewPatientsDetails"
@@ -244,6 +257,13 @@ function App() {
               path="/addMedicinePicture/:Name" 
               element={user&& user.type=="Pharmacist" && <AddMedicinePicture/> }
             />
+            <Route 
+              path="/SalesReport" 
+              element={user&& user.type!="Patient" && <SalesReport/> }
+            />
+            <Route 
+            path="/alternatives" 
+            element={<AlternativesPage />} />
 
             {/*Ibra*/}
             <Route 
@@ -258,6 +278,16 @@ function App() {
             <Route
             path='/Cart'
             element={user&& user.type=="Patient" && <Cart /> }
+            />
+
+            <Route
+            path='/Chat'
+            element={user&& user.type!="Admin" && <ChatPage />  }
+            />
+
+            <Route
+            path='/pharmaChangePassword'
+            element={user&& user.type=="Pharmacist" && <PharmaChangePassword />  }
             />
 
             {/*Admin*/}
@@ -328,6 +358,7 @@ function WithNavbarAndSidebarPharmacy({ children }) {
     </div>
   );
 }
+
 
 function WithDoctorNavbar({ children }) {
   return (

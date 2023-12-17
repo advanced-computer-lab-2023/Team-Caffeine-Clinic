@@ -1,20 +1,14 @@
 const { default: mongoose } = require('mongoose')
-
-const passport = require('passport')
-const LocalStrategy = require('passport-local')
-const passportLocalMongoose = require('passport-local-mongoose')
 const jwt = require('jsonwebtoken')
-
 const nodemailer = require('nodemailer');
 const HealthPackage = require('../models/healthPackageModel');
 const HealthPackagesTransaction = require('../models/HealthPackages_Transaction');
 const Medicine = require('../models/Medicine.js');
 
+
 const Notification = require('../models/Notification.js')
 
 const bcrypt = require('bcrypt');
-
-
 // Import Models
 const Patient = require('../models/Patient');
 const Perscriptions = require('../models/Perscriptions');
@@ -23,7 +17,9 @@ const Appointment = require('../models/appointment')
 const OTP = require('../models/OTP');
 
 const Transaction = require('../models/transaction');
-const Admin = require('../models/admin')
+const Admin = require('../models/admin');
+const Pharmacist = require('../models/Pharmacist.js');
+const Orders = require('../models/Orders.js')
 
 const FollowUpRequest = require('../models/followUpRequest')
 
@@ -377,7 +373,6 @@ const setPass = async (req, res) => {
 
     // Regular expression to check for at least one capital letter and one number
     const passwordRequirements = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
-
 
     if (!passwordRequirements.test(newPassword)) {
         return res.status(400).json({ error: 'Password must contain at least one capital letter, ones small letter, and one number.' });
@@ -1914,17 +1909,35 @@ const decAmount = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-    //console.log("hi")
+
     const MedName = req.params.Name;
     const medicine = await Medicine.findOne({ Name: MedName });
     var user = req.user;
-    //console.log(user);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    var CanAdd=true;
     var cart = {
         medicineid: medicine._id,
         amount: 1
     };
     const quantity = medicine.Quantity;
 
+    if(quantity<=0){
+        res.status(400).json({ error: "Maximum Amount Reached" });
+    }
+    else{
+    if(medicine.NeedPerscription){
+       PatientPerscription = await Perscriptions.findOne({patientID:user._id,date_of_perscription:{
+        $gte: oneMonthAgo, // prescriptions on or after one month ago
+        $lt: new Date(),   // prescriptions before the current date and time
+      },
+      medicine:medicine.Name});
+      console.log(PatientPerscription);
+      if(!PatientPerscription){
+        CanAdd=false;
+      }
+    }
+    if(CanAdd){
     const patient = await Patient.findOne({ _id: user._id, "cart.medicineid": medicine._id });
     try {
         if (patient) {
@@ -1941,6 +1954,7 @@ const addToCart = async (req, res) => {
                 res.status(400).json({ error: "Maximum Amount Reached" });
             }
             else {
+
                 Patient.findOneAndUpdate({ _id: user._id, "cart.medicineid": medicine._id }, {
                     '$set': {
                         'cart.$.amount': amount
@@ -1956,8 +1970,11 @@ const addToCart = async (req, res) => {
     } catch (error) {
         res.status(400).send('Could not Add')
     }
-
-
+}
+else{
+    res.status(400).json({ error: "This Medicine needs a Prescription" });
+}
+    }
 }
 
 const deleteFromCart = async (req, res) => {
@@ -2006,21 +2023,98 @@ const deliveryaddresses = async (req, res) => {
 
 const newOrder = async (req, res) => {
     var user = req.user;
+    var TotalPrice = 0;
+    const pharmacistList = await Pharmacist.find();
     if (user.cart.length == 0) {
         res.status(400).json({ error: "Cart is empty" })
     }
     else {
-        var address = req.body.address;
-        const order = {
-            medicines: user.cart,
-            status: 'In delivery',
-            deliveryaddress: address
-        }
         try {
+            var medicines = [];
+            for (let i = 0; i < user.cart.length; i++) {
+                const Med = await Medicine.findOne({_id:user.cart[i].medicineid});
+                newQuantity = Med.Quantity - user.cart[i].amount;
+                //Out Of Stock Email Part Start
+                if(newQuantity==0){
 
-            await Patient.findOneAndUpdate({ _id: user._id }, { '$push': { orders: order } }).catch(err => console.log(err));
-            const c1 = await Patient.findOne({ _id: user._id })
+                    try {
+                        if (pharmacistList.length > 0) {
+                            const transporter = nodemailer.createTransport({
+                                service: 'hotmail',
+                                auth: {
+                                    user: 'acluser123@hotmail.com',
+                                    pass: 'AMRgames1@',
+                                },
+                            });
+                
+                            for (let i = 0; i < pharmacistList.length; i++) {
+                                const email = pharmacistList[i].email;
+
+                            createNotification(pharmacistList[i]._id, "Medicine Out Of Stock", `${Med.Name} is Out of Stock`)
+
+                                const mailOptions = {
+                                    from: 'acluser123@hotmail.com',
+                                    to: email,
+                                    subject: 'Medicine Out of Stock',
+                                    text: `${Med.Name} is Out of Stock`,
+                                };
+                
+                                const info = await transporter.sendMail(mailOptions);
+                                console.log('Email sent:', info.response);
+
+                            }
+                        } else {
+                            console.log('No pharmacists found.');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+
+                }
+                //Out Of Stock Email Part End
+                newReserved = Med.Reserved + user.cart[i].amount;
+                newSales = Med.Sales + (Med.Price * user.cart[i].amount);
+                TotalPrice += Med.Price * user.cart[i].amount;
+                await Medicine.findOneAndUpdate({_id:user.cart[i].medicineid}, {Quantity:newQuantity, Reserved:newReserved,Sales:newSales});
+                console.log(i);
+                const medicine = {
+                    medicineid: user.cart[i].medicineid,
+                    amount: user.cart[i].amount,
+                    Name: Med.Name,
+                    stock: newQuantity,
+                    Reserved: newReserved,
+                    Sales: newSales,
+                    Returned: Med.Returned
+                };
+                console.log("before push")
+                medicines.push(medicine);
+                console.log("after push")
+            }
+            var address = req.body.address;
+            const orderId = new mongoose.Types.ObjectId();
+            const order = {
+                _id: orderId,
+                medicines: user.cart,
+                status: 'In delivery',
+                deliveryaddress: address,
+                TotalPrice:TotalPrice
+            }
+            const updatedPatient = await Patient.findOneAndUpdate(
+                { _id: user._id },
+                { $push: { orders: order } },
+                { new: true, select: '_id' }
+            ).catch(err => console.log(err));
+            const c1 = await Patient.findOne({ _id: user._id });
             await Patient.updateOne({ _id: user._id }, { cart: [] }).catch(err => console.log(err));
+            console.log(orderId);
+            await Orders.create({
+                _id:orderId,
+                patient : user.username,
+                medicines: medicines,
+                status: 'In delivery',
+                deliveryaddress: address,
+                TotalPrice:TotalPrice       
+            }).catch(err => console.log(err));
             res.status(200).json(c1);
         }
         catch (error) {
@@ -2028,6 +2122,7 @@ const newOrder = async (req, res) => {
         }
     }
 }
+
 
 const orders = async (req, res) => {
     var user = req.user;
@@ -2078,7 +2173,7 @@ const deleteOrder = async (req, res) => {
 
     const orders = user.orders
     var medicines = null;
-
+    var ordermedicines = [];
     for (let i = 0; i < orders.length; i++) {
         if (orders[i]._id == id) {
             medicines = orders[i].medicines;
@@ -2089,14 +2184,37 @@ const deleteOrder = async (req, res) => {
     let price = user.wallet;
     for (let i = 0; i < medicines.length; i++) {
         var medicine = await Medicine.findOne({ _id: medicines[i].medicineid });
+        newQuantity = medicine.Quantity + medicines[i].amount;
+        newReserved = medicine.Reserved - medicines[i].amount;
+        newReturned = medicine.Returned + medicines[i].amount;
+        newSales = medicine.Sales - (medicines[i].amount * medicine.Price);
+        await Medicine.findOneAndUpdate({_id:medicines[i].medicineid}, {Quantity:newQuantity, Reserved:newReserved, Returned:newReturned, Sales:newSales});
+        const ordermedicine = {
+            medicineid: medicines[i].medicineid,
+            amount: medicines[i].amount,
+            Name: medicine.Name,
+            stock: newQuantity,
+            Reserved: newReserved,
+            sales:newSales,
+            Returned: newReturned
+        };
+        ordermedicines.push(ordermedicine);
         price += medicine.Price * medicines[i].amount
         console.log('ana hena', price);
+        var newQuantity = medicines[i].amount
+        var medicine = await Medicine.findOneAndUpdate({ _id: medicines[i].medicineid },{Quantity:newQuantity});
     }
 
     try {
         await Patient.findOneAndUpdate({ _id: user._id, "orders._id": id }, {
             '$set': {
                 'orders.$.status': 'Cancelled'
+            }
+        }).catch(err => console.log(err));
+        await Orders.findOneAndUpdate({ _id: id}, {
+            '$set': {
+                'status': 'Cancelled',
+                medicines: ordermedicines
             }
         }).catch(err => console.log(err));
         await Patient.findOneAndUpdate({ _id: user._id, "orders._id": id }, { wallet: price }).catch(err => console.log(err));
@@ -2126,6 +2244,35 @@ const getCartPrice = async (req, res) => {
         res.status(400).send({ "error": error });
     }
 }
+const viewWallet=async (req,res)=>{
+    const user = req.user;
+    res.status(200).json(user.wallet);
+}
+
+// const getNotification = async (req, res) => {
+//     const user = req.user
+//     try {
+//         const notifications = await Notification.find({ user: user._id })
+
+//         if (notifications.length != 0)
+//             return res.status(200).json({ notifications: notifications })
+//         else
+//             return res.status(400).send('Not Found')
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).send({ "error": error });
+//     }
+// }
+
+// const createNotification = async (user, title, body) => {
+//     try {
+//         const notification = new Notification({ user: user, title: title, body: body })
+
+//         await notification.save()
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 const requestFollowUp = async (req, res) => {
     const user = req.user
@@ -2444,9 +2591,12 @@ module.exports = {
     deleteOrder,
     addAddresses,
     getCartPrice,
+
+    viewWallet,
     requestFollowUp,
     reschedule,
     getNotification,
     payForPerscription,
     checkOnAppointments
+
 }

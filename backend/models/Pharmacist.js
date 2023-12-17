@@ -48,6 +48,10 @@ const pharmacistSchema = new Schema({
     },
     License:{
         type:String
+    },
+    wallet: {
+        type: Number,
+        default: 0
     }   
 });
 

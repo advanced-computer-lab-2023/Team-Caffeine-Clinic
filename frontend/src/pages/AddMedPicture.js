@@ -64,8 +64,12 @@ const EditResults = () => {
   return (
     <><header>
       <Navbar />
-    </header><form className="create" onSubmit={handleSubmit}>
-        <h3>Upload Medicine Picture</h3>
+    </header>
+    <div className="title-section text-center col-12">
+    <h2 >Add Medicine Picture</h2>
+    </div>
+    <form className="Add_Med" onSubmit={handleSubmit}>
+
 
         <label>
                 Upload Picture:

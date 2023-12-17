@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { Diversity1 } from '@mui/icons-material';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import DoctorImage from '../assets/img/doctors/doctor.jpg';
 

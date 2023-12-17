@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useState } from 'react'
 
-import PaymentForm from '../components/PaymentHandler';
+import PaymentForm from '../components/PaymentHandlerPharmacy';
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -20,6 +20,7 @@ const Checkout = () => {
   const [error, setError] = useState(null)
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [price, setPrice] = useState(null)
+  const [isOpen, setOpen] = useState(false);
 
   const openPopup = () => {
     setPopupOpen(true);
@@ -107,21 +108,44 @@ const Checkout = () => {
     <header>
         <Navbar />
     </header>
-    <div className="home">
-        <div className="workouts">
-            <p>Select address of delivery</p>
-            {user && addresses && addresses.map(address => (
-            <div>
-                <input type="radio" name="address" value={address} id={address} onChange={(e) => setaddress(e.target.value)} ></input>
-                <label for={address}>{address}</label>
-            </div>
-            ))}
-        </div>
-        <p>{address}</p>
-        {price && (<div> <h3>Total Price: </h3> {price} </div>)}
+    <div className="row">
+          <div className="title-section text-center col-12">
+            <h2 className="text-uppercase">Checkout</h2>
+          </div>
+        </div>  
+
+         <div className={`col-lg-6 ${isOpen ? 'show' : ''}`}>
+      <h3 className="mb-3 h6 text-uppercase text-black d-block">Choose Address</h3>
+      <button
+        onClick={() => setOpen(!isOpen)}
+        type="button"
+        className="btn btn-secondary btn-md dropdown-toggle px-4"
+        id="dropdownMenuReference"
+        data-toggle="dropdown"
+      >
+         Filter
+      </button>
+      <div className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="dropdownMenuReference">
+      {user && addresses && addresses.map(address => (
+            <a
+              key={address}
+              className="dropdown-item"
+              href="#"
+              onClick={() => {
+                setaddress(address);
+              }}
+            >
+              {address}
+            </a>
+          ))}
+      </div>
+    </div>
+    <div className="title-section text-center col-12">
+        {price && (<div> <h3>Total Price: {price} </h3> </div>)}
         <button onClick={openPopup}> Order </button> 
         {error && <div className="error">{error}</div>}
-    </div>
+        </div>
+        
     {isPopupOpen && (
             <Elements stripe={stripePromise}>
               <PaymentForm

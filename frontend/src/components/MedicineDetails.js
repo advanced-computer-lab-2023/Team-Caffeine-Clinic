@@ -1,6 +1,11 @@
 import { useAuthContext } from '../hooks/useAuthContext'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMedicinesContext } from "../hooks/useMedicinesContext"
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faArchive , faImage, faCartShopping , faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const MedicineDetails = ({ medicine }) => {
   const {user} = useAuthContext()
@@ -8,9 +13,53 @@ const MedicineDetails = ({ medicine }) => {
   const [BadMessage,ViewBad]=useState(null);
   const[Amount,SetAmount]=useState(medicine.Amount);
   const[Visible,SetVisible]=useState(true);
-  const {medicines, dispatch} = useMedicinesContext()
+  const[Archive,SetArchive]=useState("");
+  const[alts,Setalts]=useState('');
+  const navigate = useNavigate();
+
+  let ArchiveMed = async (e) => {
+    e.preventDefault()
+    const response = await fetch(`/api/medicine/archiveMed/${medicine.Name}`,{
+          method:'PUT',
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+    })
+    const data = await response.json();
+
+    if(data){
+      console.log(data.Archive)
+    if(!data.Archive){
+      SetArchive('Unarchive')
+    }
+    else{
+      SetArchive('Archive')
+    }
+  }
+
+    if (response.status==200) {
+      ViewBad("")
+      if(Archive=='Archive')
+       ViewGood("Archived")
+    else
+       ViewGood("Unarchived")
+    }
+    if (response.status==400) {
+      ViewGood("")
+      ViewBad("Could not Archive")
+    }      
+  }
 
 
+  useEffect(() => {
+    if(medicine.Archive){
+      SetArchive('Unarchive')
+    }
+    else{
+      SetArchive('Archive')
+    }
+
+},ArchiveMed);
 
   let handleSubmit = async (e) => {
       e.preventDefault()
@@ -57,9 +106,11 @@ const MedicineDetails = ({ medicine }) => {
     })
 
     if (response.status==200) {
+      ViewBad("")
       ViewGood("Added")
     }
     if (response.status==400) {
+      ViewGood("")
       ViewBad("Could not Add")
     }      
   }
@@ -85,6 +136,7 @@ const MedicineDetails = ({ medicine }) => {
       ViewBad("Max Medicine Quantity Reached")
       ViewGood("");
     } 
+
   }
 
 
@@ -112,43 +164,120 @@ const MedicineDetails = ({ medicine }) => {
     } 
   }
 
+  let Alternatives = async (e) => {
+    e.preventDefault()
+    let _id = medicine._id;
+    let activeIngredients = medicine.activeIngredients;
+      const response = await fetch(`/api/medicine/alternatives`,{
+            method:'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({ _id,activeIngredients }),
+      })
+      const alternatives = await response.json();
+      if (alternatives.length == 0) {
+        Setalts("No Alternatives")
+      }
+      else{
+        navigate(
+          '/alternatives',  
+          {
+            state: {
+              alternatives
+            }
+          } 
+        );
+        Setalts('')
+      } 
+    }
+  
+
+
 
 
   return (
     <div>
-      {Visible && 
+      {Visible &&
         <form style={{marginBottom:"-20px"}} className="create" onSubmit={handleSubmit}>
-          <div className="workout-details">
-            {medicine.Picture && 
-            <img src={medicine.Picture} alt="Medicine" width='120' height='120' />}
+
+          <div className="workout-details" style={{ position: 'relative' , padding:"40px"}}>
+            
+          <div style={{ minWidth: '120px', minHeight: '120px' }}>
+            {medicine.Picture && (
+              <img src={medicine.Picture} alt="Medicine" width="120" height="120" />
+            )}
+          </div>
+            
+            {user && user.type === "Pharmacist" && (
+              <FontAwesomeIcon
+                icon={faEdit}
+                onClick={EditResults}
+                style={{ cursor: 'pointer', position: 'absolute', top: 10, right: 10 ,scale:'1.3'}}
+              />
+            )}
+            {medicine.NeedPerscription && user.type==="Patient" && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
+            <b> Requires Doctor Perscription</b></>}
             <h4>{medicine.Name}</h4>
-            <p><strong>Price : </strong>{medicine.Price}</p>
-            {user&& user.type=="Patient" &&
-            <p><strong>Discounted Price : </strong>{medicine.discountedPrice}</p>}
-            <p><strong>Description : </strong>{medicine.Description}</p>
+
+            {!medicine.discountedPrice &&user.type=="Patient"&&<p><strong>{medicine.Price}.0 EGP </strong></p>}
+            {user&& user.type!="Patient" &&<p><strong>{medicine.Price}.0  EGP</strong></p>}
+            {user&& user.type=="Patient"&&medicine.discountedPrice &&<p><del>{medicine.Price}.0</del><strong>-{medicine.discountedPrice}.0 EGP</strong></p>}
+
+            <p><strong> </strong>{medicine.Description}</p>
+
             {user&& user.type=="Patient" && medicine.amount &&
             <p><strong>Amount : </strong>{medicine.amount}</p>}
+
             {user&& user.type=="Pharmacist" &&  <p><strong>Quantity : </strong>{medicine.Quantity}</p> &&
             <p><strong>Sales : </strong>{medicine.Sales}</p> }
-            {user && user.type=="Patient" && medicine.Amount &&
-            <button style={{marginTop:"10px"}} onClick={handleSubmit}>Delete From cart</button>} <br></br> 
-            { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}   
+            {/* 
+            {user && user.type=="Patient"  && medicine.Amount &&
+            <button style={{marginTop:"10px"}} onClick={handleSubmit}>Delete From cart</button>} <br></br>  */}
+
+             { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}
+
+            {user && user.type=="Patient"  && medicine.Amount && <><br></br><br></br></>}
+
             { Visible && user && user.type=="Patient" && medicine.Amount &&
-            <button onClick={IncAmount} style={{marginRight:"20px",marginLeft:"20px"}} >+</button>} 
-             {Visible && user && user.type=="Patient" && medicine.Amount &&
-             <button onClick={DecAmount}>-</button>} <br></br>    
+            <button  onClick={IncAmount} style={{marginRight:"20px",marginLeft:"20px"}} >+</button>} 
+
+              {Visible && user && user.type=="Patient" && medicine.Amount &&
+             <button onClick={DecAmount}>-</button>} 
+
+            {user && user.type=="Patient"  && !medicine.Amount && !medicine.Quantity==0
+             && !medicine.NeedPerscription && <br></br>}
+
+            {user && user.type=="Patient"  && !medicine.Amount && !medicine.amount && !medicine.Quantity==0  &&
+           <button style={{padding:"12px",marginTop:"10px"}} onClick={addToCart} ><FontAwesomeIcon
+           icon={faCartShopping}></FontAwesomeIcon> Add To Cart</button>}
+
+            {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount &&  <><p style={{ color: 'red' }}><strong>Out Of Stock</strong></p></>}
+
+           {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount &&
+          <button className='Alt' style={{padding:"12px",marginTop:"10px"}} onClick={Alternatives} >Alternatives</button>} 
+
+
           </div>
         </form>
-      }
+} 
+            {Visible && user && user.type=="Patient"  && medicine.Amount && 
+            <button   onClick={handleSubmit}> <FontAwesomeIcon
+            icon={faTrash}></FontAwesomeIcon> Delete </button>  }
+
       {user && user.type=="Pharmacist" &&
-      <button onClick={EditResults}> Edit</button>} 
-      <samp>   </samp>
+      <button style={{padding:"10px 13px 10px 13px"}} onClick={ArchiveMed} > <FontAwesomeIcon
+      icon={faArchive}></FontAwesomeIcon> {Archive} </button>}
+        <samp> </samp>
       {user && user.type=="Pharmacist" &&
-      <button onClick={addPhoto}> Add Picture</button>}
-      {user && user.type=="Patient" && !medicine.Amount && !medicine.amount &&
-      <button onClick={addToCart}> Add To Cart</button>} <br></br>
-      {user && user.type=="Patient" && <div style={{color:"green"}}>{GoodMessage}</div>}
-      {user && user.type=="Patient" && <div style={{color:"red"}}>{BadMessage}</div>}       
+      <button onClick={addPhoto} style={{padding:"10px 13px 10px 13px"}}> <FontAwesomeIcon
+      icon={faImage}></FontAwesomeIcon> Add Picture</button>}
+
+      {user  && <div style={{color:"green"}}>{GoodMessage}</div>}
+      {user  && <div style={{color:"red"}}>{BadMessage}</div>}    
+
+      {user && user.type=="Patient" && <div style={{color:"red"}}>{alts}</div>}   
     </div>
   )
 }

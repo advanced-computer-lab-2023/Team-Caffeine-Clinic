@@ -122,6 +122,10 @@ const patientSchema = new Schema({
             },
             deliveryaddress: {
                 type: String
+            },
+            TotalPrice: {
+                type: Number,
+                default: 0
             }
         }],
         default: []
