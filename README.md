@@ -27,12 +27,6 @@ In addition to the core MERN technologies, this project also utilizes:
 
 - **Visual Studio Code**: Recommended IDE for development.
 - **Postman**: Used for API testing and development.
-- **Docker** (optional): Used for containerizing the application and ensuring consistent environments across development and production.
-
-### Deployment
-
-- This project is configured for deployment on [Heroku/AWS/another platform, if applicable].
-- Continuous Integration/Continuous Deployment is set up using [GitHub Actions/Jenkins/another CI/CD tool, if applicable].
 
 ### Additional Libraries
 
