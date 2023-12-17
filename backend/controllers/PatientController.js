@@ -1470,7 +1470,6 @@ const decAmount = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-    console.log("hi")
     const MedName = req.params.Name;
     const medicine = await Medicine.findOne({ Name: MedName });
     var user = req.user;

@@ -30,7 +30,7 @@ const SingleChat = () => {
       setLoading(true);
       var response = null;
 
-      if(user.type=="Patient"){
+      if(user && user.type=="Patient"){
        response = await fetch(`/api/patient/chat/getMessages/${selectedChat._id}`, {
         method: 'GET',
         headers: {
@@ -39,7 +39,7 @@ const SingleChat = () => {
         },
       });
     }
-    if(user.type=="Pharmacist"){
+    if(user && user.type=="Pharmacist"){
       response = await fetch(`/api/medicine/chatPharma/getMessages/${selectedChat._id}`, {
        method: 'GET',
        headers: {
@@ -48,7 +48,7 @@ const SingleChat = () => {
        },
      });
    }
-   if(user.type=="Doctor"){
+   if(user && user.type=="Doctor"){
     response = await fetch(`/api/doctorInfo/chatDoc/getMessages/${selectedChat._id}`, {
      method: 'GET',
      headers: {

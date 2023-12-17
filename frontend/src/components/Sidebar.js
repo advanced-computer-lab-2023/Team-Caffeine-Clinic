@@ -23,6 +23,7 @@ const Sidebar = () => {
       <NavLink to="/seeanddeletdocs" activeClassName="active">View & Edit Documents</NavLink>
       <NavLink to="/myInformation" activeClassName="active">My Information</NavLink>
       <NavLink to="/Medicines" activeClassName="active">Pharmacy</NavLink>
+      <NavLink to="/ClinicChats" activeClassName="active">Chats</NavLink>
       <NavLink to="/" id='logoutbutton' className='logout-button' onClick={handleClick}>log out</NavLink>
     </div>
   )

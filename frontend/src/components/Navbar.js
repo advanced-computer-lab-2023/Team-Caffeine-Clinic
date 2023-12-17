@@ -115,7 +115,7 @@ const Navbar = () => {
       {error && <div className="error">{error}</div>}
     </header>
     
-    {user && user.type === "Pharmacist"  && <Notification></Notification>}
+    {user && user.type === "Pharmacist"  && showNotifications &&<Notification></Notification>}
     </>
   )
 }

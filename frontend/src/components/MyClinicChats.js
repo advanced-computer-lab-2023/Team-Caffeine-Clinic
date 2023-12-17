@@ -21,7 +21,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/modal";
 
-const MyChats = () =>{
+const MyClinicChats = () =>{
 
 const {
     setSelectedChat,
@@ -46,7 +46,7 @@ const { user } = useAuthContext();
       setLoading(true); 
       var response = null;
     if(user.type=="Patient"){
-      response = await fetch(`/api/patient/chat/viewPharmacists`, {
+      response = await fetch(`/api/patient/chat/getDoctors`, {
        method: 'GET',
        headers: {
          'Authorization': `Bearer ${user.token}`
@@ -54,15 +54,7 @@ const { user } = useAuthContext();
      });
    }
    else
-   if(user && user.type=="Pharmacist"){
-      response = await fetch(`/api/medicine/chatPharma/getDoctors`, {
-       method: 'GET',
-       headers: {
-         'Authorization': `Bearer ${user.token}`
-       },
-     });
-   }
-   if(user && user.type=="Doctor"){
+   if(user.type=="Doctor"){
     response = await fetch(`/api/doctorInfo/chatDoc/viewPharmacists`, {
      method: 'GET',
      headers: {
@@ -137,8 +129,8 @@ const { user } = useAuthContext();
           },
         });
       }
-      if(user && user.type=="Pharmacist"){
-        response = await fetch('/api/medicine/chatPharma/accessChats', {
+      if(user && user.type=="Doctor"){
+        response = await fetch('/api/doctorInfo/chatDoc/accessChats', {
           method: 'POST',
           body: JSON.stringify({ username }),
           headers: {
@@ -175,21 +167,18 @@ const { user } = useAuthContext();
 
 const fetchChats = async () => {
 
-
-
-    // console.log(user._id);
     try {
       var response = null;
-    if(user.type=="Patient"){
-     response = await fetch('/api/patient/chat/allChats', {
+    if(user && user.type=="Patient"){
+     response = await fetch('/api/patient/chat/allDocChats', {
         method: 'GET',
         headers: {
         'Authorization': `Bearer ${user.token}`
         },
     });
   }
-  if(user.type=="Pharmacist"){
-     response = await fetch('/api/medicine/chatPharma/allChats', {
+  if(user && user.type=="Doctor"){
+     response = await fetch('/api/doctorInfo/chatDoc/allChats', {
       method: 'GET',
       headers: {
       'Authorization': `Bearer ${user.token}`
@@ -213,6 +202,7 @@ const fetchChats = async () => {
       });
     }
   };
+
   useEffect(() => {
     fetchChats();
     // eslint-disable-next-line
@@ -327,4 +317,4 @@ const fetchChats = async () => {
     </>
   );
 };
-export default MyChats;
+export default MyClinicChats;

@@ -5,7 +5,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { faArchive , faImage, faCartShopping  } from '@fortawesome/free-solid-svg-icons';
+import { faArchive , faImage, faCartShopping , faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const MedicineDetails = ({ medicine }) => {
   const {user} = useAuthContext()
@@ -217,7 +217,7 @@ const MedicineDetails = ({ medicine }) => {
                 style={{ cursor: 'pointer', position: 'absolute', top: 10, right: 10 ,scale:'1.3'}}
               />
             )}
-               {medicine.NeedPerscription && user.type==="Patient" && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
+            {medicine.NeedPerscription && user.type==="Patient" && <><FontAwesomeIcon icon={faExclamationTriangle} color="orange" size="1x"  />
             <b> Requires Doctor Perscription</b></>}
             <h4>{medicine.Name}</h4>
 
@@ -232,32 +232,37 @@ const MedicineDetails = ({ medicine }) => {
 
             {user&& user.type=="Pharmacist" &&  <p><strong>Quantity : </strong>{medicine.Quantity}</p> &&
             <p><strong>Sales : </strong>{medicine.Sales}</p> }
-{/* 
-            {user && user.type=="Patient"  && medicine.Amount &&
-            <button style={{marginTop:"10px"}} onClick={handleSubmit}>Delete From cart</button>} <br></br>  */}
 
-            {/* { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}    */}
+             { Visible && user&& user.type=="Patient" && medicine.Amount && <><strong>Amount in Cart : </strong>{Amount}</>}
 
-            {/* { Visible && user && user.type=="Patient" && medicine.Amount &&
-            <button onClick={IncAmount} style={{marginRight:"20px",marginLeft:"20px"}} >+</button>} 
+            {user && user.type=="Patient"  && medicine.Amount && <><br></br><br></br></>}
 
-             {Visible && user && user.type=="Patient" && medicine.Amount &&
-             <button onClick={DecAmount}>-</button>} <br></br>     */}
+            { Visible && user && user.type=="Patient" && medicine.Amount &&
+            <button  onClick={IncAmount} style={{marginRight:"20px",marginLeft:"20px"}} >+</button>} 
+
+              {Visible && user && user.type=="Patient" && medicine.Amount &&
+             <button onClick={DecAmount}>-</button>} 
+
             {user && user.type=="Patient"  && !medicine.Amount && !medicine.Quantity==0
              && !medicine.NeedPerscription && <br></br>}
 
-            {user && user.type=="Patient"  && !medicine.Amount && !medicine.Quantity==0  &&
+            {user && user.type=="Patient"  && !medicine.Amount && !medicine.amount && !medicine.Quantity==0  &&
            <button style={{padding:"12px",marginTop:"10px"}} onClick={addToCart} ><FontAwesomeIcon
            icon={faCartShopping}></FontAwesomeIcon> Add To Cart</button>}
 
-            {user && user.type=="Patient" && medicine.Quantity === 0 && <><p style={{ color: 'red' }}><strong>Out Of Stock</strong></p></>}
+            {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount &&  <><p style={{ color: 'red' }}><strong>Out Of Stock</strong></p></>}
 
-           {user && user.type=="Patient" && medicine.Quantity === 0 && 
+           {user && user.type=="Patient" && medicine.Quantity === 0 && !medicine.amount && 
           <button className='Alt' style={{padding:"12px",marginTop:"10px"}} onClick={Alternatives} >Alternatives</button>} 
+
 
           </div>
         </form>
 } 
+            {Visible && user && user.type=="Patient"  && medicine.Amount && 
+            <button   onClick={handleSubmit}> <FontAwesomeIcon
+            icon={faTrash}></FontAwesomeIcon> Delete </button>  }
+
       {user && user.type=="Pharmacist" &&
       <button style={{padding:"10px 13px 10px 13px"}} onClick={ArchiveMed} > <FontAwesomeIcon
       icon={faArchive}></FontAwesomeIcon> {Archive} </button>}

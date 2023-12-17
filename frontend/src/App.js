@@ -73,7 +73,7 @@ import PharmaChangePassword from './pages/PharmaChangePassword'
 
 import SalesReport from './pages/SalesReport';
 import AlternativesPage from './pages/AlternativesPage';
-
+import ClinicChatPage from '../src/pages/ClinicChatPage';
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -141,6 +141,7 @@ function App() {
               <Route path="Docaddpatientdocs" element={<WithDoctorNavbar><ProtectedRoute><AddDocuments /></ProtectedRoute></WithDoctorNavbar>} />
 
 
+
               <Route
               path="/doctor/DoctorChangePassword" 
               element={<WithDoctorNavbar><ProtectedRoute><DoctorChangePassword /></ProtectedRoute></WithDoctorNavbar>} 
@@ -193,6 +194,10 @@ function App() {
               element={<ProtectedRoute><AdminChangePassword /></ProtectedRoute>} 
               />
 
+              <Route 
+              path="/ClinicChats" 
+              element={<ClinicChatPage/>} 
+              />
 
               <Route
               path="/viewPatientsDetails"

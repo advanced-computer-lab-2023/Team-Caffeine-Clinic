@@ -182,7 +182,7 @@ const accessChat = async (req, res) => {
   };
 
   const fetchChats = async (req, res) => {
-
+        console.log(req.user);
         const isPatient = await Patient.findById(req.user._id).catch(err => console.log(err));;
         const isPharmacist = await Pharmacist.findById(req.user._id).catch(err => console.log(err));;
         const isDoctor = await Doctor.findById(req.user._id).catch(err => console.log(err));;
