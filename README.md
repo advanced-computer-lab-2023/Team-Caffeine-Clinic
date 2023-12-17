@@ -67,3 +67,53 @@ In addition to the core MERN technologies, this project also utilizes:
 
 Each feature is designed to enhance user experience and streamline the healthcare process, aligning with our project's aim to revolutionize healthcare interactions through technology.
 
+## Installation
+
+This section provides detailed instructions on how to set up and run this project on your local machine.
+
+### Prerequisites
+
+Ensure you have the following installed on your system:
+- Node.js and npm (Node Package Manager): [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
+- MongoDB: [https://docs.mongodb.com/manual/installation/](https://docs.mongodb.com/manual/installation/)
+- Git: [https://git-scm.com/downloads](https://git-scm.com/downloads)
+
+### Cloning the Repository
+
+1. Open your terminal.
+2. Use Git to clone the repository:
+git clone <URL to the GitHub repository>
+
+
+### Installing Dependencies
+
+1. navigate to backend and install backend dependencies:
+cd backend
+npm install
+
+3. navigate to frontend and install client dependencies:
+cd frontend
+npm install
+
+
+### Setting Up Environment Variables
+
+1. Create a `.env` file in the project root.
+2. Add the necessary environment variables:
+PORT=4000
+MONGO_URI=mongodb+srv://ACL1:ACL1@acl1.vsmlvre.mongodb.net/
+SECRET=6vZvFqQRwbT7gHEI
+
+
+### Running the Application
+
+1. To start the backend:
+nodemon app
+
+2. To start the frontend:
+npm start
+
+The application should now be running on `localhost` at the specified port
+
+
+
