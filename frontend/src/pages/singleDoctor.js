@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../components/PatientNavbar';
+import ClinicPatientNavBar from '../components/ClinicPatientNavBar';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 import PaymentForm from '../components/PaymentHandler';
@@ -25,7 +25,9 @@ const SingleDoctor = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isButtonsVisible, setButtonsVisible] = useState(true);
 
-
+  const margin = {
+    marginTop: '100px',
+  }
   const openPopup = (theIndex) => {
     setPopupOpen(true);
     setIndex(theIndex)
@@ -172,16 +174,20 @@ const SingleDoctor = () => {
   }
 
   return (
-    <>
+    <div style={margin}>
       {isButtonsVisible && (
-        <div className="toggle-buttons">
-          <button onClick={() => handleButtonClick(true)}>For Myself</button>
-          <button onClick={() => handleButtonClick(false)}>For Family Member</button>
+        <div>
+          <br />
+          <br />
+          <div className='text-center'><button className='button-43' onClick={() => handleButtonClick(true)}>For Myself</button></div>
+          <br />
+          <br />
+          <div className='text-center'><button className='button-43' onClick={() => handleButtonClick(false)}>For A Family Member</button></div>
         </div>
       )}
       {isForSelf !== null && (
         <>
-          <Navbar />
+          <ClinicPatientNavBar />
           {isForSelf ? (
             <div className="single-doctor-details">
               <div className="details">
@@ -233,7 +239,7 @@ const SingleDoctor = () => {
           )}
         </>
       )}
-    </>
+    </div>
   );
 };
 
