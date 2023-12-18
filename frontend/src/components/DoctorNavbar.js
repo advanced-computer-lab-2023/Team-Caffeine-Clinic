@@ -65,7 +65,7 @@ const DoctorNavbar =()=>{
             <li><Link to="/UpcomingAppointments">View My Upcoming Appointments</Link></li>
             <li><Link to="/AddAvailableDate">Add My Available Time Slots</Link></li>
             <li><Link to="/follow-up">schedule a follow-up for a patient</Link></li>
-            <li><Link to="/follow-up">Accept/Reject Follow-Up Request</Link></li>
+            <li><Link to="/FollowUpRequests">Accept/Reject Follow-Up Request</Link></li>
             <li><Link to="/DocAppointments">Appointments</Link></li>
           </ul>
         </li>

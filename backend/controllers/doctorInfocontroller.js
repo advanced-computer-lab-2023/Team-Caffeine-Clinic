@@ -789,12 +789,12 @@ const getFollowUpRequests = async (req, res) => {
     const user = req.user
 
     try {
-        const requests = await FollowUpRequest.find({ doctor: user.username }).populate('appointment').exec()
-
-        res.status(200).json(requests)
+        const requests = await FollowUpRequest.find({ doctor: user._id }).populate('appointment').exec()
+        console.log(requests);
+        return res.status(200).json(requests)
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: error });
+        return res.status(500).json({ error: error });
     }
 }
 
@@ -804,9 +804,9 @@ const rejectRequest = async (req, res) => {
     try {
         await FollowUpRequest.deleteOne({ _id: request })
 
-        res.status(200).send('Request Rejected')
+        return res.status(200).send('Request Rejected')
     } catch (error) {
-        res.status(500).json({ err: 'Database Problem' })
+        return res.status(500).json({ err: 'Database Problem' })
     }
 }
 

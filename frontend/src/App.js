@@ -87,8 +87,6 @@ import ContactSection from './components/ContactSection';
 import AppointmentSection from './components/AppointmentSection';
 import ClinicPatientNavBar from './components/ClinicPatientNavBar';
 
-
-
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -98,6 +96,7 @@ import AdminNavbar from './components/AdminNavbar';
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext';
+import FollowUpRequests from './pages/FollowUpRequests';
 
 
 const stripePromise = loadStripe('pk_test_51OABYlCDYNw0lbpN84PaD596nbIQM1GoWS1g6brg1wQxkm60xMam3ZKRANUdIzjK503IMzQ4TkFheaYGWMHcHZvS00wD6HxMit');
@@ -191,6 +190,7 @@ function App() {
                 <Route path="/patient/PatientChangePassword" element={user ? <WithNavbarAndSidebar><ProtectedRoute><PatientChangePassword /></ProtectedRoute></WithNavbarAndSidebar> : <Navigate to="/" />} />
                 <Route path='PatientfilterAppointments' element={<WithNavbarAndSidebar><ProtectedRoute><AppointmentsComponent /></ProtectedRoute></WithNavbarAndSidebar>} />
                 <Route path='AddfamilyMember' element={<WithNavbarAndSidebar><ProtectedRoute><AddFamilyMember /></ProtectedRoute></WithNavbarAndSidebar>} />
+                <Route path='FollowUpRequests' element={<WithNavbarAndSidebar><ProtectedRoute><FollowUpRequests /></ProtectedRoute></WithNavbarAndSidebar>} />
               {/* Public Routes */}
               <Route path='signup' element={!user ? <SignUp /> : <Navigate to="/home"/>} />
               <Route path='forgotPass' element={!user ? <ForgotPass /> : <Navigate to="/home"/>} />
