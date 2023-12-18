@@ -2379,6 +2379,9 @@ const payForPerscription = async (req, res) => {
 
             Patient.findOneAndUpdate({ _id: user._id }, { '$push': { cart: cart } }).catch(err => console.log(err));
         }
+
+        await Perscriptions.findByIdAndUpdate(persc, {state: 'filled'});
+
         res.status(200).send('GO AHEAD AND PAY')
     } catch (error) {
         return res.status(500).send({ "error": error });
