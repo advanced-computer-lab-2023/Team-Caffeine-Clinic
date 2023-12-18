@@ -3,6 +3,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useEffect, useState } from 'react'
 import Popup from 'reactjs-popup';
 import Button from 'react-bootstrap/esm/Button';
+import DoctorImage from '../assets/img/doctors/doctor.jpg';
 
 const Results = ({ result }) => {
     const { user } = useAuthContext();
@@ -115,7 +116,7 @@ const Results = ({ result }) => {
     }
     return (
         <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-            <p>Doctor: {result.doctor.name}</p>
+            {/* <p>Doctor: {result.doctor.name}</p>
             <p>Date: {result.appointmentDate}</p>
             <p>Status: {result.status}</p>
             <button onClick={() => OpenNewWindowButton(result.doctor)}>Call Doctor</button>
@@ -145,7 +146,57 @@ const Results = ({ result }) => {
                 </div>}
             {(result.status === 'upcoming' || result.status === 'rescheduled')
                 && <button onClick={() => refundAppointment(result.appointmentDate, result.doctor.username, result.transactionId)}>Refund</button>}
+ */}
 
+            <div className="member mt-4 d-flex align-items-start" >
+                <div className="pic">
+                    <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+                </div>
+                <div className="member-info">
+                    <h4 id='doctor-name'>Dr. {result.doctor.name}</h4>
+                    <p className='status'> <strong>{result.status}</strong></p>
+                    <div>
+                        <p>Date: {result.appointmentDate}</p>
+                        {/* <p>Date: {formatDateForDisplay(result.appointmentDate)}</p> */}
+                    </div>
+                    <br />
+                    <br />
+                    {(result.status === 'completed' || result.status === 'rescheduled') && <button className="button-41" onClick={() => handleFollowUpRequest(result.doctor, result._id)}>Follow-Up</button>}
+                    {!error ? (
+                        <button
+                            className="button-41"
+                            type="submit"
+                            onClick={() => refundAppointment(result.appointmentDate, result.doctor.username, result.transactionId)}
+                        >
+                            Refund
+                        </button>
+                    ) : (
+                        <p>You can't refund.</p>
+                    )}
+                    {result.status === 'upcoming' &&
+                        <div>
+
+                            <button className="button-41" onClick={() => handleOpen(true)}>Reschedule</button>
+                            <Popup open={isOpen} modal nested contentStyle={contentStyle} lockScroll>
+                                <strong>Available Dates: </strong>
+                                {result.doctor.availableDates && Array.isArray(result.doctor.availableDates) ? (
+                                    <ul>
+                                        {result.doctor.availableDates.map((date, index) => (
+                                            <li key={index} style={{ marginBottom: '10px' }}>
+                                                {date}{' '}
+                                                <button onClick={() => handleReschedule(date, result._id)}>Reschedule</button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    'No Dates available'
+                                )}
+
+                                <Button onClick={() => handleOpen()}>Close</Button>
+                            </Popup>
+                        </div>}
+                </div>
+            </div>
         </div>
     )
 }

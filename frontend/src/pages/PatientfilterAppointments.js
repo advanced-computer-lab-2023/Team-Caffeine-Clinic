@@ -3,7 +3,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { Diversity1 } from '@mui/icons-material';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import DoctorImage from '../assets/img/doctors/doctor.jpg';
-
+import Results from '../components/Results';
 
 const AppointmentsComponent = () => {
     const [allAppointments, setAllAppointments] = useState([]); // New state to hold all appointments
@@ -110,31 +110,35 @@ const AppointmentsComponent = () => {
                     <div className="row">
                         <div className="col-lg-8">
                             {results && results.map((result, index) => (
-                                <div className="member mt-4 d-flex align-items-start" key={index}>
-                                    <div className="pic">
-                                        <img src={DoctorImage} className="img-fluid" alt="Doctor" />
-                                    </div>
-                                    <div className="member-info">
-                                        <h4 id='doctor-name'>Dr. {result.doctor.name}</h4>
-                                        <p className='status'> <strong>{result.status}</strong></p>
-                                        <div>
-                                            <p>Date: {result.appointmentDate}</p>
-                                            {/* <p>Date: {formatDateForDisplay(result.appointmentDate)}</p> */}
-                                        </div>
-                                        <br />
-                                        <br />
-                                        {!error ? (
-                                            <button
-                                                className="button-41"
-                                                type="submit"
-                                                onClick={() => refundAppointment(result.appointmentDate, result.doctor.username, result.transactionId)}
-                                            >
-                                                Refund
-                                            </button>
-                                        ) : (
-                                            <p>You can't refund.</p>
-                                        )}                            </div>
-                                </div>
+                                <div key={index}>
+                                <Results
+                                result={result} />
+                            </div>
+                                // <div className="member mt-4 d-flex align-items-start" key={index}>
+                                //     <div className="pic">
+                                //         <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+                                //     </div>
+                                //     <div className="member-info">
+                                //         <h4 id='doctor-name'>Dr. {result.doctor.name}</h4>
+                                //         <p className='status'> <strong>{result.status}</strong></p>
+                                //         <div>
+                                //             <p>Date: {result.appointmentDate}</p>
+                                //             {/* <p>Date: {formatDateForDisplay(result.appointmentDate)}</p> */}
+                                //         </div>
+                                //         <br />
+                                //         <br />
+                                //         {!error ? (
+                                //             <button
+                                //                 className="button-41"
+                                //                 type="submit"
+                                //                 onClick={() => refundAppointment(result.appointmentDate, result.doctor.username, result.transactionId)}
+                                //             >
+                                //                 Refund
+                                //             </button>
+                                //         ) : (
+                                //             <p>You can't refund.</p>
+                                //         )}                            </div>
+                                // </div>
                             ))}
                         </div>
 
