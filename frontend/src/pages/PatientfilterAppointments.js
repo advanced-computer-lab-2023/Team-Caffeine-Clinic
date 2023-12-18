@@ -14,7 +14,7 @@ const AppointmentsComponent = () => {
     const [error, setError] = useState('');
     const margin = {
         marginTop: '100px',
-      }
+    }
     useEffect(() => {
         fetchAppointments();
     }, [date, status]);
@@ -42,7 +42,7 @@ const AppointmentsComponent = () => {
             return dateString; // Return original string if format is unexpected
         }
     };
-    
+
 
     const fetchAppointments = async () => {
         try {
@@ -65,7 +65,7 @@ const AppointmentsComponent = () => {
     };
 
     const filterAppointments = (appointments) => {
-        const filtered = appointments.filter(appointment => 
+        const filtered = appointments.filter(appointment =>
             (!date || appointment.appointmentDate === date) &&
             (!status || appointment.status === status)
         );
@@ -97,80 +97,80 @@ const AppointmentsComponent = () => {
         }
     };
     return (
-<div className='doctorPage' style={margin}>
-    <br />
-        <div className="section-title">
-          <h2>Appointments</h2>
-        </div> 
+        <div className='doctorPage' style={margin}>
+            <br />
+            <div className="section-title">
+                <h2>Appointments</h2>
+            </div>
             <div id="doctors" className="doctors">
-            <div className='text-center'>
-            <Link to="/doctors" className='button-43'>Book a new appointment</Link>
-            </div>
-            <div className="container">
-                <div className="row">
-                <div className="col-lg-8">
-                    {results && results.map((result, index) => (
-                        <div className="member mt-4 d-flex align-items-start" key={index}>
-                            <div className="pic">
-                            <img src={DoctorImage} className="img-fluid" alt="Doctor" />
-                            </div>
-                            <div className="member-info">
-                            <h4 id='doctor-name'>Dr. {result.doctor.name}</h4>
-                            <p className='status'> <strong>{result.status}</strong></p>
-                            <div>
-                            <p>Date: {result.appointmentDate}</p>
-                            {/* <p>Date: {formatDateForDisplay(result.appointmentDate)}</p> */}
-                            </div>
-                            <br />
-                            <br />
-                            {!error ? (
-  <button
-    className="button-41"
-    type="submit"
-    onClick={() => refundAppointment(result.appointmentDate, result.doctor.username, result.transactionId)}
-  >
-    Refund
-  </button>
-) : (
-  <p>You can't refund.</p>
-)}                            </div>
-                        </div>
-                    ))}
+                <div className='text-center'>
+                    <Link to="/doctors" className='button-43'>Book a new appointment</Link>
                 </div>
-
-                {/* {error && <p className="error-message">{error}</p>} */}
-
-            {/* Filters - occupies 4 columns */}
-            <div className="col-lg-4  mt-4">
-
-            <div className="filter-section">
-            <div className="bx bx-filter filter-title" >
-            Filters
-            </div>
-            <div>
-                        <label htmlFor="date">Select Date:</label>
-                        <select className="filter-input" id="date" value={date} onChange={handleDateChange}>
-                            <option value="">None</option>
-                            {getUniqueDates().map((uniqueDate, index) => (
-                                <option key={index} value={uniqueDate}>{uniqueDate}</option>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-8">
+                            {results && results.map((result, index) => (
+                                <div className="member mt-4 d-flex align-items-start" key={index}>
+                                    <div className="pic">
+                                        <img src={DoctorImage} className="img-fluid" alt="Doctor" />
+                                    </div>
+                                    <div className="member-info">
+                                        <h4 id='doctor-name'>Dr. {result.doctor.name}</h4>
+                                        <p className='status'> <strong>{result.status}</strong></p>
+                                        <div>
+                                            <p>Date: {result.appointmentDate}</p>
+                                            {/* <p>Date: {formatDateForDisplay(result.appointmentDate)}</p> */}
+                                        </div>
+                                        <br />
+                                        <br />
+                                        {!error ? (
+                                            <button
+                                                className="button-41"
+                                                type="submit"
+                                                onClick={() => refundAppointment(result.appointmentDate, result.doctor.username, result.transactionId)}
+                                            >
+                                                Refund
+                                            </button>
+                                        ) : (
+                                            <p>You can't refund.</p>
+                                        )}                            </div>
+                                </div>
                             ))}
-                        </select>
+                        </div>
+
+                        {/* {error && <p className="error-message">{error}</p>} */}
+
+                        {/* Filters - occupies 4 columns */}
+                        <div className="col-lg-4  mt-4">
+
+                            <div className="filter-section">
+                                <div className="bx bx-filter filter-title" >
+                                    Filters
+                                </div>
+                                <div>
+                                    <label htmlFor="date">Select Date:</label>
+                                    <select className="filter-input" id="date" value={date} onChange={handleDateChange}>
+                                        <option value="">None</option>
+                                        {getUniqueDates().map((uniqueDate, index) => (
+                                            <option key={index} value={uniqueDate}>{uniqueDate}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="status">Select Status:</label>
+                                    <select className="filter-input" id="status" value={status} onChange={handleStatusChange}>
+                                        <option value="">None</option>
+                                        <option value="upcoming">Upcoming</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                        <option value="rescheduled">Rescheduled</option>
+                                        <option value="FollowUp">FollowUp</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                <div>
-                    <label htmlFor="status">Select Status:</label>
-                    <select className="filter-input" id="status" value={status} onChange={handleStatusChange}>
-                        <option value="">None</option>
-                        <option value="upcoming">Upcoming</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                        <option value="rescheduled">Rescheduled</option>
-                        <option value="FollowUp">FollowUp</option>
-              </select>
                 </div>
-                </div>
-                </div>
-            </div>
-            </div>
             </div>
             <br />
         </div>
