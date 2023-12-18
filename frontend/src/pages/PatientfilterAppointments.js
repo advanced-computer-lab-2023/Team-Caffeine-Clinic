@@ -127,7 +127,7 @@ const AppointmentsComponent = () => {
   <button
     className="button-41"
     type="submit"
-    onClick={() => refundAppointment(result.appointmentDate, result.doctor, result.transactionId)}
+    onClick={() => refundAppointment(result.appointmentDate, result.doctor.username, result.transactionId)}
   >
     Refund
   </button>
