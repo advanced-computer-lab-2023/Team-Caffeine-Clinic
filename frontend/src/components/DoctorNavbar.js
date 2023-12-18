@@ -21,17 +21,6 @@ const DoctorNavbar =()=>{
 
 <div>
 
-                <Link className="doctor-buttons" to="/doctor/DoctorChangePassword"><h3>Change Password</h3></Link>
-                
-                
-                <Link className="doctor-buttons" to="/" onClick={handleClick}><h3>Log Out</h3></Link>
-                <Link className="doctor-buttons" to="/AddAvailableDate"><h3>Add My Available Time Slots</h3></Link>
-                <Link className="doctor-buttons" to="/getAllHealthRecords"><h3>Patient Health records</h3></Link>
-                <Link className="doctor-buttons" to="/follow-up"><h3>schedule a follow-up for a patient</h3></Link>
-                <Link className="doctor-buttons" to="/seepatientdocs"><h3>My Patietnts DOCS</h3></Link>
-                <Link className="doctor-buttons" to="/Docaddpatientdocs"><h3>Add to my Patietnts DOCS</h3></Link>
-                <Link className="doctor-buttons" to="/ClinicChats"><h3>Doctor Chats</h3></Link>
-
       <div id="topbar" className="d-flex align-items-center fixed-top">
   <div className="container d-flex justify-content-between">
     <div className="contact-info d-flex align-items-center">
@@ -65,14 +54,15 @@ const DoctorNavbar =()=>{
             <li><Link to="/UpcomingAppointments">View My Upcoming Appointments</Link></li>
             <li><Link to="/AddAvailableDate">Add My Available Time Slots</Link></li>
             <li><Link to="/follow-up">schedule a follow-up for a patient</Link></li>
-            <li><Link to="/FollowUpRequests">Accept/Reject Follow-Up Request</Link></li>
             <li><Link to="/DocAppointments">Appointments</Link></li>
           </ul>
         </li>
 
+
         <li className="dropdown"><a><span>Patients</span> <i className="bi bi-chevron-down" /></a>
           <ul>
             <li><Link to="/ViewPatients"> View My patients </Link></li>
+            <li><Link to="/getAllHealthRecords">Patient Health records</Link></li>
              <li className="dropdown"><a><span>Patient Documents</span> <i class="bi bi-chevron-right"></i></a>
               <ul>
                 <li><Link to="/seepatientdocs">View Patietnts DOCS</Link></li>
@@ -81,6 +71,8 @@ const DoctorNavbar =()=>{
             </li>
           </ul>
         </li>
+        <li><Link to="/ClinicChats">Doctor Chats</Link></li>
+
 
         <li className="dropdown"><a><span>My Profile</span> <i className="bi bi-chevron-down" /></a>
           <ul>
