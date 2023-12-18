@@ -9,14 +9,14 @@ const MedicineForm = () => {
   const [Price, setPrice] = useState('')
   const [Description, setDescription] = useState('')
   const [Quantity, setQuantity] = useState('')
-  const [activeIngredients, setactiveIngredients] = useState('')
+  const [activeIngredients1, setactiveIngredients] = useState('')
   const [error, setError] = useState(null)
   const {user} = useAuthContext()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const activeIngredientsArray = activeIngredients.split(',');
-    const medicine = {Name, Price, Description,activeIngredientsArray,Quantity}
+    const activeIngredients = activeIngredients1.split(',');
+    const medicine = {Name, Price, Description,activeIngredients,Quantity}
     
     const response = await fetch('/api/medicine/addMedicine', {
       method: 'POST',
@@ -86,7 +86,7 @@ const MedicineForm = () => {
         type="text"
         required={true}
         onChange={(e) => setactiveIngredients(e.target.value)}
-        value={activeIngredients} />
+        value={activeIngredients1} />
       <br></br>
       <button>Add Medicine</button>
       {error && <div className="error">{error}</div>}
