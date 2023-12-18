@@ -57,7 +57,6 @@ const DoctorNavbar =()=>{
             <li><Link to="/DocAppointments">Appointments</Link></li>
           </ul>
         </li>
-        <li><Link to="/ClinicChats">Doctor Chats</Link></li>
 
 
         <li className="dropdown"><a><span>Patients</span> <i className="bi bi-chevron-down" /></a>
@@ -72,6 +71,8 @@ const DoctorNavbar =()=>{
             </li>
           </ul>
         </li>
+        <li><Link to="/ClinicChats">Doctor Chats</Link></li>
+
 
         <li className="dropdown"><a><span>My Profile</span> <i className="bi bi-chevron-down" /></a>
           <ul>
