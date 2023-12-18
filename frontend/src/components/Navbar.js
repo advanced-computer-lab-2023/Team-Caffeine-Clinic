@@ -74,7 +74,9 @@ const Navbar = () => {
               <ul className="site-menu js-clone-nav d-none d-lg-block">
                 
                 <li><Link to="/Medicines">Home</Link></li>
-                <li><Link to="/home" href="contact.html">Clinic</Link></li>
+                {user.type === 'Patient' && <li><Link to="/home" href="contact.html">Clinic</Link></li>}
+                {user.type === 'Doctor' && <li><Link to="/DoctorHome" href="contact.html">Clinic</Link></li>}
+                
                 <li className="has-children">
                   <a href="#">More</a>
                   <FontAwesomeIcon icon={faChevronDown} style={{color:"black"}} />

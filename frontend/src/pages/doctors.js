@@ -79,7 +79,7 @@ const Doctors = () => {
     //   ))}
     // </div>
     <div className='doctorPage' style={margin}>
-      <button>Chat</button>
+      <Link to='/ClinicChats'>Chat</Link>
       <div id="doctors" className="doctors">
         <div className="container">
           <div className="row">
