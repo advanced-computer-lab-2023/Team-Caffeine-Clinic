@@ -169,6 +169,7 @@ const AppointmentsComponent = () => {
                                         <option value="cancelled">Cancelled</option>
                                         <option value="rescheduled">Rescheduled</option>
                                         <option value="FollowUp">FollowUp</option>
+                                        <option value="completedAndFollwingUP">completedAndFollwingUP</option>
                                     </select>
                                 </div>
                             </div>
