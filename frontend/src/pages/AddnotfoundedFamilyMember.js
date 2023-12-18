@@ -33,8 +33,6 @@ const SignUp = () => {
 
     const handleButtonClick = (e) => {
         register(e);
-        linkFamilyMember(email , ERelation);
-        
       };
 
 
@@ -107,6 +105,8 @@ const SignUp = () => {
             console.log("Patient Created", json[0]);
             setMessage("Patient Created Successfuly")
         }
+
+        linkFamilyMember(email , ERelation);
     }
 
 
